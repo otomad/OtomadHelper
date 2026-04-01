@@ -173,6 +173,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		#endif
 		/**<summary>伸缩变调</summary>*/ private bool AConfigLockStretchPitch { get { return configForm.AudioLockStretchPitchCheck.Checked; } }
 		/**<summary>保留共振</summary>*/ private bool AConfigReserveFormant { get { return configForm.AudioReserveFormantCheck.Checked; } }
+		/**<summary>保留共振</summary>*/ private bool AConfigVocalFry { get { return configForm.AudioVocalFryCheck.Checked; } }
 		/**<summary>创建分组</summary>*/ private bool ConfigCreateEventGroup { get { return configForm.CreateEventGroupInAudioCheck.Checked; } }
 		/**<summary>复音多轨</summary>*/ private bool AConfigMultitrack { get { return configForm.AudioMultitrackForChordsCheck.Checked; } }
 		/**<summary>首选轨道</summary>*/ private PreferredTrackWrapper<AudioTrack> AConfigPreferredTrack { get { return configForm.AudioPreferredTrackCombo.SelectedItem as PreferredTrackWrapper<AudioTrack>; } }
@@ -260,6 +261,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private Media sonarSolidColor = null;
 		private readonly List<Track> assignedSonarTracks = new List<Track>();
 		private int? nextTrackIndex = null;
+		internal static readonly Timecode oneTick = Timecode.FromMilliseconds(1);
 
 		// 媒体 / MIDI 参数变量
 		internal MIDI midi = null;
@@ -1390,9 +1392,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						} else if (AConfigMethod == AudioTuningMethod.OSCILLATOR) {
 							double periodMs = Pitch2PeriodMs(pitchDelta);
 							Timecode end = audioEvent.End, floorEnd = end.FloorToMs();
-							//if (indexInAudioTracks != 0) {
+							// 下面的代码为音轨的复音自动调相位，以防复音的相位重叠导致声音被抵消。但现在无法再次复现此问题了。
+							//if (indexInAudioTracks != 0)
 							//	audioEvent.ActiveTake.Offset += Timecode.FromMilliseconds(indexInAudioTracks);
-							//}
 							AudioEvent prevAudioEvent = audioEvent;
 							List<AudioEvent> granulars = new List<AudioEvent>() { prevAudioEvent };
 							while (true) {
@@ -1406,7 +1408,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 								tempEventGroup.Add(prevAudioEvent);
 							}
 							if (AConfigFadein != 0 || AConfigFadeout != 0)
-								CustomFadeGainForm.FadeGain(granulars, 100 - AConfigFadein, 100 - AConfigFadeout, true);
+								CustomFadeGainForm.FadeGain(granulars, 1 - AConfigFadein / 100, 1 - AConfigFadeout / 100, true);
+							if (AConfigVocalFry)
+								granulars.ForEach(evt => evt.Length = oneTick);
 						}
 						#endregion
 					}
@@ -1847,6 +1851,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// 将相对音高转换为频率(Hz)值，再转换为周期(ms)值。
 		/// </summary>
+		/// <remarks>
+		/// 由于基于 MIDI 格式，因此下面所属的 A4、C4 实际上会传入 A5、C5。
+		/// </remarks>
 		/// <param name="pitchFromC4">距离 C4 的相对音高。</param>
 		/// <param name="a4">中央 A4 的频率值，默认为标准值 440Hz。</param>
 		/// <returns>该音高的峰谷周期毫秒值。</returns>
@@ -17388,7 +17395,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private void Apply() {
 			foreach (Track track in vegas.Project.Tracks) {
 				List<TrackEvent> selection = new List<TrackEvent>(track.Events.Where(trackEvent => trackEvent.Selected));
-				FadeGain(selection, FromBox.DoubleValue, ToBox.DoubleValue, MultiplyGainCheck.Checked);
+				FadeGain(selection, FromBox.DoubleValue / 100, ToBox.DoubleValue / 100, MultiplyGainCheck.Checked);
 			}
 			vegas.UpdateUI();
 		}
@@ -19601,7 +19608,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	}
 
 	public class RememberedCheckBox : CheckBox {
-		private bool locked = false;
+		internal bool locked = false;
 
 		public RememberedCheckBox() {
 			CheckedChanged += (sender, e) => Checked = base.Checked;
@@ -19618,24 +19625,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private StatusType status = StatusType.Unlocked;
+		private bool isStatusChanging = false;
 		[Category("Appearance"), DefaultValue(typeof(StatusType), "Unlocked"), Description("设置组件的锁定状态。")]
 		public StatusType Status {
 			get { return status; }
 			set {
-				if (status == value)
-					return;
-				else if (status != StatusType.Unlocked && value != StatusType.Unlocked)
-					Checked = value == StatusType.True;
-				else if (status == StatusType.Unlocked && value != StatusType.Unlocked) {
-					locked = true;
-					Enabled = false;
-					Checked = value == StatusType.True;
-				} else if (status != StatusType.Unlocked && value == StatusType.Unlocked) {
-					locked = false;
-					Enabled = true;
-					Checked = userChecked;
-				}
+				locked = value != StatusType.Unlocked;
 				status = value;
+				Enabled = !locked;
+				Checked = !locked ? UserChecked : value == StatusType.True;
 			}
 		}
 
@@ -21331,7 +21329,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigForm));
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.UserHelpLink = new System.Windows.Forms.LinkLabel();
 			this.AboutBtn = new System.Windows.Forms.Button();
@@ -21668,6 +21665,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VisualEffectAdvancedBtn = new System.Windows.Forms.Button();
 			this.VideoVelocityGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel18 = new System.Windows.Forms.TableLayoutPanel();
+			this.flowLayoutPanel17 = new System.Windows.Forms.FlowLayoutPanel();
+			this.VideoVelocityCheck = new System.Windows.Forms.CheckBox();
+			this.VideoVelocityMultiplyGainCheck = new System.Windows.Forms.CheckBox();
 			this.VideoGainTildeLbl = new System.Windows.Forms.Label();
 			this.VideoVelocityTildeLbl = new System.Windows.Forms.Label();
 			this.VideoGainMoreBox = new Otomad.VegasScript.OtomadHelper.V4.NumericUpDownWithUnit();
@@ -21872,9 +21872,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.flowLayoutPanel17 = new System.Windows.Forms.FlowLayoutPanel();
-			this.VideoVelocityMultiplyGainCheck = new System.Windows.Forms.CheckBox();
-			this.VideoVelocityCheck = new System.Windows.Forms.CheckBox();
+			this.AudioVocalFryCheck = new Otomad.VegasScript.OtomadHelper.V4.RememberedCheckBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -21957,6 +21955,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel8.SuspendLayout();
 			this.VideoVelocityGroup.SuspendLayout();
 			this.tableLayoutPanel18.SuspendLayout();
+			this.flowLayoutPanel17.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.VideoGainMoreBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.VideoGainLessBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.VideoVelocityMoreBox)).BeginInit();
@@ -22021,7 +22020,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
-			this.flowLayoutPanel17.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// tableLayoutPanel1
@@ -22118,9 +22116,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			// AudioTuneMethodCombo
 			//
-			S.s = 1;
 			this.AudioTuneMethodCombo.Dock = System.Windows.Forms.DockStyle.Fill;
-			S.s = 2;
 			this.AudioTuneMethodCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.AudioTuneMethodCombo.FormattingEnabled = true;
 			this.AudioTuneMethodCombo.Items.AddRange(new object[] {
@@ -22134,7 +22130,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioTuneMethodCombo.Name = "AudioTuneMethodCombo";
 			this.AudioTuneMethodCombo.Size = new System.Drawing.Size(864, 40);
 			this.AudioTuneMethodCombo.TabIndex = 2;
-			this.Balloon.SetToolTip(this.AudioTuneMethodCombo, resources.GetString("AudioTuneMethodCombo.ToolTip"));
 			this.AudioTuneMethodCombo.SelectedIndexChanged += new System.EventHandler(this.AudioTuneMethodCombo_SelectedIndexChanged);
 			//
 			// AudioLockStretchPitchCheck
@@ -22205,7 +22200,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioAltMethodCombo.Name = "AudioAltMethodCombo";
 			this.AudioAltMethodCombo.Size = new System.Drawing.Size(864, 40);
 			this.AudioAltMethodCombo.TabIndex = 12;
-			this.Balloon.SetToolTip(this.AudioAltMethodCombo, resources.GetString("AudioAltMethodCombo.ToolTip"));
 			this.AudioAltMethodCombo.SelectedIndexChanged += new System.EventHandler(this.AudioAltMethodCombo_SelectedIndexChanged);
 			//
 			// SourceStartTimeText
@@ -24902,6 +24896,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel10.AutoSize = true;
 			this.flowLayoutPanel10.Controls.Add(this.AudioLockStretchPitchCheck);
 			this.flowLayoutPanel10.Controls.Add(this.AudioReserveFormantCheck);
+			this.flowLayoutPanel10.Controls.Add(this.AudioVocalFryCheck);
 			this.flowLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel10.Location = new System.Drawing.Point(116, 158);
 			this.flowLayoutPanel10.Margin = new System.Windows.Forms.Padding(0);
@@ -26978,6 +26973,44 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel18.Size = new System.Drawing.Size(986, 156);
 			this.tableLayoutPanel18.TabIndex = 0;
+			//
+			// flowLayoutPanel17
+			//
+			this.flowLayoutPanel17.AutoSize = true;
+			this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanel17, 5);
+			this.flowLayoutPanel17.Controls.Add(this.VideoVelocityCheck);
+			this.flowLayoutPanel17.Controls.Add(this.VideoVelocityMultiplyGainCheck);
+			this.flowLayoutPanel17.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel17.Location = new System.Drawing.Point(0, 0);
+			this.flowLayoutPanel17.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel17.Name = "flowLayoutPanel17";
+			this.flowLayoutPanel17.Padding = new System.Windows.Forms.Padding(6);
+			this.flowLayoutPanel17.Size = new System.Drawing.Size(986, 48);
+			this.flowLayoutPanel17.TabIndex = 10;
+			//
+			// VideoVelocityCheck
+			//
+			this.VideoVelocityCheck.AutoSize = true;
+			this.VideoVelocityCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoVelocityCheck.Location = new System.Drawing.Point(9, 6);
+			this.VideoVelocityCheck.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+			this.VideoVelocityCheck.Name = "VideoVelocityCheck";
+			this.VideoVelocityCheck.Size = new System.Drawing.Size(142, 36);
+			this.VideoVelocityCheck.TabIndex = 2;
+			this.VideoVelocityCheck.Text = "映射力度";
+			this.VideoVelocityCheck.UseVisualStyleBackColor = true;
+			//
+			// VideoVelocityMultiplyGainCheck
+			//
+			this.VideoVelocityMultiplyGainCheck.AutoSize = true;
+			this.VideoVelocityMultiplyGainCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoVelocityMultiplyGainCheck.Location = new System.Drawing.Point(157, 6);
+			this.VideoVelocityMultiplyGainCheck.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+			this.VideoVelocityMultiplyGainCheck.Name = "VideoVelocityMultiplyGainCheck";
+			this.VideoVelocityMultiplyGainCheck.Size = new System.Drawing.Size(190, 36);
+			this.VideoVelocityMultiplyGainCheck.TabIndex = 1;
+			this.VideoVelocityMultiplyGainCheck.Text = "乘以当前增益";
+			this.VideoVelocityMultiplyGainCheck.UseVisualStyleBackColor = true;
 			//
 			// VideoGainTildeLbl
 			//
@@ -30041,43 +30074,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			//
-			// flowLayoutPanel17
+			// AudioVocalFryCheck
 			//
-			this.flowLayoutPanel17.AutoSize = true;
-			this.tableLayoutPanel18.SetColumnSpan(this.flowLayoutPanel17, 5);
-			this.flowLayoutPanel17.Controls.Add(this.VideoVelocityCheck);
-			this.flowLayoutPanel17.Controls.Add(this.VideoVelocityMultiplyGainCheck);
-			this.flowLayoutPanel17.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel17.Location = new System.Drawing.Point(0, 0);
-			this.flowLayoutPanel17.Margin = new System.Windows.Forms.Padding(0);
-			this.flowLayoutPanel17.Name = "flowLayoutPanel17";
-			this.flowLayoutPanel17.Padding = new System.Windows.Forms.Padding(6);
-			this.flowLayoutPanel17.Size = new System.Drawing.Size(986, 48);
-			this.flowLayoutPanel17.TabIndex = 10;
-			//
-			// VideoVelocityMultiplyGainCheck
-			//
-			this.VideoVelocityMultiplyGainCheck.AutoSize = true;
-			this.VideoVelocityMultiplyGainCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoVelocityMultiplyGainCheck.Location = new System.Drawing.Point(157, 6);
-			this.VideoVelocityMultiplyGainCheck.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
-			this.VideoVelocityMultiplyGainCheck.Name = "VideoVelocityMultiplyGainCheck";
-			this.VideoVelocityMultiplyGainCheck.Size = new System.Drawing.Size(190, 36);
-			this.VideoVelocityMultiplyGainCheck.TabIndex = 1;
-			this.VideoVelocityMultiplyGainCheck.Text = "乘以当前增益";
-			this.VideoVelocityMultiplyGainCheck.UseVisualStyleBackColor = true;
-			//
-			// VideoVelocityCheck
-			//
-			this.VideoVelocityCheck.AutoSize = true;
-			this.VideoVelocityCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoVelocityCheck.Location = new System.Drawing.Point(9, 6);
-			this.VideoVelocityCheck.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
-			this.VideoVelocityCheck.Name = "VideoVelocityCheck";
-			this.VideoVelocityCheck.Size = new System.Drawing.Size(142, 36);
-			this.VideoVelocityCheck.TabIndex = 2;
-			this.VideoVelocityCheck.Text = "映射力度";
-			this.VideoVelocityCheck.UseVisualStyleBackColor = true;
+			this.AudioVocalFryCheck.AutoSize = true;
+			this.AudioVocalFryCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioVocalFryCheck.Location = new System.Drawing.Point(395, 3);
+			this.AudioVocalFryCheck.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioVocalFryCheck.Name = "AudioVocalFryCheck";
+			this.AudioVocalFryCheck.Size = new System.Drawing.Size(118, 48);
+			this.AudioVocalFryCheck.TabIndex = 3;
+			this.AudioVocalFryCheck.Text = "气泡音";
+			this.AudioVocalFryCheck.UseVisualStyleBackColor = true;
 			//
 			// ConfigForm
 			//
@@ -30244,6 +30251,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoVelocityGroup.PerformLayout();
 			this.tableLayoutPanel18.ResumeLayout(false);
 			this.tableLayoutPanel18.PerformLayout();
+			this.flowLayoutPanel17.ResumeLayout(false);
+			this.flowLayoutPanel17.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.VideoGainMoreBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.VideoGainLessBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.VideoVelocityMoreBox)).EndInit();
@@ -30343,8 +30352,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
-			this.flowLayoutPanel17.ResumeLayout(false);
-			this.flowLayoutPanel17.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -30890,11 +30897,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.Label LuckyDipBarOrBeatPreparationLbl;
 		public System.Windows.Forms.NumericUpDown LuckyDipBarOrBeatPreparationBox;
 		public System.Windows.Forms.ComboBox LuckyDipBarOrBeatPreparationUnitCombo;
-		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel14;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel14;
 		public System.Windows.Forms.CheckBox AudioVelocityMultiplyGainCheck;
-		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel17;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel17;
 		public System.Windows.Forms.CheckBox VideoVelocityCheck;
 		public System.Windows.Forms.CheckBox VideoVelocityMultiplyGainCheck;
+		public RememberedCheckBox AudioVocalFryCheck;
 	}
 	#endregion
 
@@ -31207,6 +31215,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			AudioStretchAttrCombo.SetIndex(configIni.Read("StretchAttr", 1), 1);
 			AudioLockStretchPitchCheck.Checked = configIni.Read("LockStretchPitch", false);
 			AudioReserveFormantCheck.Checked = configIni.Read("ReserveFormant", false);
+			AudioVocalFryCheck.UserChecked = configIni.Read("VocalFry", false);
 			CreateEventGroupInAudioCheck.Checked = configIni.Read("CreateEventGroup", true);
 			configIni.EndSection();
 			#endregion
@@ -31298,14 +31307,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			RestrictLengthBox.Value = configIni.Read("RestrictLengthValue", 1000);
 			LayoutInfos.Grid.enabled = configIni.Read("EnableGridLayoutForTracks", false);
 			LayoutInfos.GradientTracks.enabled = configIni.Read("EnableGradientForTracks", false);
-			CheckMidiAutoLayoutTracksButtonActived();
-			QuickEnableAllMidiAutoLayoutTracks();
 			SourceStartTimeText.DoubleValue = configIni.Read("SourceStartTime", 0d);
 			SourceEndTimeText.DoubleValue = configIni.Read("SourceEndTime", 0d);
 			MidiStartSecondBox.DoubleValue = configIni.Read("MidiStartTime", 0d);
 			MidiEndSecondBox.DoubleValue = configIni.Read("MidiEndTime", 0d);
 			MidiAutoChangeProjectBpmCheck.Checked = configIni.Read("MidiAutoChangeProjectBpm", false);
 			MidiAutoChangeProjectBeatCheck.Checked = configIni.Read("MidiAutoChangeProjectBeat", false);
+			CheckMidiAutoLayoutTracksButtonActived();
+			QuickEnableAllMidiAutoLayoutTracks();
 			configIni.EndSection();
 			#endregion
 
@@ -31434,6 +31443,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("StretchAttr", AudioStretchAttrCombo.SelectedIndex);
 			configIni.Write("LockStretchPitch", AudioLockStretchPitchCheck.Checked);
 			configIni.Write("ReserveFormant", AudioReserveFormantCheck.Checked);
+			configIni.Write("VocalFry", AudioVocalFryCheck.UserChecked);
 			configIni.Write("CreateEventGroup", CreateEventGroupInAudioCheck.Checked);
 			configIni.EndSection();
 			#endregion
@@ -31900,6 +31910,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			AudioPreviewAttrLbl.Text = str.preview_listen_attr;
 			PreviewTuneAudioCheck.Text = str.preview_tune_audio;
 			AudioReserveFormantCheck.Text = str.reserve_formant;
+			AudioVocalFryCheck.Text = str.vocal_fry;
 			AudioTuneMethodLbl.Text = str.tune_method;
 			AudioBasePitchLbl.Text = str.base_pitch;
 			PreviewAudioBtn.Text = str.preview_audio;
@@ -32294,7 +32305,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING && method != AudioTuningMethod.OSCILLATOR;
 			AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled = PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled
 				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING;
-			AudioFadeSetAsTimecodeRadio.Enabled = method != AudioTuningMethod.OSCILLATOR;
+			AudioFadeSetAsTimecodeRadio.Enabled = AudioFadeInCurveCombo.Enabled = AudioFadeOutCurveCombo.Enabled = method != AudioTuningMethod.OSCILLATOR;
+			AudioVocalFryCheck.Status = (isAConfigOn && method == AudioTuningMethod.OSCILLATOR) ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
 			if (method == AudioTuningMethod.OSCILLATOR) AudioFadeSetAsPercentRadio.Checked = true;
 			if (method == AudioTuningMethod.FOOL_TUNING || method == AudioTuningMethod.OSCILLATOR) {
 				AudioLockStretchPitchCheck.Enabled = AudioScratchCombo.Enabled = false;
@@ -32326,7 +32338,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				VideoLegatoCombo.Enabled = VideoGlissandoFlow.Enabled = isVConfigOnButNotSheetConfigOn;
 			VideoGlissandoCheck.Status = isSheetConfigOn ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
 			VideoMultitrackForChordsCheck.Status = isSheetConfigOn ? RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.Unlocked;
-			if (!isVConfigOn) VideoMultitrackForChordsCheck.Enabled = false;
+			if (!isVConfigOn) VideoMultitrackForChordsCheck.Status = RememberedCheckBox.StatusType.False;
 			if (isSheetConfigOn) {
 				VideoScratchCombo.Enabled = false;
 				VideoScratchCombo.SelectedIndex = 0;
@@ -32363,8 +32375,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			TrackShadowColorBtn.Enabled = TrackShadowCheck.Checked && TrackShadowCheck.Enabled;
 			SonarDeleteBtn.Enabled = SonarMoveUpBtn.Enabled = SonarMoveDownBtn.Enabled = SonarParamsGroup.Enabled = enableSonar && SonarList.SelectedItems.Count != 0;
 
-			SetEnabled(AudioVelocityCheck.Parent, AudioVelocityCheck.Checked, new Control[] { AudioVelocityCheck });
-			SetEnabled(VideoVelocityCheck.Parent, VideoVelocityCheck.Checked, new Control[] { VideoVelocityCheck });
+			SetEnabled(AudioVelocityCheck.Parent.Parent, AudioVelocityCheck.Checked, new Control[] { AudioVelocityCheck, AudioVelocityCheck.Parent });
+			SetEnabled(VideoVelocityCheck.Parent.Parent, VideoVelocityCheck.Checked, new Control[] { VideoVelocityCheck, VideoVelocityCheck.Parent });
+			AudioVelocityMultiplyGainCheck.Enabled = AudioVelocityCheck.Checked;
+			VideoVelocityMultiplyGainCheck.Enabled = VideoVelocityCheck.Checked;
 			AudioAutoPanCurveCombo.Enabled = AudioAutoPanCheck.CheckedAndEnabled();
 			VideoGlissandoBox.Enabled = VideoGlissandoCheck.CheckedAndEnabled();
 
@@ -34955,6 +34969,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			alt_dock = "停靠在边缘",
 			alt_silent = "不发声",
 			multiply_gain = "乘以当前增益",
+			vocal_fry = "气泡音",
 			__eol__ = "";
 
 		static Lang() {
