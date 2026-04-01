@@ -65,5 +65,6 @@ public sealed class BamlAssemblyResource : IDisposable {
 	public void Dispose() {
 		manifestResourceStream?.Dispose();
 		resourceReader?.Dispose();
+		GC.SuppressFinalize(this);
 	}
 }
