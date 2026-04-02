@@ -517,15 +517,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// 显示报错信息。
 		/// </summary>
 		public static void ShowError(string str, ShowErrorState state = ShowErrorState.NORMAL) {
-			instance.vegas.ShowError(str);
+			instance.vegas.ShowError(str + ExceptionVersionInfo);
 			DoingAfterShowError(state);
 		}
 		public static void ShowError(Exception e, ShowErrorState state = ShowErrorState.NORMAL) {
-			instance.vegas.ShowError(e.Message);
+			instance.vegas.ShowError(e.Message + ExceptionVersionInfo, e.StackTrace);
 			DoingAfterShowError(state);
 		}
 		public static void ShowError(Exception e1, Exception e2, ShowErrorState state = ShowErrorState.NORMAL) {
-			instance.vegas.ShowError(e1.Message, e2.ToString());
+			instance.vegas.ShowError(e1.Message + ExceptionVersionInfo, e2.ToString());
 			DoingAfterShowError(state);
 		}
 		public static void ShowError2(string str) {
@@ -539,6 +539,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 		private string GetExceptionInfo(Exception e) {
 			return e.Message + "\n" + e.StackTrace + "\n" + e.ToString();
+		}
+		private static string ExceptionVersionInfo {
+			get {
+				Lang str = Lang.str;
+				StringBuilder sb = new StringBuilder();
+				sb.AppendLine();
+				sb.AppendLine();
+				sb.AppendLine(new string('—', 20));
+				sb.AppendLine(str.otomad_helper_version + str.colon + VERSION);
+				sb.AppendLine(str.vegas_version + str.colon + CurrentVegasVersion);
+				sb.AppendLine(str.script_supported_vegas_version + str.colon + GetScriptSupportedVersionRange());
+				sb.AppendLine(str.naudio_version + str.colon + NAudioVersion);
+				return sb.ToString();
+			}
 		}
 		private static void DoingAfterShowError(ShowErrorState state) {
 			if (state == ShowErrorState.SILENCE) return;
@@ -2929,40 +2943,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#else
 				new Version(13, 0);
 			#endif
-		public static Version CurrentVegasVersion;
 
 		/// <summary>
 		/// 检查 Vegas 版本是否支持。
 		/// </summary>
 		/// <returns>版本支持情况状态值。</returns>
 		public SupportVegasVersionState CheckVersionSupport() {
-			Version curVer = CurrentVegasVersion = GetVegasVersion();
+			Version curVer = CurrentVegasVersion;
 			if (curVer == null) return SupportVegasVersionState.UNDEFINED;
 			else if (curVer >= MIN_SUPPORTED_VERSION &&
 				(MAX_SUPPORTED_VERSION == null || curVer <= MAX_SUPPORTED_VERSION)
 			) return SupportVegasVersionState.SUPPORTED;
 			else return SupportVegasVersionState.UNSUPPORTED;
-		}
-
-		/// <summary>
-		/// 获取当前 Vegas 版本号对象。
-		/// </summary>
-		/// <returns>Vegas 版本号对象。</returns>
-		public Version GetVegasVersion() {
-			try {
-				MatchCollection matches = Regex.Matches(vegas.Version, @"(\d+\.)+\d+");
-				if (matches.Count <= 0) return null;
-				string version = matches[0].Value;
-				List<object> versionItems = new List<object>(); // 必须用 object 不能用 int。
-				const int VERSION_MAX_LENGTH = 4;
-				int versionNum;
-				foreach (string item in version.Split('.'))
-					if (versionItems.Count < VERSION_MAX_LENGTH)
-						if (int.TryParse(item, out versionNum))
-							versionItems.Add(versionNum);
-				if (versionItems.Count == 0) return null;
-				return Activator.CreateInstance(typeof(Version), versionItems.ToArray()) as Version;
-			} catch (Exception) { return null; }
 		}
 
 		public static string GetScriptSupportedVersionRange() {
@@ -2983,6 +2975,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private SupportVegasVersionState _supported = SupportVegasVersionState.UNDEFINED;
 		public SupportVegasVersionState Supported { get { return _supported; } }
 		public bool quickConfigMode = false;
+
+		public static readonly Version NAudioVersion = typeof(NAudio.Midi.MidiEvent).Assembly.GetName().Version;
+		public static readonly Version CurrentVegasVersion = typeof(ScriptPortal.Vegas.Vegas).Assembly.GetName().Version;
 
 		/// <summary>
 		/// Vegas 脚本的入口方法。
@@ -3617,7 +3612,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		/// <summary>
-		/// 安全地设置渐变的增益，避免输入的值小于0或大于1导致程序报错。
+		/// 安全地设置渐变的增益，避免输入的值小于 0 或大于 1 导致程序报错。
 		/// </summary>
 		public static void SetGain(this Fade fade, float value, bool multiply) {
 			if (multiply) value *= fade.Gain;
@@ -31358,7 +31353,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (BelowTopAdjustmentTrackCheck.Enabled)
 				BelowTopAdjustmentTrackCheck.Checked = configIni.Read("BelowTopAdjustmentTracks", true);
 			RemoveSourceTrackEventsCheck.UserChecked = configIni.Read("RemoveSourceTrackEvents", false);
-			SelectAllGeneratedEventsCheck.Checked = configIni.Read("SelectAllGeneratedEvents", true);
+			SelectAllGeneratedEventsCheck.Checked = configIni.Read("SelectAllGeneratedEvents", false);
 			RestrictLengthMode_int = configIni.Read("RestrictLengthMode", 0);
 			RestrictLengthBox.Value = configIni.Read("RestrictLengthValue", 1000);
 			LayoutInfos.Grid.enabled = configIni.Read("EnableGridLayoutForTracks", false);
@@ -32596,8 +32591,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			string[,] pairs = {
 				{ str.version_number, EntryPoint.VERSION.ToString() },
 				{ str.revision_date, EntryPoint.REVISION_DATE.ToString("D") },
-				{ str.vegas_version, vegas.Version },
+				{ str.vegas_version, EntryPoint.CurrentVegasVersion.ToString() },
 				{ str.script_supported_vegas_version, EntryPoint.GetScriptSupportedVersionRange() },
+				{ str.naudio_version, EntryPoint.NAudioVersion.ToString() },
 				{ "", "" },
 				{ str.script_author, str.ranne },
 				{ str.script_original_author , "Chaosinism" },
@@ -34219,7 +34215,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			no_to_restart_to_effect_language = "不重启以生效",
 			version_number = "版本号",
 			revision_date = "最后修订日期",
-			vegas_version = "VEGAS 版本",
+			vegas_version = "VEGAS Pro 版本",
+			otomad_helper_version = "Otomad Helper 版本",
+			naudio_version = "NAudio 版本",
 			script_supported_vegas_version = "脚本支持版本",
 			unsupported_vegas_version = "警告：当前脚本与你当前所使用的 VEGAS 版本不匹配，部分功能可能不能正常工作！请重新安装正确版本的脚本。\n脚本支持的版本为：VEGAS Pro {0}\n当前软件的版本为：VEGAS Pro {1}",
 			unsupported_vegas_version_title = "版本不匹配",
@@ -34886,7 +34884,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			no_video_take_exception = "错误：无法读取视频媒体流。\n\n在设置界面，纯音频素材不要勾选“生成画面”。\n\n",
 			no_media_take_exception = "错误：无法读取媒体。\n\n你所选的文件格式不受 VEGAS 支持，请检查该媒体文件是否损坏，或未安装对应的 VEGAS 解码器。\n\n",
 			not_a_midi_file_exception = "错误：无法读取 MIDI 文件。\n\n解决方法：用宿主软件导入该 MIDI，然后重新导出一份新的 MIDI 文件。\n\n补充说明：MIDI 文件有多种格式，脚本不保证都能够正确读取。所幸主流宿主软件在\n默认设置下导出的 MIDI 文件一般是可以读取的。（目前测试过 FL Studio、LMMS \n与 Music Studio for iPad。）",
-			midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有其它音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
+			midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有任何音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
 			no_selected_exception_ps = "补充说明：如果你想手动在文件夹中选择一项媒体素材，那么请点击其右边的“浏览”按钮，\n选择一项媒体素材。并确保左侧的下拉菜单中选中的是你所选文件所在的路径。",
 			no_selected_media_exception = "错误：没有在项目媒体窗口中选择任何媒体。\n\n请在项目媒体窗口中选择一项媒体，然后重新打开参数配置窗口，并在素材设置中选择“选中的媒体文件”。\n\n",
 			no_selected_clip_exception_short = "错误：没有在轨道中选择任何剪辑。",
@@ -35063,7 +35061,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_to_restart_to_effect_language = "Re-render",
 				version_number = "Version",
 				revision_date = "Last revision date",
-				vegas_version = "VEGAS version",
+				vegas_version = "VEGAS Pro version",
+				otomad_helper_version = "Otomad Helper version",
+				naudio_version = "NAudio version",
 				script_supported_vegas_version = "Script supported version",
 				unsupported_vegas_version = "Warning: The current script does not match the version of VEGAS you are currently using. Some features may not work properly! Please reinstall the correct version of the script.\nSupported version: VEGAS Pro {0}\nCurrent version: VEGAS Pro {1}",
 				unsupported_vegas_version_title = "Version mismatch",
@@ -35895,7 +35895,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_to_restart_to_effect_language = "不重啟以生效",
 				version_number = "版本號",
 				revision_date = "最後修訂日期",
-				vegas_version = "VEGAS 版本",
+				vegas_version = "VEGAS Pro 版本",
+				otomad_helper_version = "Otomad Helper 版本",
+				naudio_version = "NAudio 版本",
 				script_supported_vegas_version = "腳本支援版本",
 				unsupported_vegas_version = "警告：當前腳本與你當前所使用的 VEGAS 版本不匹配，部分功能可能不能正常工作！請重新安裝正確版本的腳本。\n腳本支援的版本為：VEGAS Pro {0}\n當前軟體的版本為：VEGAS Pro {1}",
 				unsupported_vegas_version_title = "版本不匹配",
@@ -36560,7 +36562,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_video_take_exception = "錯誤：無法讀取視訊媒體流。\n\n在設定介面，純音訊素材不要勾選「生成畫面」。\n\n",
 				no_media_take_exception = "錯誤：無法讀取媒體。\n\n你所選的檔案格式不受 VEGAS 支援，請檢查該媒體檔案是否損壞，或未安裝對應的 VEGAS 解碼器。\n\n",
 				not_a_midi_file_exception = "錯誤：無法讀取 MIDI 檔案。\n\n解決方法：用宿主軟體導入該 MIDI，然後重新匯出一份新的 MIDI 檔案。\n\n補充說明：MIDI 檔案有多種格式，腳本不保證都能够正確讀取。所幸主流宿主軟體在\n默認設定下匯出的 MIDI 檔案一般是可以讀取的。（現時測試過 FL Studio、LMMS\n與 Music Studio for iPad。）",
-				midi_contains_velocity_zero_exception = "錯誤：你的 MIDI 檔案中包含力度值為 0 的音符。\n請檢查是否還有其它音符的力度值為 0（即沒有音量），如果有，請刪除它們。\n\n補充說明：NAudio.Midi 庫不支援包含力度為 0 音符的 MIDI 檔案，未來版本的 Otomad Helper 會通過更換解析引擎來解決此問題。",
+				midi_contains_velocity_zero_exception = "錯誤：你的 MIDI 檔案中包含力度值為 0 的音符。\n請檢查是否還有任何音符的力度值為 0（即沒有音量），如果有，請刪除它們。\n\n補充說明：NAudio.Midi 庫不支援包含力度為 0 音符的 MIDI 檔案，未來版本的 Otomad Helper 會通過更換解析引擎來解決此問題。",
 				no_selected_exception_ps = "補充說明：如果你想手動在資料夾中選擇一項媒體素材，那麼請點擊其右邊的「瀏覽」按鈕，\n選擇一項媒體素材。並確保左側的下拉式功能表中選中的是你所選檔案所在的路徑。",
 				no_selected_media_exception = "錯誤：沒有在專案媒體視窗中選擇任何媒體。\n\n請在專案媒體視窗中選擇一項媒體，然後重新啟動參數設定視窗，並在素材設定中選擇「選中的媒體檔案」。\n\n",
 				no_selected_clip_exception_short = "錯誤：沒有在軌道中選擇任何剪輯。",
@@ -36726,7 +36728,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_to_restart_to_effect_language = "有効にするために再起動しません",
 				version_number = "バージョン番号",
 				revision_date = "最終改訂日",
-				vegas_version = "VEGASバージョン",
+				vegas_version = "VEGAS Proバージョン",
+				otomad_helper_version = "Otomad Helperバージョン",
+				naudio_version = "NAudioバージョン",
 				script_supported_vegas_version = "スクリプトでサポートされているバージョン",
 				unsupported_vegas_version = "警告：現在のスクリプトは現在使用しているVEGASバージョンと一緻せず、一部の機能が正常に動作しない可能性があります！正しいバージョンのスクリプトを再インストールしてください。\nサポートされているバージョン：VEGAS Pro {0}\n現在のバージョン：VEGAS Pro {1}",
 				unsupported_vegas_version_title = "バージョンが一緻しません",
@@ -37393,7 +37397,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_video_take_exception = "エラー：ビデオメディアストリームを読み取ることができません。\n\n設定画面で、純粋なオーディオメディアの[有効なビデオ]をチェックしないでください。\n\n",
 				no_media_take_exception = "エラー：メディアを読み取ることができません。\n\n選択したファイル形式はVEGASではサポートされていません。メディアファイルが破損していないか、対応するVEGASデコーダーがインストールされていないか確認してください。\n\n",
 				not_a_midi_file_exception = "エラー：MIDIファイルを読み取ることができません。\n\n解決策：ホストソフトウェアでMIDIをインポートしてから、新しいMIDIファイルを再出力します。\n\n補足：MIDIファイルには複数の形式があり、スクリプトはそれらすべてが正しく読み取れることを保証するものではありません。幸い、\nデフォルト設定で主流のホストソフトウェアによってエクスポートされたMIDIファイルは一般的に読み取り可能です。（現在テスト済みのFL Studio、LMMS、\nおよびMusic Studio for iPadです。）",
-				midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有其它音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
+				midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有任何音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
 				no_selected_exception_ps = "追記：フォルダ内のメディアを手動で選択する場合は、右側の\n[参照]ボタンをクリックしてメディアを選択してください。また、左側のドロップダウンメニューで、選択したファイルのパスが選択されていることを確認してください。",
 				no_selected_media_exception = "エラー：プロジェクトメディアウィンドウでメディアが選択されていません。\n\nプロジェクトメディアウィンドウでメディアを選択してから、構成ダイアログを再度開き、素材設定で「選択したメディアファイル」を選択してください。\n\n",
 				no_selected_clip_exception_short = "エラー：トラックでクリップが選択されていません。",
@@ -37559,7 +37563,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_to_restart_to_effect_language = "Не перезагружается чтобы вступить в силу",
 				version_number = "Номер версии",
 				revision_date = "Дата последнего изменения",
-				vegas_version = "Версия VEGAS",
+				vegas_version = "Версия VEGAS Pro",
+				otomad_helper_version = "Версия Otomad Helper",
+				naudio_version = "Версия NAudio",
 				script_supported_vegas_version = "Версия с поддержкой скрипта",
 				unsupported_vegas_version = "Предупреждение: Текущий скрипт не соответствует версии VEGAS, которую вы сейчас используете. Некоторые функции могут работать некорректно! Пожалуйста, переустановите правильную версию скрипта.\nПоддерживаемая версия: VEGAS Pro {0}\nТекущая версия: VEGAS Pro {1}",
 				unsupported_vegas_version_title = "Несоответствие версий",
@@ -38226,7 +38232,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_video_take_exception = "Ошибка: невозможно прочитать видеопоток.\n\nВ пользовательском интерфейсе настроек не устанавливайте флажок «Включенное видео» для чистого аудио.\n\n",
 				no_media_take_exception = "Ошибка: невозможно прочитать носитель.\n\nВыбранный формат файла не поддерживается VEGAS. Пожалуйста, проверьте, не поврежден ли медиафайл или не установлен ли соответствующий декодер VEGAS.\n\n",
 				not_a_midi_file_exception = "Ошибка: невозможно прочитать файл MIDI.\n\nРешение: импортируйте MIDI с помощью программного обеспечения хоста, а затем повторно выведите новый файл MIDI.\n\nДополнительное примечание: существует несколько форматов файлов MIDI, и сценарий не гарантирует, что все они могут быть правильно прочитаны. К счастью,\nфайлы MIDI, экспортированные основным программным обеспечением хоста с настройками по умолчанию, обычно читаются. (В настоящее время протестированы FL Studio, LMMS\nи Music Studio для iPad.)",
-				midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有其它音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
+				midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有任何音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
 				no_selected_exception_ps = "Дополнительное примечание: если вы хотите вручную выбрать носитель в папке, нажмите кнопку «Обзор» справа, чтобы\nвыбрать носитель. И убедитесь, что путь к выбранному вами файлу выбран в раскрывающемся меню слева.",
 				no_selected_media_exception = "Ошибка: в окне мультимедиа проекта не выбран ни один носитель.\n\nВыберите носитель в окне мультимедиа проекта, затем снова откройте диалоговое окно конфигурации и выберите «выбранный файл мультимедиа» в настройках источника.\n\n",
 				no_selected_clip_exception_short = "Ошибка: на дорожке не выбраны клипы.",
@@ -38392,7 +38398,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_to_restart_to_effect_language = "Không k.động lại",
 				version_number = "Phiên bản",
 				revision_date = "Ngày sửa đổi lần cuối",
-				vegas_version = "Phiên bản VEGAS",
+				vegas_version = "Phiên bản VEGAS Pro",
+				otomad_helper_version = "Phiên bản Otomad Helper",
+				naudio_version = "Phiên bản NAudio",
 				script_supported_vegas_version = "Phiên bản được hỗ trợ script",
 				unsupported_vegas_version = "Cảnh báo: Script hiện tại không khớp với phiên bản VEGAS bạn đang dùng. Một số tính năng có thể không hoạt động đúng cách! Vui lòng cài đặt lại đúng phiên bản của script.\nPhiên bản được hỗ trợ: VEGAS Pro {0}\nPhiên bản hiện tại: VEGAS Pro {1}",
 				unsupported_vegas_version_title = "Phiên bản không khớp",
@@ -39058,7 +39066,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_video_take_exception = "Lỗi: Không thể đọc phương tiện video stream.\n\nTrong giao diện cài đặt, không tích vào \"Bật Video\" để cho ra chỉ duy nhất phương tiện âm thanh.\n\n",
 				no_media_take_exception = "Lỗi: Không thể đọc phương tiện.\n\nĐịnh dạng file bạn đã chọn không được VEGAS hỗ trợ. Vui lòng kiểm tra xem file phương tiện có bị hỏng hoặc bộ giải mã (decoder) VEGAS tương ứng chưa được cài đặt hay không.\n\n",
 				not_a_midi_file_exception = "Lỗi: Không thể đọc file MIDI.\n\nGiải pháp: Nhập MIDI bằng phần mềm máy chủ, sau đó xuất lại file MIDI mới.\n\nLưu ý bổ sung: Có nhiều định dạng tệp MIDI và script không đảm bảo rằng tất cả chúng đều có thể được đọc chính xác. May thay,\nCác file MIDI được xuất bởi phần mềm máy chủ chính trong cài đặt mặc định thường có thể đọc được. (Hiện đã thử với FL Studio, LMMS \nvà Music Studio dành cho iPad.)",
-				midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有其它音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
+				midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有任何音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
 				no_selected_exception_ps = "Lưu ý thêm: Nếu bạn muốn chọn thủ công một phương tiện trong thư mục, vui lòng bấm vào nút \"Duyệt tìm\" ở bên phải để\nchọn một phương tiện. Và đảm bảo rằng đường dẫn của file bạn đã chọn được chọn trong menu ở dưới bên trái.",
 				no_selected_media_exception = "Lỗi: Không có phương tiện đã chọn trong project media window.\n\nVui lòng chọn một phương tiện trong project media window, sau đó mở lại hộp thoại thiết lập script, và chọn \"File phương tiện đã chọn\" trong thiết lập nguồn.\n\n",
 				no_selected_clip_exception_short = "Lỗi: Không có clip đã chọn trong track.",
@@ -39224,7 +39232,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_to_restart_to_effect_language = "Re-render",
 				version_number = "Versi",
 				revision_date = "Tanggal revisi terakhir",
-				vegas_version = "Versi VEGAS",
+				vegas_version = "Versi VEGAS Pro",
+				otomad_helper_version = "Versi Otomad Helper",
+				naudio_version = "Versi NAudio",
 				script_supported_vegas_version = "Versi yang didukung skrip",
 				unsupported_vegas_version = "Peringatan: Skrip ini tidak cocok dengan versi VEGAS ini. Beberapa fitur tidak akan berkerja dengan baik. Harap install ulang sesuai dengan versi VEGAS ini!.\nVersi didukung: VEGAS Pro {0}\nVersi VEGAS: VEGAS Pro {1}",
 				unsupported_vegas_version_title = "Ketidakcocokan versi",
@@ -39890,7 +39900,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_video_take_exception = "Error: Tidak dapat membaca streaming media video.\n\nDi antarmuka setelan, jangan centang \"Enabled Video\" untuk media Audio murni.\n\n",
 				no_media_take_exception = "Error: Tidak dapat membaca media.\n\nFormat file yang Anda pilih tidak didukung oleh VEGAS. Silakan periksa apakah file media rusak atau dekoder VEGAS yang sesuai tidak terpasang.\n\n",
 				not_a_midi_file_exception = "Error: Tidak dapat membaca file MIDI.\n\nSolusi: Impor MIDI dengan perangkat lunak host, lalu keluarkan kembali file MIDI baru.\n\nCatatan tambahan: Ada beberapa format file MIDI, dan skrip tidak menjamin hal itu semuanya dapat dibaca dengan benar. Untungnya,\nfile MIDI yang diekspor oleh software host mainstream dengan setelan default biasanya dapat dibaca. (FL Studio, LMMS \ndan Studio Musik untuk iPad yang saat ini diuji.)",
-				midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有其它音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
+				midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有任何音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
 				no_selected_exception_ps = "Catatan tambahan: Jika ingin memilih media dalam folder secara manual, klik tombol \"Jelajahi\" di sebelah kanan untuk\nmemilih media. Dan pastikan jalur file yang Anda pilih dipilih di menu tarik-turun di sebelah kiri.",
 				no_selected_media_exception = "Error: Tidak ada media yang dipilih di jendela media proyek.\n\nSilakan pilih media di jendela media proyek, lalu buka kembali dialog konfigurasi, dan pilih \"file media yang dipilih\" di konfigurasi sumber.\n\n",
 				no_selected_clip_exception_short = "Error: Tidak ada klip yang dipilih di trek.",
