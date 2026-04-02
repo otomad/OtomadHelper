@@ -41,11 +41,10 @@ public partial class ContentDialogViewModel : ObservableObject<ContentDialog> {
 		click?.Invoke(e?.OriginalSource, e);
 	}
 
-	private bool expandable = false;
 	public bool Expandable {
-		get => expandable && !string.IsNullOrEmpty(Body);
-		set => SetProperty(ref expandable, value);
-	}
+		get => field && !string.IsNullOrEmpty(Body);
+		set => SetProperty(ref field, value);
+	} = false;
 
 	[ObservableProperty]
 	private bool canCopyBody = false;
