@@ -1414,5 +1414,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private void AudioAltMethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
 			Console.WriteLine(sender);
 		}
+
+		private void VelocityResetBtn_Click(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
 	}
 }

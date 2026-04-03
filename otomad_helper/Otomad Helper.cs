@@ -215,10 +215,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/**<summary>折叠分组</summary>*/ private bool CollapseTrackGroups { get { return configForm.CollapseTrackGroupCheck.Checked; } }
 		#endregion
 
-		#region
+		#region 多素材属性
 		/**<summary>素材盲盒</summary>*/ private bool CombConfigLuckyDip { get { return configForm.LuckyDipRadio.Checked; } }
-		/**<summary>素材盲盒</summary>*/ private bool CombConfigLuckyDipTrack { get { return configForm.LuckyDipTrackCheck.Checked; } }
-		/**<summary>素材盲盒</summary>*/ private bool CombConfigLuckyDipBarOrBeat { get { return configForm.LuckyDipBarOrBeatCheck.Checked; } }
+		/**<summary>音轨切换</summary>*/ private bool CombConfigLuckyDipTrack { get { return configForm.LuckyDipTrackCheck.Checked; } }
+		/**<summary>小节或拍</summary>*/ private bool CombConfigLuckyDipBarOrBeat { get { return configForm.LuckyDipBarOrBeatCheck.Checked; } }
+		/**<summary>周　　期</summary>*/ private BarOrBeat CombConfigLuckyDipBarOrBeatPeriod { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPeriodBox.Value, configForm.LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex); } }
+		/**<summary>预　　备</summary>*/ private BarOrBeat CombConfigLuckyDipBarOrBeatPreparation { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPreparationBox.Value, configForm.LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndex); } }
+
+		// 多素材属性 - 实例对象变量
+		private int? luckyDipSeed = null;
+		private Random luckyDipRandom;
 		#endregion
 
 		#region 五线谱属性
@@ -1043,10 +1049,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			return true;
 		}
 
-		private int? luckyDipSeed = null;
-		private Random luckyDipRandom;
-		private long luckyDipFirstMeasure = -1;
-
 		/// <summary>
 		/// 生成音系 Music Anime Dōga / YouTube Poop Music Video。
 		/// </summary>
@@ -1055,6 +1057,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#region 验证数据合法
 			bool noMidiChannel = MidiConfigTracks == null || MidiConfigTracks.Count == 0;
 			bool isSonarLegal = SonarConfig && !noMidiChannel && MidiConfigTracks[0].IsDrumKit;
+			bool hasTimeSignature = midi.TimeSignatureTrack != null;
 			if (!AConfig && !VConfig && !SonarConfig) return false;
 			if (!isSonarLegal) {
 				if (!IsFromBrowseFile) { bool ok = GetSelectedSource(); if (!ok) return false; }
@@ -1066,7 +1069,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (midi.TrackInfos == null) { ShowError(new Exceptions.NoTrackInfoException()); return false; }
 				if (!MidiUseMidiBpm && !MidiUseVariableMidiBpm)
 					midi.Bpm = MidiUseCustomBpm ? (double)configForm.MidiCustomBpmBox.Value : ProjectBpm;
-				if (midi.TimeSignatureTrack == null && SheetConfig) { ShowError(new Exceptions.GenerateStaffVisualizerWithoutTimeSignatureException()); return false; }
+				if (!hasTimeSignature && SheetConfig) { ShowError(new Exceptions.GenerateStaffVisualizerWithoutTimeSignatureException()); return false; }
+				if (!hasTimeSignature && CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat && (CombConfigLuckyDipBarOrBeatPeriod.Unit == BarOrBeat.Units.Bar || CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Bar && CombConfigLuckyDipBarOrBeatPreparation.Value != 0)) { ShowError(new Exceptions.GenerateStaffVisualizerWithoutTimeSignatureException()); return false; } // TODO: 改自定义错误！！！
 			}
 			Plugin.Init(vegas);
 			if (AConfig && AConfigMethod == AudioTuningMethod.PITCH_SHIFT) requestShowProgress = true;
@@ -1145,18 +1149,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 			#region 如果修改了素材的入点和出点的时间
 			double sourceStartTime = SourceConfigStartTime, sourceEndTime = SourceConfigEndTime;
-			if (CombConfigLuckyDip && MidiConfigTracks.CurrentChannel > 0) // WARN: 临时解决未来版本的后门代码。
-				sourceStartTime = luckyDipRandom.NextDouble() * Math.Max(audioLength, videoLength);
 			bool adjustTime = sourceStartTime != 0 || sourceEndTime != 0 || CombConfigLuckyDip;
 			if (adjustTime) {
 				while (sourceEndTime <= sourceStartTime) sourceEndTime += Math.Max(audioLength, videoLength);
 				audioLength = videoLength = sourceEndTime - sourceStartTime;
 			}
-			long luckyDipLastMeasure = 0;
-			Action NextRandomSource = () => {
+			long quartersPerMeasure = !hasTimeSignature ? 4 : midi.TimeSignatureNumerator * 4 / midi.TimeSignatureDenominator;
+			long luckyDipFirstQuarter = Math.Max(0, CombConfigLuckyDipBarOrBeatPreparation.Value * (CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Beat ? 1 : quartersPerMeasure)),
+				luckyDipLastQuarter = 0;
+			Action NextLuckyDipSource = () => {
 				sourceStartTime = luckyDipRandom.NextDouble() * Math.Max(audioLength, videoLength);
 				sourceEndTime = sourceStartTime + Math.Max(audioLength, videoLength);
 			};
+			if (CombConfigLuckyDip && CombConfigLuckyDipTrack && MidiConfigTracks.CurrentChannel != 0 && CombConfigLuckyDipBarOrBeatPreparation.Value == 0)
+				sourceStartTime = luckyDipRandom.NextDouble() * Math.Max(audioLength, videoLength);
 			double generateBeginTime = GenerateAt == GenerateAt.CUSTOM ? GenerateAtCustomTimecode.ToMilliseconds() :
 				GenerateAt == GenerateAt.CURSOR ? vegas.Transport.CursorPosition.ToMilliseconds() : 0;
 			double songLength = 0; // 指定乐曲总长。
@@ -1227,18 +1233,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				NoteEvent noteEvent = midiEvent as NoteEvent;
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
 
-				if (CombConfigLuckyDip) {
-					const long changeSourceDuration = 4;
+				if (CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat) {
 					long quarters = noteOnEvent.AbsoluteTime / midi.TicksPerQuarter;
-					long measures = (quarters * midi.TimeSignatureDenominator) / (midi.TimeSignatureNumerator * 4);
-					if (luckyDipFirstMeasure < 0)
-						luckyDipFirstMeasure = measures;
-					else {
-						long luckyDipCurrentMeasure = (measures - luckyDipFirstMeasure) / changeSourceDuration;
-						if (luckyDipCurrentMeasure > luckyDipLastMeasure) {
-							luckyDipLastMeasure = luckyDipCurrentMeasure;
-							NextRandomSource();
-						}
+					long period = CombConfigLuckyDipBarOrBeatPeriod.Value * (CombConfigLuckyDipBarOrBeatPeriod.Unit == BarOrBeat.Units.Beat ? 1 : quartersPerMeasure);
+					if (luckyDipLastQuarter <= luckyDipFirstQuarter)
+						luckyDipLastQuarter = luckyDipFirstQuarter + period;
+					if (quarters >= luckyDipLastQuarter) {
+						luckyDipFirstQuarter = luckyDipLastQuarter;
+						NextLuckyDipSource();
 					}
 				}
 
@@ -2838,10 +2840,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			return false;
 		}
 
+		public static int NewSeed() {
+			return unchecked((int)DateTime.Now.Ticks & int.MaxValue);
+		}
+
 		private void Generate() {
 			if (!YtpConfig)
 				MidiConfigTracks.CompleteConfig();
-			if (!CombConfigLuckyDipTrack) luckyDipSeed = unchecked((int)DateTime.Now.Ticks & int.MaxValue);
+			if (!CombConfigLuckyDipTrack) luckyDipSeed = NewSeed();
 			if (YtpConfig || !IsMultiMidiChannel) {
 				GenerateOtomad();
 				goto StartToRemoveSourceTrackEvents;
@@ -3962,6 +3968,24 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		TRACK,
 		/// <summary>按会话分组。</summary>
 		SESSION,
+	}
+
+	/// <summary>
+	/// 多素材梳子模式。
+	/// </summary>
+	public enum MultisourceCombMode {
+		/// <summary>不启用多素材梳子。</summary>
+		OFF,
+		/// <summary>素材盲盒。</summary>
+		LUCKY_DIP,
+		/// <summary>踩点。</summary>
+		MATCH_CUT,
+		/// <summary>线性映射输出。</summary>
+		LINEAR_MAP,
+		/// <summary>辅音时间。</summary>
+		CONSONANT,
+		/// <summary>原音系战法。</summary>
+		SHUPELUNKER,
 	}
 
 	/// <summary>
@@ -5731,6 +5755,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				};
 			}
 		}
+	}
+
+	public struct BarOrBeat {
+		public int Value { get; private set; }
+		public Units Unit { get; private set; }
+
+		public BarOrBeat(int value, Units unit) : this() {
+			Value = value;
+			Unit = unit;
+		}
+		/// <remarks>From WinForm.</remarks>
+		public BarOrBeat(decimal value, int unit) : this((int)value, Enum.IsDefined(typeof(Units), unit) ? (Units)unit : Units.Bar) { }
+
+		public enum Units { Bar, Beat }
 	}
 
 	/// <summary>
@@ -21931,6 +21969,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.AudioVelocityResetBtn = new System.Windows.Forms.Button();
+			this.VideoVelocityResetBtn = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -23198,6 +23238,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			// LuckyDipBarOrBeatPeriodUnitCombo
 			//
+			this.LuckyDipBarOrBeatPeriodUnitCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.LuckyDipBarOrBeatPeriodUnitCombo.FormattingEnabled = true;
 			this.LuckyDipBarOrBeatPeriodUnitCombo.Items.AddRange(new object[] {
 			"小节",
@@ -23250,6 +23291,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			// LuckyDipBarOrBeatPreparationUnitCombo
 			//
+			this.LuckyDipBarOrBeatPreparationUnitCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.LuckyDipBarOrBeatPreparationUnitCombo.FormattingEnabled = true;
 			this.LuckyDipBarOrBeatPreparationUnitCombo.Items.AddRange(new object[] {
 			"小节",
@@ -25180,12 +25222,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// tableLayoutPanel13
 			//
 			this.tableLayoutPanel13.AutoSize = true;
-			this.tableLayoutPanel13.ColumnCount = 5;
+			this.tableLayoutPanel13.ColumnCount = 6;
 			this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 144F));
 			this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 144F));
 			this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
 			this.tableLayoutPanel13.Controls.Add(this.AudioGainTildeLbl, 2, 2);
 			this.tableLayoutPanel13.Controls.Add(this.AudioVelocityTildeLbl, 2, 1);
 			this.tableLayoutPanel13.Controls.Add(this.AudioGainMoreBox, 3, 2);
@@ -25195,6 +25238,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel13.Controls.Add(this.AudioGainLbl, 0, 2);
 			this.tableLayoutPanel13.Controls.Add(this.AudioVelocityLbl, 0, 1);
 			this.tableLayoutPanel13.Controls.Add(this.flowLayoutPanel14, 0, 0);
+			this.tableLayoutPanel13.Controls.Add(this.AudioVelocityResetBtn, 5, 0);
 			this.tableLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel13.Location = new System.Drawing.Point(8, 32);
 			this.tableLayoutPanel13.Name = "tableLayoutPanel13";
@@ -25202,8 +25246,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel13.Size = new System.Drawing.Size(986, 156);
 			this.tableLayoutPanel13.TabIndex = 0;
 			//
@@ -25344,7 +25386,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel14.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel14.Name = "flowLayoutPanel14";
 			this.flowLayoutPanel14.Padding = new System.Windows.Forms.Padding(6);
-			this.flowLayoutPanel14.Size = new System.Drawing.Size(986, 48);
+			this.flowLayoutPanel14.Size = new System.Drawing.Size(836, 48);
 			this.flowLayoutPanel14.TabIndex = 9;
 			//
 			// AudioVelocityCheck
@@ -27018,12 +27060,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// tableLayoutPanel18
 			//
 			this.tableLayoutPanel18.AutoSize = true;
-			this.tableLayoutPanel18.ColumnCount = 5;
+			this.tableLayoutPanel18.ColumnCount = 6;
 			this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 144F));
 			this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 144F));
 			this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+			this.tableLayoutPanel18.Controls.Add(this.VideoVelocityResetBtn, 5, 0);
 			this.tableLayoutPanel18.Controls.Add(this.flowLayoutPanel17, 0, 0);
 			this.tableLayoutPanel18.Controls.Add(this.VideoGainTildeLbl, 2, 2);
 			this.tableLayoutPanel18.Controls.Add(this.VideoVelocityTildeLbl, 2, 1);
@@ -27040,7 +27084,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel18.Size = new System.Drawing.Size(986, 156);
 			this.tableLayoutPanel18.TabIndex = 0;
 			//
@@ -27055,7 +27098,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel17.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel17.Name = "flowLayoutPanel17";
 			this.flowLayoutPanel17.Padding = new System.Windows.Forms.Padding(6);
-			this.flowLayoutPanel17.Size = new System.Drawing.Size(986, 48);
+			this.flowLayoutPanel17.Size = new System.Drawing.Size(836, 48);
 			this.flowLayoutPanel17.TabIndex = 10;
 			//
 			// VideoVelocityCheck
@@ -30144,6 +30187,32 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			//
+			// AudioVelocityResetBtn
+			//
+			this.AudioVelocityResetBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioVelocityResetBtn.ForeColor = System.Drawing.Color.Red;
+			this.AudioVelocityResetBtn.Location = new System.Drawing.Point(836, 2);
+			this.AudioVelocityResetBtn.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
+			this.AudioVelocityResetBtn.Name = "AudioVelocityResetBtn";
+			this.AudioVelocityResetBtn.Size = new System.Drawing.Size(150, 44);
+			this.AudioVelocityResetBtn.TabIndex = 10;
+			this.AudioVelocityResetBtn.Text = "重设";
+			this.AudioVelocityResetBtn.UseVisualStyleBackColor = true;
+			this.AudioVelocityResetBtn.Click += new System.EventHandler(this.VelocityResetBtn_Click);
+			//
+			// VideoVelocityResetBtn
+			//
+			this.VideoVelocityResetBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoVelocityResetBtn.ForeColor = System.Drawing.Color.Red;
+			this.VideoVelocityResetBtn.Location = new System.Drawing.Point(836, 2);
+			this.VideoVelocityResetBtn.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
+			this.VideoVelocityResetBtn.Name = "VideoVelocityResetBtn";
+			this.VideoVelocityResetBtn.Size = new System.Drawing.Size(150, 44);
+			this.VideoVelocityResetBtn.TabIndex = 11;
+			this.VideoVelocityResetBtn.Text = "重设";
+			this.VideoVelocityResetBtn.UseVisualStyleBackColor = true;
+			this.VideoVelocityResetBtn.Click += new System.EventHandler(this.VelocityResetBtn_Click);
+			//
 			// ConfigForm
 			//
 			this.AcceptButton = this.OkBtn;
@@ -30961,6 +31030,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.CheckBox VideoVelocityCheck;
 		public System.Windows.Forms.CheckBox VideoVelocityMultiplyGainCheck;
 		public RememberedCheckBox AudioVocalFryCheck;
+		public System.Windows.Forms.Button AudioVelocityResetBtn;
+		public System.Windows.Forms.Button VideoVelocityResetBtn;
 	}
 	#endregion
 
@@ -31378,6 +31449,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.EndSection();
 			#endregion
 
+			#region 多素材配置
+			configIni.StartSection("Multisource");
+			MultisourceComb = configIni.Read("Mode", MultisourceCombMode.OFF);
+			LuckyDipLimitToSelectedCheck.Checked = configIni.Read("LuckyDipLimitToSelected", false);
+			LuckyDipTrackCheck.Checked = configIni.Read("LuckyDipTrack", true);
+			LuckyDipMarkerCheck.Checked = configIni.Read("LuckyDipMarker", true);
+			LuckyDipBarOrBeatCheck.Checked = configIni.Read("LuckyDipBarOrBeat", true);
+			LuckyDipBarOrBeatPeriodBox.SetValue(configIni.Read("LuckyDipBarOrBeatPeriodValue", 4));
+			LuckyDipBarOrBeatPeriodUnitCombo.SetIndex(configIni.Read("LuckyDipBarOrBeatPeriodUnit", 0));
+			LuckyDipBarOrBeatPreparationBox.SetValue(configIni.Read("LuckyDipBarOrBeatPreparationValue", 0));
+			LuckyDipBarOrBeatPreparationUnitCombo.SetIndex(configIni.Read("LuckyDipBarOrBeatPreparationUnit", 0));
+			configIni.EndSection();
+			#endregion
+
 			#region 五线谱配置
 			configIni.StartSection("Staff");
 			StaffVisualizerConfigCheck.Checked = configIni.Read("Enable", false);
@@ -31592,6 +31677,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("MidiAutoChangeProjectBeat", MidiAutoChangeProjectBeatCheck.Checked);
 			configIni.Write("GroupTrackBy", GroupTrackBy);
 			configIni.Write("CollapseTrackGroup", CollapseTrackGroupCheck.Checked);
+			configIni.EndSection();
+			#endregion
+
+			#region 多素材配置
+			configIni.StartSection("Multisource");
+			configIni.Write("Mode", MultisourceComb);
+			configIni.Write("LuckyDipLimitToSelected", LuckyDipLimitToSelectedCheck.Checked);
+			configIni.Write("LuckyDipTrack", LuckyDipTrackCheck.Checked);
+			configIni.Write("LuckyDipMarker", LuckyDipMarkerCheck.Checked);
+			configIni.Write("LuckyDipBarOrBeat", LuckyDipBarOrBeatCheck.Checked);
+			configIni.Write("LuckyDipBarOrBeatPeriodValue", LuckyDipBarOrBeatPeriodBox.Value);
+			configIni.Write("LuckyDipBarOrBeatPeriodUnit", LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex);
+			configIni.Write("LuckyDipBarOrBeatPreparationValue", LuckyDipBarOrBeatPreparationBox.Value);
+			configIni.Write("LuckyDipBarOrBeatPreparationUnit", LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndex);
 			configIni.EndSection();
 			#endregion
 
@@ -32444,8 +32543,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			TrackShadowColorBtn.Enabled = TrackShadowCheck.Checked && TrackShadowCheck.Enabled;
 			SonarDeleteBtn.Enabled = SonarMoveUpBtn.Enabled = SonarMoveDownBtn.Enabled = SonarParamsGroup.Enabled = enableSonar && SonarList.SelectedItems.Count != 0;
 
-			SetEnabled(AudioVelocityCheck.Parent.Parent, AudioVelocityCheck.Checked, new Control[] { AudioVelocityCheck, AudioVelocityCheck.Parent });
-			SetEnabled(VideoVelocityCheck.Parent.Parent, VideoVelocityCheck.Checked, new Control[] { VideoVelocityCheck, VideoVelocityCheck.Parent });
+			AudioVelocityMultiplyGainCheck.Enabled = AudioVelocityLbl.Enabled = AudioVelocityLessBox.Enabled = AudioVelocityTildeLbl.Enabled = AudioVelocityMoreBox.Enabled =
+				AudioGainLbl.Enabled = AudioGainLessBox.Enabled = AudioGainTildeLbl.Enabled = AudioGainMoreBox.Enabled = AudioVelocityResetBtn.Enabled = AudioVelocityCheck.Checked;
+			VideoVelocityMultiplyGainCheck.Enabled = VideoVelocityLbl.Enabled = VideoVelocityLessBox.Enabled = VideoVelocityTildeLbl.Enabled = VideoVelocityMoreBox.Enabled =
+				VideoGainLbl.Enabled = VideoGainLessBox.Enabled = VideoGainTildeLbl.Enabled = VideoGainMoreBox.Enabled = VideoVelocityResetBtn.Enabled = VideoVelocityCheck.Checked;
 			AudioVelocityMultiplyGainCheck.Enabled = AudioVelocityCheck.Checked;
 			VideoVelocityMultiplyGainCheck.Enabled = VideoVelocityCheck.Checked;
 			AudioAutoPanCurveCombo.Enabled = AudioAutoPanCheck.CheckedAndEnabled();
@@ -34166,6 +34267,32 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (AudioMainKeyCombo.SelectedItem == null || AudioMainOctaveCombo.SelectedItem == null) return;
 			int interval = BasePitch - EntryPoint.PitchMap("C", "5");
 			AudioBasePitchIntervalLbl.Text = (interval > 0 ? "+" : interval < 0 ? "−" : "±") + Math.Abs(interval);
+		}
+
+		public MultisourceCombMode MultisourceComb {
+			get { return LuckyDipRadio.Checked ? MultisourceCombMode.LUCKY_DIP : MatchCutRadio.Checked ? MultisourceCombMode.MATCH_CUT : LinearMapRadio.Checked ? MultisourceCombMode.LINEAR_MAP : MultisourceCombMode.OFF; }
+			set {
+				switch (value) {
+					case MultisourceCombMode.LUCKY_DIP: LuckyDipRadio.Checked = true; break;
+					case MultisourceCombMode.MATCH_CUT: MatchCutRadio.Checked = true; break;
+					case MultisourceCombMode.LINEAR_MAP: LinearMapRadio.Checked = true; break;
+					case MultisourceCombMode.OFF: default: MultiSourceOffRadio.Checked = true; break;
+				}
+			}
+		}
+
+		private void VelocityResetBtn_Click(object sender, EventArgs e) {
+			if (sender != AudioVelocityResetBtn && sender != VideoVelocityResetBtn) return;
+			NumericUpDownWithUnit velocityLess, velocityMore, gainLess, gainMore;
+			if (sender == AudioVelocityResetBtn) {
+				velocityLess = AudioVelocityLessBox; velocityMore = AudioVelocityMoreBox; gainLess = AudioGainLessBox; gainMore = AudioGainMoreBox;
+			} else {
+				velocityLess = VideoVelocityLessBox; velocityMore = VideoVelocityMoreBox; gainLess = VideoGainLessBox; gainMore = VideoGainMoreBox;
+			}
+			velocityLess.Value = 0;
+			velocityMore.Value = 127;
+			gainLess.Value = 0;
+			gainMore.Value = 100;
 		}
 	}
 
