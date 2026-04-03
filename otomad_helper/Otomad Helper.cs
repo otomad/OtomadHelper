@@ -195,7 +195,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		#endregion
 
 		#region 媒体属性
-		/**<summary>素材盲盒</summary>*/ private const bool IsBlindBox = false;
 		/**<summary>起始时间</summary>*/ private double SourceConfigStartTime { get { return configForm.SourceStartTimeText.DoubleValue; } }
 		/**<summary>终止时间</summary>*/ private double SourceConfigEndTime { get { return configForm.SourceStartTimeText.DoubleValue; } }
 		/**<summary>素材来源</summary>*/ private MediaSourceFrom SourceConfigFrom { get { return (MediaSourceFrom)configForm.ChooseSourceCombo.SelectedIndex; } }
@@ -214,6 +213,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 		/**<summary>轨道分组</summary>*/ internal GroupTrackBy GroupTrackBy { get { return configForm.GroupTrackBy; } }
 		/**<summary>折叠分组</summary>*/ private bool CollapseTrackGroups { get { return configForm.CollapseTrackGroupCheck.Checked; } }
+		#endregion
+
+		#region
+		/**<summary>素材盲盒</summary>*/ private bool CombConfigLuckyDip { get { return configForm.LuckyDipRadio.Checked; } }
+		/**<summary>素材盲盒</summary>*/ private bool CombConfigLuckyDipTrack { get { return configForm.LuckyDipTrackCheck.Checked; } }
+		/**<summary>素材盲盒</summary>*/ private bool CombConfigLuckyDipBarOrBeat { get { return configForm.LuckyDipBarOrBeatCheck.Checked; } }
 		#endregion
 
 		#region 五线谱属性
@@ -1038,8 +1043,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			return true;
 		}
 
-		private static readonly Random blindBoxRandom = new Random();
-		private long blindBoxFirstMeasure = -1;
+		private int? luckyDipSeed = null;
+		private Random luckyDipRandom;
+		private long luckyDipFirstMeasure = -1;
 
 		/// <summary>
 		/// 生成音系 Music Anime Dōga / YouTube Poop Music Video。
@@ -1134,21 +1140,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				return false;
 			}
 			#endif
-
+			luckyDipRandom = luckyDipSeed == null ? new Random() : new Random(luckyDipSeed.Value);
 			#endregion
 
 			#region 如果修改了素材的入点和出点的时间
 			double sourceStartTime = SourceConfigStartTime, sourceEndTime = SourceConfigEndTime;
-			if (IsBlindBox && MidiConfigTracks.CurrentChannel > 0) // WARN: 临时解决未来版本的后门代码。
-				sourceStartTime = blindBoxRandom.NextDouble() * Math.Max(audioLength, videoLength);
-			bool adjustTime = sourceStartTime != 0 || sourceEndTime != 0 || IsBlindBox;
+			if (CombConfigLuckyDip && MidiConfigTracks.CurrentChannel > 0) // WARN: 临时解决未来版本的后门代码。
+				sourceStartTime = luckyDipRandom.NextDouble() * Math.Max(audioLength, videoLength);
+			bool adjustTime = sourceStartTime != 0 || sourceEndTime != 0 || CombConfigLuckyDip;
 			if (adjustTime) {
 				while (sourceEndTime <= sourceStartTime) sourceEndTime += Math.Max(audioLength, videoLength);
 				audioLength = videoLength = sourceEndTime - sourceStartTime;
 			}
-			long blindBoxLastMeasure = 0;
+			long luckyDipLastMeasure = 0;
 			Action NextRandomSource = () => {
-				sourceStartTime = blindBoxRandom.NextDouble() * Math.Max(audioLength, videoLength);
+				sourceStartTime = luckyDipRandom.NextDouble() * Math.Max(audioLength, videoLength);
 				sourceEndTime = sourceStartTime + Math.Max(audioLength, videoLength);
 			};
 			double generateBeginTime = GenerateAt == GenerateAt.CUSTOM ? GenerateAtCustomTimecode.ToMilliseconds() :
@@ -1221,16 +1227,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				NoteEvent noteEvent = midiEvent as NoteEvent;
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
 
-				if (IsBlindBox) { // WARN: 临时解决未来版本的后门代码。
+				if (CombConfigLuckyDip) {
 					const long changeSourceDuration = 4;
 					long quarters = noteOnEvent.AbsoluteTime / midi.TicksPerQuarter;
-					long measures = quarters / midi.TimeSignatureNumerator;
-					if (blindBoxFirstMeasure < 0)
-						blindBoxFirstMeasure = measures;
+					long measures = (quarters * midi.TimeSignatureDenominator) / (midi.TimeSignatureNumerator * 4);
+					if (luckyDipFirstMeasure < 0)
+						luckyDipFirstMeasure = measures;
 					else {
-						long blindBoxCurrentMeasure = (measures - blindBoxFirstMeasure) / changeSourceDuration;
-						if (blindBoxCurrentMeasure > blindBoxLastMeasure) {
-							blindBoxLastMeasure = blindBoxCurrentMeasure;
+						long luckyDipCurrentMeasure = (measures - luckyDipFirstMeasure) / changeSourceDuration;
+						if (luckyDipCurrentMeasure > luckyDipLastMeasure) {
+							luckyDipLastMeasure = luckyDipCurrentMeasure;
 							NextRandomSource();
 						}
 					}
@@ -2835,6 +2841,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private void Generate() {
 			if (!YtpConfig)
 				MidiConfigTracks.CompleteConfig();
+			if (!CombConfigLuckyDipTrack) luckyDipSeed = unchecked((int)DateTime.Now.Ticks & int.MaxValue);
 			if (YtpConfig || !IsMultiMidiChannel) {
 				GenerateOtomad();
 				goto StartToRemoveSourceTrackEvents;
