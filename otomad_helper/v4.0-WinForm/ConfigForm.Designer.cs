@@ -276,6 +276,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel14 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioVelocityCheck = new System.Windows.Forms.CheckBox();
 			this.AudioVelocityMultiplyGainCheck = new System.Windows.Forms.CheckBox();
+			this.AudioVelocityResetBtn = new System.Windows.Forms.Button();
 			this.AudioPreferredTrackPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.AudioPreferredTrackLbl = new System.Windows.Forms.Label();
 			this.AudioPreferredTrackCombo = new System.Windows.Forms.ComboBox();
@@ -362,6 +363,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VisualEffectAdvancedBtn = new System.Windows.Forms.Button();
 			this.VideoVelocityGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel18 = new System.Windows.Forms.TableLayoutPanel();
+			this.VideoVelocityResetBtn = new System.Windows.Forms.Button();
 			this.flowLayoutPanel17 = new System.Windows.Forms.FlowLayoutPanel();
 			this.VideoVelocityCheck = new System.Windows.Forms.CheckBox();
 			this.VideoVelocityMultiplyGainCheck = new System.Windows.Forms.CheckBox();
@@ -569,8 +571,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.AudioVelocityResetBtn = new System.Windows.Forms.Button();
-			this.VideoVelocityResetBtn = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -3988,6 +3988,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel14.Padding = new System.Windows.Forms.Padding(6);
 			this.flowLayoutPanel14.Size = new System.Drawing.Size(836, 48);
 			this.flowLayoutPanel14.TabIndex = 9;
+			this.flowLayoutPanel14.WrapContents = false;
 			// 
 			// AudioVelocityCheck
 			// 
@@ -4012,6 +4013,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioVelocityMultiplyGainCheck.TabIndex = 1;
 			this.AudioVelocityMultiplyGainCheck.Text = "乘以当前增益";
 			this.AudioVelocityMultiplyGainCheck.UseVisualStyleBackColor = true;
+			// 
+			// AudioVelocityResetBtn
+			// 
+			this.AudioVelocityResetBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioVelocityResetBtn.ForeColor = System.Drawing.Color.Red;
+			this.AudioVelocityResetBtn.Location = new System.Drawing.Point(836, 2);
+			this.AudioVelocityResetBtn.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
+			this.AudioVelocityResetBtn.Name = "AudioVelocityResetBtn";
+			this.AudioVelocityResetBtn.Size = new System.Drawing.Size(150, 44);
+			this.AudioVelocityResetBtn.TabIndex = 10;
+			this.AudioVelocityResetBtn.Text = "重设";
+			this.AudioVelocityResetBtn.UseVisualStyleBackColor = true;
+			this.AudioVelocityResetBtn.Click += new System.EventHandler(this.VelocityResetBtn_Click);
 			// 
 			// AudioPreferredTrackPanel
 			// 
@@ -5687,6 +5701,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel18.Size = new System.Drawing.Size(986, 156);
 			this.tableLayoutPanel18.TabIndex = 0;
 			// 
+			// VideoVelocityResetBtn
+			// 
+			this.VideoVelocityResetBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoVelocityResetBtn.ForeColor = System.Drawing.Color.Red;
+			this.VideoVelocityResetBtn.Location = new System.Drawing.Point(836, 2);
+			this.VideoVelocityResetBtn.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
+			this.VideoVelocityResetBtn.Name = "VideoVelocityResetBtn";
+			this.VideoVelocityResetBtn.Size = new System.Drawing.Size(150, 44);
+			this.VideoVelocityResetBtn.TabIndex = 11;
+			this.VideoVelocityResetBtn.Text = "重设";
+			this.VideoVelocityResetBtn.UseVisualStyleBackColor = true;
+			this.VideoVelocityResetBtn.Click += new System.EventHandler(this.VelocityResetBtn_Click);
+			// 
 			// flowLayoutPanel17
 			// 
 			this.flowLayoutPanel17.AutoSize = true;
@@ -5700,6 +5727,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel17.Padding = new System.Windows.Forms.Padding(6);
 			this.flowLayoutPanel17.Size = new System.Drawing.Size(836, 48);
 			this.flowLayoutPanel17.TabIndex = 10;
+			this.flowLayoutPanel17.WrapContents = false;
 			// 
 			// VideoVelocityCheck
 			// 
@@ -8786,32 +8814,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.AutoPopDelay = 60000;
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
-			// 
-			// AudioVelocityResetBtn
-			// 
-			this.AudioVelocityResetBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioVelocityResetBtn.ForeColor = System.Drawing.Color.Red;
-			this.AudioVelocityResetBtn.Location = new System.Drawing.Point(836, 2);
-			this.AudioVelocityResetBtn.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
-			this.AudioVelocityResetBtn.Name = "AudioVelocityResetBtn";
-			this.AudioVelocityResetBtn.Size = new System.Drawing.Size(150, 44);
-			this.AudioVelocityResetBtn.TabIndex = 10;
-			this.AudioVelocityResetBtn.Text = "重设";
-			this.AudioVelocityResetBtn.UseVisualStyleBackColor = true;
-			this.AudioVelocityResetBtn.Click += new System.EventHandler(this.VelocityResetBtn_Click);
-			// 
-			// VideoVelocityResetBtn
-			// 
-			this.VideoVelocityResetBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoVelocityResetBtn.ForeColor = System.Drawing.Color.Red;
-			this.VideoVelocityResetBtn.Location = new System.Drawing.Point(836, 2);
-			this.VideoVelocityResetBtn.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
-			this.VideoVelocityResetBtn.Name = "VideoVelocityResetBtn";
-			this.VideoVelocityResetBtn.Size = new System.Drawing.Size(150, 44);
-			this.VideoVelocityResetBtn.TabIndex = 11;
-			this.VideoVelocityResetBtn.Text = "重设";
-			this.VideoVelocityResetBtn.UseVisualStyleBackColor = true;
-			this.VideoVelocityResetBtn.Click += new System.EventHandler(this.VelocityResetBtn_Click);
 			// 
 			// ConfigForm
 			// 
