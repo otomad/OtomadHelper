@@ -173,7 +173,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		#endif
 		/**<summary>伸缩变调</summary>*/ private bool AConfigLockStretchPitch { get { return configForm.AudioLockStretchPitchCheck.Checked; } }
 		/**<summary>保留共振</summary>*/ private bool AConfigReserveFormant { get { return configForm.AudioReserveFormantCheck.Checked; } }
-		/**<summary>保留共振</summary>*/ private bool AConfigVocalFry { get { return configForm.AudioVocalFryCheck.Checked; } }
+		/**<summary>气泡低音</summary>*/ private bool AConfigVocalFry { get { return configForm.AudioVocalFryCheck.Checked; } }
 		/**<summary>创建分组</summary>*/ private bool ConfigCreateEventGroup { get { return configForm.CreateEventGroupInAudioCheck.Checked; } }
 		/**<summary>复音多轨</summary>*/ private bool AConfigMultitrack { get { return configForm.AudioMultitrackForChordsCheck.Checked; } }
 		/**<summary>首选轨道</summary>*/ private PreferredTrackWrapper<AudioTrack> AConfigPreferredTrack { get { return configForm.AudioPreferredTrackCombo.SelectedItem as PreferredTrackWrapper<AudioTrack>; } }
@@ -224,7 +224,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		// 多素材属性 - 实例对象变量
 		private int? luckyDipSeed = null;
-		private Random luckyDipRandom;
+		private DeterministicRandom luckyDipRandom;
 		#endregion
 
 		#region 五线谱属性
@@ -276,6 +276,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private readonly HashSet<Track> generatedTracks = new HashSet<Track>();
 		private int? nextTrackIndex = null;
 		internal static readonly Timecode oneTick = Timecode.FromMilliseconds(1);
+		VariableBpmIntegrator bpmIntegrator = null;
+		VariableTimeSignatureIntegrator beatIntegrator = null;
 
 		// 媒体 / MIDI 参数变量
 		internal MIDI midi = null;
@@ -1144,7 +1146,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				return false;
 			}
 			#endif
-			luckyDipRandom = luckyDipSeed == null ? new Random() : new Random(luckyDipSeed.Value);
+			#endregion
+
+			#region 可变速度、拍号处理
+			bpmIntegrator = bpmIntegrator ?? (MidiUseVariableMidiBpm ? new VariableBpmIntegrator(midi, MidiUseVariableMidiBpmForm == 1) : null);
+			beatIntegrator = beatIntegrator ?? (CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat || SheetConfig ? new VariableTimeSignatureIntegrator(midi) : null);
+			luckyDipRandom = new DeterministicRandom(luckyDipSeed);
 			#endregion
 
 			#region 如果修改了素材的入点和出点的时间
@@ -1154,19 +1161,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				while (sourceEndTime <= sourceStartTime) sourceEndTime += Math.Max(audioLength, videoLength);
 				audioLength = videoLength = sourceEndTime - sourceStartTime;
 			}
-			long quartersPerMeasure = !hasTimeSignature ? 4 : midi.TimeSignatureNumerator * 4 / midi.TimeSignatureDenominator;
-			long luckyDipFirstQuarter = Math.Max(0, CombConfigLuckyDipBarOrBeatPreparation.Value * (CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Beat ? 1 : quartersPerMeasure)),
-				luckyDipLastQuarter = 0;
-			Action NextLuckyDipSource = () => {
-				sourceStartTime = luckyDipRandom.NextDouble() * Math.Max(audioLength, videoLength);
-				sourceEndTime = sourceStartTime + Math.Max(audioLength, videoLength);
-			};
-			if (CombConfigLuckyDip && CombConfigLuckyDipTrack && MidiConfigTracks.CurrentChannel != 0 && CombConfigLuckyDipBarOrBeatPreparation.Value == 0)
-				sourceStartTime = luckyDipRandom.NextDouble() * Math.Max(audioLength, videoLength);
 			double generateBeginTime = GenerateAt == GenerateAt.CUSTOM ? GenerateAtCustomTimecode.ToMilliseconds() :
 				GenerateAt == GenerateAt.CURSOR ? vegas.Transport.CursorPosition.ToMilliseconds() : 0;
 			double songLength = 0; // 指定乐曲总长。
 			double songStart = generateBeginTime + MidiConfigStartTime;
+
+			// 素材盲盒
+			#region 素材盲盒
+			long prevMeasures = 0, prevQuarters = 0;
+			Action<long> NextLuckyDipSource = step => {
+				sourceStartTime = (step < 0 ? luckyDipRandom.NextDouble() : luckyDipRandom.GetDoubleAtStep(step)) * Math.Max(audioLength, videoLength);
+				sourceEndTime = sourceStartTime + Math.Max(audioLength, videoLength);
+			};
+			if (CombConfigLuckyDip && CombConfigLuckyDipTrack && MidiConfigTracks.CurrentChannel != 0)
+				NextLuckyDipSource(-1);
+			#endregion
 			#endregion
 
 			#region 五线谱操作
@@ -1201,11 +1210,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				}
 			}
 			#endregion
-
-			#region 可变 BPM 处理
-			DynamicBpmIntegrator integrator = null;
-			if (MidiUseVariableMidiBpm) integrator = new DynamicBpmIntegrator(midi, MidiUseVariableMidiBpmForm == 1);
-			#endregion
 			for (int i = 0; i < currentChannel.Events.Count; i++) {
 				MidiEvent midiEvent = currentChannel.Events[i];
 				if (!(midiEvent is NoteOnEvent)) continue;
@@ -1222,34 +1226,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				}
 				if (progressForm.RequestAbort) break;
 				if (SheetConfig)
-					foreach (MidiEvent _midiEvent in midi.TimeSignatureTrack)
-						if (_midiEvent is TimeSignatureEvent) {
-							TimeSignatureEvent timeSignatureEvent = _midiEvent as TimeSignatureEvent;
-							if (midiEvent.AbsoluteTime >= timeSignatureEvent.AbsoluteTime)
-								barLength = !MidiUseVariableMidiBpm
-									? midi.MsPerQuarter * timeSignatureEvent.Numerator
-									: integrator.GetActualTime(timeSignatureEvent.Numerator);
+					foreach (VariableTimeSignatureIntegrator.TimeSignatureKeysData timeSignature in beatIntegrator.keysDatas.Reverse())
+						if (midiEvent.AbsoluteTime >= timeSignature.startTicks) {
+							barLength = /*!MidiUseVariableMidiBpm ?*/
+								midi.MsPerQuarter * timeSignature.QuartersPerMeasure/* :
+								bpmIntegrator.GetActualTime(timeSignature.startTicks)*/; // TODO: 何意味？
+							break;
 						}
 				NoteEvent noteEvent = midiEvent as NoteEvent;
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
 
+				#region 素材盲盒
 				if (CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat) {
-					long quarters = noteOnEvent.AbsoluteTime / midi.TicksPerQuarter;
-					long period = CombConfigLuckyDipBarOrBeatPeriod.Value * (CombConfigLuckyDipBarOrBeatPeriod.Unit == BarOrBeat.Units.Beat ? 1 : quartersPerMeasure);
-					if (luckyDipLastQuarter <= luckyDipFirstQuarter)
-						luckyDipLastQuarter = luckyDipFirstQuarter + period;
-					if (quarters >= luckyDipLastQuarter) {
-						luckyDipFirstQuarter = luckyDipLastQuarter;
-						NextLuckyDipSource();
+					long measures = beatIntegrator.GetMeasureIndex(noteEvent), quarters = beatIntegrator.GetQuarterIndex(noteEvent);
+					if (CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Beat && quarters >= CombConfigLuckyDipBarOrBeatPreparation.Value ||
+						CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Bar && measures >= CombConfigLuckyDipBarOrBeatPreparation.Value) {
+						long targetStep;
+						if (VariableTimeSignatureIntegrator.ShouldChangeSource(measures, prevMeasures, quarters, prevQuarters, out targetStep, CombConfigLuckyDipBarOrBeatPeriod, CombConfigLuckyDipBarOrBeatPreparation))
+							NextLuckyDipSource(targetStep);
 					}
+					prevMeasures = measures; prevQuarters = quarters;
 				}
+				#endregion
 
 				double startTime, duration, staffVisualizedDuration;
 				if (!MidiUseVariableMidiBpm) {
 					startTime = midiEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter;
 					duration = noteOnEvent.NoteLength * midi.MsPerQuarter / midi.TicksPerQuarter;
 				} else {
-					Tuple<double, double> _ = integrator.GetActualTime(midiEvent.AbsoluteTime, noteOnEvent.NoteLength);
+					Tuple<double, double> _ = bpmIntegrator.GetActualTime(midiEvent.AbsoluteTime, noteOnEvent.NoteLength);
 					startTime = _.Item1;
 					duration = _.Item2;
 				}
@@ -1579,7 +1584,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						if (controlChangeEvent.Controller == MidiController.Pan) {
 							startTime = !MidiUseVariableMidiBpm ?
 								midiEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter :
-								startTime = integrator.GetActualTime(midiEvent.AbsoluteTime);
+								startTime = bpmIntegrator.GetActualTime(midiEvent.AbsoluteTime);
 
 							if (startTime < MidiConfigStartTime) continue;
 							if (startTime > MidiConfigEndTime && sliceComposition) break;
@@ -1649,7 +1654,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (!MidiUseVariableMidiBpm)
 						startTime = pitchEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter;
 					else
-						startTime = integrator.GetActualTime(pitchEvent.AbsoluteTime);
+						startTime = bpmIntegrator.GetActualTime(pitchEvent.AbsoluteTime);
 
 					if (startTime < MidiConfigStartTime) continue;
 					if (startTime > MidiConfigEndTime && sliceComposition) break;
@@ -3032,6 +3037,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	[Obsolete]
 	public static class S {
 		#region 以下方法仅供测试使用
+		/// <summary>
+		/// 给老娘展示内容！
+		/// </summary>
+		/// <param name="value">内容</param>
 		public static object s { set { MessageBox.Show(value == null ? "null" : value.ToString()); } }
 		public static void test() { s = "Super Idol 的笑容都没你的甜！"; }
 		public static void update() { EntryPoint.instance.vegas.UpdateUI(); test(); }
@@ -3050,11 +3059,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// C# 的 this 参数方法，就是 JavaScript 的 prototype 的方法。
 	/// </summary>
 	public static class Extensions {
-		/// <summary>
-		/// 给老娘展示内容！
-		/// </summary>
-		/// <param name="value">内容</param>
-		public static string s(this object value) { string str = value == null ? "null" : value.ToString(); MessageBox.Show(str); return str; }
+
+		//public static string s(this object value) { string str = value == null ? "null" : value.ToString(); MessageBox.Show(str); return str; }
 
 		/// <summary>
 		/// 在视频事件平移/裁切中将其所有关键帧进行翻转操作。
@@ -3680,6 +3686,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (collection != null)
 					set.UnionWith(collection);
 			return set;
+		}
+
+		/// <summary>
+		/// 获取拍号事件的真正分母数值。
+		/// </summary>
+		/// <remarks>
+		/// <see cref="TimeSignatureEvent.Denominator" /> 给的分母是代号，不是真实值。
+		/// </remarks>
+		public static int GetDenominator(this TimeSignatureEvent timeSignatureEvent) {
+			return (int)Math.Pow(2, timeSignatureEvent.Denominator);
 		}
 	}
 
@@ -5772,23 +5788,59 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	}
 
 	/// <summary>
-	/// 继承的 MIDI 类。
+	/// 继承封装的 MIDI 类。
 	/// </summary>
 	public class MIDI : MidiFile {
-		public TrackInfo[] TrackInfos = null;
-		public int TicksPerQuarter = 0;
-		public double MsPerQuarter = 0;
+		/// <summary>
+		/// 音轨信息们。
+		/// </summary>
+		public TrackInfo[] TrackInfos { get; private set; }
+		/// <summary>
+		/// 每四分音符有多少刻（基本单位）。<br />0 表示未初始化。
+		/// </summary>
+		public int TicksPerQuarter { get; private set; }
+		/// <summary>
+		/// 每四分音符有多少毫秒。<br />0 表示未初始化。
+		/// </summary>
+		public double MsPerQuarter { get; private set; }
+		/// <summary>
+		/// 每分钟有多少拍（四分音符）。
+		/// </summary>
 		public double Bpm {
 			get { return 6e4 / MsPerQuarter; }
 			set { MsPerQuarter = 6e4 / value; }
 		}
-		public IList<MidiEvent> MsPerQuarterTrack;
-		public string TimeSignature = "";
-		public readonly int TimeSignatureNumerator = 0;
-		public readonly int TimeSignatureDenominator = 0;
-		public IList<MidiEvent> TimeSignatureTrack;
-		public string Path;
+		/// <summary>
+		/// 时值元数据信息事件所在的音轨。
+		/// </summary>
+		public IList<MidiEvent> MsPerQuarterTrack { get; private set; }
+		/// <summary>
+		/// 拍号的显示值。
+		/// </summary>
+		public string TimeSignature { get; private set; }
+		/// <summary>
+		/// 拍号的分子。
+		/// </summary>
+		public int TimeSignatureNumerator { get; private set; }
+		/// <summary>
+		/// 拍号的分母。
+		/// </summary>
+		public int TimeSignatureDenominator { get; private set; }
+		/// <summary>
+		/// 拍号元数据信息事件所在的音轨。
+		/// </summary>
+		public IList<MidiEvent> TimeSignatureTrack { get; private set; }
+		/// <summary>
+		/// MIDI 文件路径。
+		/// </summary>
+		public string Path { get; private set; }
+		/// <summary>
+		/// 初始声像值。
+		/// </summary>
 		public const int INITIAL_PAN = -1;
+		/// <summary>
+		/// 音轨信息。
+		/// </summary>
 		public class TrackInfo {
 			public int Index;
 			public string Name = "";
@@ -5845,6 +5897,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			List<TrackInfo> trackInfos = new List<TrackInfo>();
 			TicksPerQuarter = DeltaTicksPerQuarterNote;
 			MsPerQuarter = 0; // 毫秒每拍
+			TimeSignature = "";
 			for (int i = 0; i < Events.Tracks; i++) {
 				TrackInfo info = new TrackInfo { Index = i, Events = Events[i] };
 				foreach (MidiEvent midiEvent in info.Events) {
@@ -5874,7 +5927,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						TimeSignatureEvent timeSignatureEvent = midiEvent as TimeSignatureEvent;
 						TimeSignature = timeSignatureEvent.TimeSignature; // 初始节拍
 						TimeSignatureNumerator = timeSignatureEvent.Numerator;
-						TimeSignatureDenominator = (int)Math.Pow(2, timeSignatureEvent.Denominator);
+						TimeSignatureDenominator = timeSignatureEvent.GetDenominator();
 						TimeSignatureTrack = info.Events;
 					}
 					if (midiEvent is ControlChangeEvent && !info.IsDynamicPan) {
@@ -5944,36 +5997,31 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	}
 
 	/// <summary>
-	/// 动态 BPM 积分器。
+	/// 可变 BPM 积分器。
 	/// </summary>
-	public class DynamicBpmIntegrator {
+	public class VariableBpmIntegrator {
 		private readonly MIDI midi;
 		private readonly TempoEvent[] msPerQuarterTrack;
 		private readonly BpmKeysData[] bpmKeysDatas;
 		private readonly bool useLinearKeyframes = false;
 
 		/// <summary>
-		/// 动态 BPM 积分器。
+		/// 可变 BPM 积分器。
 		/// </summary>
 		/// <param name="midi">MIDI 对象。</param>
 		/// <param name="useLinearKeyframes">如果为 false，则关键帧间插值使用定格（矩形）；如果为 true，则关键帧间插值使用线性（梯形）。<br />
-		/// 一般来说 MIDI 的动态 BPM 属性的关键帧插值都是定格的。</param>
-		public DynamicBpmIntegrator(MIDI midi, bool useLinearKeyframes = false) {
+		/// 一般来说 MIDI 的可变 BPM 属性的关键帧插值都是定格的。</param>
+		public VariableBpmIntegrator(MIDI midi, bool useLinearKeyframes = false) {
 			this.midi = midi;
 			this.useLinearKeyframes = useLinearKeyframes;
 			double totalMs = 0;
 			BpmKeysData previousData = null;
-			IList<MidiEvent> _msPerQuarterTrack_IList = midi.MsPerQuarterTrack;
-			List<TempoEvent> _msPerQuarterTrack_List = new List<TempoEvent>();
-			List<BpmKeysData> _bpmKeysDatas_List = new List<BpmKeysData>();
-			foreach (MidiEvent midiEvent in _msPerQuarterTrack_IList)
-				if (midiEvent is TempoEvent)
-					_msPerQuarterTrack_List.Add(midiEvent as TempoEvent);
-			msPerQuarterTrack = _msPerQuarterTrack_List.ToArray();
+			msPerQuarterTrack = midi.MsPerQuarterTrack.OfType<TempoEvent>().ToArray();
+			List<BpmKeysData> _bpmKeysDatas_list = new List<BpmKeysData>(msPerQuarterTrack.Length);
 			for (int i = 0; i < msPerQuarterTrack.Length; i++) {
 				TempoEvent tempoEvent = msPerQuarterTrack[i];
 				double msPerQuarter = (double)tempoEvent.MicrosecondsPerQuarterNote / 1000;
-				double startTicks = tempoEvent.AbsoluteTime;
+				long startTicks = tempoEvent.AbsoluteTime;
 				if (i + 1 < msPerQuarterTrack.Length && msPerQuarterTrack[i + 1].AbsoluteTime == startTicks) continue;
 				// 经改正，MIDI 的动态 BPM 应该呈矩形而不是梯形。
 				double previousStartTicks = previousData == null ? 0 : previousData.startTicks;
@@ -5982,9 +6030,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					totalMs += (startTicks - previousStartTicks) / midi.TicksPerQuarter * previousMsPerQuarter;
 				else
 					totalMs += (startTicks - previousStartTicks) / midi.TicksPerQuarter * (previousMsPerQuarter + msPerQuarter) / 2.0;
-				_bpmKeysDatas_List.Add(previousData = new BpmKeysData(msPerQuarter, startTicks, totalMs));
+				_bpmKeysDatas_list.Add(previousData = new BpmKeysData(msPerQuarter, startTicks, totalMs));
 			}
-			bpmKeysDatas = _bpmKeysDatas_List.ToArray();
+			bpmKeysDatas = _bpmKeysDatas_list.ToArray();
 		}
 		/// <summary>
 		/// 存储 BPM 关键帧数据的类。<br />
@@ -5992,18 +6040,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		private class BpmKeysData {
 			public readonly double msPerQuarter;
-			public readonly double startTicks;
-			public readonly double previousMs;
+			public readonly long startTicks;
+			public readonly double passedMs;
 			/// <summary>
 			/// 存储 BPM 关键帧数据的类。
 			/// </summary>
 			/// <param name="msPerQuarter">此刻的毫秒每四分音符的值（即当前速度）。</param>
 			/// <param name="startTicks">相对开始位置。</param>
-			/// <param name="previousMs">之前所有数据实际毫秒值的总和。</param>
-			public BpmKeysData(double msPerQuarter, double startTicks, double previousMs) {
+			/// <param name="passedMs">之前所有数据实际毫秒值的总和。</param>
+			public BpmKeysData(double msPerQuarter, long startTicks, double passedMs) {
 				this.msPerQuarter = msPerQuarter;
 				this.startTicks = startTicks;
-				this.previousMs = previousMs;
+				this.passedMs = passedMs;
 			}
 		}
 		/// <summary>
@@ -6027,7 +6075,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					double curMsPerQuarter = curData.msPerQuarter * (1 - curProportion) + nextData.msPerQuarter * curProportion;
 					curMs = (absoluteTime - curData.startTicks) * (curData.msPerQuarter + curMsPerQuarter) / 2.0 / midi.TicksPerQuarter;
 				}
-				return curMs + curData.previousMs;
+				return curMs + curData.passedMs;
 			}
 			// 针对没有任何 BPM 关键帧却误打误撞进入这个函数环节的。
 			MessageBox.Show("No Bpm Keys!");
@@ -6043,6 +6091,138 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			double start = GetActualTime(absoluteStart);
 			double duration = GetActualTime(absoluteStart + absoluteDuration) - start;
 			return new Tuple<double, double>(start, duration);
+		}
+	}
+
+	/// <summary>
+	/// 可变拍号积分器。
+	/// </summary>
+	public class VariableTimeSignatureIntegrator {
+		private readonly MIDI midi;
+		internal readonly TimeSignatureEvent[] timeSignatureTrack;
+		internal readonly TimeSignatureKeysData[] keysDatas;
+
+		public VariableTimeSignatureIntegrator(MIDI midi) {
+			this.midi = midi;
+			timeSignatureTrack = midi.TimeSignatureTrack.OfType<TimeSignatureEvent>().ToArray();
+			List<TimeSignatureKeysData> _keysDatas_list = new List<TimeSignatureKeysData>(timeSignatureTrack.Length);
+			TimeSignatureKeysData prevData = new TimeSignatureKeysData(0, 0, 0, 0);
+			foreach (TimeSignatureEvent timeSignature in timeSignatureTrack) {
+				long startTicks = timeSignature.AbsoluteTime;
+				if (prevData.numerator == 0) prevData.numerator = timeSignature.Numerator;
+				if (prevData.denominator == 0) prevData.denominator = timeSignature.GetDenominator();
+				double quartersPerMeasure = prevData.QuartersPerMeasure;
+				double prevQuarters = (startTicks - prevData.startTicks) / (double)midi.TicksPerQuarter;
+				int prevMeasures = (int)Math.Ceiling(prevQuarters / quartersPerMeasure);
+				TimeSignatureKeysData data = new TimeSignatureKeysData(prevData.measureIndex + prevMeasures, startTicks, timeSignature.Numerator, timeSignature.GetDenominator());
+				_keysDatas_list.Add(data);
+				prevData = data;
+			}
+			keysDatas = _keysDatas_list.ToArray();
+		}
+
+		/// <summary>
+		/// 存储拍号关键帧数据的类。
+		/// </summary>
+		internal class TimeSignatureKeysData {
+			public long measureIndex;
+			public long startTicks;
+			public int numerator;
+			public int denominator;
+			/// <summary>
+			/// 存储拍号关键帧数据的类。
+			/// </summary>
+			/// <param name="measureIndex">当前小节索引值。</param>
+			/// <param name="startTicks">相对开始位置。</param>
+			/// <param name="numerator">拍号分子。</param>
+			/// <param name="denominator">拍号分母。</param>
+			public TimeSignatureKeysData(long measureIndex, long startTicks, int numerator, int denominator) {
+				this.measureIndex = measureIndex;
+				this.startTicks = startTicks;
+				this.numerator = numerator;
+				this.denominator = denominator;
+			}
+			public double QuartersPerMeasure { get { return numerator * 4 / (double)denominator; } }
+		}
+
+		public long GetMeasureIndex(MidiEvent midiEvent) {
+			long startTicks = midiEvent.AbsoluteTime;
+			foreach (TimeSignatureKeysData curData in keysDatas.Reverse())
+				if (startTicks >= curData.startTicks) {
+					long measureIndex = curData.measureIndex + (long)/* Math.Floor */((startTicks - curData.startTicks) / (midi.TicksPerQuarter * curData.QuartersPerMeasure));
+					return measureIndex;
+				}
+			return 0;
+		}
+
+		public long GetQuarterIndex(MidiEvent midiEvent) {
+			return midiEvent.AbsoluteTime / midi.TicksPerQuarter;
+		}
+
+		public static bool ShouldChangeSource(long measures, long prevMeasures, long quarters, long prevQuarters, out long targetStep, BarOrBeat period, BarOrBeat preparation = new BarOrBeat()) {
+			bool isBar = period.Unit == BarOrBeat.Units.Bar; // 忽略预备的单位，因为如果混合周期和预备的单位会变得非常麻烦。
+			int _period = period.Value, _preparation = preparation.Value;
+			long current = isBar ? measures : quarters, previous = isBar ? prevMeasures : prevQuarters;
+			targetStep = (current - _preparation) / _period;
+			return targetStep > (previous - _preparation) / _period;
+		}
+	}
+
+	/// <summary>
+	/// 可以支持获取第几次 <see cref="Random.NextDouble" /> 返回值的随机数类。
+	/// </summary>
+	public class DeterministicRandom {
+		private readonly int? seed;
+		private Random random;
+		private long currentStep;
+		private double lastValue;
+
+		public DeterministicRandom(int? seed) {
+			this.seed = seed;
+			Reset();
+		}
+
+		public DeterministicRandom() {
+			Reset();
+		}
+
+		public void Reset() {
+			random = seed == null ? new Random() : new Random(seed.Value);
+			// 初始化为 -1，表示目前还没有计算过任何步数
+			currentStep = -1;
+			lastValue = 0;
+		}
+
+		public double NextDouble() {
+			lastValue = random.NextDouble();
+			currentStep++;
+			return lastValue;
+		}
+
+		public double GetDoubleAtStep(long targetStep) {
+			if (targetStep < 0) throw new ArgumentOutOfRangeException("targetStep", "Step cannot be negative");
+
+			// 1. 原地跳：如果步数没变，直接返回缓存的值
+			if (targetStep == currentStep)
+				return lastValue;
+
+			// 特殊：如果种子未定义，那么就随机返回，不必这么麻烦了。
+			if (seed == null) {
+				NextDouble();
+				currentStep = targetStep;
+				return lastValue;
+			}
+
+			// 2. 倒退跳：如果目标比当前小，必须重置
+			if (targetStep < currentStep)
+				Reset();
+
+			// 3. 向前跳（或重置后的第一次跳跃）
+			// 循环直到 currentStep 达到 targetStep
+			while (currentStep < targetStep)
+				NextDouble();
+
+			return lastValue;
 		}
 	}
 
@@ -23254,6 +23434,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPeriodUnitCombo.Name = "LuckyDipBarOrBeatPeriodUnitCombo";
 			this.LuckyDipBarOrBeatPeriodUnitCombo.Size = new System.Drawing.Size(120, 40);
 			this.LuckyDipBarOrBeatPeriodUnitCombo.TabIndex = 16;
+			this.LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndexChanged += new System.EventHandler(this.LuckyDipBarOrBeatPeriodUnitCombo_SelectedIndexChanged);
 			//
 			// LuckyDipBarOrBeatPreparationPanel
 			//
@@ -23299,6 +23480,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// LuckyDipBarOrBeatPreparationUnitCombo
 			//
 			this.LuckyDipBarOrBeatPreparationUnitCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.LuckyDipBarOrBeatPreparationUnitCombo.Enabled = false;
 			this.LuckyDipBarOrBeatPreparationUnitCombo.FormattingEnabled = true;
 			this.LuckyDipBarOrBeatPreparationUnitCombo.Items.AddRange(new object[] {
 			"小节",
@@ -34324,6 +34506,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			velocityMore.Value = 127;
 			gainLess.Value = 0;
 			gainMore.Value = 100;
+		}
+
+		private void LuckyDipBarOrBeatPeriodUnitCombo_SelectedIndexChanged(object sender, EventArgs e) {
+			LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndex = LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex;
 		}
 	}
 

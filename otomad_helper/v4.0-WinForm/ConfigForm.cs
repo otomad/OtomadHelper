@@ -1418,5 +1418,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private void VelocityResetBtn_Click(object sender, EventArgs e) {
 			Console.WriteLine(sender);
 		}
+
+		private void LuckyDipBarOrBeatPeriodUnitCombo_SelectedIndexChanged(object sender, EventArgs e) {
+			LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndex = LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex;
+		}
 	}
 }

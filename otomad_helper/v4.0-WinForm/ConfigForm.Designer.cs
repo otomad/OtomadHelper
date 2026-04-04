@@ -1847,6 +1847,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPeriodUnitCombo.Name = "LuckyDipBarOrBeatPeriodUnitCombo";
 			this.LuckyDipBarOrBeatPeriodUnitCombo.Size = new System.Drawing.Size(120, 40);
 			this.LuckyDipBarOrBeatPeriodUnitCombo.TabIndex = 16;
+			this.LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndexChanged += new System.EventHandler(this.LuckyDipBarOrBeatPeriodUnitCombo_SelectedIndexChanged);
 			// 
 			// LuckyDipBarOrBeatPreparationPanel
 			// 
@@ -1892,6 +1893,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// LuckyDipBarOrBeatPreparationUnitCombo
 			// 
 			this.LuckyDipBarOrBeatPreparationUnitCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.LuckyDipBarOrBeatPreparationUnitCombo.Enabled = false;
 			this.LuckyDipBarOrBeatPreparationUnitCombo.FormattingEnabled = true;
 			this.LuckyDipBarOrBeatPreparationUnitCombo.Items.AddRange(new object[] {
             "小节",
