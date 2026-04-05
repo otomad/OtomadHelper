@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using ScriptPortal.Vegas;
 #endif
 
-namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 	[ToolboxBitmap(typeof(NumericUpDown))]
 	public class TimecodeBox : NumericUpDown {

@@ -1,4 +1,4 @@
-namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	partial class QuickConfigPropertiesForm {
 		/// <summary>
 		/// Required designer variable.
@@ -33,23 +33,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioLockCheck = new System.Windows.Forms.CheckBox();
 			this.AudioLoopCheck = new System.Windows.Forms.CheckBox();
 			this.AudioInvertPhaseCheck = new System.Windows.Forms.CheckBox();
-			this.horizontalDivider4 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.horizontalDivider4 = new Otomad.VegasScripts.OtomadHelper.V4.HorizontalDivider();
 			this.AudioNormalizeCheck = new System.Windows.Forms.CheckBox();
 			this.AudioRecalcNormGainPanel = new System.Windows.Forms.FlowLayoutPanel();
-			this.AudioNoRecalcNormGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.AudioRecalcNewNormGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.AudioRecalcAllNormGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.horizontalDivider5 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.AudioNoRecalcNormGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioRecalcNewNormGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioRecalcAllNormGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.horizontalDivider5 = new Otomad.VegasScripts.OtomadHelper.V4.HorizontalDivider();
 			this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-			this.AudioUnsetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.AudioSetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.AudioMultiplyRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioUnsetRateRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioSetRateRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioMultiplyRateRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.AudioRateBox = new System.Windows.Forms.NumericUpDown();
-			this.horizontalDivider7 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.horizontalDivider7 = new Otomad.VegasScripts.OtomadHelper.V4.HorizontalDivider();
 			this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
-			this.AudioUnsetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.AudioSetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.AudioMultiplyGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioUnsetGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioSetGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioMultiplyGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.AudioGainBox = new System.Windows.Forms.NumericUpDown();
 			this.VideoGroup = new System.Windows.Forms.GroupBox();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -58,23 +58,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoLoopCheck = new System.Windows.Forms.CheckBox();
 			this.VideoMaintainAspectRatioCheck = new System.Windows.Forms.CheckBox();
 			this.VideoReduceInterlaceCheck = new System.Windows.Forms.CheckBox();
-			this.horizontalDivider1 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.horizontalDivider1 = new Otomad.VegasScripts.OtomadHelper.V4.HorizontalDivider();
 			this.VideoResampleModeLbl = new System.Windows.Forms.Label();
 			this.VideoResampleModeCombo = new System.Windows.Forms.ComboBox();
-			this.horizontalDivider2 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.horizontalDivider2 = new Otomad.VegasScripts.OtomadHelper.V4.HorizontalDivider();
 			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-			this.VideoUnsetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.VideoSetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.VideoMultiplyRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoUnsetRateRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoSetRateRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoMultiplyRateRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.VideoRateBox = new System.Windows.Forms.NumericUpDown();
-			this.horizontalDivider3 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.horizontalDivider3 = new Otomad.VegasScripts.OtomadHelper.V4.HorizontalDivider();
 			this.VideoUnderSampleRateCheck = new System.Windows.Forms.CheckBox();
 			this.VideoUnderSampleRateBox = new System.Windows.Forms.NumericUpDown();
-			this.horizontalDivider6 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.horizontalDivider6 = new Otomad.VegasScripts.OtomadHelper.V4.HorizontalDivider();
 			this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
-			this.VideoUnsetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.VideoSetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.VideoMultiplyGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoUnsetGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoSetGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoMultiplyGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.VideoGainBox = new System.Windows.Forms.NumericUpDown();
 			this.dock.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();

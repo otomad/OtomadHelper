@@ -1,5 +1,5 @@
-﻿
-namespace Otomad.VegasScript.OtomadHelper.V4 {
+
+namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	partial class ChangeTuneMethodForm {
 		/// <summary>
 		/// Required designer variable.

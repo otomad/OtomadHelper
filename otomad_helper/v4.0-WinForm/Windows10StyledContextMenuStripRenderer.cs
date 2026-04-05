@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	public class Windows10StyledContextMenuStripRenderer : ToolStripProfessionalRenderer {
 		public Windows10StyledContextMenuStripRenderer() : base(new Windows10StyledContextMenuStripColorTable()) { }
 		protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e) {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -13,7 +13,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
-namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 	[ToolboxBitmap(typeof(TrackBar))]
 	public partial class IntegerTrackWithBox : UserControl { // 兼容说明：后期被更新成带小数的了，但由于为了兼容只能保留 Integer 的字样。

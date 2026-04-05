@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	public partial class TestDarkModeForm : Form {
 		public TestDarkModeForm() {
 			InitializeComponent();

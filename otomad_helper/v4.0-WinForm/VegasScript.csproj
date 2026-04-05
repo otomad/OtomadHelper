@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{396AB8FE-122A-4CE8-8426-28AB46006EA3}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Otomad.VegasScript.OtomadHelper.V4</RootNamespace>
-    <AssemblyName>VegasScript</AssemblyName>
+    <RootNamespace>Otomad.VegasScripts.OtomadHelper.V4</RootNamespace>
+    <AssemblyName>VegasScripts</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>4</LangVersion>
     <FileAlignment>512</FileAlignment>

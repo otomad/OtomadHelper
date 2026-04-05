@@ -1,4 +1,4 @@
-﻿#region Copyright 2009-2021 Ookii Dialogs Contributors
+#region Copyright 2009-2021 Ookii Dialogs Contributors
 //
 // Licensed under the BSD 3-Clause License (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.ConstrainedExecution;
 
-namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	/// <summary>
 	/// Represents an animation for the <see cref="ProgressDialog"/> loaded from a Win32 resource.
 	/// </summary>

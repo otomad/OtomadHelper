@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 	public class CommandLinkButton : Button {
 		private bool _commandLink = false;

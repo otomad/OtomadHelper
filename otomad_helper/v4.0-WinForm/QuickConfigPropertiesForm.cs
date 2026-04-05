@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 using ScriptPortal.Vegas;
 
-namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	public partial class QuickConfigPropertiesForm : Form {
 		public QuickConfigPropertiesForm() {
 			InitializeComponent();

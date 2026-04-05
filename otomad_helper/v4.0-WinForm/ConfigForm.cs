@@ -23,7 +23,7 @@ using System.Windows.Forms.VisualStyles;
 using ScriptPortal.Vegas;
 #endif
 
-namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 	public partial class ConfigForm : Form {
 		public bool AcceptConfig = false;
@@ -565,7 +565,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public const string aboutHelpLink = "https://www.bilibili.com/read/cv392013";
 		public const string troubleShootingLink = "https://www.bilibili.com/read/cv495309";
 		public const string updateInfoLink = "http://www.bilibili.com/read/cv13335178";
-		public const string githubLink = "https://github.com/otomad/Otomad.VegasScript.OtomadHelper.V4s";
+		public const string githubLink = "https://github.com/otomad/Otomad.VegasScripts.OtomadHelper.V4s";
 		private void UserHelpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
 			OpenLink(aboutHelpLink);
 		}

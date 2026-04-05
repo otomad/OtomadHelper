@@ -1,4 +1,4 @@
-namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	partial class CustomFadeGainForm {
 		/// <summary>
 		/// Required designer variable.
@@ -27,8 +27,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OkBtn = new System.Windows.Forms.Button();
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this.ToBox = new Otomad.VegasScript.OtomadHelper.V4.IntegerTrackWithBox();
-			this.FromBox = new Otomad.VegasScript.OtomadHelper.V4.IntegerTrackWithBox();
+			this.ToBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.FromBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
 			this.ToLbl = new System.Windows.Forms.Label();
 			this.FromLbl = new System.Windows.Forms.Label();
 			this.PreviewBtn = new System.Windows.Forms.Button();

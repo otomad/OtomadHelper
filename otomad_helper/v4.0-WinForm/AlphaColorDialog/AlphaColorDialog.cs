@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Diagnostics;
 
-namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	public class AlphaColorDialog : ColorDialog {
 
 		///<summary>Event is fired after the color or alpha value are changed via any of the possible user-interface controls.</summary>
@@ -51,8 +51,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				Size sz = dialogAlpha.Size;
 				RECT r = new RECT();
 				GetWindowRect(handle, ref r);
-				//dialogAlpha.Location = new Point(r.Left + (r.Right - r.Left - sz.Width) / 2, r.Top + (r.Bottom - r.Top - sz.Height) / 2); // Î»ÓÚ¸¸´°¿ÚÖĞÑë¡£
-				dialogAlpha.Location = new Point(r.Right, r.Top); // Î»ÓÚ¸¸´°¿ÚÓÒÉÏ½Ç¡£
+				//dialogAlpha.Location = new Point(r.Left + (r.Right - r.Left - sz.Width) / 2, r.Top + (r.Bottom - r.Top - sz.Height) / 2); // ä½äºçˆ¶çª—å£ä¸­å¤®ã€‚
+				dialogAlpha.Location = new Point(r.Right, r.Top); // ä½äºçˆ¶çª—å£å³ä¸Šè§’ã€‚
 				dialogAlpha.FormBorderStyle = FormBorderStyle.FixedDialog;
 				dialogAlpha.MinimizeBox = false;
 				dialogAlpha.MaximizeBox = false;
@@ -328,7 +328,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				RECT r = new RECT();
 				GetWindowRect(handle, ref r);
 				dialogAlpha.Location = new Point(r.Right, r.Top);
-			} catch (Exception) { // ÍÌµô¾ä±ú¶ªÊ§µÄ´íÎó¡£
+			} catch (Exception) { // åæ‰å¥æŸ„ä¸¢å¤±çš„é”™è¯¯ã€‚
 				windowDragTimer.Stop();
 				return;
 			}
