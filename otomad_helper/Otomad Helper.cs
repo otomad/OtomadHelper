@@ -216,12 +216,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		#endregion
 
 		#region 多素材属性
+		/**<summary>需多素材</summary>*/ private bool CombConfigAvailable { get { return YtpConfig || CombConfigLuckyDip && CombConfigLuckyDipLimitToSelected; } }
 		/**<summary>素材盲盒</summary>*/ private bool CombConfigLuckyDip { get { return configForm.LuckyDipRadio.Checked; } }
 		/**<summary>音轨切换</summary>*/ private bool CombConfigLuckyDipTrack { get { return configForm.LuckyDipTrackCheck.Checked; } }
 		/**<summary>小节或拍</summary>*/ private bool CombConfigLuckyDipBarOrBeat { get { return configForm.LuckyDipBarOrBeatCheck.Checked; } }
 		/**<summary>周　　期</summary>*/ private BarOrBeat CombConfigLuckyDipBarOrBeatPeriod { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPeriodBox.Value, configForm.LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex); } }
 		/**<summary>预　　备</summary>*/ private BarOrBeat CombConfigLuckyDipBarOrBeatPreparation { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPreparationBox.Value, configForm.LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndex); } }
 		/**<summary>标　　记</summary>*/ private bool CombConfigLuckyDipMarker { get { return configForm.LuckyDipMarkerCheck.Checked; } }
+		/**<summary>限制选中</summary>*/ private bool CombConfigLuckyDipLimitToSelected { get { return configForm.LuckyDipLimitToSelectedCheck.Checked; } }
 
 		// 多素材属性 - 实例对象变量
 		private int? luckyDipSeed = null;
@@ -252,7 +254,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>最小长度</summary>*/ private int YtpConfigMinLen { get { return (int)configForm.YtpMinLenBox.Value; } }
 		/**<summary>最大长度</summary>*/ private int YtpConfigMaxLen { get { return (int)configForm.YtpMaxLenBox.Value; } }
 		/**<summary>剪辑数目</summary>*/ private int YtpConfigClipsCount { get { return (int)configForm.YtpClipsCountBox.Value; } }
-		/**<summary>启用效果</summary>*/ private YtpEffectType[] YtpConfigEffects { get { return configForm.selectedYtpEffects; } }
+		/**<summary>启用效果</summary>*/ private IList<YtpEffectType> YtpConfigEffects { get { return configForm.selectedYtpEffects; } }
 		#endregion
 
 		#region 声呐属性
@@ -288,7 +290,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private bool IsFromSelectedMedia { get { return SourceConfigFrom == MediaSourceFrom.SELECTED_MEDIA; } }
 		private bool IsFromSelectedClip { get { return SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP; } }
 		private bool IsFromBrowseFile { get { return SourceConfigFrom == MediaSourceFrom.BROWSE_FILE; } }
-		internal EventSet selectedEventSet = new EventSet();
+		internal EventSet selectedEventSet { get; private set; }
+		internal EventSet[] eventSets;
 		public double ProjectBpm { get { return vegas.Project.Ruler.BeatsPerMinute; } }
 		private AutoLayoutTracksInfos LayoutInfos { get { return configForm.LayoutInfos; } }
 		private bool IsMultiMidiChannel { get { return MidiConfigTracks.IsMultiMidiChannel; } }
@@ -698,10 +701,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// 在轨道事件集合数组中消除重复的轨道事件集合对象。
 			/// </summary>
 			/// <param name="eventSets">轨道事件集合对象数组。</param>
-			/// <returns>原轨道事件集合对象数组，只是处理过了。</returns>
-			public static EventSet[] EliminateDuplicates(ref EventSet[] eventSets) {
+			public static void EliminateDuplicates(ref List<EventSet> eventSets) {
+				if (eventSets.Count == 0) { ShowError(new Exceptions.NoMediaException(), ShowErrorState.RESUME_NEXT); return; }
 				List<EventSet> sets = new List<EventSet>();
-				for (int i = 0; i < eventSets.Length; i++) {
+				for (int i = 0; i < eventSets.Count; i++) {
 					EventSet current = eventSets[i];
 					bool same = false;
 					for (int j = 0; j < i; j++) {
@@ -714,7 +717,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (!same) sets.Add(current);
 				}
 				if (sets.Count == 0) ShowError(new Exceptions.YtpEliminateDuplicatesFinallyNullException(), ShowErrorState.RESUME_NEXT);
-				return eventSets = sets.ToArray();
+				eventSets = sets;
 			}
 			/// <summary>
 			/// 根据给定的一个轨道事件数组，获取第一个满足条件的音频事件与视频事件。<br />
@@ -1073,7 +1076,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (!MidiUseMidiBpm && !MidiUseVariableMidiBpm)
 					midi.Bpm = MidiUseCustomBpm ? (double)configForm.MidiCustomBpmBox.Value : ProjectBpm;
 				if (!hasTimeSignature && SheetConfig) { ShowError(new Exceptions.GenerateStaffVisualizerWithoutTimeSignatureException()); return false; }
-				if (!hasTimeSignature && CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat && (CombConfigLuckyDipBarOrBeatPeriod.Unit == BarOrBeat.Units.Bar || CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Bar && CombConfigLuckyDipBarOrBeatPreparation.Value != 0)) { ShowError(new Exceptions.LuckyDipBarWithoutTimeSignatureException()); return false; } // TODO: 改自定义错误！！！
+				if (!hasTimeSignature && CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat && (CombConfigLuckyDipBarOrBeatPeriod.Unit == BarOrBeat.Units.Bar || CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Bar && CombConfigLuckyDipBarOrBeatPreparation.Value != 0)) { ShowError(new Exceptions.LuckyDipBarWithoutTimeSignatureException()); return false; }
 			}
 			Plugin.Init(vegas);
 			if (AConfig && AConfigMethod == AudioTuningMethod.PITCH_SHIFT) requestShowProgress = true;
@@ -1088,6 +1091,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				(AConfigMethod == AudioTuningMethod.ELASTIQUE || AConfigMethod == AudioTuningMethod.CLASSIC) && AConfigAltMethod == AudioAltTuningMethod.PLUGIN
 			)) if (!ExaminePitchShiftPresetsExist()) return false;
 			if (YtpConfig) { GenerateYtp(); return true; }
+			if (eventSets == null && !GetSelectedSources(out eventSets)) return false;
+			if (CombConfigAvailable) {
+				int i = 0;
+				foreach (EventSet eventSet in eventSets) {
+					if (eventSet.videoEvent != null) eventSet.videoEvent.ActiveTake.Name = i.ToString();
+					if (eventSet.audioEvent != null) eventSet.audioEvent.ActiveTake.Name = i.ToString();
+					i++;
+				}
+				return false;
+			}
 			#endregion
 			#region 自动改变项目速度和拍号
 			RulerProperties ruler = vegas.Project.Ruler;
@@ -1165,18 +1178,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				GenerateAt == GenerateAt.CURSOR ? vegas.Transport.CursorPosition.ToMilliseconds() : 0;
 			double songLength = 0; // 指定乐曲总长。
 			double songStart = generateBeginTime + MidiConfigStartTime;
-
-			// 素材盲盒
-			#region 素材盲盒
-			long prevMeasures = 0, prevQuarters = 0;
-			int prevMarkerIndex = -1;
-			Action<long, int> NextLuckyDipSource = (step, markerIndex) => {
-				sourceStartTime = HashRandom.GetDouble(luckyDipSeed, step, markerIndex) * Math.Max(audioLength, videoLength);
-				sourceEndTime = sourceStartTime + Math.Max(audioLength, videoLength);
-			};
-			if (CombConfigLuckyDip && CombConfigLuckyDipTrack && MidiConfigTracks.CurrentChannel != 0)
-				NextLuckyDipSource(-1, -1);
-			#endregion
 			#endregion
 
 			#region 五线谱操作
@@ -1209,6 +1210,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 			}
 			#endregion
+
+			#region 素材盲盒
+			long prevMeasures = 0, prevQuarters = 0;
+			int prevMarkerIndex = -1;
+			Action<long, int> NextLuckyDipSource = (step, markerIndex) => {
+				sourceStartTime = HashRandom.GetDouble(luckyDipSeed, step, markerIndex) * Math.Max(audioLength, videoLength);
+				sourceEndTime = sourceStartTime + Math.Max(audioLength, videoLength);
+			};
+			if (CombConfigLuckyDip && CombConfigLuckyDipTrack && MidiConfigTracks.CurrentChannel != 0)
+				NextLuckyDipSource(-1, -1);
+			#endregion
+
 			for (int i = 0; i < currentChannel.Events.Count; i++) {
 				MidiEvent midiEvent = currentChannel.Events[i];
 				if (!(midiEvent is NoteOnEvent)) continue;
@@ -2240,7 +2253,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private static TrackEvent GetAssociatedEvent(TrackEvent trackEvent) {
 			if (!trackEvent.IsGrouped) return null;
 			foreach (TrackEvent eventInGroup in trackEvent.Group)
-				if (trackEvent is AudioEvent && eventInGroup is TrackEvent)
+				if (trackEvent is AudioEvent && eventInGroup is TrackEvent || trackEvent is VideoEvent && eventInGroup is AudioEvent)
 					return eventInGroup;
 			return null;
 		}
@@ -2251,8 +2264,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return GetAssociatedEvent(trackEvent as TrackEvent) as AudioEvent;
 		}
 
-		private bool GetSelectedSources(AudioTrack aSmpTrack, VideoTrack vSmpTrack, out EventSet[] eventSetArr) {
+		private bool GetSelectedSources(out EventSet[] eventSetArr, bool autoPutToSampleTrack = false, AudioTrack aSmpTrack = null, VideoTrack vSmpTrack = null) {
 			eventSetArr = null;
+			bool requireReverse = YtpConfigEffects.Contains(YtpEffectType.REVERSE);
 			List<EventSet> eventSets = new List<EventSet>();
 			if (!IsFromSelectedClip) {
 				List<Media> selections = new List<Media>();
@@ -2284,7 +2298,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						ytpInMediaGenerator = true;
 					else selections.Add(media);
 				}
-				if (selections.Count /* still */ == 0) {
+				if (YtpConfig && selections.Count /* still */ == 0) {
 					if (ytpOverLength) {
 						ShowError(new Exceptions.YtpOverLengthException(), ShowErrorState.RESUME_NEXT);
 						return false;
@@ -2302,18 +2316,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 				#endregion
 				#region 放置示例轨道剪辑
-				foreach (Media media in selections) {
-					AudioEvent aSmp = null; VideoEvent vSmp = null;
-					Subclip aReverse, vReverse;
-					if (AConfig) if (!Track_AppendMedia(aSmpTrack, media, out aSmp)) return false;
-					if (VConfig) if (!Track_AppendMedia(vSmpTrack, media, out vSmp)) return false;
-					aReverse = vReverse = GetReversedSubclip(media);
-					eventSets.Add(new EventSet(aSmp, vSmp, aReverse, vReverse));
-				}
+				if (autoPutToSampleTrack)
+					foreach (Media media in selections) {
+						AudioEvent aSmp = null; VideoEvent vSmp = null;
+						Subclip aReverse = null, vReverse = null;
+						if (AConfig) if (!Track_AppendMedia(aSmpTrack, media, out aSmp)) return false;
+						if (VConfig) if (!Track_AppendMedia(vSmpTrack, media, out vSmp)) return false;
+						if (requireReverse)
+							aReverse = vReverse = GetReversedSubclip(media);
+						eventSets.Add(new EventSet(aSmp, vSmp, aReverse, vReverse));
+					}
 				#endregion
 			} else {
 				#region 放置示例轨道剪辑
 				Func<AudioEvent, VideoEvent, bool, bool> appendOne = (aEvent, vEvent, notIgnore) => {
+					if (!autoPutToSampleTrack) {
+						eventSets.Add(new EventSet(aEvent, vEvent));
+						return true;
+					}
 					Action<Exception> SE = e => { // 色氵炎々（误
 						if (notIgnore) ShowError(e, ShowErrorState.RESUME_NEXT);
 					};
@@ -2322,14 +2342,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (AConfig) {
 						if (aEvent == null) { SE(new Exceptions.NoAudioTakeException()); return false; }
 						if (YtpConfigMinLen > aEvent.Length.ToMilliseconds()) goto ytpOverLength;
-						aReverse = vReverse = GetReversedSubclip(aEvent);
+						if (requireReverse)
+							aReverse = vReverse = GetReversedSubclip(aEvent);
 					}
 					if (VConfig) {
 						if (vEvent == null) { SE(new Exceptions.NoVideoTakeException()); return false; }
 						if (YtpConfigMinLen > vEvent.Length.ToMilliseconds()) goto ytpOverLength;
 						if (vEvent.ActiveTake.Media.Generator != null) goto ytpInMediaGenerator;
 						if (!AConfig || vEvent.ActiveTake.Media != aEvent.ActiveTake.Media)
-							vReverse = GetReversedSubclip(vEvent);
+							if (requireReverse)
+								vReverse = GetReversedSubclip(vEvent);
 					}
 					// 在后面单独添加，避免之后报错又消不掉。
 					if (AConfig) aSmp = Track_Append(aSmpTrack, aEvent, Timecode.FromMilliseconds(0), true);
@@ -2343,37 +2365,55 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					SE(new Exceptions.YtpInMediaGeneratorException());
 					return false;
 				};
-				TrackEvent[] _selected = GetSelectedEvents().ToArray();
-				AudioEvent[] _selectedAudio = GetSelectedAudioEvents().ToArray();
-				VideoEvent[] _selectedVideo = GetSelectedVideoEvents().ToArray();
+				List<TrackEvent> selectedEvents = GetSelectedEvents().ToList(), selectedUngroupedEvents = new List<TrackEvent>(selectedEvents);
 				#endregion
 				#region 验证合法性
-				if (_selectedAudio.Length == 1 && _selectedVideo.Length == 1)
-					appendOne(_selectedAudio[0], _selectedVideo[0], true);
-				else if (_selected.Length == 1)
-					appendOne(selectedEventSet.audioEvent, selectedEventSet.videoEvent, true);
-				else {
-					foreach (TrackEvent trackEvent in _selected) {
-						if (!trackEvent.IsGrouped) continue;
-						AudioEvent aEvent = null;
-						VideoEvent vEvent = null;
-						if (trackEvent is AudioEvent) {
-							aEvent = trackEvent as AudioEvent;
-							vEvent = GetAssociatedEvent(aEvent);
-							if (vEvent == null) continue;
-						} else if (trackEvent is VideoEvent) {
-							vEvent = trackEvent as VideoEvent;
-							aEvent = GetAssociatedEvent(vEvent);
-							if (aEvent == null) continue;
-						} else continue;
-						appendOne(aEvent, vEvent, false);
+				foreach (TrackEvent trackEvent in selectedEvents) {
+					if (!trackEvent.IsGrouped) continue;
+					AudioEvent aEvent = null;
+					VideoEvent vEvent = null;
+					IEnumerable<TrackEvent> otherEventsInGroup = trackEvent.Group;
+					if (trackEvent is AudioEvent) {
+						aEvent = trackEvent as AudioEvent;
+						vEvent = GetAssociatedEvent(aEvent);
+						if (vEvent == null) continue;
+					} else if (trackEvent is VideoEvent) {
+						vEvent = trackEvent as VideoEvent;
+						aEvent = GetAssociatedEvent(vEvent);
+						if (aEvent == null) continue;
+					} else continue;
+					appendOne(aEvent, vEvent, false);
+					selectedUngroupedEvents.Remove(trackEvent);
+					foreach (TrackEvent otherEventInGroup in otherEventsInGroup)
+						selectedUngroupedEvents.Remove(otherEventInGroup);
+				}
+				if (selectedUngroupedEvents.Any()) {
+					List<TrackEvent> audioEvents = selectedUngroupedEvents.Where(e => e is AudioEvent).ToList();
+					List<TrackEvent> videoEvents = selectedUngroupedEvents.Where(e => e is VideoEvent).ToList();
+					List<TrackEvent> nominative = videoEvents.Count <= audioEvents.Count ? videoEvents : audioEvents,
+						accusative = nominative != videoEvents ? videoEvents : audioEvents;
+					foreach (TrackEvent @event in nominative) {
+						double curMs = @event.Start.ToMilliseconds();
+						TrackEvent closestEvent = accusative.Aggregate((min, next) => Math.Abs(next.Start.ToMilliseconds() - curMs) < Math.Abs(min.Start.ToMilliseconds() - curMs) ? next : min);
+						if (@event is AudioEvent) appendOne((AudioEvent)@event, (VideoEvent)closestEvent, false);
+						else appendOne((AudioEvent)closestEvent, (VideoEvent)@event, false);
+						accusative.Remove(closestEvent);
 					}
-					if (eventSets.Count == 0) appendOne(selectedEventSet.audioEvent, selectedEventSet.videoEvent, true);
+					foreach (TrackEvent @event in accusative) {
+						if (@event is AudioEvent) appendOne((AudioEvent)@event, null, false);
+						else appendOne(null, (VideoEvent)@event, false);
+					}
 				}
 				#endregion
 			}
+			EventSet.EliminateDuplicates(ref eventSets);
+			eventSets.Sort((aa, bb) => {
+				TrackEvent a = VConfig ? (TrackEvent)aa.videoEvent : (TrackEvent)aa.audioEvent, b = VConfig ? (TrackEvent)bb.videoEvent : (TrackEvent)bb.audioEvent;
+				if (a == null || b == null) return a == null && b == null ? 0 : a == null ? 1 : -1;
+				return a.Start.CompareTo(b.Start);
+			});
 			eventSetArr = eventSets.ToArray();
-			return true;
+			return !eventSetArr.IsEmpty();
 		}
 
 		/// <summary>
@@ -2801,11 +2841,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (vTrack != null && !IsVPreferredTrack) vegas.Project.Tracks.Remove(vTrack);
 				}
 			});
-			EventSet[] eventSets;
 			#region 多素材支持
-			if (!GetSelectedSources(aSmpTrack, vSmpTrack, out eventSets) || eventSets.Length == 0) goto cleanUpRuins;
-			EventSet.EliminateDuplicates(ref eventSets);
-			if (eventSets.Length == 0) goto cleanUpRuins;
+			if (!GetSelectedSources(out eventSets, true, aSmpTrack, vSmpTrack)) goto cleanUpRuins;
 			#endregion
 			#region 获取选中需要使用的效果
 			Random rand = new Random();
@@ -5355,7 +5392,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				Subclip vReverse,
 				EntryPoint p,
 				out List<TrackEvent> generatedEvents,
-				YtpEffectType[] effects = null
+				IList<YtpEffectType> effects = null
 			) {
 				generatedEvents = new List<TrackEvent>();
 				if (aEvent != null) generatedEvents.Add(aEvent);
@@ -5633,8 +5670,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// <param name="effects">指定的 YTP 效果数组</param>
 			/// <returns>随机选择的效果</returns>
 			/// <exception cref="null">如果指定的 YTP 效果数组中没有任何效果，将会返回 <see cref="null"/>。</exception>
-			private static YtpEffectType? GetRandomYtpEffectType(YtpEffectType[] effects) {
-				int count = effects.Length;
+			private static YtpEffectType? GetRandomYtpEffectType(IList<YtpEffectType> effects) {
+				int count = effects.Count;
 				if (count == 0) return null;
 				int rand = random.Next(count);
 				return effects[rand];
@@ -33458,7 +33495,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			YtpEffectsCheckList_SelectedIndexChanged(null, null);
 		}
 
-		public YtpEffectType[] selectedYtpEffects;
+		public IList<YtpEffectType> selectedYtpEffects;
 		private void YtpEffectsCheckList_SelectedIndexChanged(object sender, EventArgs e) {
 			CheckState? state = null;
 			List<YtpEffectType> selected = new List<YtpEffectType>();
@@ -33469,7 +33506,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				else if (!isChecked && (state == null || state == CheckState.Unchecked)) state = CheckState.Unchecked;
 				else state = CheckState.Indeterminate;
 			}
-			selectedYtpEffects = selected.ToArray();
+			selectedYtpEffects = selected.AsReadOnly();
 			if (state == null) return;
 			YtpEnableAllEffectsCheck.CheckState = (CheckState)state;
 			YtpEffectsGroup.Text = Lang.str.effect + " (" + selected.Count + ")";
