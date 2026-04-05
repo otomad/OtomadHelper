@@ -54,7 +54,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Otomad.VegasScript.OtomadHelper.V4.Program</StartupObject>
+    <StartupObject>Otomad.VegasScripts.OtomadHelper.V4.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>

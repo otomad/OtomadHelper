@@ -221,10 +221,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>小节或拍</summary>*/ private bool CombConfigLuckyDipBarOrBeat { get { return configForm.LuckyDipBarOrBeatCheck.Checked; } }
 		/**<summary>周　　期</summary>*/ private BarOrBeat CombConfigLuckyDipBarOrBeatPeriod { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPeriodBox.Value, configForm.LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex); } }
 		/**<summary>预　　备</summary>*/ private BarOrBeat CombConfigLuckyDipBarOrBeatPreparation { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPreparationBox.Value, configForm.LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndex); } }
+		/**<summary>标　　记</summary>*/ private bool CombConfigLuckyDipMarker { get { return configForm.LuckyDipMarkerCheck.Checked; } }
 
 		// 多素材属性 - 实例对象变量
 		private int? luckyDipSeed = null;
-		private DeterministicRandom luckyDipRandom;
 		#endregion
 
 		#region 五线谱属性
@@ -1152,7 +1152,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 可变速度、拍号处理
 			bpmIntegrator = bpmIntegrator ?? (MidiUseVariableMidiBpm ? new VariableBpmIntegrator(midi, MidiUseVariableMidiBpmForm == 1) : null);
 			beatIntegrator = beatIntegrator ?? (CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat || SheetConfig ? new VariableTimeSignatureIntegrator(midi) : null);
-			luckyDipRandom = new DeterministicRandom(luckyDipSeed);
 			#endregion
 
 			#region 如果修改了素材的入点和出点的时间
@@ -1170,12 +1169,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 素材盲盒
 			#region 素材盲盒
 			long prevMeasures = 0, prevQuarters = 0;
-			Action<long> NextLuckyDipSource = step => {
-				sourceStartTime = (step < 0 ? luckyDipRandom.NextDouble() : luckyDipRandom.GetDoubleAtStep(step)) * Math.Max(audioLength, videoLength);
+			int prevMarkerIndex = -1;
+			Action<long, int> NextLuckyDipSource = (step, markerIndex) => {
+				sourceStartTime = HashRandom.GetDouble(luckyDipSeed, step, markerIndex) * Math.Max(audioLength, videoLength);
 				sourceEndTime = sourceStartTime + Math.Max(audioLength, videoLength);
 			};
 			if (CombConfigLuckyDip && CombConfigLuckyDipTrack && MidiConfigTracks.CurrentChannel != 0)
-				NextLuckyDipSource(-1);
+				NextLuckyDipSource(-1, -1);
 			#endregion
 			#endregion
 
@@ -1224,23 +1224,35 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						vegas.UpdateUI(); // 可以让 Vegas 实时更新 UI，但是会更慢。
 				}
 				if (progressForm.RequestAbort) break;
+				string _testName = null;
 				NoteEvent noteEvent = midiEvent as NoteEvent;
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
 
 				#region 素材盲盒
-				if (CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat) {
-					long measures = beatIntegrator.GetMeasureIndex(noteEvent), quarters = beatIntegrator.GetQuarterIndex(noteEvent);
-					if (CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Beat && quarters >= CombConfigLuckyDipBarOrBeatPreparation.Value ||
-						CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Bar && measures >= CombConfigLuckyDipBarOrBeatPreparation.Value) {
-						long targetStep;
-						if (VariableTimeSignatureIntegrator.ShouldChangeSource(measures, prevMeasures, quarters, prevQuarters, out targetStep, CombConfigLuckyDipBarOrBeatPeriod, CombConfigLuckyDipBarOrBeatPreparation))
-							NextLuckyDipSource(targetStep);
+				if (CombConfigLuckyDip) {
+					bool targetStepEnabled = false, markerIndexEnabled = false;
+					long targetStep = 0; int markerIndex = 0;
+					if (CombConfigLuckyDipBarOrBeat) {
+						long measures = beatIntegrator.GetMeasureIndex(noteEvent), quarters = beatIntegrator.GetQuarterIndex(noteEvent);
+						if (CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Beat && quarters >= CombConfigLuckyDipBarOrBeatPreparation.Value ||
+							CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Bar && measures >= CombConfigLuckyDipBarOrBeatPreparation.Value) {
+							targetStepEnabled = VariableTimeSignatureIntegrator.ShouldChangeSource(measures, prevMeasures, quarters, prevQuarters, out targetStep, CombConfigLuckyDipBarOrBeatPeriod, CombConfigLuckyDipBarOrBeatPreparation);
+						}
+						prevMeasures = measures; prevQuarters = quarters;
 					}
-					prevMeasures = measures; prevQuarters = quarters;
+					if (CombConfigLuckyDipMarker) {
+						TextEvent marker = midi.GetLeadingMarker(noteEvent, ref markerIndex);
+						markerIndexEnabled = markerIndex != prevMarkerIndex && marker != null && marker.AbsoluteTime != 0;
+						if (markerIndexEnabled) prevMarkerIndex = markerIndex;
+						if (markerIndexEnabled) _testName = markerIndex.ToString();
+					}
+					if (targetStepEnabled || markerIndexEnabled)
+						NextLuckyDipSource(targetStep, markerIndex);
 				}
 				#endregion
 
-				double startTime, duration, staffVisualizedDuration;
+				double startTime, duration;
+				double? staffVisualizedDuration = null; // 编译器很笨，不知道计算逻辑路径而强制要求初始化值，即便完全不会被用到。
 				if (!MidiUseVariableMidiBpm) {
 					startTime = midiEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter;
 					duration = noteOnEvent.NoteLength * midi.MsPerQuarter / midi.TicksPerQuarter;
@@ -1259,11 +1271,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (startTime > MidiConfigEndTime && sliceComposition) break;
 				songLength = startTime + duration;
 				#region 下一页
-				if (beatIntegrator.GetQuarterPassed(midiEvent) >= barEndQuarters)
-					beatIntegrator.GetSheetMeasureInfo(midiEvent, out barStartQuarters, out barEndQuarters);
-				staffVisualizedDuration = SheetConfigTruncateAtNoteOff ? duration :
-					MidiUseVariableMidiBpm ? bpmIntegrator.GetStaffDurationFromQuarters(midiEvent.AbsoluteTime, barEndQuarters) :
-					barEndQuarters * midi.MsPerQuarter - startTime;
+				if (SheetConfig) {
+					if (beatIntegrator.GetQuarterPassed(midiEvent) >= barEndQuarters)
+						beatIntegrator.GetSheetMeasureInfo(midiEvent, out barStartQuarters, out barEndQuarters);
+					staffVisualizedDuration = SheetConfigTruncateAtNoteOff ? duration :
+						MidiUseVariableMidiBpm ? bpmIntegrator.GetStaffDurationFromQuarters(midiEvent.AbsoluteTime, barEndQuarters) :
+						barEndQuarters * midi.MsPerQuarter - startTime;
+				}
 				#endregion
 
 				#region 生成声呐事件
@@ -1443,7 +1457,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					#region 生成视频事件
 					if (VConfig) {
 						VideoEvent videoEvent;
-						double videoEventDuration = SheetConfig ? staffVisualizedDuration : duration;
+						double videoEventDuration = SheetConfig ? staffVisualizedDuration.Value : duration;
 						if (!IsFromSelectedClip) {
 							videoEvent = trackHelper.AddEvent<VideoEvent>(
 								Timecode.FromMilliseconds(generateBeginTime + startTime),
@@ -1459,6 +1473,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							videoEvent = trackHelper.AddEvent(selectedEventSet.videoEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(videoEventDuration), out _index);
 							if (videoEvent == null) goto endVConfig;
 						}
+						if (!(_testName == null)) videoEvent.ActiveTake.Name = _testName;
 						VideoTrack videoTrack = videoEvent.Track as VideoTrack;
 						PvVisualEffect anim;
 						if (!anims.TryGetValue(videoTrack, out anim))
@@ -3649,6 +3664,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		/// <summary>
+		/// When using <c>foreach</c> to iterate an <see cref="IEnumerable"/> object,
+		/// it is allowed to provide an additional index value of the current item for use.
+		/// </summary>
+		/// <typeparam name="T">The item type of the <see cref="IEnumerable"/> object.</typeparam>
+		/// <param name="collection"><see cref="IEnumerable"/> object.</param>
+		/// <returns>A conversion function can be called containing the current item and index values.</returns>
+		public static IEnumerable<IndexerEntry<T>> WithIndex<T>(this IEnumerable<T> collection) {
+			return collection.Select((item, index) => new IndexerEntry<T>(item, index));
+		}
+
+		/// <summary>
 		/// 判断指定轨道是否位于轨道组内。
 		/// </summary>
 		/// <param name="track">轨道。</param>
@@ -3690,6 +3716,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </remarks>
 		public static int GetDenominator(this TimeSignatureEvent timeSignatureEvent) {
 			return (int)Math.Pow(2, timeSignatureEvent.Denominator);
+		}
+	}
+
+	public struct IndexerEntry<T> {
+		public int Index { get; private set; }
+		public T Item { get; private set; }
+		public IndexerEntry(T item, int index) : this() {
+			Index = index;
+			Item = item;
 		}
 	}
 
@@ -5807,7 +5842,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>
 		/// 时值元数据信息事件所在的音轨。
 		/// </summary>
-		public IList<MidiEvent> MsPerQuarterTrack { get; private set; }
+		public IEnumerable<TempoEvent> MsPerQuarterTrack { get; private set; }
 		/// <summary>
 		/// 拍号的显示值。
 		/// </summary>
@@ -5823,7 +5858,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>
 		/// 拍号元数据信息事件所在的音轨。
 		/// </summary>
-		public IList<MidiEvent> TimeSignatureTrack { get; private set; }
+		public IEnumerable<TimeSignatureEvent> TimeSignatureTrack { get; private set; }
+		/// <summary>
+		/// 标记元数据信息事件所在的音轨。
+		/// </summary>
+		public IEnumerable<TextEvent> MarkerTrack { get; private set; }
 		/// <summary>
 		/// MIDI 文件路径。
 		/// </summary>
@@ -5908,7 +5947,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						TempoEvent tempoEvent = midiEvent as TempoEvent;
 						MsPerQuarter = Convert.ToDouble(tempoEvent.MicrosecondsPerQuarterNote) / 1000; // 每四分音符多少毫秒
 						// tempoEvent.Tempo; // 用 Tempo 表示 BPM
-						MsPerQuarterTrack = info.Events;
+						MsPerQuarterTrack = info.Events.OfType<TempoEvent>();
 					}
 					if (midiEvent is TextEvent && !info.HasName) {
 						TextEvent textEvent = midiEvent as TextEvent;
@@ -5917,12 +5956,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							info.Name = Latin1ToAnsi(latin1Text);
 						}
 					}
+					if (midiEvent is TextEvent && MarkerTrack.IsEmpty()) {
+						TextEvent textEvent = midiEvent as TextEvent;
+						if (textEvent.MetaEventType == MetaEventType.Marker) {
+							MarkerTrack = info.Events.OfType<TextEvent>().Where(evt => evt.MetaEventType == MetaEventType.Marker);
+							foreach (TextEvent marker in MarkerTrack)
+								marker.Text = Latin1ToAnsi(marker.Text);
+						}
+					}
 					if (midiEvent is TimeSignatureEvent && TimeSignature.Length == 0) {
 						TimeSignatureEvent timeSignatureEvent = midiEvent as TimeSignatureEvent;
 						TimeSignature = timeSignatureEvent.TimeSignature; // 初始节拍
 						TimeSignatureNumerator = timeSignatureEvent.Numerator;
 						TimeSignatureDenominator = timeSignatureEvent.GetDenominator();
-						TimeSignatureTrack = info.Events;
+						TimeSignatureTrack = info.Events.OfType<TimeSignatureEvent>();
 					}
 					if (midiEvent is ControlChangeEvent && !info.IsDynamicPan) {
 						ControlChangeEvent controlChangeEvent = midiEvent as ControlChangeEvent;
@@ -5943,28 +5990,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			TrackInfos = trackInfos.ToArray();
 		}
-		public static int CountIf<MidiEventType>(IList<MidiEvent> track) where MidiEventType : MidiEvent {
-			int num = 0;
-			if (track != null)
-				foreach (MidiEvent midiEvent in track)
-					if (midiEvent is MidiEventType)
-						num++;
-			return num;
+		/// <summary>
+		/// 根据指定 MIDI 事件获取当前或在此之前的标记事件。如果没有，返回 null。
+		/// </summary>
+		/// <param name="index">该标记在标记列表中的索引值。</param>
+		public TextEvent GetLeadingMarker(MidiEvent midiEvent, ref int index) {
+			if (!MarkerTrack.IsEmpty())
+				foreach (var textEvent in MarkerTrack.WithIndex().Reverse())
+					if (midiEvent.AbsoluteTime >= textEvent.Item.AbsoluteTime) {
+						index = textEvent.Index;
+						return textEvent.Item;
+					}
+			return null;
 		}
-		public bool IsDynamicBeat { get { return (TimeSignatureTrack == null ? 0 : TimeSignatureTrack.Count(midiEvent => midiEvent is TimeSignatureEvent)) > 1; } }
-		public bool IsDynamicBpm {
-			get {
-				double tempTempo = -1;
-				if (MsPerQuarterTrack != null)
-					foreach (MidiEvent midiEvent in MsPerQuarterTrack)
-						if (midiEvent is TempoEvent) {
-							TempoEvent tempo = midiEvent as TempoEvent;
-							if (tempTempo < 0) tempTempo = tempo.Tempo;
-							else if (tempTempo != tempo.Tempo) return true;
-						}
-				return false;
-			}
-		}
+		public bool IsVariableBeat { get { return TimeSignatureTrack != null && TimeSignatureTrack.DistinctBy(evt => ValueTuple.Create(evt.Numerator, evt.Denominator)).Count() > 1; } }
+		public bool IsVariableBpm { get { return MsPerQuarterTrack != null && MsPerQuarterTrack.DistinctBy(tempo => tempo.Tempo).Count() > 1; } }
 
 		/// <summary>
 		/// Latin1 编码又称为 ISO-8859-1 编码。
@@ -6010,7 +6050,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.useLinearKeyframes = useLinearKeyframes;
 			double totalMs = 0;
 			BpmKeysData previousData = null;
-			msPerQuarterTrack = midi.MsPerQuarterTrack.OfType<TempoEvent>().ToArray();
+			msPerQuarterTrack = midi.MsPerQuarterTrack.ToArray();
 			List<BpmKeysData> _bpmKeysDatas_list = new List<BpmKeysData>(msPerQuarterTrack.Length);
 			for (int i = 0; i < msPerQuarterTrack.Length; i++) {
 				TempoEvent tempoEvent = msPerQuarterTrack[i];
@@ -6191,60 +6231,64 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	}
 
 	/// <summary>
-	/// 可以支持获取第几次 <see cref="Random.NextDouble" /> 返回值的随机数类。
+	/// 可混合多种参数产生唯一确定的随机数类。
 	/// </summary>
-	public class DeterministicRandom {
-		private readonly int? seed;
-		private Random random;
-		private long currentStep;
-		private double lastValue;
+	public static class HashRandom {
+		// FNV-1a 64位算法的偏移偏移量和素数
+		private const ulong FNV_OFFSET_BASIS = 0xcbf29ce484222325ul;
+		private const ulong FNV_PRIME = 0x100000001b3ul;
 
-		public DeterministicRandom(int? seed) {
-			this.seed = seed;
-			Reset();
-		}
+		// 混合函数 (Mixer) 使用的精心挑选的质数常数
+		private const ulong MIXER_CONST_1 = 0xbf58476d1ce4e5b9ul;
+		private const ulong MIXER_CONST_2 = 0x94d049bb133111ebul;
 
-		public DeterministicRandom() {
-			Reset();
-		}
+		// 用于映射到 double 精度范围的掩码 (2^53 - 1) 和 分母 (2^53)
+		private const ulong DOUBLE_PRECISION_MASK = 0x1FFFFFFFFFFFFFul;
+		private const double DOUBLE_DIVISOR = (double)0x20000000000000ul;
 
-		public void Reset() {
-			random = seed == null ? new Random() : new Random(seed.Value);
-			// 初始化为 -1，表示目前还没有计算过任何步数
-			currentStep = -1;
-			lastValue = 0;
-		}
+		// 用于处理 null 时的非确定性随机数生成器
+		private static readonly Random fallbackRandom = new Random();
 
-		public double NextDouble() {
-			lastValue = random.NextDouble();
-			currentStep++;
-			return lastValue;
-		}
+		/// <summary>
+		/// 支持无限参数，包含各种数值、布尔值及 null。<br />
+		/// long, int, short, byte, bool 等均可隐式或显式转为 long。<br />
+		/// 如果包含 null，则返回不稳定的随机数。
+		/// </summary>
+		public static double GetDouble(params object[] inputs) {
+			// 1. 预检查：如果参数数组本身为 null 或其中包含 null 元素
+			if (inputs == null) return fallbackRandom.NextDouble();
 
-		public double GetDoubleAtStep(long targetStep) {
-			if (targetStep < 0) throw new ArgumentOutOfRangeException("targetStep", "Step cannot be negative");
+			unchecked { // 忽略溢出检查，确保正负数转换安全
+				ulong hash = FNV_OFFSET_BASIS;
 
-			// 1. 原地跳：如果步数没变，直接返回缓存的值
-			if (targetStep == currentStep)
-				return lastValue;
+				// 2. 将所有输入参数混合进 Hash 值
+				foreach (object input in inputs) {
+					// 如果任意一个参数是 null，立即返回非确定性随机数
+					if (input == null) return fallbackRandom.NextDouble();
 
-			// 特殊：如果种子未定义，那么就随机返回，不必这么麻烦了。
-			if (seed == null) {
-				NextDouble();
-				currentStep = targetStep;
-				return lastValue;
+					// 3. 将不同类型统一转换为 8 字节 (long) 进行 Hash
+					long value;
+					if (input is bool) value = (bool)input ? 1L : 0L;
+					else value = Convert.ToInt64(input); // 处理 int, long, short, uint 等
+
+					// 4. FNV-1a 逐字节混合
+					// 这里使用位移比 BitConverter.GetBytes 更快且无内存分配
+					for (int i = 0; i < 8; i++) {
+						hash ^= (byte)((value >> (i * 8)) & 0xFF);
+						hash *= FNV_PRIME;
+					}
+				}
+
+				// 5. 使用快速混合函数（Finalizer，类似 SplitMix64 核心逻辑）打乱位分布，确保随机性
+				// 这些常数是数学上精心挑选的，用于散列位分布
+				hash = (hash ^ (hash >> 30)) * MIXER_CONST_1;
+				hash = (hash ^ (hash >> 27)) * MIXER_CONST_2;
+				hash ^= (hash >> 31);
+
+				// 6. 将 64 位整数映射到 [0.0, 1.0) 范围
+				// 0x1FFFFFFFFFFFFFL 是 2^53 - 1，对应 double 的 53 位精度
+				return (hash & DOUBLE_PRECISION_MASK) / DOUBLE_DIVISOR;
 			}
-
-			// 2. 倒退跳：如果目标比当前小，必须重置
-			if (targetStep < currentStep)
-				Reset();
-
-			// 3. 向前跳（或重置后的第一次跳跃）
-			// 循环直到 currentStep 达到 targetStep
-			while (currentStep < targetStep)
-				NextDouble();
-
-			return lastValue;
 		}
 	}
 
@@ -21722,6 +21766,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.Tabs = new System.Windows.Forms.TabControl();
 			this.SourceTab = new System.Windows.Forms.TabPage();
+			this.SourceTabScrollPanel = new System.Windows.Forms.Panel();
 			this.MultiSourceConfigGroup = new System.Windows.Forms.GroupBox();
 			this.LuckyDipPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.LuckyDipLimitToSelectedCheck = new System.Windows.Forms.CheckBox();
@@ -22029,6 +22074,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.StaffNotesShiftLbl = new System.Windows.Forms.Label();
 			this.StaffNotesShiftBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
 			this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+			this.StaffLengthenToBarEndCheck = new System.Windows.Forms.CheckBox();
 			this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
 			this.StaffVisualizerConfigCheck = new System.Windows.Forms.CheckBox();
 			this.SheetConfigInfoLabel = new System.Windows.Forms.Label();
@@ -22180,7 +22226,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.StaffLengthenToBarEndCheck = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -22198,6 +22243,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.panel1.SuspendLayout();
 			this.Tabs.SuspendLayout();
 			this.SourceTab.SuspendLayout();
+			this.SourceTabScrollPanel.SuspendLayout();
 			this.MultiSourceConfigGroup.SuspendLayout();
 			this.LuckyDipPanel.SuspendLayout();
 			this.LuckyDipBarOrBeatPeriodPanel.SuspendLayout();
@@ -23305,18 +23351,29 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			// SourceTab
 			//
-			this.SourceTab.AutoScroll = true;
 			this.SourceTab.BackColor = System.Drawing.Color.Transparent;
-			this.SourceTab.Controls.Add(this.MultiSourceConfigGroup);
-			this.SourceTab.Controls.Add(this.SourceConfigGroup);
+			this.SourceTab.Controls.Add(this.SourceTabScrollPanel);
 			this.SourceTab.Controls.Add(this.WarningInfoLabel);
 			this.SourceTab.Location = new System.Drawing.Point(8, 46);
+			this.SourceTab.Margin = new System.Windows.Forms.Padding(0);
 			this.SourceTab.Name = "SourceTab";
-			this.SourceTab.Padding = new System.Windows.Forms.Padding(8);
 			this.SourceTab.Size = new System.Drawing.Size(1052, 1002);
 			this.SourceTab.TabIndex = 0;
 			this.SourceTab.Text = "素材";
 			this.SourceTab.UseVisualStyleBackColor = true;
+			//
+			// SourceTabScrollPanel
+			//
+			this.SourceTabScrollPanel.AutoScroll = true;
+			this.SourceTabScrollPanel.Controls.Add(this.MultiSourceConfigGroup);
+			this.SourceTabScrollPanel.Controls.Add(this.SourceConfigGroup);
+			this.SourceTabScrollPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SourceTabScrollPanel.Location = new System.Drawing.Point(0, 0);
+			this.SourceTabScrollPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.SourceTabScrollPanel.Name = "SourceTabScrollPanel";
+			this.SourceTabScrollPanel.Padding = new System.Windows.Forms.Padding(8);
+			this.SourceTabScrollPanel.Size = new System.Drawing.Size(1052, 946);
+			this.SourceTabScrollPanel.TabIndex = 5;
 			//
 			// MultiSourceConfigGroup
 			//
@@ -24114,12 +24171,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.WarningInfoLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.WarningInfoLabel.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
 			this.WarningInfoLabel.ForeColor = System.Drawing.Color.Red;
-			this.WarningInfoLabel.Location = new System.Drawing.Point(8, 1037);
-			this.WarningInfoLabel.Margin = new System.Windows.Forms.Padding(0);
+			this.WarningInfoLabel.Location = new System.Drawing.Point(0, 946);
 			this.WarningInfoLabel.MaximumSize = new System.Drawing.Size(864, 0);
 			this.WarningInfoLabel.Name = "WarningInfoLabel";
-			this.WarningInfoLabel.Padding = new System.Windows.Forms.Padding(8, 8, 8, 0);
-			this.WarningInfoLabel.Size = new System.Drawing.Size(16, 48);
+			this.WarningInfoLabel.Padding = new System.Windows.Forms.Padding(8);
+			this.WarningInfoLabel.Size = new System.Drawing.Size(16, 56);
 			this.WarningInfoLabel.TabIndex = 3;
 			//
 			// ScoreTab
@@ -24591,7 +24647,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiDynamicTempoFlow.Location = new System.Drawing.Point(0, 3);
 			this.MidiDynamicTempoFlow.Margin = new System.Windows.Forms.Padding(0);
 			this.MidiDynamicTempoFlow.Name = "MidiDynamicTempoFlow";
-			this.MidiDynamicTempoFlow.Size = new System.Drawing.Size(317, 45);
+			this.MidiDynamicTempoFlow.Padding = new System.Windows.Forms.Padding(0, 0, 6, 0);
+			this.MidiDynamicTempoFlow.Size = new System.Drawing.Size(323, 45);
 			this.MidiDynamicTempoFlow.TabIndex = 0;
 			this.MidiDynamicTempoFlow.Visible = false;
 			this.MidiDynamicTempoFlow.WrapContents = false;
@@ -24630,7 +24687,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiMidiBpmCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MidiMidiBpmCheck.Enabled = false;
 			this.MidiMidiBpmCheck.Group = "BpmTempo";
-			this.MidiMidiBpmCheck.Location = new System.Drawing.Point(320, 6);
+			this.MidiMidiBpmCheck.Location = new System.Drawing.Point(326, 6);
 			this.MidiMidiBpmCheck.Name = "MidiMidiBpmCheck";
 			this.MidiMidiBpmCheck.Size = new System.Drawing.Size(151, 39);
 			this.MidiMidiBpmCheck.TabIndex = 1;
@@ -24644,7 +24701,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiProjectBpmCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MidiProjectBpmCheck.Enabled = false;
 			this.MidiProjectBpmCheck.Group = "BpmTempo";
-			this.MidiProjectBpmCheck.Location = new System.Drawing.Point(477, 6);
+			this.MidiProjectBpmCheck.Location = new System.Drawing.Point(483, 6);
 			this.MidiProjectBpmCheck.Name = "MidiProjectBpmCheck";
 			this.MidiProjectBpmCheck.Size = new System.Drawing.Size(141, 39);
 			this.MidiProjectBpmCheck.TabIndex = 2;
@@ -24657,7 +24714,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel2.Controls.Add(this.MidiCustomBpmCheck);
 			this.flowLayoutPanel2.Controls.Add(this.MidiCustomBpmBox);
 			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel2.Location = new System.Drawing.Point(621, 3);
+			this.flowLayoutPanel2.Location = new System.Drawing.Point(627, 3);
 			this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
 			this.flowLayoutPanel2.Size = new System.Drawing.Size(334, 45);
@@ -25915,7 +25972,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab.Location = new System.Drawing.Point(8, 46);
 			this.VideoTab.Name = "VideoTab";
 			this.VideoTab.Padding = new System.Windows.Forms.Padding(8);
-			this.VideoTab.Size = new System.Drawing.Size(1052, 1002);
+			this.VideoTab.Size = new System.Drawing.Size(1052, 1000);
 			this.VideoTab.TabIndex = 2;
 			this.VideoTab.Text = "画面";
 			this.VideoTab.UseVisualStyleBackColor = true;
@@ -27768,7 +27825,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SheetTab.Location = new System.Drawing.Point(8, 46);
 			this.SheetTab.Name = "SheetTab";
 			this.SheetTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SheetTab.Size = new System.Drawing.Size(1052, 1002);
+			this.SheetTab.Size = new System.Drawing.Size(1052, 1000);
 			this.SheetTab.TabIndex = 3;
 			this.SheetTab.Text = "五线谱";
 			this.SheetTab.UseVisualStyleBackColor = true;
@@ -28145,6 +28202,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel4.Size = new System.Drawing.Size(1020, 42);
 			this.flowLayoutPanel4.TabIndex = 0;
 			//
+			// StaffLengthenToBarEndCheck
+			//
+			this.StaffLengthenToBarEndCheck.AutoSize = true;
+			this.StaffLengthenToBarEndCheck.Checked = true;
+			this.StaffLengthenToBarEndCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.StaffLengthenToBarEndCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffLengthenToBarEndCheck.Location = new System.Drawing.Point(615, 3);
+			this.StaffLengthenToBarEndCheck.Name = "StaffLengthenToBarEndCheck";
+			this.StaffLengthenToBarEndCheck.Size = new System.Drawing.Size(214, 36);
+			this.StaffLengthenToBarEndCheck.TabIndex = 8;
+			this.StaffLengthenToBarEndCheck.Text = "持续到小节结尾";
+			this.StaffLengthenToBarEndCheck.UseVisualStyleBackColor = true;
+			//
 			// flowLayoutPanel8
 			//
 			this.flowLayoutPanel8.AutoSize = true;
@@ -28186,7 +28256,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarTab.Location = new System.Drawing.Point(8, 46);
 			this.SonarTab.Name = "SonarTab";
 			this.SonarTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SonarTab.Size = new System.Drawing.Size(1052, 1002);
+			this.SonarTab.Size = new System.Drawing.Size(1052, 1000);
 			this.SonarTab.TabIndex = 6;
 			this.SonarTab.Text = "声呐";
 			this.SonarTab.UseVisualStyleBackColor = true;
@@ -28208,7 +28278,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 986);
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 984);
 			this.tableLayoutPanel11.TabIndex = 0;
 			//
 			// SonarSwitchesFlow
@@ -28311,7 +28381,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarList.Location = new System.Drawing.Point(3, 58);
 			this.SonarList.Name = "SonarList";
 			this.SonarList.ShowItemToolTips = true;
-			this.SonarList.Size = new System.Drawing.Size(1030, 327);
+			this.SonarList.Size = new System.Drawing.Size(1030, 325);
 			this.SonarList.TabIndex = 1;
 			this.SonarList.UseCompatibleStateImageBehavior = false;
 			this.SonarList.View = System.Windows.Forms.View.Details;
@@ -28347,7 +28417,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarButtonsTable.Controls.Add(this.SonarDeleteBtn, 1, 0);
 			this.SonarButtonsTable.Controls.Add(this.SonarResetBtn, 0, 0);
 			this.SonarButtonsTable.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 391);
+			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 389);
 			this.SonarButtonsTable.Name = "SonarButtonsTable";
 			this.SonarButtonsTable.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.SonarButtonsTable.RowCount = 1;
@@ -28426,7 +28496,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarParamsGroup.AutoSize = true;
 			this.SonarParamsGroup.Controls.Add(this.SonarParamsPanel);
 			this.SonarParamsGroup.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 465);
+			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 463);
 			this.SonarParamsGroup.Name = "SonarParamsGroup";
 			this.SonarParamsGroup.Size = new System.Drawing.Size(1030, 518);
 			this.SonarParamsGroup.TabIndex = 3;
@@ -29409,7 +29479,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.YtpTab.Location = new System.Drawing.Point(8, 46);
 			this.YtpTab.Name = "YtpTab";
 			this.YtpTab.Padding = new System.Windows.Forms.Padding(8);
-			this.YtpTab.Size = new System.Drawing.Size(1052, 1002);
+			this.YtpTab.Size = new System.Drawing.Size(1052, 1000);
 			this.YtpTab.TabIndex = 5;
 			this.YtpTab.Text = "YTP";
 			this.YtpTab.UseVisualStyleBackColor = true;
@@ -29612,7 +29682,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MoshTab.Location = new System.Drawing.Point(8, 46);
 			this.MoshTab.Name = "MoshTab";
 			this.MoshTab.Padding = new System.Windows.Forms.Padding(3);
-			this.MoshTab.Size = new System.Drawing.Size(1052, 1002);
+			this.MoshTab.Size = new System.Drawing.Size(1052, 1000);
 			this.MoshTab.TabIndex = 7;
 			this.MoshTab.Text = "抹失";
 			this.MoshTab.UseVisualStyleBackColor = true;
@@ -29908,7 +29978,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.HelperTab.Location = new System.Drawing.Point(8, 46);
 			this.HelperTab.Name = "HelperTab";
 			this.HelperTab.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.HelperTab.Size = new System.Drawing.Size(1052, 1002);
+			this.HelperTab.Size = new System.Drawing.Size(1052, 1000);
 			this.HelperTab.TabIndex = 4;
 			this.HelperTab.Text = "工具";
 			this.HelperTab.UseVisualStyleBackColor = true;
@@ -30428,19 +30498,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			//
-			// StaffLengthenToBarEndCheck
-			//
-			this.StaffLengthenToBarEndCheck.AutoSize = true;
-			this.StaffLengthenToBarEndCheck.Checked = true;
-			this.StaffLengthenToBarEndCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.StaffLengthenToBarEndCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffLengthenToBarEndCheck.Location = new System.Drawing.Point(615, 3);
-			this.StaffLengthenToBarEndCheck.Name = "StaffLengthenToBarEndCheck";
-			this.StaffLengthenToBarEndCheck.Size = new System.Drawing.Size(214, 36);
-			this.StaffLengthenToBarEndCheck.TabIndex = 8;
-			this.StaffLengthenToBarEndCheck.Text = "持续到小节结尾";
-			this.StaffLengthenToBarEndCheck.UseVisualStyleBackColor = true;
-			//
 			// ConfigForm
 			//
 			this.AcceptButton = this.OkBtn;
@@ -30485,6 +30542,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Tabs.ResumeLayout(false);
 			this.SourceTab.ResumeLayout(false);
 			this.SourceTab.PerformLayout();
+			this.SourceTabScrollPanel.ResumeLayout(false);
+			this.SourceTabScrollPanel.PerformLayout();
 			this.MultiSourceConfigGroup.ResumeLayout(false);
 			this.MultiSourceConfigGroup.PerformLayout();
 			this.LuckyDipPanel.ResumeLayout(false);
@@ -31261,6 +31320,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.Button AudioVelocityResetBtn;
 		public System.Windows.Forms.Button VideoVelocityResetBtn;
 		public System.Windows.Forms.CheckBox StaffLengthenToBarEndCheck;
+		public System.Windows.Forms.Panel SourceTabScrollPanel;
 	}
 	#endregion
 
@@ -32909,11 +32969,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				= true;
 			Lang str = Lang.str;
 			string bpm_str = ProcessBpmDouble(midi.Bpm);
-			IsDynamicMidiBpm = midi.IsDynamicBpm;
+			IsDynamicMidiBpm = midi.IsVariableBpm;
 			MidiMidiBpmCheck.Text = str.midi_midi_bpm + str.colon + bpm_str;
 			MidiDynamicMidiBpmCheck.Text = str.midi_dynamic_midi_bpm + str.colon + string.Format(str.dynamic_midi_bpm_info, bpm_str);
 			MidiBeatTxt.Text = string.IsNullOrWhiteSpace(midi.TimeSignature) ? str.none :
-				midi.IsDynamicBeat ? string.Format(str.dynamic_midi_beat_info, midi.TimeSignature) : midi.TimeSignature;
+				midi.IsVariableBeat ? string.Format(str.dynamic_midi_beat_info, midi.TimeSignature) : midi.TimeSignature;
 		}
 
 		/// <summary>
