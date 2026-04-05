@@ -241,7 +241,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/**<summary>谱号颜色</summary>*/ private Color SheetConfigClefColor { get { return configForm.StaffClefColorBtn.Color; } }
 		/**<summary>谱号缩放</summary>*/ private double SheetConfigClefScale { get { return (double)configForm.StaffClefScaleBox.Value; } }
 		/**<summary>生成谱号</summary>*/ private bool SheetConfigGenerateStaffClef { get { return configForm.StaffGenerateClefCheck.Checked; } }
-		/**<summary>定格符尾</summary>*/ private bool SheetConfigFreezeAtNoteOff { get { return configForm.StaffFreezeAtNoteOffCheck.Checked; } }
+		/**<summary>定格符尾</summary>*/ private bool SheetConfigFreezeAtNoteOff { get { return configForm.StaffFreezeAtNoteOffCheck.Checked && configForm.StaffLengthenToBarEndCheck.Checked; } }
+		/**<summary>截断符尾</summary>*/ private bool SheetConfigTruncateAtNoteOff { get { return !configForm.StaffLengthenToBarEndCheck.Checked; } }
 		/**<summary>音符偏移</summary>*/ private int SheetConfigShift { get { return (int)configForm.StaffNotesShiftBox.Value; } }
 		/**<summary>旧版定位</summary>*/ private bool UseLegacySheetMethod { get { return configForm.StaffLegacyMethodCheck.Checked; } } // 使用轨道运动方式放置音符位置
 		#endregion
@@ -1179,9 +1180,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#endregion
 
 			#region 五线谱操作
-			const int DEFAULT_MIDI_CONFIG_BEAT = 4;
-			double barStartTime = 0;
-			double barLength = midi.MsPerQuarter * DEFAULT_MIDI_CONFIG_BEAT;
+			double barStartQuarters = -1, barEndQuarters = -1;
 			bool sliceComposition = MidiConfigStartTime < MidiConfigEndTime;
 			int projWidth = vegas.Project.Video.Width;
 			int projHeight = vegas.Project.Video.Height;
@@ -1225,14 +1224,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						vegas.UpdateUI(); // 可以让 Vegas 实时更新 UI，但是会更慢。
 				}
 				if (progressForm.RequestAbort) break;
-				if (SheetConfig)
-					foreach (VariableTimeSignatureIntegrator.TimeSignatureKeysData timeSignature in beatIntegrator.keysDatas.Reverse())
-						if (midiEvent.AbsoluteTime >= timeSignature.startTicks) {
-							barLength = /*!MidiUseVariableMidiBpm ?*/
-								midi.MsPerQuarter * timeSignature.QuartersPerMeasure/* :
-								bpmIntegrator.GetActualTime(timeSignature.startTicks)*/; // TODO: 何意味？
-							break;
-						}
 				NoteEvent noteEvent = midiEvent as NoteEvent;
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
 
@@ -1268,9 +1259,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (startTime > MidiConfigEndTime && sliceComposition) break;
 				songLength = startTime + duration;
 				#region 下一页
-				while (Math.Ceiling(startTime) >= barStartTime + barLength)
-					barStartTime += barLength;
-				staffVisualizedDuration = barStartTime + barLength - startTime;
+				if (beatIntegrator.GetQuarterPassed(midiEvent) >= barEndQuarters)
+					beatIntegrator.GetSheetMeasureInfo(midiEvent, out barStartQuarters, out barEndQuarters);
+				staffVisualizedDuration = SheetConfigTruncateAtNoteOff ? duration :
+					MidiUseVariableMidiBpm ? bpmIntegrator.GetStaffDurationFromQuarters(midiEvent.AbsoluteTime, barEndQuarters) :
+					barEndQuarters * midi.MsPerQuarter - startTime;
 				#endregion
 
 				#region 生成声呐事件
@@ -1523,6 +1516,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						if (!ApplyPvRhythmVisualEffectPartialMethod(videoEvent, anim)) return false;
 						// 五线谱效果生成
 						if (SheetConfig) {
+							double startQuarters = beatIntegrator.GetQuarterPassed(midiEvent), barLength = barEndQuarters - barStartQuarters;
 							if (UseLegacySheetMethod) {
 								double sheetConfigGap = SheetConfigGap,
 									sheetConfigPosition = SheetConfigPosition,
@@ -1539,7 +1533,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 								keyFrame.Type = VideoKeyframeType.Hold;
 								keyFrame.Width = sheetConfigGap * 2 * projWidth / projHeight;
 								keyFrame.Height = sheetConfigGap * 2;
-								keyFrame.PositionX = -projWidth / 2 + sheetConfigPaddingLeft + sheetConfigWidth / barLength * (startTime - barStartTime);
+								keyFrame.PositionX = -projWidth / 2 + sheetConfigPaddingLeft + sheetConfigWidth / barLength * (startQuarters - barStartQuarters);
 								int octave = _pitch / 12;
 								int line = StaffPitchMap[_pitch % 12];
 								keyFrame.PositionY = sheetConfigPosition - sheetConfigGap * 3 + (octave - 5) * sheetConfigGap * 3.5 + line * sheetConfigGap * 0.5 + SheetConfigCelf * 12;
@@ -1552,7 +1546,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 								OFXDoubleParameter scaleY = picInPic.OFXEffect.FindParameterByName("DistortionScaleY") as OFXDoubleParameter; // Vegas 15 及以下版本不支持。
 								if (scaleY != null) scaleY.Value = scale.Value;
 								OFXDouble2DParameter location = picInPic.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter;
-								double positionX = -virtualWidth / 2 + SheetConfigPaddingLeft + sheetConfigWidth / barLength * (startTime - barStartTime);
+								double positionX = -virtualWidth / 2 + SheetConfigPaddingLeft + sheetConfigWidth / barLength * (startQuarters - barStartQuarters);
 								int octave = _pitch / 12;
 								int line = StaffPitchMap[_pitch % 12];
 								double positionY = SheetConfigPosition - SheetConfigGap * 3 + (octave - 5) * SheetConfigGap * 3.5 + line * SheetConfigGap * 0.5 + SheetConfigCelf * 12;
@@ -6021,16 +6015,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			for (int i = 0; i < msPerQuarterTrack.Length; i++) {
 				TempoEvent tempoEvent = msPerQuarterTrack[i];
 				double msPerQuarter = (double)tempoEvent.MicrosecondsPerQuarterNote / 1000;
-				long startTicks = tempoEvent.AbsoluteTime;
-				if (i + 1 < msPerQuarterTrack.Length && msPerQuarterTrack[i + 1].AbsoluteTime == startTicks) continue;
+				long ticks = tempoEvent.AbsoluteTime;
+				if (i + 1 < msPerQuarterTrack.Length && msPerQuarterTrack[i + 1].AbsoluteTime == ticks) continue;
 				// 经改正，MIDI 的动态 BPM 应该呈矩形而不是梯形。
-				double previousStartTicks = previousData == null ? 0 : previousData.startTicks;
+				double previousTicks = previousData == null ? 0 : previousData.ticks;
 				double previousMsPerQuarter = previousData == null ? 0 : previousData.msPerQuarter;
 				if (!useLinearKeyframes)
-					totalMs += (startTicks - previousStartTicks) / midi.TicksPerQuarter * previousMsPerQuarter;
+					totalMs += (ticks - previousTicks) / midi.TicksPerQuarter * previousMsPerQuarter;
 				else
-					totalMs += (startTicks - previousStartTicks) / midi.TicksPerQuarter * (previousMsPerQuarter + msPerQuarter) / 2.0;
-				_bpmKeysDatas_list.Add(previousData = new BpmKeysData(msPerQuarter, startTicks, totalMs));
+					totalMs += (ticks - previousTicks) / midi.TicksPerQuarter * (previousMsPerQuarter + msPerQuarter) / 2.0;
+				_bpmKeysDatas_list.Add(previousData = new BpmKeysData(msPerQuarter, ticks, totalMs));
 			}
 			bpmKeysDatas = _bpmKeysDatas_list.ToArray();
 		}
@@ -6040,40 +6034,40 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		private class BpmKeysData {
 			public readonly double msPerQuarter;
-			public readonly long startTicks;
+			public readonly long ticks;
 			public readonly double passedMs;
 			/// <summary>
 			/// 存储 BPM 关键帧数据的类。
 			/// </summary>
 			/// <param name="msPerQuarter">此刻的毫秒每四分音符的值（即当前速度）。</param>
-			/// <param name="startTicks">相对开始位置。</param>
+			/// <param name="ticks">刻。</param>
 			/// <param name="passedMs">之前所有数据实际毫秒值的总和。</param>
-			public BpmKeysData(double msPerQuarter, long startTicks, double passedMs) {
+			public BpmKeysData(double msPerQuarter, long ticks, double passedMs) {
 				this.msPerQuarter = msPerQuarter;
-				this.startTicks = startTicks;
+				this.ticks = ticks;
 				this.passedMs = passedMs;
 			}
 		}
 		/// <summary>
-		/// 根据 MIDI 音符的相对时刻获取音频播放的实际时刻（毫秒）。
+		/// 根据 MIDI 音符的刻（基本单位）获取音频播放的实际时刻（毫秒）。
 		/// </summary>
-		/// <param name="absoluteTime">音符相对时刻。</param>
+		/// <param name="absoluteTime">刻。</param>
 		/// <returns>音频播放的实际时刻。</returns>
 		public double GetActualTime(double absoluteTime) {
 			for (int i = 0; i < bpmKeysDatas.Length; i++) {
 				BpmKeysData curData = bpmKeysDatas[i], nextData = null;
 				if (i + 1 < bpmKeysDatas.Length) {
 					nextData = bpmKeysDatas[i + 1];
-					if (absoluteTime > nextData.startTicks) continue;
+					if (absoluteTime > nextData.ticks) continue;
 				}
 				double curMs;
 				if (nextData == null || !useLinearKeyframes)
-					curMs = (absoluteTime - curData.startTicks) * curData.msPerQuarter / midi.TicksPerQuarter;
+					curMs = (absoluteTime - curData.ticks) * curData.msPerQuarter / midi.TicksPerQuarter;
 				else {
-					double curPosition = absoluteTime - curData.startTicks;
-					double curProportion = curPosition / (nextData.startTicks - curData.startTicks);
+					double curPosition = absoluteTime - curData.ticks;
+					double curProportion = curPosition / (nextData.ticks - curData.ticks);
 					double curMsPerQuarter = curData.msPerQuarter * (1 - curProportion) + nextData.msPerQuarter * curProportion;
-					curMs = (absoluteTime - curData.startTicks) * (curData.msPerQuarter + curMsPerQuarter) / 2.0 / midi.TicksPerQuarter;
+					curMs = (absoluteTime - curData.ticks) * (curData.msPerQuarter + curMsPerQuarter) / 2.0 / midi.TicksPerQuarter;
 				}
 				return curMs + curData.passedMs;
 			}
@@ -6082,15 +6076,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			return absoluteTime;
 		}
 		/// <summary>
-		/// 根据 MIDI 音符的相对时刻与时长获取音频播放的实际时刻与时长（毫秒）。
+		/// 根据 MIDI 音符的开始刻（基本单位）与时长获取音频播放的实际时刻与时长（毫秒）。
 		/// </summary>
-		/// <param name="absoluteStart">音符相对时刻。</param>
-		/// <param name="absoluteDuration">音符相对时长。</param>
+		/// <param name="absoluteStart">开始刻。</param>
+		/// <param name="absoluteDuration">时长刻。</param>
 		/// <returns>一个元组，其<c>Item1</c>和<c>Item2</c>值分别为音频播放的实际时刻与时长。</returns>
 		public Tuple<double, double> GetActualTime(double absoluteStart, double absoluteDuration) {
 			double start = GetActualTime(absoluteStart);
 			double duration = GetActualTime(absoluteStart + absoluteDuration) - start;
 			return new Tuple<double, double>(start, duration);
+		}
+		public double GetStaffDurationFromQuarters(long currentTicks, double measureEndQuarters) {
+			double measureEndTicks = measureEndQuarters * midi.TicksPerQuarter;
+			return GetActualTime(measureEndTicks) - GetActualTime(currentTicks);
 		}
 	}
 
@@ -6106,15 +6104,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.midi = midi;
 			timeSignatureTrack = midi.TimeSignatureTrack.OfType<TimeSignatureEvent>().ToArray();
 			List<TimeSignatureKeysData> _keysDatas_list = new List<TimeSignatureKeysData>(timeSignatureTrack.Length);
-			TimeSignatureKeysData prevData = new TimeSignatureKeysData(0, 0, 0, 0);
+			TimeSignatureKeysData prevData = new TimeSignatureKeysData(0, 0, 0, 0, 0);
 			foreach (TimeSignatureEvent timeSignature in timeSignatureTrack) {
-				long startTicks = timeSignature.AbsoluteTime;
+				long ticks = timeSignature.AbsoluteTime;
 				if (prevData.numerator == 0) prevData.numerator = timeSignature.Numerator;
 				if (prevData.denominator == 0) prevData.denominator = timeSignature.GetDenominator();
 				double quartersPerMeasure = prevData.QuartersPerMeasure;
-				double prevQuarters = (startTicks - prevData.startTicks) / (double)midi.TicksPerQuarter;
+				double prevQuarters = (ticks - prevData.ticks) / (double)midi.TicksPerQuarter;
 				int prevMeasures = (int)Math.Ceiling(prevQuarters / quartersPerMeasure);
-				TimeSignatureKeysData data = new TimeSignatureKeysData(prevData.measureIndex + prevMeasures, startTicks, timeSignature.Numerator, timeSignature.GetDenominator());
+				TimeSignatureKeysData data = new TimeSignatureKeysData(prevData.measureIndex + prevMeasures, ticks, timeSignature.Numerator, timeSignature.GetDenominator(), prevData.passedQuarters + prevQuarters);
 				_keysDatas_list.Add(data);
 				prevData = data;
 			}
@@ -6126,30 +6124,33 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		internal class TimeSignatureKeysData {
 			public long measureIndex;
-			public long startTicks;
+			public long ticks;
 			public int numerator;
 			public int denominator;
+			public double passedQuarters;
 			/// <summary>
 			/// 存储拍号关键帧数据的类。
 			/// </summary>
 			/// <param name="measureIndex">当前小节索引值。</param>
-			/// <param name="startTicks">相对开始位置。</param>
+			/// <param name="ticks">刻。</param>
 			/// <param name="numerator">拍号分子。</param>
 			/// <param name="denominator">拍号分母。</param>
-			public TimeSignatureKeysData(long measureIndex, long startTicks, int numerator, int denominator) {
+			/// <param name="passedQuarters">之前所有数据四分音符数目的总和。</param>
+			public TimeSignatureKeysData(long measureIndex, long ticks, int numerator, int denominator, double passedQuarters) {
 				this.measureIndex = measureIndex;
-				this.startTicks = startTicks;
+				this.ticks = ticks;
 				this.numerator = numerator;
 				this.denominator = denominator;
+				this.passedQuarters = passedQuarters;
 			}
 			public double QuartersPerMeasure { get { return numerator * 4 / (double)denominator; } }
 		}
 
 		public long GetMeasureIndex(MidiEvent midiEvent) {
-			long startTicks = midiEvent.AbsoluteTime;
+			long ticks = midiEvent.AbsoluteTime;
 			foreach (TimeSignatureKeysData curData in keysDatas.Reverse())
-				if (startTicks >= curData.startTicks) {
-					long measureIndex = curData.measureIndex + (long)/* Math.Floor */((startTicks - curData.startTicks) / (midi.TicksPerQuarter * curData.QuartersPerMeasure));
+				if (ticks >= curData.ticks) {
+					long measureIndex = curData.measureIndex + (long)/* Math.Floor */((ticks - curData.ticks) / (midi.TicksPerQuarter * curData.QuartersPerMeasure));
 					return measureIndex;
 				}
 			return 0;
@@ -6159,12 +6160,33 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			return midiEvent.AbsoluteTime / midi.TicksPerQuarter;
 		}
 
+		public double GetQuarterPassed(MidiEvent midiEvent) {
+			return midiEvent.AbsoluteTime / (double)midi.TicksPerQuarter;
+		}
+
 		public static bool ShouldChangeSource(long measures, long prevMeasures, long quarters, long prevQuarters, out long targetStep, BarOrBeat period, BarOrBeat preparation = new BarOrBeat()) {
 			bool isBar = period.Unit == BarOrBeat.Units.Bar; // 忽略预备的单位，因为如果混合周期和预备的单位会变得非常麻烦。
 			int _period = period.Value, _preparation = preparation.Value;
 			long current = isBar ? measures : quarters, previous = isBar ? prevMeasures : prevQuarters;
 			targetStep = (current - _preparation) / _period;
 			return targetStep > (previous - _preparation) / _period;
+		}
+
+		public void GetSheetMeasureInfo(MidiEvent midiEvent, out double measureStartQuarters, out double measureEndQuarters) {
+			long ticks = midiEvent.AbsoluteTime;
+			foreach (TimeSignatureKeysData curData in keysDatas.Reverse())
+				if (ticks >= curData.ticks) {
+					double measures = (ticks - curData.ticks) / (midi.TicksPerQuarter * curData.QuartersPerMeasure);
+					measureStartQuarters = curData.passedQuarters + Math.Floor(measures) * curData.QuartersPerMeasure;
+					measureEndQuarters = curData.passedQuarters + Math.Floor(measures + 1) * curData.QuartersPerMeasure;
+					return;
+				}
+			{ // 在第一个拍号标记之前的音符，按理不应该进入这一环节。
+				TimeSignatureKeysData curData = keysDatas[0];
+				double measures = ticks / (midi.TicksPerQuarter * curData.QuartersPerMeasure);
+				measureStartQuarters = Math.Floor(measures) * curData.QuartersPerMeasure;
+				measureEndQuarters = Math.Floor(measures + 1) * curData.QuartersPerMeasure;
+			}
 		}
 	}
 
@@ -22158,6 +22180,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.StaffLengthenToBarEndCheck = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -28114,6 +28137,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel4.Controls.Add(this.StaffRelativeValueCheck);
 			this.flowLayoutPanel4.Controls.Add(this.StaffLegacyMethodCheck);
 			this.flowLayoutPanel4.Controls.Add(this.StaffFreezeAtNoteOffCheck);
+			this.flowLayoutPanel4.Controls.Add(this.StaffLengthenToBarEndCheck);
 			this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 0);
 			this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
@@ -30404,6 +30428,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			//
+			// StaffLengthenToBarEndCheck
+			//
+			this.StaffLengthenToBarEndCheck.AutoSize = true;
+			this.StaffLengthenToBarEndCheck.Checked = true;
+			this.StaffLengthenToBarEndCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.StaffLengthenToBarEndCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffLengthenToBarEndCheck.Location = new System.Drawing.Point(615, 3);
+			this.StaffLengthenToBarEndCheck.Name = "StaffLengthenToBarEndCheck";
+			this.StaffLengthenToBarEndCheck.Size = new System.Drawing.Size(214, 36);
+			this.StaffLengthenToBarEndCheck.TabIndex = 8;
+			this.StaffLengthenToBarEndCheck.Text = "持续到小节结尾";
+			this.StaffLengthenToBarEndCheck.UseVisualStyleBackColor = true;
+			//
 			// ConfigForm
 			//
 			this.AcceptButton = this.OkBtn;
@@ -31223,6 +31260,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public RememberedCheckBox AudioVocalFryCheck;
 		public System.Windows.Forms.Button AudioVelocityResetBtn;
 		public System.Windows.Forms.Button VideoVelocityResetBtn;
+		public System.Windows.Forms.CheckBox StaffLengthenToBarEndCheck;
 	}
 	#endregion
 
@@ -31319,6 +31357,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				MatchCutRadio.CheckedChanged += e;
 				LuckyDipRadio.CheckedChanged += e;
 				ConsonantRadio.CheckedChanged += e;
+				StaffLengthenToBarEndCheck.CheckedChanged += e;
 			}
 			AudioMainKeyCombo.MouseWheel += AudioMainKeyCombo_MouseWheel;
 			SourceConfigGroup.AllowDrop = MidiConfigGroup.AllowDrop = true;
@@ -31677,6 +31716,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			StaffClefScaleBox.SetValue(configIni.Read("ClefScale", 100), 100);
 			StaffGenerateClefCheck.Checked = configIni.Read("GenerateStaffClef", true);
 			StaffFreezeAtNoteOffCheck.Checked = configIni.Read("FreezeAtNoteOff", true);
+			StaffLengthenToBarEndCheck.Checked = configIni.Read("LengthenToBarEnd", true);
 			StaffLegacyMethodCheck.Checked = configIni.Read("LegacyMethod", false);
 			configIni.EndSection();
 			#endregion
@@ -31902,6 +31942,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("ClefScale", StaffClefScaleBox.Value);
 			configIni.Write("GenerateStaffClef", StaffGenerateClefCheck.Checked);
 			configIni.Write("FreezeAtNoteOff", StaffFreezeAtNoteOffCheck.Checked);
+			configIni.Write("LengthenToBarEnd", StaffLengthenToBarEndCheck.Checked);
 			configIni.Write("LegacyMethod", StaffLegacyMethodCheck.Checked);
 			configIni.EndSection();
 			#endregion
@@ -32377,6 +32418,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			StaffSurfacePaddingLeftLbl.Text = str.sheet_padding_left;
 			StaffSurfacePaddingRightLbl.Text = str.sheet_padding_right;
 			StaffFreezeAtNoteOffCheck.Text = str.sheet_freeze_at_noteoff;
+			StaffLengthenToBarEndCheck.Text = str.sheet_lengthen_to_bar_end;
 			SheetConfigInfoLabel.Text = str.sheet_config_info;
 			YtpTab.Text = str.ytp;
 			YtpClipsCountLbl.Text = str.ytp_clips_count;
@@ -32739,6 +32781,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				StaffLineThicknessBox.Enabled = StaffLineColorBtn.Enabled = false;
 			if (!StaffGenerateClefCheck.Checked)
 				StaffClefScaleBox.Enabled = StaffClefColorBtn.Enabled = false;
+			StaffFreezeAtNoteOffCheck.Enabled = StaffLengthenToBarEndCheck.Checked;
 			SetEnabled(YtpTab, VideoConfigCheck.Checked || AudioConfigCheck.Checked);
 
 			bool midiConfigOn = parent.midi != null;
@@ -35418,6 +35461,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			shuffled = "乱序",
 			match_cut_round = "按轮次应用视觉效果",
 			match_cut_repeat = "每段重复次数",
+			sheet_lengthen_to_bar_end = "持续到小节结尾",
 			__eol__ = "";
 
 		static Lang() {

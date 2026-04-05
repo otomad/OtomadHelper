@@ -571,6 +571,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.StaffLengthenToBarEndCheck = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -6527,6 +6528,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel4.Controls.Add(this.StaffRelativeValueCheck);
 			this.flowLayoutPanel4.Controls.Add(this.StaffLegacyMethodCheck);
 			this.flowLayoutPanel4.Controls.Add(this.StaffFreezeAtNoteOffCheck);
+			this.flowLayoutPanel4.Controls.Add(this.StaffLengthenToBarEndCheck);
 			this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 0);
 			this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
@@ -8817,6 +8819,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			// 
+			// StaffLengthenToBarEndCheck
+			// 
+			this.StaffLengthenToBarEndCheck.AutoSize = true;
+			this.StaffLengthenToBarEndCheck.Checked = true;
+			this.StaffLengthenToBarEndCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.StaffLengthenToBarEndCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffLengthenToBarEndCheck.Location = new System.Drawing.Point(615, 3);
+			this.StaffLengthenToBarEndCheck.Name = "StaffLengthenToBarEndCheck";
+			this.StaffLengthenToBarEndCheck.Size = new System.Drawing.Size(214, 36);
+			this.StaffLengthenToBarEndCheck.TabIndex = 8;
+			this.StaffLengthenToBarEndCheck.Text = "持续到小节结尾";
+			this.StaffLengthenToBarEndCheck.UseVisualStyleBackColor = true;
+			// 
 			// ConfigForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -9636,6 +9651,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public RememberedCheckBox AudioVocalFryCheck;
 		public System.Windows.Forms.Button AudioVelocityResetBtn;
 		public System.Windows.Forms.Button VideoVelocityResetBtn;
+		public System.Windows.Forms.CheckBox StaffLengthenToBarEndCheck;
 	}
 }
 
