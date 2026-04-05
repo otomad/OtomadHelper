@@ -1907,7 +1907,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// LuckyDipBarOrBeatPreparationUnitCombo
 			//
 			this.LuckyDipBarOrBeatPreparationUnitCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.LuckyDipBarOrBeatPreparationUnitCombo.Enabled = false;
 			this.LuckyDipBarOrBeatPreparationUnitCombo.FormattingEnabled = true;
 			this.LuckyDipBarOrBeatPreparationUnitCombo.Items.AddRange(new object[] {
 			"小节",
@@ -1916,6 +1915,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPreparationUnitCombo.Name = "LuckyDipBarOrBeatPreparationUnitCombo";
 			this.LuckyDipBarOrBeatPreparationUnitCombo.Size = new System.Drawing.Size(120, 40);
 			this.LuckyDipBarOrBeatPreparationUnitCombo.TabIndex = 16;
+			this.LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndexChanged += new System.EventHandler(this.LuckyDipBarOrBeatPeriodUnitCombo_SelectedIndexChanged);
 			//
 			// MatchCutPanel
 			//
@@ -4319,7 +4319,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab.Location = new System.Drawing.Point(8, 46);
 			this.VideoTab.Name = "VideoTab";
 			this.VideoTab.Padding = new System.Windows.Forms.Padding(8);
-			this.VideoTab.Size = new System.Drawing.Size(1052, 1000);
+			this.VideoTab.Size = new System.Drawing.Size(1052, 1002);
 			this.VideoTab.TabIndex = 2;
 			this.VideoTab.Text = "画面";
 			this.VideoTab.UseVisualStyleBackColor = true;
@@ -6172,7 +6172,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SheetTab.Location = new System.Drawing.Point(8, 46);
 			this.SheetTab.Name = "SheetTab";
 			this.SheetTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SheetTab.Size = new System.Drawing.Size(1052, 1000);
+			this.SheetTab.Size = new System.Drawing.Size(1052, 1002);
 			this.SheetTab.TabIndex = 3;
 			this.SheetTab.Text = "五线谱";
 			this.SheetTab.UseVisualStyleBackColor = true;
@@ -6603,7 +6603,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarTab.Location = new System.Drawing.Point(8, 46);
 			this.SonarTab.Name = "SonarTab";
 			this.SonarTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SonarTab.Size = new System.Drawing.Size(1052, 1000);
+			this.SonarTab.Size = new System.Drawing.Size(1052, 1002);
 			this.SonarTab.TabIndex = 6;
 			this.SonarTab.Text = "声呐";
 			this.SonarTab.UseVisualStyleBackColor = true;
@@ -6625,7 +6625,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 984);
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 986);
 			this.tableLayoutPanel11.TabIndex = 0;
 			//
 			// SonarSwitchesFlow
@@ -6728,7 +6728,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarList.Location = new System.Drawing.Point(3, 58);
 			this.SonarList.Name = "SonarList";
 			this.SonarList.ShowItemToolTips = true;
-			this.SonarList.Size = new System.Drawing.Size(1030, 325);
+			this.SonarList.Size = new System.Drawing.Size(1030, 327);
 			this.SonarList.TabIndex = 1;
 			this.SonarList.UseCompatibleStateImageBehavior = false;
 			this.SonarList.View = System.Windows.Forms.View.Details;
@@ -6764,7 +6764,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarButtonsTable.Controls.Add(this.SonarDeleteBtn, 1, 0);
 			this.SonarButtonsTable.Controls.Add(this.SonarResetBtn, 0, 0);
 			this.SonarButtonsTable.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 389);
+			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 391);
 			this.SonarButtonsTable.Name = "SonarButtonsTable";
 			this.SonarButtonsTable.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.SonarButtonsTable.RowCount = 1;
@@ -6843,7 +6843,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarParamsGroup.AutoSize = true;
 			this.SonarParamsGroup.Controls.Add(this.SonarParamsPanel);
 			this.SonarParamsGroup.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 463);
+			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 465);
 			this.SonarParamsGroup.Name = "SonarParamsGroup";
 			this.SonarParamsGroup.Size = new System.Drawing.Size(1030, 518);
 			this.SonarParamsGroup.TabIndex = 3;
@@ -7826,7 +7826,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.YtpTab.Location = new System.Drawing.Point(8, 46);
 			this.YtpTab.Name = "YtpTab";
 			this.YtpTab.Padding = new System.Windows.Forms.Padding(8);
-			this.YtpTab.Size = new System.Drawing.Size(1052, 1000);
+			this.YtpTab.Size = new System.Drawing.Size(1052, 1002);
 			this.YtpTab.TabIndex = 5;
 			this.YtpTab.Text = "YTP";
 			this.YtpTab.UseVisualStyleBackColor = true;
@@ -8029,7 +8029,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MoshTab.Location = new System.Drawing.Point(8, 46);
 			this.MoshTab.Name = "MoshTab";
 			this.MoshTab.Padding = new System.Windows.Forms.Padding(3);
-			this.MoshTab.Size = new System.Drawing.Size(1052, 1000);
+			this.MoshTab.Size = new System.Drawing.Size(1052, 1002);
 			this.MoshTab.TabIndex = 7;
 			this.MoshTab.Text = "抹失";
 			this.MoshTab.UseVisualStyleBackColor = true;
@@ -8325,7 +8325,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.HelperTab.Location = new System.Drawing.Point(8, 46);
 			this.HelperTab.Name = "HelperTab";
 			this.HelperTab.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.HelperTab.Size = new System.Drawing.Size(1052, 1000);
+			this.HelperTab.Size = new System.Drawing.Size(1052, 1002);
 			this.HelperTab.TabIndex = 4;
 			this.HelperTab.Text = "工具";
 			this.HelperTab.UseVisualStyleBackColor = true;
