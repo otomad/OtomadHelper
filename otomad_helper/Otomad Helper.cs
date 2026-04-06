@@ -87,7 +87,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	/// <summary>
 	/// Vegas 入口类。
 	/// </summary>
-	public class EntryPoint {
+	public sealed class EntryPoint {
 		/// <summary>版本号</summary>
 		public static readonly Version VERSION = new Version(4, 47, 17, 0);
 		/// <summary>修订日期</summary>
@@ -216,7 +216,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		#endregion
 
 		#region 多素材属性
-		/**<summary>需多素材</summary>*/ private bool CombConfigAvailable { get { return YtpConfig || CombConfigLuckyDip && CombConfigLuckyDipLimitToSelected; } }
+		/**<summary>需多素材</summary>*/ private bool ShouldMultisource { get { return YtpConfig || CombConfigLuckyDip; } }
 		/**<summary>素材盲盒</summary>*/ private bool CombConfigLuckyDip { get { return configForm.LuckyDipRadio.Checked; } }
 		/**<summary>音轨切换</summary>*/ private bool CombConfigLuckyDipTrack { get { return configForm.LuckyDipTrackCheck.Checked; } }
 		/**<summary>小节或拍</summary>*/ private bool CombConfigLuckyDipBarOrBeat { get { return configForm.LuckyDipBarOrBeatCheck.Checked; } }
@@ -226,7 +226,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>限制选中</summary>*/ private bool CombConfigLuckyDipLimitToSelected { get { return configForm.LuckyDipLimitToSelectedCheck.Checked; } }
 
 		// 多素材属性 - 实例对象变量
-		private int? luckyDipSeed = null;
+		/**
+		 * <summary>确保多音轨素材的一致性的随机种子。</summary>
+		 * <remarks>若为 null 表示不保障一致性，完全打乱随机。</remarks>
+		 */
+		private int? consistencyTracksSeed = null;
 		#endregion
 
 		#region 五线谱属性
@@ -285,13 +289,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		// 媒体 / MIDI 参数变量
 		internal MIDI midi = null;
 		internal Media media = null;
-		private double audioLength = 0;
-		private double videoLength = 0;
 		private bool IsFromSelectedMedia { get { return SourceConfigFrom == MediaSourceFrom.SELECTED_MEDIA; } }
 		private bool IsFromSelectedClip { get { return SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP; } }
 		private bool IsFromBrowseFile { get { return SourceConfigFrom == MediaSourceFrom.BROWSE_FILE; } }
 		internal EventSet selectedEventSet { get; private set; }
-		internal EventSet[] eventSets;
+		internal EventSets eventSets;
 		public double ProjectBpm { get { return vegas.Project.Ruler.BeatsPerMinute; } }
 		private AutoLayoutTracksInfos LayoutInfos { get { return configForm.LayoutInfos; } }
 		private bool IsMultiMidiChannel { get { return MidiConfigTracks.IsMultiMidiChannel; } }
@@ -394,7 +396,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private bool OpenMedia(Media media) {
 			try {
 				this.media = media;
-				audioLength = videoLength = media.Length.ToMilliseconds();
 			} catch (Exception e) {
 				ShowError(new Exceptions.NoMediaTakeException(), e);
 				this.media = null;
@@ -413,7 +414,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			} catch (Exception ee) { ShowError(new Exceptions.NoMediaTakeException(), ee); return false; }
 			Media media = vegas.Project.MediaPool.Find(clipName);
 			this.media = media;
-			audioLength = videoLength = media.Length.ToMilliseconds();
 			return true;
 		}
 
@@ -534,15 +534,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 显示报错信息。
 		/// </summary>
 		public static void ShowError(string str, ShowErrorState state = ShowErrorState.NORMAL) {
-			instance.vegas.ShowError(str + ExceptionVersionInfo);
+			instance.vegas.ShowError(str + ExceptionVersionInfo, Environment.StackTrace);
 			DoingAfterShowError(state);
 		}
 		public static void ShowError(Exception e, ShowErrorState state = ShowErrorState.NORMAL) {
-			instance.vegas.ShowError(e.Message + ExceptionVersionInfo, e.StackTrace);
+			string stackTrace = !string.IsNullOrWhiteSpace(e.StackTrace) ? e.StackTrace :
+				(e == null ? string.Empty : e.ToString() + Environment.NewLine) + Environment.StackTrace;
+			instance.vegas.ShowError(e.Message + ExceptionVersionInfo, stackTrace);
 			DoingAfterShowError(state);
 		}
 		public static void ShowError(Exception e1, Exception e2, ShowErrorState state = ShowErrorState.NORMAL) {
-			instance.vegas.ShowError(e1.Message + ExceptionVersionInfo, e2.ToString());
+			string stackTrace = !string.IsNullOrWhiteSpace(e2.ToString()) ? e2.ToString() :
+				(e1 == null ? string.Empty : string.IsNullOrWhiteSpace(e1.ToString()) ? string.Empty : e1.ToString() + Environment.NewLine) +
+				(e2 == null ? string.Empty : string.IsNullOrWhiteSpace(e2.ToString()) ? string.Empty : e2.ToString() + Environment.NewLine) + Environment.StackTrace;
+			instance.vegas.ShowError(e1.Message + ExceptionVersionInfo, stackTrace);
 			DoingAfterShowError(state);
 		}
 		public static void ShowError2(string str) {
@@ -553,9 +558,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 		public static void ShowError2(Exception e1, Exception e2) {
 			ShowError2(e1.Message + "\n\n" + Lang.str.details + "\n" + e2.ToString());
-		}
-		private string GetExceptionInfo(Exception e) {
-			return e.Message + "\n" + e.StackTrace + "\n" + e.ToString();
 		}
 		private static string ExceptionVersionInfo {
 			get {
@@ -664,6 +666,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public double videoLength { get { return videoEvent == null ? 0 : videoEvent.Length.ToMilliseconds(); } }
 			public Subclip audioReverse = null;
 			public Subclip videoReverse = null;
+			public AudioEvent audioOriginalEvent = null;
+			public VideoEvent videoOriginalEvent = null;
+			public int? mediaPoolIndex = null;
 			/// <summary>
 			/// 初始化一个空的集合。
 			/// </summary>
@@ -687,6 +692,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public EventSet(AudioEvent audioEvent, VideoEvent videoEvent, Subclip audioReverse, Subclip videoReverse) : this(audioEvent, videoEvent) {
 				this.audioReverse = audioReverse;
 				this.videoReverse = videoReverse;
+			}
+			public EventSet(AudioEvent audioEvent, VideoEvent videoEvent, AudioEvent audioOriginalEvent, VideoEvent videoOriginalEvent) : this(audioEvent, videoEvent) {
+				this.audioOriginalEvent = audioOriginalEvent;
+				this.videoOriginalEvent = videoOriginalEvent;
+			}
+			public EventSet(AudioEvent audioEvent, VideoEvent videoEvent, int mediaPoolIndex) : this(audioEvent, videoEvent) {
+				this.mediaPoolIndex = mediaPoolIndex;
 			}
 			public override bool Equals(object obj) {
 				if (ReferenceEquals(this, obj)) return true;
@@ -753,11 +765,50 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// <summary>
 			/// 是否包含倒放子剪辑。
 			/// </summary>
-			public bool IncludeReverseSubClip {
+			public bool IncludeReversedSubClip {
 				get {
 					return audioReverse != null || videoReverse != null;
 				}
 			}
+		}
+
+		public class EventSets : IReadOnlyList<EventSet>, IDisposable {
+			private readonly static EventSet[] emptyEventSets = new EventSet[0];
+			private readonly static TrackEvent[] emptyOriginalClips = new TrackEvent[0];
+			private readonly IReadOnlyList<EventSet> eventSets;
+			public delegate void EventSetsDisposeEventHandler(EventSets sender);
+			public event EventSetsDisposeEventHandler OnDispose;
+			public AudioTrack ASmpTrack { get; private set; }
+			public VideoTrack VSmpTrack { get; private set; }
+			/// <summary>获取主素材。<br />用于单素材模式。</summary>
+			public EventSet Primary { get { return eventSets.IsEmpty() ? null : eventSets[0]; } }
+			internal IEnumerable<TrackEvent> OriginalClips { get; private set; }
+			public IEnumerable<AudioEvent> AudioSampleEvents { get { return eventSets.Select(set => set.audioEvent).OfType<AudioEvent>(); } }
+			public IEnumerable<VideoEvent> VideoSampleEvents { get { return eventSets.Select(set => set.videoEvent).OfType<VideoEvent>(); } }
+			/// <summary>
+			/// <list type="bullet">
+			/// <item><term><see langword="true" /></term><description>落单的视频剪辑更多。</description></item>
+			/// <item><term><see langword="false" /></term><description>落单的音频剪辑更多。</description></item>
+			/// <item><term><see langword="null" /></term><description>一样多，没有落单的。</description></item>
+			/// </list>
+			/// </summary>
+			public bool? IsRemainingVideos { get; private set; }
+
+			public EventSets(IReadOnlyList<EventSet> eventSets, AudioTrack aSmpTrack, VideoTrack vSmpTrack, IEnumerable<TrackEvent> originalClips, bool? isRemainingVideos = null) {
+				OriginalClips = originalClips ?? emptyOriginalClips;
+				this.eventSets = eventSets ?? emptyEventSets;
+				if (!(this.eventSets is IList<EventSet>)) throw new ArgumentException("代码编写错误：EventSets 必须实现接口 IList<EventSet>");
+				ASmpTrack = aSmpTrack;
+				VSmpTrack = vSmpTrack;
+				IsRemainingVideos = isRemainingVideos;
+			}
+
+			public void Dispose() { if (OnDispose != null) OnDispose(this); }
+			public EventSet this[int index] { get { return eventSets[index]; } }
+			public int Count { get { return eventSets.Count; } }
+			public IEnumerator<EventSet> GetEnumerator() { return eventSets.GetEnumerator(); }
+			IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+			public int IndexOf(EventSet item) { IList<EventSet> _eventSets = eventSets as IList<EventSet>; return _eventSets == null ? -1 : _eventSets.IndexOf(item); }
 		}
 
 		/// <summary>
@@ -888,8 +939,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				OpenMedia(selections[0]);
 			}
 			if (IsFromSelectedClip) {
-				audioLength = selectedEventSet.audioLength;
-				videoLength = selectedEventSet.videoLength;
 				if (selectedEventSet.audioEvent == null && selectedEventSet.videoEvent == null) {
 					ShowError(new Exceptions.NoSelectedClipException());
 					media = null;
@@ -1040,11 +1089,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			audioEventSample = null;
 			if (!IsFromBrowseFile) { bool ok = GetSelectedSource(); if (!ok) return false; }
 			if (!IsFromSelectedClip) {
-				audioEventSample = track.AddAudioEvent(
-					position,
-					Timecode.FromMilliseconds(audioLength)
-				);
 				try {
+					AudioStream audioStream = media.GetAudioStreamByIndex(0);
+					audioEventSample = track.AddAudioEvent(
+						position,
+						audioStream.Length
+					);
 					audioEventSample.AddTake(media.GetAudioStreamByIndex(0));
 				} catch (Exception) { /*ShowError(new Exceptions.NoAudioTakeException(), e);*/ return false; }
 			} else {
@@ -1090,17 +1140,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				(AConfigMethod == AudioTuningMethod.PITCH_SHIFT ||
 				(AConfigMethod == AudioTuningMethod.ELASTIQUE || AConfigMethod == AudioTuningMethod.CLASSIC) && AConfigAltMethod == AudioAltTuningMethod.PLUGIN
 			)) if (!ExaminePitchShiftPresetsExist()) return false;
-			if (YtpConfig) { GenerateYtp(); return true; }
-			if (eventSets == null && !GetSelectedSources(out eventSets)) return false;
-			if (CombConfigAvailable) {
-				int i = 0;
-				foreach (EventSet eventSet in eventSets) {
-					if (eventSet.videoEvent != null) eventSet.videoEvent.ActiveTake.Name = i.ToString();
-					if (eventSet.audioEvent != null) eventSet.audioEvent.ActiveTake.Name = i.ToString();
-					i++;
-				}
-				return false;
-			}
+			if (YtpConfig) return GenerateYtp();
 			#endregion
 			#region 自动改变项目速度和拍号
 			RulerProperties ruler = vegas.Project.Ruler;
@@ -1162,18 +1202,35 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endif
 			#endregion
 
+			#region 多素材支持
+			AddSampleTracks();
+			if (eventSets == null && !GetSelectedSources(out eventSets, ShouldMultisource, true, true, aSmpTrack, vSmpTrack)) return false;
+			#if TEST // 测试分组功能是否正常匹配。
+			if (ShouldMultisource) {
+				int i = 0;
+				foreach (EventSet eventSet in eventSets) {
+					if (eventSet.videoEvent != null) eventSet.videoEvent.ActiveTake.Name = i.ToString();
+					if (eventSet.audioEvent != null) eventSet.audioEvent.ActiveTake.Name = i.ToString();
+					i++;
+				}
+				return false;
+			}
+			#endif
+			#endregion
+
 			#region 可变速度、拍号处理
 			bpmIntegrator = bpmIntegrator ?? (MidiUseVariableMidiBpm ? new VariableBpmIntegrator(midi, MidiUseVariableMidiBpmForm == 1) : null);
 			beatIntegrator = beatIntegrator ?? (CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat || SheetConfig ? new VariableTimeSignatureIntegrator(midi) : null);
 			#endregion
 
 			#region 如果修改了素材的入点和出点的时间
+			EventSet activeSource = eventSets.Primary;
 			double sourceStartTime = SourceConfigStartTime, sourceEndTime = SourceConfigEndTime;
 			bool adjustTime = sourceStartTime != 0 || sourceEndTime != 0 || CombConfigLuckyDip;
-			if (adjustTime) {
-				while (sourceEndTime <= sourceStartTime) sourceEndTime += Math.Max(audioLength, videoLength);
-				audioLength = videoLength = sourceEndTime - sourceStartTime;
-			}
+			Action ResetSourceTrimTime = () => {
+				sourceStartTime = SourceConfigStartTime; sourceEndTime = SourceConfigEndTime;
+				if (adjustTime) while (sourceEndTime <= sourceStartTime) sourceEndTime += Math.Max(activeSource.audioLength, activeSource.videoLength);
+			};
 			double generateBeginTime = GenerateAt == GenerateAt.CUSTOM ? GenerateAtCustomTimecode.ToMilliseconds() :
 				GenerateAt == GenerateAt.CURSOR ? vegas.Transport.CursorPosition.ToMilliseconds() : 0;
 			double songLength = 0; // 指定乐曲总长。
@@ -1189,37 +1246,57 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			int virtualHeight = SheetConfigRelative ? 1080 : projHeight;
 			#endregion
 
-			#region 规范化音频
-			AudioEvent audioEventSample = null;
-			if (AConfig && !isSonarLegal) {
-				if (!IsFromSelectedClip) {
-					audioEventSample = trackHelper.AddSampleEvent<AudioEvent>(
-						Timecode.FromMilliseconds(0),
-						Timecode.FromMilliseconds(audioLength)
-					);
-					try {
-						audioEventSample.AddTake(media.GetAudioStreamByIndex(0));
-					} catch (Exception e) { ShowError(new Exceptions.NoAudioTakeException(), e); return false; }
+			#region 踩点
+			bool[] matchCutShuffledStatus = null;
+			object[] matchCutShuffledSeed = { consistencyTracksSeed };
+			Action<object[]> NextSourceByDuration = seeds => {
+				if (!ShouldMultisource) return;
+				seeds = seeds ?? matchCutShuffledSeed;
+				bool calcByVideos = AConfig && VConfig ? eventSets.IsRemainingVideos != false : !AConfig;
+				activeSource = Randoms.SourceRandomSelector.GetRandomByDuration(eventSets, calcByVideos, seeds);
+			};
+			Func<MatchCutOrder, object[], bool> NextSourceByOrder = (order, seeds) => {
+				if (!ShouldMultisource) return true;
+				bool looped = false;
+				if (order != MatchCutOrder.SHUFFLED) {
+					int direction = order == MatchCutOrder.SEQUENTIAL ? 1 : -1;
+					activeSource = eventSets.ElementAtOrDefault(FloorMod(eventSets.IndexOf(activeSource) + direction, eventSets.Count, out looped)) ?? eventSets.Primary;
 				} else {
-					if (selectedEventSet.audioEvent == null) { ShowError(new Exceptions.NoAudioTakeException()); return false; }
-					audioEventSample = trackHelper.AddSampleEvent(selectedEventSet.audioEvent, Timecode.FromMilliseconds(0));
+					seeds = seeds ?? matchCutShuffledSeed;
+					activeSource = Randoms.SourceRandomSelector.GetRandomInPool(eventSets, ref matchCutShuffledStatus, out looped, seeds);
 				}
-				if (AConfigNormalize) { // 将添加音频单独提取到循环之外有助于提高规范化音频的速度
-					audioEventSample.RecalculateNorm();
-					audioEventSample.Normalize = true;
-				}
-			}
+				return !looped;
+			};
 			#endregion
 
 			#region 素材盲盒
 			long prevMeasures = 0, prevQuarters = 0;
 			int prevMarkerIndex = -1;
 			Action<long, int> NextLuckyDipSource = (step, markerIndex) => {
-				sourceStartTime = HashRandom.GetDouble(luckyDipSeed, step, markerIndex) * Math.Max(audioLength, videoLength);
-				sourceEndTime = sourceStartTime + Math.Max(audioLength, videoLength);
+				object[] seeds = { consistencyTracksSeed, step, markerIndex };
+				if (CombConfigLuckyDipLimitToSelected)
+					NextSourceByOrder(MatchCutOrder.SHUFFLED, seeds);
+				else {
+					NextSourceByDuration(seeds);
+					double maxLength = Math.Max(activeSource.audioLength, activeSource.videoLength);
+					sourceStartTime = Randoms.HashRandom.NextDouble(seeds) * maxLength;
+					sourceEndTime = sourceStartTime + maxLength;
+				}
 			};
 			if (CombConfigLuckyDip && CombConfigLuckyDipTrack && MidiConfigTracks.CurrentChannel != 0)
 				NextLuckyDipSource(-1, -1);
+			#endregion
+
+			#region 规范化音频
+			if (AConfig && !isSonarLegal) {
+				if (activeSource.audioEvent == null) { ShowError(new Exceptions.NoAudioTakeException()); return false; }
+				if (AConfigNormalize) { // 将添加音频单独提取到循环之外有助于提高规范化音频的速度
+					foreach (AudioEvent sample in eventSets.AudioSampleEvents) {
+						sample.RecalculateNorm();
+						sample.Normalize = true;
+					}
+				}
+			}
 			#endregion
 
 			for (int i = 0; i < currentChannel.Events.Count; i++) {
@@ -1350,10 +1427,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				#endregion
 
 				using (TempEventGroup tempEventGroup = TempEventGroup.Create(this)) { // 事件分组临时列表。
+					double audioLength = activeSource.audioLength, videoLength = activeSource.videoLength;
 					#region 生成音频事件
 					if (AConfig) {
 						int indexInAudioTracks;
-						AudioEvent audioEvent = trackHelper.AddEvent(audioEventSample, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(duration), out indexInAudioTracks);
+						AudioEvent audioEvent = trackHelper.AddEvent(activeSource.audioEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(duration), out indexInAudioTracks);
 						if (audioEvent == null) goto endAConfig;
 						audioEvent.Length = Timecode.FromMilliseconds(duration);
 						bool audioFreezeLastFrameCondition = AConfigFreezeLastFrame &&
@@ -1481,9 +1559,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 								videoEvent.AddTake(media.GetVideoStreamByIndex(0));
 							} catch (Exception) { ShowError(new Exceptions.NoVideoTakeException()); return false; }
 						} else {
-							if (selectedEventSet.videoEvent == null) { ShowError(new Exceptions.NoVideoTakeException()); return false; }
+							if (activeSource.videoEvent == null) { ShowError(new Exceptions.NoVideoTakeException()); return false; }
 							int _index;
-							videoEvent = trackHelper.AddEvent(selectedEventSet.videoEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(videoEventDuration), out _index);
+							videoEvent = trackHelper.AddEvent(activeSource.videoEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(videoEventDuration), out _index);
 							if (videoEvent == null) goto endVConfig;
 						}
 						if (!(_testName == null)) videoEvent.ActiveTake.Name = _testName;
@@ -1596,7 +1674,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					foreach (AudioTrack audioTrack in trackHelper.audioTracks)
 						action(audioTrack);
 				});
-				if (!currentChannel.IsDynamicPan)
+				if (!currentChannel.IsVariablePan)
 					ForATracks(audioTrack => audioTrack.PanX = GetPan(currentChannel.Pan));
 				else
 					foreach (MidiEvent midiEvent in currentChannel.Events) {
@@ -1776,7 +1854,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 			#endregion
 
-			if (audioEventSample != null) audioEventSample.Remove();
 			foreach (Track track in trackHelper.AllTracks)
 				foreach (TrackEvent trackEvent in track.Events)
 					trackEvent.Selected = SelectAllGeneratedEvents;
@@ -2264,17 +2341,31 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return GetAssociatedEvent(trackEvent as TrackEvent) as AudioEvent;
 		}
 
-		private bool GetSelectedSources(out EventSet[] eventSetArr, bool autoPutToSampleTrack = false, AudioTrack aSmpTrack = null, VideoTrack vSmpTrack = null) {
-			eventSetArr = null;
-			bool requireReverse = YtpConfigEffects.Contains(YtpEffectType.REVERSE);
+		/// <summary>
+		/// 获取所选多项素材（包括选中轨道事件或项目媒体）。
+		/// </summary>
+		/// <param name="getEventSets">获取音视频事件套装。</param>
+		/// <param name="multisource">是否为多素材模式？如果不是的话获取一套素材后就立即返回。</param>
+		/// <param name="autoSupplementMissingStream">如果音视频中某一流比另一流少，是否自动重用现有的其它流补上？（仅限选中轨道事件。）</param>
+		/// <param name="autoPutToSampleTrack">自动将选中素材放入范例轨道？如果选中的是项目媒体且该参数为 false，则本方法无法正常工作。</param>
+		/// <param name="aSmpTrack">当 <paramref name="autoPutToSampleTrack" /> 为 true 时指定的范例音频轨道。</param>
+		/// <param name="vSmpTrack">当 <paramref name="autoPutToSampleTrack" /> 为 true 时指定的范例视频轨道。</param>
+		/// <returns>是否成功获取到任意素材？</returns>
+		private bool GetSelectedSources(out EventSets getEventSets, bool multisource, bool autoSupplementMissingStream = false, bool autoPutToSampleTrack = false, AudioTrack aSmpTrack = null, VideoTrack vSmpTrack = null) {
+			bool? isRemainingVideos = null;
+			getEventSets = new EventSets(null, aSmpTrack, vSmpTrack, null, isRemainingVideos);
+			getEventSets.OnDispose += EventSets_Dispose;
+			bool requireReverse = YtpConfig && YtpConfigEffects.Contains(YtpEffectType.REVERSE);
 			List<EventSet> eventSets = new List<EventSet>();
+			HashSet<TrackEvent> originalClips = new HashSet<TrackEvent>();
 			if (!IsFromSelectedClip) {
-				List<Media> selections = new List<Media>();
+				List<IndexerEntry<Media>> selections = new List<IndexerEntry<Media>>();
 				#region 验证合法性
 				bool ytpOverLength = false;
 				bool ytpInMediaGenerator = false;
 				bool noMediaTake = false;
 				Exception noMediaTakeException = null;
+				int i = 0;
 				if (IsFromSelectedMedia)
 					foreach (Media media in vegas.Project.MediaPool.GetSelectedMedia()) {
 						try {
@@ -2284,7 +2375,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 								ytpOverLength = true;
 							else if (media.Generator != null)
 								ytpInMediaGenerator = true;
-							else selections.Add(media);
+							else selections.Add(new IndexerEntry<Media>(media, i++));
 						} catch (Exception e) {
 							noMediaTake = true;
 							noMediaTakeException = noMediaTakeException ?? e;
@@ -2296,7 +2387,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						ytpOverLength = true;
 					else if (media.Generator != null)
 						ytpInMediaGenerator = true;
-					else selections.Add(media);
+					else selections.Add(new IndexerEntry<Media>(media, -1));
 				}
 				if (YtpConfig && selections.Count /* still */ == 0) {
 					if (ytpOverLength) {
@@ -2317,14 +2408,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				#endregion
 				#region 放置示例轨道剪辑
 				if (autoPutToSampleTrack)
-					foreach (Media media in selections) {
+					foreach (IndexerEntry<Media> media in selections) {
 						AudioEvent aSmp = null; VideoEvent vSmp = null;
 						Subclip aReverse = null, vReverse = null;
-						if (AConfig) if (!Track_AppendMedia(aSmpTrack, media, out aSmp)) return false;
-						if (VConfig) if (!Track_AppendMedia(vSmpTrack, media, out vSmp)) return false;
-						if (requireReverse)
-							aReverse = vReverse = GetReversedSubclip(media);
-						eventSets.Add(new EventSet(aSmp, vSmp, aReverse, vReverse));
+						if (AConfig) if (!Track_AppendMedia(aSmpTrack, media.Item, out aSmp)) return false;
+						if (VConfig) if (!Track_AppendMedia(vSmpTrack, media.Item, out vSmp)) return false;
+						if (requireReverse) {
+							aReverse = vReverse = GetReversedSubclip(media.Item);
+							eventSets.Add(new EventSet(aSmp, vSmp, aReverse, vReverse));
+						} else
+							eventSets.Add(new EventSet(aSmp, vSmp, media.Index));
 					}
 				#endregion
 			} else {
@@ -2341,22 +2434,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					Subclip aReverse = null, vReverse = null;
 					if (AConfig) {
 						if (aEvent == null) { SE(new Exceptions.NoAudioTakeException()); return false; }
-						if (YtpConfigMinLen > aEvent.Length.ToMilliseconds()) goto ytpOverLength;
+						if (YtpConfig && YtpConfigMinLen > aEvent.Length.ToMilliseconds()) goto ytpOverLength;
 						if (requireReverse)
 							aReverse = vReverse = GetReversedSubclip(aEvent);
 					}
 					if (VConfig) {
 						if (vEvent == null) { SE(new Exceptions.NoVideoTakeException()); return false; }
-						if (YtpConfigMinLen > vEvent.Length.ToMilliseconds()) goto ytpOverLength;
-						if (vEvent.ActiveTake.Media.Generator != null) goto ytpInMediaGenerator;
-						if (!AConfig || vEvent.ActiveTake.Media != aEvent.ActiveTake.Media)
+						if (YtpConfig && YtpConfigMinLen > vEvent.Length.ToMilliseconds()) goto ytpOverLength;
+						if (YtpConfig && vEvent.ActiveTake.Media.Generator != null) goto ytpInMediaGenerator;
+						if (!AConfig || vEvent.ActiveTake.Media != aEvent.ActiveTake.Media) {
 							if (requireReverse)
 								vReverse = GetReversedSubclip(vEvent);
+						}
 					}
 					// 在后面单独添加，避免之后报错又消不掉。
 					if (AConfig) aSmp = Track_Append(aSmpTrack, aEvent, Timecode.FromMilliseconds(0), true);
 					if (VConfig) vSmp = Track_Append(vSmpTrack, vEvent, Timecode.FromMilliseconds(0), true);
-					eventSets.Add(new EventSet(aSmp, vSmp, aReverse, vReverse));
+					if (requireReverse) eventSets.Add(new EventSet(aSmp, vSmp, aReverse, vReverse));
+					else eventSets.Add(new EventSet(aSmp, vSmp, aEvent, vEvent));
 					return true;
 				ytpOverLength:
 					SE(new Exceptions.YtpOverLengthException());
@@ -2369,7 +2464,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				#endregion
 				#region 验证合法性
 				foreach (TrackEvent trackEvent in selectedEvents) {
-					if (!trackEvent.IsGrouped) continue;
+					if (!trackEvent.IsGrouped ||
+						!selectedUngroupedEvents.Contains(trackEvent)) // 避免当同时选中音视频剪辑时，两个剪辑被同时创建一次反转子剪辑。
+						continue;
 					AudioEvent aEvent = null;
 					VideoEvent vEvent = null;
 					IEnumerable<TrackEvent> otherEventsInGroup = trackEvent.Group;
@@ -2383,6 +2480,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (aEvent == null) continue;
 					} else continue;
 					appendOne(aEvent, vEvent, false);
+					if (RemoveSourceTrackEvents) originalClips.Adds((TrackEvent)aEvent, (TrackEvent)vEvent);
+					if (!multisource) goto JustNeedOne;
 					selectedUngroupedEvents.Remove(trackEvent);
 					foreach (TrackEvent otherEventInGroup in otherEventsInGroup)
 						selectedUngroupedEvents.Remove(otherEventInGroup);
@@ -2393,27 +2492,60 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					List<TrackEvent> nominative = videoEvents.Count <= audioEvents.Count ? videoEvents : audioEvents,
 						accusative = nominative != videoEvents ? videoEvents : audioEvents;
 					foreach (TrackEvent @event in nominative) {
-						double curMs = @event.Start.ToMilliseconds();
-						TrackEvent closestEvent = accusative.Aggregate((min, next) => Math.Abs(next.Start.ToMilliseconds() - curMs) < Math.Abs(min.Start.ToMilliseconds() - curMs) ? next : min);
+						TrackEvent closestEvent = FindTheClosestEvent(@event, accusative);
 						if (@event is AudioEvent) appendOne((AudioEvent)@event, (VideoEvent)closestEvent, false);
 						else appendOne((AudioEvent)closestEvent, (VideoEvent)@event, false);
 						accusative.Remove(closestEvent);
 					}
+					if (accusative.Any()) isRemainingVideos = accusative[0] is VideoEvent;
+					IEnumerable<TrackEvent> reusedEvents = autoSupplementMissingStream && accusative.Any() ? eventSets.Select(e => isRemainingVideos == false ? e.audioEvent as TrackEvent : e.videoEvent as TrackEvent).OfType<TrackEvent>() : null;
 					foreach (TrackEvent @event in accusative) {
-						if (@event is AudioEvent) appendOne((AudioEvent)@event, null, false);
-						else appendOne(null, (VideoEvent)@event, false);
+						TrackEvent reusedEvent = autoSupplementMissingStream ? FindTheClosestEvent(@event, nominative) : null;
+						if (@event is AudioEvent) appendOne((AudioEvent)@event, (VideoEvent)reusedEvent, false);
+						else appendOne((AudioEvent)reusedEvent, (VideoEvent)@event, false);
 					}
 				}
 				#endregion
 			}
 			EventSet.EliminateDuplicates(ref eventSets);
 			eventSets.Sort((aa, bb) => {
-				TrackEvent a = VConfig ? (TrackEvent)aa.videoEvent : (TrackEvent)aa.audioEvent, b = VConfig ? (TrackEvent)bb.videoEvent : (TrackEvent)bb.audioEvent;
+				// 通过项目媒体选中的素材，根据媒体在项目媒体中的顺序排序。
+				if (aa.mediaPoolIndex.HasValue && bb.mediaPoolIndex.HasValue) return aa.mediaPoolIndex.Value.CompareTo(bb.mediaPoolIndex.Value);
+				// 通过轨道事件选中的素材，如果有原始轨道事件，则放在没有原始轨道事件的前面。
+				if (VConfig ? (aa.videoOriginalEvent != null) != (bb.videoOriginalEvent != null) : (aa.audioOriginalEvent != null) != (bb.audioOriginalEvent != null))
+					return (VConfig ? aa.videoOriginalEvent == null : aa.audioOriginalEvent == null) ? 1 : -1;
+				// 通过轨道事件选中的素材，选择其轨道事件，如果没有原始轨道事件，则用范例轨道事件。
+				TrackEvent a = VConfig ? (TrackEvent)(aa.videoOriginalEvent ?? aa.videoEvent) : (TrackEvent)(aa.audioOriginalEvent ?? aa.audioEvent),
+					b = VConfig ? (TrackEvent)(bb.videoOriginalEvent ?? bb.videoEvent) : (TrackEvent)(bb.audioOriginalEvent ?? bb.audioEvent);
+				// null 排在其它的后面。
 				if (a == null || b == null) return a == null && b == null ? 0 : a == null ? 1 : -1;
 				return a.Start.CompareTo(b.Start);
 			});
-			eventSetArr = eventSets.ToArray();
-			return !eventSetArr.IsEmpty();
+		JustNeedOne:
+			getEventSets = new EventSets(eventSets, aSmpTrack, vSmpTrack, originalClips, isRemainingVideos);
+			getEventSets.OnDispose += EventSets_Dispose;
+			return !getEventSets.IsEmpty();
+		}
+
+		private void EventSets_Dispose(EventSets eventSets) {
+			if (eventSets.ASmpTrack != null) vegas.Project.Tracks.Remove(eventSets.ASmpTrack);
+			if (eventSets.VSmpTrack != null) vegas.Project.Tracks.Remove(eventSets.VSmpTrack);
+			aSmpTrack = null;
+			vSmpTrack = null;
+			HashSet<Subclip> subclips = new HashSet<Subclip>();
+			foreach (EventSet set in eventSets) { // 先将子剪辑放入集合中，因为有些媒体的音视频会共用同一子剪辑，删除其中一项后，另一项不会自动失效也无法验证，调用其任意属性均会报错，多次报错则会导致软件崩溃。
+				if (set.audioReverse != null) subclips.Add(set.audioReverse);
+				if (set.videoReverse != null) subclips.Add(set.videoReverse);
+			}
+			foreach (Subclip subclip in subclips) // 删除不需要使用的反转子剪辑。
+				if (subclip.UseCount == 0) vegas.Project.MediaPool.Remove(subclip.KeyString);
+		}
+
+		private static TrackEvent FindTheClosestEvent(TrackEvent nominative, IEnumerable<TrackEvent> accusative) {
+			if (accusative.IsEmpty()) return null;
+			double curMs = nominative.Start.ToMilliseconds();
+			TrackEvent closestEvent = accusative.Aggregate((min, next) => Math.Abs(next.Start.ToMilliseconds() - curMs) < Math.Abs(min.Start.ToMilliseconds() - curMs) ? next : min);
+			return closestEvent;
 		}
 
 		/// <summary>
@@ -2731,6 +2863,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return _value < _min ? min : _value > _max ? max : value;
 		}
 
+		public static int FloorMod(int x, int y, out bool looped) {
+			looped = x >= y || x < 0;
+			int result = x % y;
+			if (result != 0 && x < 0 != y < 0)
+				result += y;
+			return result;
+		}
+
 		/// <summary>
 		/// 确定指定值是否有限（零、次正规或正规）。
 		/// </summary>
@@ -2815,6 +2955,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return Timecode.FromPositionString(string.Format("{0}.{1}.000", measure, beat), RulerFormat.MeasuresAndBeats);
 		}
 
+		private AudioTrack aSmpTrack;
+		private VideoTrack vSmpTrack;
+		private void AddSampleTracks() {
+			if (AConfig && aSmpTrack == null) vegas.Project.Tracks.Add(aSmpTrack = new AudioTrack(vegas.Project, vegas.Project.Tracks.Count, Lang.str.sample_audio_track_name));
+			if (VConfig && vSmpTrack == null) vegas.Project.Tracks.Add(vSmpTrack = new VideoTrack(vegas.Project, vegas.Project.Tracks.Count, Lang.str.sample_video_track_name));
+		}
+
 		/// <summary>
 		/// 生成 YouTube Poop。
 		/// </summary>
@@ -2822,27 +2969,26 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			Timecode generateBeginTime = GenerateAt == GenerateAt.CUSTOM ? GenerateAtCustomTimecode :
 				GenerateAt == GenerateAt.CURSOR ? vegas.Transport.CursorPosition : Timecode.FromMilliseconds(0);
 			progressForm.Info = Lang.str.processing_ytp;
-			AudioTrack aSmpTrack = null, aTrack = AConfig && IsAPreferredTrack ? AConfigPreferredTrack.Track : null;
-			VideoTrack vSmpTrack = null, vTrack = VConfig && IsVPreferredTrack ? VConfigPreferredTrack.Track : null;
+			AudioTrack aTrack = AConfig && IsAPreferredTrack ? AConfigPreferredTrack.Track : null;
+			VideoTrack vTrack = VConfig && IsVPreferredTrack ? VConfigPreferredTrack.Track : null;
 			int startIndex = GenerateBelowTopAdjustmentTrack ? GetFirstNotAdjustmentTrackIndex() : 0;
-			if (AConfig) vegas.Project.Tracks.Add(aSmpTrack = new AudioTrack(vegas.Project, startIndex, "YTP Audio Sample Track"));
-			if (VConfig) vegas.Project.Tracks.Add(vSmpTrack = new VideoTrack(vegas.Project, startIndex, "YTP Video Sample Track"));
 			if (AConfig && !IsAPreferredTrack) vegas.Project.Tracks.Add(aTrack = new AudioTrack(vegas.Project, startIndex, ""));
 			if (VConfig && !IsVPreferredTrack) vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, startIndex, ""));
 			if (GroupTrackBy != GroupTrackBy.OFF)
 				generatedTracks.Adds(aTrack as Track, vTrack as Track);
 			else
 				UngroupTracks(aTrack, vTrack);
-			Action<bool> DeleteYtpSampleTracks = new Action<bool>(reserveYtpTracks => {
-				if (aSmpTrack != null) vegas.Project.Tracks.Remove(aSmpTrack);
-				if (vSmpTrack != null) vegas.Project.Tracks.Remove(vSmpTrack);
+			#region 多素材支持
+			AddSampleTracks();
+			Action<bool> DeleteYtpSampleTracks = reserveYtpTracks => {
+				//if (aSmpTrack != null) vegas.Project.Tracks.Remove(aSmpTrack);
+				//if (vSmpTrack != null) vegas.Project.Tracks.Remove(vSmpTrack);
 				if (!reserveYtpTracks) {
 					if (aTrack != null && !IsAPreferredTrack) vegas.Project.Tracks.Remove(aTrack);
 					if (vTrack != null && !IsVPreferredTrack) vegas.Project.Tracks.Remove(vTrack);
 				}
-			});
-			#region 多素材支持
-			if (!GetSelectedSources(out eventSets, true, aSmpTrack, vSmpTrack)) goto cleanUpRuins;
+			};
+			if (eventSets == null && !GetSelectedSources(out eventSets, true, false, true, aSmpTrack, vSmpTrack)) goto cleanUpRuins;
 			#endregion
 			#region 获取选中需要使用的效果
 			Random rand = new Random();
@@ -2853,7 +2999,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (progressForm.RealTimeUpdateCheck.Checked)
 					vegas.UpdateUI();
 				if (progressForm.RequestAbort) break;
-				EventSet randClip = eventSets[rand.Next(eventSets.Length)];
+				EventSet randClip = eventSets[rand.Next(eventSets.Count)];
 				double randLen = rand.Next(YtpConfigMinLen, YtpConfigMaxLen + 1);
 				int sourceAvailableLength = (int)((AConfig && VConfig ? Math.Min(randClip.audioLength, randClip.videoLength) :
 					AConfig ? randClip.audioLength : randClip.videoLength) - randLen);
@@ -2896,16 +3042,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void Generate() {
-			if (!YtpConfig)
-				MidiConfigTracks.CompleteConfig();
-			if (!CombConfigLuckyDipTrack) luckyDipSeed = NewSeed();
-			if (YtpConfig || !IsMultiMidiChannel) {
-				GenerateOtomad();
-				goto StartToRemoveSourceTrackEvents;
-			}
-			while (MidiConfigTracks.IsNonEmpty) {
-				if (!GenerateOtomad()) goto StartToRemoveSourceTrackEvents;
-				MidiConfigTracks.Next();
+			bool succeed = true;
+			if (!YtpConfig) MidiConfigTracks.CompleteConfig();
+			if (!CombConfigLuckyDipTrack) consistencyTracksSeed = NewSeed();
+			try {
+				if (YtpConfig || !IsMultiMidiChannel) {
+					succeed = succeed && GenerateOtomad();
+					goto StartToRemoveSourceTrackEvents;
+				}
+				while (MidiConfigTracks.IsNonEmpty) {
+					if (!(succeed = succeed && GenerateOtomad())) goto StartToRemoveSourceTrackEvents;
+					MidiConfigTracks.Next();
+				}
+			} finally {
+				if (eventSets != null) eventSets.Dispose();
 			}
 			if (!SheetConfig && generatedVideoTracks.Count > 1) {
 				VideoTrack[] videoTracks = generatedVideoTracks.ToArray();
@@ -2913,10 +3063,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				GradientTracksForm.Arrange(videoTracks, LayoutInfos.GradientTracks, this);
 			}
 		StartToRemoveSourceTrackEvents:
-			if (RemoveSourceTrackEvents && SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP) {
-				if (AConfig && selectedEventSet.audioEvent != null) selectedEventSet.audioEvent.Remove();
-				if (VConfig && selectedEventSet.videoEvent != null) selectedEventSet.videoEvent.Remove();
-			}
+			if (succeed && RemoveSourceTrackEvents && SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP && eventSets != null)
+				foreach (TrackEvent originalClip in eventSets.OriginalClips)
+					if (AConfig && originalClip is AudioEvent || VConfig && originalClip is VideoEvent)
+						originalClip.Remove();
 			if (GroupTrackBy == GroupTrackBy.SESSION || GroupTrackBy != GroupTrackBy.OFF && YtpConfig)
 				GroupTracks(generatedTracks);
 			if (CollapseTrackGroups)
@@ -3089,7 +3239,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <param name="value">内容</param>
 		public static object s { set { MessageBox.Show(value == null ? "null" : value.ToString()); } }
 		public static void test() { s = "Super Idol 的笑容都没你的甜！"; }
-		public static void update() { EntryPoint.instance.vegas.UpdateUI(); test(); }
+		public static void update(object message = null) {
+			EntryPoint.instance.vegas.UpdateUI();
+			if (message == null) test();
+			else s = message;
+		}
+		public static void trace(object message = null) {
+			EntryPoint.instance.vegas.UpdateUI();
+			string _message = message == null ? string.Empty : message.ToString();
+			EntryPoint.instance.vegas.ShowError(!string.IsNullOrWhiteSpace(_message) ? _message : "DEBUG STACK TRACE...", Environment.StackTrace);
+		}
 		private static int times = 0;
 		public static void s1(object text, int times) {
 			if (S.times++ < times) {
@@ -4071,6 +4230,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		CONSONANT,
 		/// <summary>原音系战法。</summary>
 		SHUPELUNKER,
+	}
+
+	public enum MatchCutOrder {
+		/// <summary>顺序。</summary>
+		SEQUENTIAL,
+		/// <summary>逆序。</summary>
+		REVERSED,
+		/// <summary>乱序。</summary>
+		SHUFFLED,
 	}
 
 	/// <summary>
@@ -5935,7 +6103,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public IList<MidiEvent> Events;
 			public bool IsDrumKit = false;
 			public int Pan = INITIAL_PAN;
-			public bool IsDynamicPan = false;
+			public bool IsVariablePan = false;
 			private bool isResorted = false;
 			public bool HasPitchWheelEvents = false;
 			/// <summary>
@@ -6011,13 +6179,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						TimeSignatureDenominator = timeSignatureEvent.GetDenominator();
 						TimeSignatureTrack = info.Events.OfType<TimeSignatureEvent>();
 					}
-					if (midiEvent is ControlChangeEvent && !info.IsDynamicPan) {
+					if (midiEvent is ControlChangeEvent && !info.IsVariablePan) {
 						ControlChangeEvent controlChangeEvent = midiEvent as ControlChangeEvent;
 						if (controlChangeEvent.Controller == MidiController.Pan)
 							if (controlChangeEvent.ControllerValue != info.Pan)
 								if (info.Pan == INITIAL_PAN)
 									info.Pan = controlChangeEvent.ControllerValue;
-								else info.IsDynamicPan = true;
+								else info.IsVariablePan = true;
 					}
 					if (midiEvent is PitchWheelChangeEvent && !info.HasPitchWheelEvents)
 						info.HasPitchWheelEvents = true;
@@ -6271,63 +6439,162 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	}
 
 	/// <summary>
-	/// 可混合多种参数产生唯一确定的随机数类。
+	/// 各种随机数方法。
 	/// </summary>
-	public static class HashRandom {
-		// FNV-1a 64位算法的偏移偏移量和素数
-		private const ulong FNV_OFFSET_BASIS = 0xcbf29ce484222325ul;
-		private const ulong FNV_PRIME = 0x100000001b3ul;
+	namespace Randoms {
+		/// <summary>
+		/// 可混合多种参数产生唯一确定的随机数类。
+		/// </summary>
+		public static class HashRandom {
+			// FNV-1a 64位算法的偏移偏移量和素数
+			private const ulong FNV_OFFSET_BASIS = 0xcbf29ce484222325ul;
+			private const ulong FNV_PRIME = 0x100000001b3ul;
 
-		// 混合函数 (Mixer) 使用的精心挑选的质数常数
-		private const ulong MIXER_CONST_1 = 0xbf58476d1ce4e5b9ul;
-		private const ulong MIXER_CONST_2 = 0x94d049bb133111ebul;
+			// 混合函数 (Mixer) 使用的精心挑选的质数常数
+			private const ulong MIXER_CONST_1 = 0xbf58476d1ce4e5b9ul;
+			private const ulong MIXER_CONST_2 = 0x94d049bb133111ebul;
 
-		// 用于映射到 double 精度范围的掩码 (2^53 - 1) 和 分母 (2^53)
-		private const ulong DOUBLE_PRECISION_MASK = 0x1FFFFFFFFFFFFFul;
-		private const double DOUBLE_DIVISOR = (double)0x20000000000000ul;
+			// 用于映射到 double 精度范围的掩码 (2^53 - 1) 和 分母 (2^53)
+			private const ulong DOUBLE_PRECISION_MASK = 0x1FFFFFFFFFFFFFul;
+			private const double DOUBLE_DIVISOR = (double)0x20000000000000ul;
 
-		// 用于处理 null 时的非确定性随机数生成器
-		private static readonly Random fallbackRandom = new Random();
+			// 用于处理 null 时的非确定性随机数生成器
+			private static readonly Random fallbackRandom = new Random();
+
+			/// <summary>
+			/// 支持无限参数，包含各种数值、布尔值及 null。<br />
+			/// long, int, short, byte, bool 等均可隐式或显式转为 long。<br />
+			/// 如果包含 null，则返回不稳定的随机数。
+			/// </summary>
+			public static double NextDouble(params object[] seeds) {
+				// 1. 预检查：如果参数数组本身为 null 或其中包含 null 元素
+				if (seeds == null) return fallbackRandom.NextDouble();
+
+				unchecked { // 忽略溢出检查，确保正负数转换安全
+					ulong hash = FNV_OFFSET_BASIS;
+
+					// 2. 将所有输入参数混合进 Hash 值
+					foreach (object input in seeds) {
+						// 如果任意一个参数是 null，立即返回非确定性随机数
+						if (input == null) return fallbackRandom.NextDouble();
+
+						// 3. 将不同类型统一转换为 8 字节 (long) 进行 Hash
+						long value;
+						if (input is bool) value = (bool)input ? 1L : 0L;
+						else value = Convert.ToInt64(input); // 处理 int, long, short, uint 等
+
+						// 4. FNV-1a 逐字节混合
+						// 这里使用位移比 BitConverter.GetBytes 更快且无内存分配
+						for (int i = 0; i < 8; i++) {
+							hash ^= (byte)((value >> (i * 8)) & 0xFF);
+							hash *= FNV_PRIME;
+						}
+					}
+
+					// 5. 使用快速混合函数（Finalizer，类似 SplitMix64 核心逻辑）打乱位分布，确保随机性
+					// 这些常数是数学上精心挑选的，用于散列位分布
+					hash = (hash ^ (hash >> 30)) * MIXER_CONST_1;
+					hash = (hash ^ (hash >> 27)) * MIXER_CONST_2;
+					hash ^= (hash >> 31);
+
+					// 6. 将 64 位整数映射到 [0.0, 1.0) 范围
+					// 0x1FFFFFFFFFFFFFL 是 2^53 - 1，对应 double 的 53 位精度
+					return (hash & DOUBLE_PRECISION_MASK) / DOUBLE_DIVISOR;
+				}
+			}
+
+			/// <inheritdoc cref="Random.Next(int, int)" />
+			public static int Next(int minValue, int maxValue, object[] seeds = null) {
+				if (minValue > maxValue) throw new ArgumentOutOfRangeException("maxValue is less than minValue in Randoms.HashRandom.Next()");
+				else if (minValue == maxValue) return minValue;
+				if (seeds == null) return fallbackRandom.Next(minValue, maxValue);
+				double value = NextDouble(seeds);
+				return EntryPoint.Map(value, 0d, 1d, minValue, maxValue);
+			}
+
+			/// <inheritdoc cref="Random.Next(int)" />
+			public static int Next(int maxValue, object[] seeds = null) {
+				return Next(0, maxValue, seeds);
+			}
+		}
 
 		/// <summary>
-		/// 支持无限参数，包含各种数值、布尔值及 null。<br />
-		/// long, int, short, byte, bool 等均可隐式或显式转为 long。<br />
-		/// 如果包含 null，则返回不稳定的随机数。
+		/// 素材随机选择器。
 		/// </summary>
-		public static double GetDouble(params object[] inputs) {
-			// 1. 预检查：如果参数数组本身为 null 或其中包含 null 元素
-			if (inputs == null) return fallbackRandom.NextDouble();
+		public static class SourceRandomSelector {
+			/// <summary>
+			/// 从素材列表中随机挑一个素材返回。如果某个素材的时长越长，它被选中的机率就越高。
+			/// </summary>
+			/// <remarks>
+			/// 加权随机选择（Weighted Random Selection）。素材的时长就是它的权重。
+			/// </remarks>
+			/// <param name="sources">素材们。</param>
+			/// <param name="calcByVideos">是否按视频时长计算而不是按音频时长计算？</param>
+			/// <param name="seeds">种子。缺省为随机。</param>
+			public static EntryPoint.EventSet GetRandomByDuration(EntryPoint.EventSets sources, bool calcByVideos, object[] seeds = null) {
+				if (sources.IsEmpty()) return null;
 
-			unchecked { // 忽略溢出检查，确保正负数转换安全
-				ulong hash = FNV_OFFSET_BASIS;
+				// 1. 计算总时长（总权重）
+				Func<EntryPoint.EventSet, double> GetSourceLength = source => {
+					TrackEvent trackEvent = calcByVideos ? (TrackEvent)source.videoEvent : (TrackEvent)source.audioEvent;
+					return trackEvent == null ? 0 : trackEvent.Length.ToMilliseconds();
+				};
 
-				// 2. 将所有输入参数混合进 Hash 值
-				foreach (object input in inputs) {
-					// 如果任意一个参数是 null，立即返回非确定性随机数
-					if (input == null) return fallbackRandom.NextDouble();
+				double totalLength = sources.Sum(GetSourceLength);
 
-					// 3. 将不同类型统一转换为 8 字节 (long) 进行 Hash
-					long value;
-					if (input is bool) value = (bool)input ? 1L : 0L;
-					else value = Convert.ToInt64(input); // 处理 int, long, short, uint 等
+				// 2. 在总时长范围内生成一个随机点
+				// 注意：Random.NextDouble() 返回 0.0 到 1.0 之间的值
+				double randomPoint = HashRandom.NextDouble(seeds) * totalLength;
 
-					// 4. FNV-1a 逐字节混合
-					// 这里使用位移比 BitConverter.GetBytes 更快且无内存分配
-					for (int i = 0; i < 8; i++) {
-						hash ^= (byte)((value >> (i * 8)) & 0xFF);
-						hash *= FNV_PRIME;
-					}
+				// 3. 确定随机点落在哪个视频的区间内
+				double currentSum = 0;
+				foreach (EntryPoint.EventSet source in sources) {
+					currentSum += GetSourceLength(source);
+					if (currentSum >= randomPoint) return source;
 				}
 
-				// 5. 使用快速混合函数（Finalizer，类似 SplitMix64 核心逻辑）打乱位分布，确保随机性
-				// 这些常数是数学上精心挑选的，用于散列位分布
-				hash = (hash ^ (hash >> 30)) * MIXER_CONST_1;
-				hash = (hash ^ (hash >> 27)) * MIXER_CONST_2;
-				hash ^= (hash >> 31);
+				return sources.Last();
+			}
 
-				// 6. 将 64 位整数映射到 [0.0, 1.0) 范围
-				// 0x1FFFFFFFFFFFFFL 是 2^53 - 1，对应 double 的 53 位精度
-				return (hash & DOUBLE_PRECISION_MASK) / DOUBLE_DIVISOR;
+			/// <summary>
+			/// 从列表抽取一个元素，并更新对应的布尔标记数组。
+			/// </summary>
+			/// <param name="pool">抽奖池列表。</param>
+			/// <param name="status">记录是否已抽取的布尔数组（应与 <paramref name="pool" /> 长度一致，不一致的话就会自动重新调整大小）。</param>
+			/// <param name="allPicked">现在是否全抽完了开启新的一轮了？</param>
+			public static T GetRandomInPool<T>(IReadOnlyList<T> pool, ref bool[] status, out bool allPicked, object[] seeds = null) {
+				allPicked = false;
+				if (pool.IsEmpty()) return default(T);
+				if (status == null) status = new bool[pool.Count];
+				else if (status.Length != pool.Count) Array.Resize(ref status, pool.Count);
+
+				// 1. 快速扫描：检查是否检查是否已全部抽完（即全为 true，这一轮是否结束）
+				int pickedCount = status.Count(picked => picked);
+				if (pickedCount == status.Length) {
+					allPicked = true;
+					Array.Clear(status, 0, status.Length); // 开启新轮次：全部归零
+				}
+
+				int selectedIndex = -1;
+				const int HYBRID_THRESHOLD = 64;
+				const double PICKED_RATIO = 0.8;
+
+				// 2. 性能优化混合策略：当总数超过阈值且剩余名额不足 20% 时，直接找索引，避免随机碰撞死循环
+				if (seeds != null || status.Length > HYBRID_THRESHOLD && pickedCount > status.Length * PICKED_RATIO) {
+					// 策略 A：索引提取法 (防止大规模下的“随机碰撞陷阱”)
+					int[] remainingIndices = status.Select((picked, index) => picked ? null : (int?)index).OfType<int>().ToArray();
+					int remainingCount = status.Length - pickedCount;
+					selectedIndex = remainingIndices[HashRandom.Next(remainingCount, seeds)];
+				} else {
+					// 策略 B：剩余名额多，直接随机撞大运（小规模或大规模前期，效率最高）
+					do
+						selectedIndex = HashRandom.Next(status.Length, seeds);
+					while (status[selectedIndex]); // 如果抽中了已标记为 true 的，重抽
+				}
+
+				// 3. 标记并返回
+				status[selectedIndex] = true;
+				return pool[selectedIndex];
 			}
 		}
 	}
@@ -11813,7 +12080,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private readonly bool isAudioAboveVideo = false;
 		public string audioName;
 		public string videoName;
-		public const string EXAMPLE_EVENT_NAME = "(Example Track Event)";
+		//public const string EXAMPLE_EVENT_NAME = "(Example Track Event)";
 		public List<Track> AllTracks { get { return videoTracks.Cast<Track>().Concat(audioTracks.Cast<Track>()).ToList(); } }
 		public readonly bool audioSingleTrack;
 		public readonly bool videoSingleTrack;
@@ -11973,14 +12240,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			Timecode end = start + length;
 			{
 				TrackEvent trackEvent = track.Events.LastOrDefault();
-				if (trackEvent == null || IsExampleEvent(trackEvent)) { }
+				if (trackEvent == null /*|| IsExampleEvent(trackEvent)*/) { }
 				else if (trackEvent.Start == start) return false;
 				else if (trackEvent.End > start && trackEvent.End <= end)
 					trackEvent.Length = start - trackEvent.Start;
 			}
 			if (!IsAlwaysNewTrack<T>()) {
 				bool hasEqualedStart;
-				List<TrackEvent> inEvents = FindEventsAlmostIn(track, start, end, out hasEqualedStart, EXAMPLE_EVENT_NAME);
+				List<TrackEvent> inEvents = FindEventsAlmostIn(track, start, end, out hasEqualedStart);
 				if (hasEqualedStart) return false;
 				foreach (TrackEvent trackEvent in inEvents)
 					if (trackEvent.Start < start && trackEvent.End > start && trackEvent.End <= end)
@@ -12007,7 +12274,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (!isSampleEvent && !TrackVacateSpace<T>(track, start, length)) return null;
 			indexInStreamTracks = IsAudio<T>() ? audioTracks.IndexOf(track as AudioTrack) : videoTracks.IndexOf(track as VideoTrack);
 			T copiedEvent = trackEvent.Copy(track, start) as T;
-			if (copiedEvent.Name == EXAMPLE_EVENT_NAME) copiedEvent.Name = "";
+			//if (copiedEvent.Name == EXAMPLE_EVENT_NAME) copiedEvent.Name = "";
 			copiedEvent.Length = length;
 			SetTopmostTrackIndex(track.Index);
 			return copiedEvent;
@@ -12032,7 +12299,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return trackEvent;
 		}
 
-		/// <summary>
+		/*/// <summary>
 		/// 添加示例轨道事件。
 		/// </summary>
 		/// <typeparam name="T">轨道事件类型。</typeparam>
@@ -12060,7 +12327,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (sampleEvent == null) return null;
 			sampleEvent.Name = name;
 			return sampleEvent;
-		}
+		}*/
 
 		/// <summary>
 		/// 查找一个可以容下剪辑的轨道。
@@ -12085,7 +12352,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (length.ToMilliseconds() == 0) goto ok;
 					if (info.length > Round(start)) continue;
 					if (!IsAlwaysNewTrack<TEvent>()) {
-						List<TrackEvent> inEvents = FindEventsAlmostIn(otherTrack, start, end, EXAMPLE_EVENT_NAME, true);
+						List<TrackEvent> inEvents = FindEventsAlmostIn(otherTrack, start, end, null, true);
 						if (inEvents.Count != 0) continue;
 					}
 				ok:
@@ -12237,14 +12504,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			Dispose();
 		}
 
-		/// <summary>
+		/*/// <summary>
 		/// 快速验证指定轨道事件是否是范例样本。
 		/// </summary>
 		/// <param name="trackEvent">要检测的轨道事件。</param>
 		/// <returns>该轨道事件是否是范例样本。</returns>
 		public static bool IsExampleEvent(TrackEvent trackEvent) {
 			return trackEvent.Name == EXAMPLE_EVENT_NAME;
-		}
+		}*/
 	}
 
 	partial class AutoLayoutTracksGridForm {
@@ -32172,7 +32439,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					midiChannel.Pan < 60 ? Lang.str.pan_left_abbr :
 					midiChannel.Pan > 68 ? Lang.str.pan_right_abbr :
 					Lang.str.pan_center_abbr; // 60 ~ 68 之间判定为中置声道。
-				if (midiChannel.IsDynamicPan) pan += " " + Lang.str.pan_dynamic_abbr;
+				if (midiChannel.IsVariablePan) pan += " " + Lang.str.pan_dynamic_abbr;
 				ListViewItem item = MidiTrackListView.Items.Add(new ListViewItem(new string[] {
 					i.ToString(), midiChannel.Index.ToString(), midiChannel.Name, midiChannel.Instrument,
 					midiChannel.IsDrumKit ? "√" : "",
@@ -33416,7 +33683,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (IsPreviewingAudio) {
 				projectEndTimecode = vegas.Project.Length + Timecode.FromMilliseconds(1000); // 避免闪现视频尾帧。
 				vegas.Transport.LoopMode = false;
-				previewAudioTrack = new AudioTrack(vegas.Project, 0, Lang.str.preview_audio_track_name);
+				previewAudioTrack = new AudioTrack(vegas.Project, vegas.Project.Tracks.Count, Lang.str.preview_audio_track_name);
 				vegas.Project.Tracks.Add(previewAudioTrack);
 				AudioEvent previewAudio;
 				bool putOk = parent.PutPreviewAudioEvent(previewAudioTrack, projectEndTimecode, out previewAudio);
@@ -35575,6 +35842,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			match_cut_round = "按轮次应用视觉效果",
 			match_cut_repeat = "每段重复次数",
 			sheet_lengthen_to_bar_end = "持续到小节结尾",
+			sample_audio_track_name = "范例音频轨道（应该被删除！）",
+			sample_video_track_name = "范例视频轨道（应该被删除！）",
 			__eol__ = "";
 
 		static Lang() {
