@@ -1234,6 +1234,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return false;
 			}
 			#endif
+			if (CombConfigLinearMap && !CombConfigLinearMapAllowReuse && eventSets.Count < MidiConfigTracks.SelectedChannelCount) {
+				progressForm.Close();
+				MessageBox.Show(Lang.str.linear_map_allow_reuse_existed_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				return false;
+			}
 			#endregion
 
 			#region 可变速度、拍号处理
@@ -1306,6 +1311,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			};
 			if (CombConfigLuckyDip && CombConfigLuckyDipTrack && MidiConfigTracks.CurrentChannel != 0)
 				NextLuckyDipSource(-1);
+			#endregion
+
+			#region 线性映射输出
+			if (CombConfigLinearMap)
+				activeSource = eventSets.ElementWrappedAt(!CombConfigLinearMapDescending ? MidiConfigTracks.CurrentChannel : -MidiConfigTracks.CurrentChannel - 1) ?? eventSets.Primary;
 			#endregion
 
 			#region 规范化音频
