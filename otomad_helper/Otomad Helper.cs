@@ -1221,7 +1221,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 可变速度、拍号处理
 			bpmIntegrator = bpmIntegrator ?? (MidiUseVariableMidiBpm ? new VariableBpmIntegrator(midi, MidiUseVariableMidiBpmForm == 1) : null);
 			beatIntegrator = beatIntegrator ?? (CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat || SheetConfig ? new VariableTimeSignatureIntegrator(midi) : null);
-			if (CombConfigLuckyDipMarker && CombConfigLuckyDipBarOrBeat && midi.MarkerTrack != null && midi.MarkerDodgedMeasureTrack == null)
+			if (CombConfigLuckyDip && CombConfigLuckyDipMarker && CombConfigLuckyDipBarOrBeat && midi.MarkerTrack != null && midi.MarkerDodgedMeasureTrack == null)
 				beatIntegrator.InitMarkerDodgedMeasureTrack(CombConfigLuckyDipBarOrBeatPeriod, CombConfigLuckyDipBarOrBeatPreparation);
 			#endregion
 
@@ -1233,6 +1233,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				sourceStartTime = SourceConfigStartTime; sourceEndTime = SourceConfigEndTime;
 				if (adjustTime) while (sourceEndTime <= sourceStartTime) sourceEndTime += Math.Max(activeSource.audioLength, activeSource.videoLength);
 			};
+			ResetSourceTrimTime();
 			double generateBeginTime = GenerateAt == GenerateAt.CUSTOM ? GenerateAtCustomTimecode.ToMilliseconds() :
 				GenerateAt == GenerateAt.CURSOR ? vegas.Transport.CursorPosition.ToMilliseconds() : 0;
 			double songLength = 0; // 指定乐曲总长。
@@ -1255,6 +1256,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				seeds = seeds ?? baseShuffledSeed;
 				bool calcByVideos = AConfig && VConfig ? eventSets.IsRemainingVideos != false : !AConfig;
 				activeSource = Randoms.SourceRandomSelector.GetRandomByDuration(eventSets, calcByVideos, seeds);
+				//S.s = activeSource.videoEvent.ActiveTake.Name;
 			};
 			Func<MatchCutOrder, object[], long, bool> NextSourceByOrder = (order, seeds, step) => {
 				if (!ShouldMultisource) return true;
@@ -1264,7 +1266,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					activeSource = eventSets.ElementAtOrDefault(FloorMod(eventSets.IndexOf(activeSource) + direction, eventSets.Count, out looped)) ?? eventSets.Primary;
 				} else {
 					seeds = seeds ?? baseShuffledSeed;
-					activeSource = Randoms.SourceRandomSelector.GetRandomInPool(eventSets, step, out looped, seeds);
+					activeSource = Randoms.SourceRandomSelector.GetRandomInPool(eventSets, step - 1, out looped, seeds);
 				}
 				return !looped;
 			};
@@ -1277,9 +1279,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (CombConfigLuckyDipLimitToSelected)
 					NextSourceByOrder(MatchCutOrder.SHUFFLED, baseShuffledSeed, step);
 				else {
-					NextSourceByDuration(new object[] { baseShuffledSeed[0], step });
+					object[] seeds = { baseShuffledSeed[0], step };
+					NextSourceByDuration(seeds);
 					double maxLength = Math.Max(activeSource.audioLength, activeSource.videoLength);
-					sourceStartTime = Randoms.HashRandom.NextDouble(baseShuffledSeed, step) * maxLength;
+					sourceStartTime = Randoms.HashRandom.NextDouble(seeds) * maxLength;
 					sourceEndTime = sourceStartTime + maxLength;
 				}
 			};
@@ -1314,7 +1317,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						vegas.UpdateUI(); // 可以让 Vegas 实时更新 UI，但是会更慢。
 				}
 				if (progressForm.RequestAbort) break;
-				//string _testName = null;
+				string _testName = null;
 				NoteEvent noteEvent = midiEvent as NoteEvent;
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
 
@@ -1331,11 +1334,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						prevMeasures = measures; prevQuarters = quarters;
 					}
 					if (CombConfigLuckyDipMarker && midi.MarkerTrack != null) {
-						TextEvent marker = midi.GetLeadingMarker(noteEvent, ref markerIndex, CombConfigLuckyDipBarOrBeat);
+						TextEvent marker = midi.GetLeadingMarker(noteEvent, out markerIndex, CombConfigLuckyDipBarOrBeat);
 						markerIndexEnabled = markerIndex != prevMarkerIndex && marker != null && marker.AbsoluteTime != 0;
 						if (markerIndexEnabled) prevMarkerIndex = markerIndex;
-						//if (markerIndexEnabled) _testName = markerIndex.ToString();
 					}
+					_testName = targetStep.ToString() + markerIndex.ToString();
 					if (targetStepEnabled || markerIndexEnabled)
 						NextLuckyDipSource(targetStep + markerIndex);
 				}
@@ -1549,22 +1552,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (VConfig) {
 						VideoEvent videoEvent;
 						double videoEventDuration = SheetConfig ? staffVisualizedDuration.Value : duration;
-						if (!IsFromSelectedClip) {
-							videoEvent = trackHelper.AddEvent<VideoEvent>(
-								Timecode.FromMilliseconds(generateBeginTime + startTime),
-								Timecode.FromMilliseconds(videoEventDuration)
-							);
-							if (videoEvent == null) goto endVConfig;
-							try {
-								videoEvent.AddTake(media.GetVideoStreamByIndex(0));
-							} catch (Exception) { ShowError(new Exceptions.NoVideoTakeException()); return false; }
-						} else {
+						{
 							if (activeSource.videoEvent == null) { ShowError(new Exceptions.NoVideoTakeException()); return false; }
 							int _index;
 							videoEvent = trackHelper.AddEvent(activeSource.videoEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(videoEventDuration), out _index);
 							if (videoEvent == null) goto endVConfig;
 						}
-						//if (!(_testName == null)) videoEvent.ActiveTake.Name = _testName;
+						if (!(_testName == null)) videoEvent.ActiveTake.Name += _testName;
 						VideoTrack videoTrack = videoEvent.Track as VideoTrack;
 						PvVisualEffect anim;
 						if (!anims.TryGetValue(videoTrack, out anim))
@@ -6207,14 +6201,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 根据指定 MIDI 事件获取当前或在此之前的标记事件。如果没有，返回 null。
 		/// </summary>
 		/// <param name="index">该标记在标记列表中的索引值。</param>
-		public TextEvent GetLeadingMarker(MidiEvent midiEvent, ref int index, bool dodgedWithMeasures) {
+		public TextEvent GetLeadingMarker(MidiEvent midiEvent, out int index, bool dodgedWithMeasures) {
 			IEnumerable<TextEvent> track = dodgedWithMeasures && MarkerDodgedMeasureTrack != null ? MarkerDodgedMeasureTrack : MarkerTrack;
-			if (!track.IsEmpty())
+			if (!track.IsEmpty()) {
+				int beginWith = track.First().AbsoluteTime == 0 ? 0 : 1;
 				foreach (IndexerEntry<TextEvent> textEvent in track.WithIndex().Reverse())
 					if (midiEvent.AbsoluteTime >= textEvent.Item.AbsoluteTime) {
-						index = textEvent.Index;
+						index = textEvent.Index + beginWith;
 						return textEvent.Item;
 					}
+			}
+			index = 0;
 			return null;
 		}
 		public bool IsVariableBeat { get { return TimeSignatureTrack != null && TimeSignatureTrack.DistinctBy(evt => ValueTuple.Create(evt.Numerator, evt.Denominator)).Count() > 1; } }
@@ -6353,46 +6350,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private readonly MIDI midi;
 		internal readonly TimeSignatureEvent[] timeSignatureTrack;
 		internal readonly TimeSignatureKeysData[] beatKeysDatas;
-		internal readonly TimeSignatureKeysData[] beatWithMarkerKeysDatas;
 
 		public VariableTimeSignatureIntegrator(MIDI midi) {
 			this.midi = midi;
 			timeSignatureTrack = midi.TimeSignatureTrack.OfType<TimeSignatureEvent>().ToArray();
 			List<TimeSignatureKeysData> _beatKeysDatas_list = new List<TimeSignatureKeysData>(timeSignatureTrack.Length);
-			Func<TimeSignatureKeysData> GetFirstTimeSignature = () => {
-				TimeSignatureEvent firstTimeSignature = (TimeSignatureEvent)timeSignatureTrack[0].Clone();
-				firstTimeSignature.AbsoluteTime = 0;
-				return new TimeSignatureKeysData(0, 0, firstTimeSignature.Numerator, firstTimeSignature.GetDenominator(), 0, firstTimeSignature);
-			};
-			TimeSignatureKeysData prevData = GetFirstTimeSignature();
+			TimeSignatureEvent firstTimeSignature = (TimeSignatureEvent)timeSignatureTrack[0].Clone();
+			firstTimeSignature.AbsoluteTime = 0;
+			TimeSignatureKeysData prevData = new TimeSignatureKeysData(0, 0, firstTimeSignature.Numerator, firstTimeSignature.GetDenominator(), 0, firstTimeSignature);
 			foreach (TimeSignatureEvent timeSignature in timeSignatureTrack) {
 				TimeSignatureKeysData data = CreateTimeSignatureKeysData(timeSignature, prevData);
 				_beatKeysDatas_list.Add(data);
 				prevData = data;
 			}
 			beatKeysDatas = _beatKeysDatas_list.ToArray();
-			if (midi.MarkerTrack == null) beatWithMarkerKeysDatas = beatKeysDatas;
-			else {
-				List<MetaEvent> mixedList = timeSignatureTrack.Cast<MetaEvent>().Concat(midi.MarkerTrack.Cast<MetaEvent>()).DistinctBy(meta => meta.AbsoluteTime).ToList();
-				mixedList.Sort((a, b) => a.AbsoluteTime.CompareTo(b.AbsoluteTime));
-				TimeSignatureKeysData prevData2 = GetFirstTimeSignature();
-				List<TimeSignatureKeysData> _beatWithMarkerKeysDatas_list = new List<TimeSignatureKeysData>(mixedList.Count);
-				foreach (MetaEvent meta in mixedList) {
-					TimeSignatureKeysData data = CreateTimeSignatureKeysData(meta, prevData2);
-					_beatKeysDatas_list.Add(data);
-					prevData2 = data;
-				}
-				beatWithMarkerKeysDatas = _beatWithMarkerKeysDatas_list.ToArray();
-			}
 		}
 
-		private TimeSignatureKeysData CreateTimeSignatureKeysData(MetaEvent _timeSignature, TimeSignatureKeysData prevData) {
-			TimeSignatureEvent timeSignature;
-			if (_timeSignature is TimeSignatureEvent) timeSignature = (TimeSignatureEvent)_timeSignature;
-			else {
-				timeSignature = (TimeSignatureEvent)prevData.@event.Clone();
-				timeSignature.AbsoluteTime = _timeSignature.AbsoluteTime;
-			}
+		private TimeSignatureKeysData CreateTimeSignatureKeysData(TimeSignatureEvent timeSignature, TimeSignatureKeysData prevData) {
 			long ticks = timeSignature.AbsoluteTime;
 			if (prevData.numerator == 0) prevData.numerator = timeSignature.Numerator;
 			if (prevData.denominator == 0) prevData.denominator = timeSignature.GetDenominator();
@@ -6518,15 +6492,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 用于处理 null 时的非确定性随机数生成器
 			private static readonly Random fallbackRandom = new Random();
 
-			// 与 SourceRandomSelector.GetRandomInPool 方法整合使用。
-			private const int DEFAULT_SHUFFLE_STEP = -1;
-
 			/// <summary>
 			/// 支持无限参数，包含各种数值、布尔值及 null。<br />
 			/// long, int, short, byte, bool 等均可隐式或显式转为 long。<br />
 			/// 如果包含 null，则返回不稳定的随机数。
 			/// </summary>
-			public static double NextDouble(object[] seeds, long shuffleStep = DEFAULT_SHUFFLE_STEP) {
+			public static double NextDouble(object[] seeds) {
 				// 1. 预检查：如果参数数组本身为 null 或其中包含 null 元素
 				if (seeds == null) return fallbackRandom.NextDouble();
 
@@ -6548,14 +6519,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							hash ^= (byte)((value >> (i * 8)) & 0xFF);
 							hash *= FNV_PRIME;
 						}
-
-						// +. 混合洗牌步骤索引，确保每一步随机数不同
-						if (shuffleStep >= 0) {
-							for (int i = 0; i < 8; i++) {
-								hash ^= (byte)((shuffleStep >> (i * 8)) & 0xFF);
-								hash *= FNV_PRIME;
-							}
-						}
 					}
 
 					// 5. 使用快速混合函数（Finalizer，类似 SplitMix64 核心逻辑）打乱位分布，确保随机性
@@ -6571,17 +6534,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 
 			/// <inheritdoc cref="Random.Next(int, int)" />
-			public static int Next(int minValue, int maxValue, object[] seeds = null, int shuffleStep = DEFAULT_SHUFFLE_STEP) {
+			public static int Next(int minValue, int maxValue, object[] seeds = null) {
 				if (minValue > maxValue) throw new ArgumentOutOfRangeException("maxValue is less than minValue in Randoms.HashRandom.Next()");
 				else if (minValue == maxValue) return minValue;
 				if (seeds == null) return fallbackRandom.Next(minValue, maxValue);
-				double value = NextDouble(seeds, shuffleStep);
+				double value = NextDouble(seeds);
 				return EntryPoint.Map(value, 0d, 1d, minValue, maxValue);
 			}
 
 			/// <inheritdoc cref="Random.Next(int)" />
-			public static int Next(int maxValue, object[] seeds = null, int shuffleStep = DEFAULT_SHUFFLE_STEP) {
-				return Next(0, maxValue, seeds, shuffleStep);
+			public static int Next(int maxValue, object[] seeds = null) {
+				return Next(0, maxValue, seeds);
 			}
 		}
 
@@ -6617,7 +6580,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				double currentSum = 0;
 				foreach (EntryPoint.EventSet source in sources) {
 					currentSum += GetSourceLength(source);
-					if (currentSum >= randomPoint) return source;
+					if (currentSum >= randomPoint) { return source; }
 				}
 
 				return sources.Last();
@@ -6637,28 +6600,68 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				// 1. 计算当前属于第几轮，以及在轮内的位置
 				long round = step / pool.Count;
 				int offset = (int)(step % pool.Count);
+				allPicked = round >= 1;
 
 				// 2. 构建这一轮的专属种子 (由 基础种子 + 轮次 组成)
 				object[] roundSeeds = seeds.Append(round).ToArray();
 
 				// 3. 使用确定性洗牌算法 (Fisher-Yates 变体)
 				// 我们不需要真的洗掉整个列表，只需要模拟洗牌过程直到找到 offset 位置的元素
-				List<int> indices = Enumerable.Range(0, pool.Count).ToList();
+				// 获取当前轮次的洗牌序列
+				List<int> currentRoundIndices = GetShuffledIndices(pool.Count, round, roundSeeds);
 
-				for (int i = 0; i <= offset; i++) {
-					// 为洗牌的每一步生成一个独立的确定性随机数
-					// 种子由 (轮次种子 + 洗牌步骤 i) 组成
-					double r = HashRandom.NextDouble(roundSeeds, i);
-					int targetIndex = i + (int)(r * (indices.Count - i));
-
-					// 交换位置
-					int temp = indices[i];
-					indices[i] = indices[targetIndex];
-					indices[targetIndex] = temp;
+				// 4. 特殊处理：第一轮（Round 0）的第一个元素不能是 0
+				if (round == 0 && offset == 0 && currentRoundIndices[0] == 0) {
+					// 将 0 号元素与后续随机一个元素交换
+					double r = HashRandom.NextDouble(roundSeeds.Append(round).Append(-1).ToArray()); // 特殊步数用于修正第一轮
+					int swapIdx = 1 + (int)(r * (pool.Count - 1));
+					int temp = currentRoundIndices[0];
+					currentRoundIndices[0] = currentRoundIndices[swapIdx];
+					currentRoundIndices[swapIdx] = temp;
 				}
 
-				// 4. 返回 offset 位置对应的元素
-				return pool[indices[offset]];
+				// 5. 跨轮重叠修正：如果当前是新一轮的开头，检查是否与上一轮末尾相同
+				if (round > 0 && offset == 0) {
+					int lastRoundEnd = GetLastRoundEnd(pool.Count, round - 1, roundSeeds);
+					if (currentRoundIndices[0] == lastRoundEnd) {
+						// 如果重复，将当前轮首位与本轮次位交换
+						// 注意：由于 pool.Count > 1，索引 1 必定存在
+						int temp = currentRoundIndices[0];
+						currentRoundIndices[0] = currentRoundIndices[1];
+						currentRoundIndices[1] = temp;
+					}
+				}
+
+				// 6. 返回 offset 位置对应的元素
+				return pool[currentRoundIndices[offset]];
+			}
+
+			private static List<int> GetShuffledIndices(int count, long round, object[] baseSeeds) {
+				List<int> indices = Enumerable.Range(0, count).ToList();
+				for (int i = 0; i < count - 1; i++) {
+					// 使用 (轮次, 洗牌步骤) 作为复合种子
+					double r = HashRandom.NextDouble(baseSeeds.Append(round).Append(i).ToArray());
+					int j = i + (int)(r * (count - i));
+					int temp = indices[i];
+					indices[i] = indices[j];
+					indices[j] = temp;
+				}
+				return indices;
+			}
+
+			private static int GetLastRoundEnd(int count, long lastRound, object[] baseSeeds) {
+				// 递归或重新计算上一轮的最后一个元素
+				List<int> lastIndices = GetShuffledIndices(count, lastRound, baseSeeds);
+
+				// 如果是第 0 轮，还需要应用第 0 轮首位不为 0 的修正逻辑，
+				// 但这里我们只需要找上一轮的“末尾”，如果上一轮是 Round 0，
+				// 且修正逻辑只动了首位，末尾只有在 count=2 时才可能受影响
+				if (lastRound == 0 && count == 2 && lastIndices[0] == 0) {
+					 // 逻辑同 GetValue 中的 Round 0 修正
+					 return 0; // 原本 index[1] 是 0，交换后 index[1] 变成了原来的 index[0]
+				}
+
+				return lastIndices[count - 1];
 			}
 		}
 	}
@@ -35155,8 +35158,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			replaced_label = "被替换项",
 			replacer_label = "替换项",
 			separation_replaced_info = "已选中 {0} 段轨道剪辑，其中 {1} 段音频剪辑，{2} 段视频剪辑。",
-			separation_set_replaced = "将选中的 {0} 段剪辑设为被替换项",
-			separation_set_replacer = "将选中的 {0} 段剪辑设为替换项",
+			separation_set_replaced = "将所选 {0} 段剪辑设为被替换项",
+			separation_set_replacer = "将所选 {0} 段剪辑设为替换项",
 			separation_back_to_select = "返回 VEGAS 选定剪辑",
 			separation_use_clip_group = "同时替换分组内其它剪辑",
 			separation_reserve_original_name = "保留原剪辑名称",
@@ -35266,7 +35269,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			will_clear_existing_text_info = "将会清除现有的文本内容，系统可能不会保留你的更改。",
 			import_from_file = "从文件中导入",
 			find_clips = "查找轨道素材",
-			find_clips_select_info = "选中的第一段轨道剪辑",
+			find_clips_select_info = "所选第一段轨道剪辑",
 			find_clips_info = "在上方选中相匹配的剪辑，确定之后将会选中这些剪辑。",
 			find_clips_header_name = "名称",
 			find_clips_header_num = "数目",
@@ -35278,7 +35281,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			filter_audio_event = "仅音频",
 			convert_music_beats = "转换音乐节拍",
 			convert_music_beats_complete = "完成转换音乐节拍。",
-			convert_music_beats_info = "即将对选中的音乐音频剪辑从{0}转换到{1}。",
+			convert_music_beats_info = "即将对所选音乐音频剪辑从{0}转换到{1}。",
 			metre_4_4 = "四四拍",
 			metre_3_4 = "四三拍",
 			metre_6_8 = "八六拍",
@@ -35403,8 +35406,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			remove_source_track_events = "生成完成后移除作为源素材的轨道事件",
 			select_all_generated_events = "生成完成后选中生成的所有事件",
 			choose_source_file = "选择媒体素材",
-			selected_media = "选中的媒体文件",
-			selected_clip = "选中的轨道素材",
+			selected_media = "所选项目媒体",
+			selected_clip = "所选轨道事件",
 			source_start_time = "入点时间",
 			source_end_time = "出点时间",
 			parameters = "参数",
@@ -35638,7 +35641,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			quick_config_properties = "快速配置属性",
 			quick_config_properties_configform_info = "批量为所有选中剪辑设置属性（如规范化音量、拉伸）。",
 			replace_clips_configform_info = "替换所选剪辑至指定的新剪辑。",
-			auto_layout_tracks_configform_info = "类 YTPMV 风格自动布局选中的轨道。",
+			auto_layout_tracks_configform_info = "类 YTPMV 风格自动布局所选轨道。",
 			change_tune_method_configform_info = "为所选音频剪辑更换调音算法。",
 			batch_subtitle_generation_configform_info = "预先设定好“字幕和文字”的预设，然后在此添加多行文本。",
 			find_clips_configform_info = "查找并选中符合指定条件（如剪辑名称、与选中剪辑相同的素材等）的所有剪辑。",
@@ -35660,10 +35663,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			increase_spacing = "增加间隙（应用于当前轨道）",
 			increase_spacing_all_tracks = "增加间隙（应用于所有轨道）",
 			increase_spacing_info = "在指定的剪辑之间增加的间隙时间",
-			effect_to_selected_events = "仅应用于选中的轨道剪辑",
+			effect_to_selected_events = "仅应用于所选轨道剪辑",
 			include_events_within_group = "也应用于同分组内的其它轨道剪辑",
 			reverse_direction = "反转方向",
-			select_multiple_tracks_warning = "警告：你选中的轨道或轨道剪辑所位于的轨道数目超过 1 条，处理结果可能与你的预期不符。\n是否继续执行？",
+			select_multiple_tracks_warning = "警告：你所选轨道或轨道剪辑所位于的轨道数目超过 1 条，处理结果可能与你的预期不符。\n是否继续执行？",
 			drag_here_to_import = "拖动到这里以导入",
 			helper_info = "以下功能只是一些独立的辅助功能，与其它生成音画的参数无关。",
 			helper_info_warning = "注意：操作之后将会关闭本对话框，你可以稍后再重新打开，部分你未保存的更改可能会丢失！",
@@ -35724,10 +35727,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			not_a_midi_file_exception = "错误：无法读取 MIDI 文件。\n\n解决方法：用宿主软件导入该 MIDI，然后重新导出一份新的 MIDI 文件。\n\n补充说明：MIDI 文件有多种格式，脚本不保证都能够正确读取。所幸主流宿主软件在\n默认设置下导出的 MIDI 文件一般是可以读取的。（目前测试过 FL Studio、LMMS \n与 Music Studio for iPad。）",
 			midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有任何音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
 			no_selected_exception_ps = "补充说明：如果你想手动在文件夹中选择一项媒体素材，那么请点击其右边的“浏览”按钮，\n选择一项媒体素材。并确保左侧的下拉菜单中选中的是你所选文件所在的路径。",
-			no_selected_media_exception = "错误：没有在项目媒体窗口中选择任何媒体。\n\n请在项目媒体窗口中选择一项媒体，然后重新打开参数配置窗口，并在素材设置中选择“选中的媒体文件”。\n\n",
+			no_selected_media_exception = "错误：没有在项目媒体窗口中选择任何媒体。\n\n请在项目媒体窗口中选择一项媒体，然后重新打开参数配置窗口，并在素材设置中选择“所选项目媒体”。\n\n",
 			no_selected_clip_exception_short = "错误：没有在轨道中选择任何剪辑。",
-			no_selected_clip_exception = "错误：没有在轨道中选择任何剪辑。\n\n请在轨道中选择一段剪辑，然后重新打开参数配置窗口，并在素材设置中选择“选中的轨道素材”。\n\n",
-			no_time_stretch_pitch_shift_exception = "错误：选定素材音调转换方法被设置为不调音。\n\n很有可能你使用的是“选中的轨道素材”。出现了这种错误不怪你，要怪就怪 VEGAS 这种脑残设计。\n\n解决方法：请重新选中你的轨道素材，右键音频部分，选择底部的“属性”。将“时间拉伸/音调转换”的“方法”设定为“élastique”。\n然后点击确定即可。\n\n补充说明：如果某段音频事件没有进行变调操作，然后打开了它的属性，那么其属性中的“时间拉伸/音调转换”的“方法”会被\n自动修改为“无”，点击确定就会生效。这时你会发现键盘上的 +、- 键调音操作无效了。这时必须重新打开音频事件的属性，\n将“时间拉伸/音调转换”的“方法”设定为“élastique”，不必设置“音调更改”，点击确定即可。",
+			no_selected_clip_exception = "错误：没有在轨道中选择任何剪辑。\n\n请在轨道中选择一段剪辑，然后重新打开参数配置窗口，并在素材设置中选择“所选轨道事件”。\n\n",
+			no_time_stretch_pitch_shift_exception = "错误：选定素材音调转换方法被设置为不调音。\n\n很有可能你使用的是“所选轨道事件”。出现了这种错误不怪你，要怪就怪 VEGAS 这种脑残设计。\n\n解决方法：请重新选中你的轨道素材，右键音频部分，选择底部的“属性”。将“时间拉伸/音调转换”的“方法”设定为“élastique”。\n然后点击确定即可。\n\n补充说明：如果某段音频事件没有进行变调操作，然后打开了它的属性，那么其属性中的“时间拉伸/音调转换”的“方法”会被\n自动修改为“无”，点击确定就会生效。这时你会发现键盘上的 +、- 键调音操作无效了。这时必须重新打开音频事件的属性，\n将“时间拉伸/音调转换”的“方法”设定为“élastique”，不必设置“音调更改”，点击确定即可。",
 			read_config_fail_exception = "错误：读取参数配置文件失败。\n\n很遗憾你遇到了这种不可预见的错误。我们将会清除用户配置设置并恢复为默认值以便解决问题。\n建议将这种错误告诉作者以便快速解决问题。\n将会退出此脚本，然后劳烦阁下手动重新打开此脚本。",
 			fail_to_select_clips_exception = "错误：选取轨道剪辑出错。\n\n请先在轨道窗口中选取部分轨道剪辑。",
 			fail_to_select_tracks_exception = "错误：选取轨道出错。\n\n请先在轨道窗口中选取部分视频轨道。",
@@ -36272,7 +36275,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				remove_source_track_events = "Remove track events assigned as source material after the generation completed",
 				select_all_generated_events = "Select all generated events after the generation completed",
 				choose_source_file = "Select media source",
-				selected_media = "Selected media file",
+				selected_media = "Selected project media",
 				selected_clip = "Selected track event",
 				source_start_time = "Start time",
 				source_end_time = "End time",
@@ -36859,8 +36862,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				replaced_label = "被替換項",
 				replacer_label = "替換項",
 				separation_replaced_info = "已選中 {0} 段軌道剪輯，其中 {1} 段音訊剪輯，{2} 段視訊剪輯。",
-				separation_set_replaced = "將選中的 {0} 段剪輯設為被替換項",
-				separation_set_replacer = "將選中的 {0} 段剪輯設為替換項",
+				separation_set_replaced = "將所選 {0} 段剪輯設為被替換項",
+				separation_set_replacer = "將所選 {0} 段剪輯設為替換項",
 				separation_back_to_select = "返回 VEGAS 選定剪輯",
 				separation_use_clip_group = "同時替換分組內其它剪輯",
 				separation_reserve_original_name = "保留原始剪輯名稱",
@@ -36969,7 +36972,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				will_clear_existing_text_info = "將會清除現有的文字內容，系統可能不會保留你的更改。",
 				import_from_file = "從檔案中導入",
 				find_clips = "查找軌道素材",
-				find_clips_select_info = "選中的第一段軌道剪輯",
+				find_clips_select_info = "所選第一段軌道剪輯",
 				find_clips_info = "在上方選中相匹配的剪輯，確定之後將會選中這些剪輯。",
 				find_clips_header_name = "名稱",
 				find_clips_header_num = "數目",
@@ -36981,7 +36984,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				filter_audio_event = "僅音訊",
 				convert_music_beats = "轉換音樂節拍",
 				convert_music_beats_complete = "完成轉換音樂節拍。",
-				convert_music_beats_info = "即將對選中的音樂音訊剪輯從{0}轉換到{1}。",
+				convert_music_beats_info = "即將對所選音樂音訊剪輯從{0}轉換到{1}。",
 				metre_4_4 = "四四拍",
 				metre_3_4 = "四三拍",
 				metre_6_8 = "八六拍",
@@ -37106,8 +37109,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				remove_source_track_events = "生成完成後移除作為源素材的軌道事件",
 				select_all_generated_events = "生成完成後選中生成的所有事件",
 				choose_source_file = "選擇媒體素材",
-				selected_media = "選中的媒體檔案",
-				selected_clip = "選中的軌道素材",
+				selected_media = "所選專案媒體",
+				selected_clip = "所選軌道事件",
 				source_start_time = "入點時間",
 				source_end_time = "出點時間",
 				parameters = "參數",
@@ -37340,7 +37343,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				quick_config_properties = "快速配置屬性",
 				quick_config_properties_configform_info = "批量為所有選中剪輯設置屬性（如規範化音量、拉伸）。",
 				replace_clips_configform_info = "替換所選剪輯至指定的新剪輯。",
-				auto_layout_tracks_configform_info = "類 YTPMV 風格自動佈局選中的軌道。",
+				auto_layout_tracks_configform_info = "類 YTPMV 風格自動佈局所選軌道。",
 				change_tune_method_configform_info = "為所選音訊剪輯更換調音演算法。",
 				batch_subtitle_generation_configform_info = "預先設定好「字幕和文字」的預設，然後在此添加多行文本。",
 				find_clips_configform_info = "查找並選中符合指定條件（如剪輯名稱、與選中剪輯相同的素材等）的所有剪輯。",
@@ -37362,10 +37365,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				increase_spacing = "增加間隙（應用於當前軌道）",
 				increase_spacing_all_tracks = "增加間隙（應用於所有軌道）",
 				increase_spacing_info = "在指定的剪輯之間增加的間隙時間",
-				effect_to_selected_events = "僅應用於選中的軌道剪輯",
+				effect_to_selected_events = "僅應用於所選軌道剪輯",
 				include_events_within_group = "也應用於同分組内的其它軌道剪輯",
 				reverse_direction = "反轉方向",
-				select_multiple_tracks_warning = "警告：你選中的軌道或軌道剪輯所位於的軌道數目超過 1 條，處理結果可能與你的預期不符。\n是否繼續執行？",
+				select_multiple_tracks_warning = "警告：你所選軌道或軌道剪輯所位於的軌道數目超過 1 條，處理結果可能與你的預期不符。\n是否繼續執行？",
 				drag_here_to_import = "拖動到這裡以導入",
 				helper_info = "以下功能只是一些獨立的協助工具，與其它生成音畫的參數無關。",
 				helper_info_warning = "注意：操作之後將會關閉本對話方塊，你可以稍後再重新啟動，部分你未儲存的更改可能會遺失！\n",
@@ -37426,10 +37429,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				not_a_midi_file_exception = "錯誤：無法讀取 MIDI 檔案。\n\n解決方法：用宿主軟體導入該 MIDI，然後重新匯出一份新的 MIDI 檔案。\n\n補充說明：MIDI 檔案有多種格式，腳本不保證都能够正確讀取。所幸主流宿主軟體在\n默認設定下匯出的 MIDI 檔案一般是可以讀取的。（現時測試過 FL Studio、LMMS\n與 Music Studio for iPad。）",
 				midi_contains_velocity_zero_exception = "錯誤：你的 MIDI 檔案中包含力度值為 0 的音符。\n請檢查是否還有任何音符的力度值為 0（即沒有音量），如果有，請刪除它們。\n\n補充說明：NAudio.Midi 庫不支援包含力度為 0 音符的 MIDI 檔案，未來版本的 Otomad Helper 會通過更換解析引擎來解決此問題。",
 				no_selected_exception_ps = "補充說明：如果你想手動在資料夾中選擇一項媒體素材，那麼請點擊其右邊的「瀏覽」按鈕，\n選擇一項媒體素材。並確保左側的下拉式功能表中選中的是你所選檔案所在的路徑。",
-				no_selected_media_exception = "錯誤：沒有在專案媒體視窗中選擇任何媒體。\n\n請在專案媒體視窗中選擇一項媒體，然後重新啟動參數設定視窗，並在素材設定中選擇「選中的媒體檔案」。\n\n",
+				no_selected_media_exception = "錯誤：沒有在專案媒體視窗中選擇任何媒體。\n\n請在專案媒體視窗中選擇一項媒體，然後重新啟動參數設定視窗，並在素材設定中選擇「所選專案媒體」。\n\n",
 				no_selected_clip_exception_short = "錯誤：沒有在軌道中選擇任何剪輯。",
-				no_selected_clip_exception = "錯誤：沒有在軌道中選擇任何剪輯。\n\n請在軌道中選擇一段剪輯，然後重新啟動參數設定視窗，並在素材設定中選擇「選中的軌道素材」。\n\n",
-				no_time_stretch_pitch_shift_exception = "錯誤：選定素材音調轉換方法被設定為不調音。\n\n很有可能你使用的是「選中的軌道素材」。出現了這種錯誤不怪你，要怪就怪 VEGAS 這種腦殘設計。\n\n解決方法：請重新選中你的軌道素材，右鍵音訊部分，選擇底部的「內容」。將「時間拉伸/音調轉換」的「方法」設定為“élastique”。\n然後點擊確定即可。\n\n補充說明：如果某段音訊事件沒有進行變調操作，然後開啟了它的內容，那麼其內容中的「時間拉伸/音調轉換」的「方法」會被\n自動修改為「無」，點擊確定就會生效。這時你會發現鍵盤上的 +、- 鍵調音操作無效了。這時必須重新開啟音訊事件的內容，\n將「時間拉伸/音調轉換」的「方法」設定為“élastique”，不必設定「音調更改」，點擊確定即可。",
+				no_selected_clip_exception = "錯誤：沒有在軌道中選擇任何剪輯。\n\n請在軌道中選擇一段剪輯，然後重新啟動參數設定視窗，並在素材設定中選擇「所選軌道事件」。\n\n",
+				no_time_stretch_pitch_shift_exception = "錯誤：選定素材音調轉換方法被設定為不調音。\n\n很有可能你使用的是「所選軌道事件」。出現了這種錯誤不怪你，要怪就怪 VEGAS 這種腦殘設計。\n\n解決方法：請重新選中你的軌道素材，右鍵音訊部分，選擇底部的「內容」。將「時間拉伸/音調轉換」的「方法」設定為“élastique”。\n然後點擊確定即可。\n\n補充說明：如果某段音訊事件沒有進行變調操作，然後開啟了它的內容，那麼其內容中的「時間拉伸/音調轉換」的「方法」會被\n自動修改為「無」，點擊確定就會生效。這時你會發現鍵盤上的 +、- 鍵調音操作無效了。這時必須重新開啟音訊事件的內容，\n將「時間拉伸/音調轉換」的「方法」設定為“élastique”，不必設定「音調更改」，點擊確定即可。",
 				read_config_fail_exception = "錯誤：讀取參數設定檔失敗。\n\n很遺憾你遇到了這種不可預見的錯誤。我們將會清除使用者組態設定並恢復為預設值以便解决問題。\n建議將這種錯誤告訴作者以便快速解决問題。\n將會退出此腳本，然後勞煩閣下手動重新啟動此腳本。",
 				fail_to_select_clips_exception = "錯誤：選取軌道剪輯出錯。\n\n請先在軌道視窗中選取部分軌道剪輯。",
 				fail_to_select_tracks_exception = "錯誤：選取軌道出錯。\n\n請先在軌道視窗中選取部分視訊軌道。",
