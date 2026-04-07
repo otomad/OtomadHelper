@@ -2293,20 +2293,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <param name="track">轨道。</param>
 		/// <param name="media">媒体。</param>
 		/// <param name="trackEvent">输出的轨道事件。</param>
+		/// <param name="skipError">是否跳过显示错误信息？</param>
+		/// <param name="outE">将错误事件传到函数外面，假如没有报错则不会修改该外部变量的值。</param>
 		/// <returns>是否成功添加媒体。</returns>
-		private static bool Track_AppendMedia<T, E>(T track, Media media, out E trackEvent)
+		private static bool Track_AppendMedia<T, E>(T track, Media media, out E trackEvent, bool skipError, ref Exception outE)
 			where T : Track
 			where E : TrackEvent {
 			if (track is AudioTrack) {
 				trackEvent = (track as AudioTrack).AddAudioEvent(track.Length, media.Length) as E;
 				try {
 					trackEvent.AddTake(media.GetAudioStreamByIndex(0));
-				} catch (Exception e) { ShowError(new Exceptions.NoAudioTakeException(), e); return false; }
+				} catch (Exception e) { if (!skipError) ShowError(new Exceptions.NoAudioTakeException(), e); outE = e; return false; }
 			} else if (track is VideoTrack) {
 				trackEvent = (track as VideoTrack).AddVideoEvent(track.Length, media.Length) as E;
 				try {
 					trackEvent.AddTake(media.GetVideoStreamByIndex(0));
-				} catch (Exception e) { ShowError(new Exceptions.NoVideoTakeException(), e); return false; }
+				} catch (Exception e) { if (!skipError) ShowError(new Exceptions.NoVideoTakeException(), e); outE = e; return false; }
 			} else { trackEvent = null; return false; }
 			return true;
 		}
@@ -2434,12 +2436,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						ytpInMediaGenerator = true;
 					else selections.Add(new IndexerEntry<Media>(media, -1));
 				}
-				if (YtpConfig && selections.Count /* still */ == 0) {
-					if (ytpOverLength) {
+				if (selections.Count /* still */ == 0) {
+					if (YtpConfig && ytpOverLength) {
 						ShowError(new Exceptions.YtpOverLengthException(), ShowErrorState.RESUME_NEXT);
 						return false;
 					}
-					if (ytpInMediaGenerator) {
+					if (YtpConfig && ytpInMediaGenerator) {
 						ShowError(new Exceptions.YtpInMediaGeneratorException(), ShowErrorState.RESUME_NEXT);
 						return false;
 					}
@@ -2452,18 +2454,30 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 				#endregion
 				#region 放置示例轨道剪辑
-				if (autoPutToSampleTrack)
+				if (autoPutToSampleTrack) {
+					Exception audioE = null, videoE = null;
+					int loadMediaAudioFailedCount = 0, loadMediaVideoFailedCount = 0;
 					foreach (IndexerEntry<Media> media in selections) {
 						AudioEvent aSmp = null; VideoEvent vSmp = null;
 						Subclip aReverse = null, vReverse = null;
-						if (AConfig) if (!Track_AppendMedia(aSmpTrack, media.Item, out aSmp)) return false;
-						if (VConfig) if (!Track_AppendMedia(vSmpTrack, media.Item, out vSmp)) return false;
+						if (AConfig) if (!Track_AppendMedia(aSmpTrack, media.Item, out aSmp, true, ref audioE)) { loadMediaAudioFailedCount++; continue; }
+						if (VConfig) if (!Track_AppendMedia(vSmpTrack, media.Item, out vSmp, true, ref videoE)) { loadMediaVideoFailedCount++; continue; }
 						if (requireReverse) {
 							aReverse = vReverse = GetReversedSubclip(media.Item);
 							eventSets.Add(new EventSet(aSmp, vSmp, aReverse, vReverse));
 						} else
 							eventSets.Add(new EventSet(aSmp, vSmp, media.Index));
 					}
+					if (loadMediaAudioFailedCount == selections.Count || loadMediaVideoFailedCount == selections.Count || eventSets.Count == 0) {
+						if (loadMediaAudioFailedCount == selections.Count)
+							ShowError(new Exceptions.NoAudioTakeException(), audioE);
+						else if (loadMediaVideoFailedCount == selections.Count)
+							ShowError(new Exceptions.NoVideoTakeException(), videoE);
+						else
+							ShowError(new Exceptions.NoMediaTakeException());
+						return false;
+					}
+				}
 				#endregion
 			} else {
 				#region 放置示例轨道剪辑
