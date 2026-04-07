@@ -1221,6 +1221,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 可变速度、拍号处理
 			bpmIntegrator = bpmIntegrator ?? (MidiUseVariableMidiBpm ? new VariableBpmIntegrator(midi, MidiUseVariableMidiBpmForm == 1) : null);
 			beatIntegrator = beatIntegrator ?? (CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat || SheetConfig ? new VariableTimeSignatureIntegrator(midi) : null);
+			if (CombConfigLuckyDipMarker && CombConfigLuckyDipBarOrBeat && midi.MarkerTrack != null && midi.MarkerDodgedMeasureTrack == null)
+				beatIntegrator.InitMarkerDodgedMeasureTrack(CombConfigLuckyDipBarOrBeatPeriod, CombConfigLuckyDipBarOrBeatPreparation);
 			#endregion
 
 			#region 如果修改了素材的入点和出点的时间
@@ -1247,23 +1249,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endregion
 
 			#region 踩点
-			bool[] matchCutShuffledStatus = null;
-			object[] matchCutShuffledSeed = { consistencyTracksSeed };
+			object[] baseShuffledSeed = { consistencyTracksSeed ?? NewSeed() };
 			Action<object[]> NextSourceByDuration = seeds => {
 				if (!ShouldMultisource) return;
-				seeds = seeds ?? matchCutShuffledSeed;
+				seeds = seeds ?? baseShuffledSeed;
 				bool calcByVideos = AConfig && VConfig ? eventSets.IsRemainingVideos != false : !AConfig;
 				activeSource = Randoms.SourceRandomSelector.GetRandomByDuration(eventSets, calcByVideos, seeds);
 			};
-			Func<MatchCutOrder, object[], bool> NextSourceByOrder = (order, seeds) => {
+			Func<MatchCutOrder, object[], long, bool> NextSourceByOrder = (order, seeds, step) => {
 				if (!ShouldMultisource) return true;
 				bool looped = false;
 				if (order != MatchCutOrder.SHUFFLED) {
 					int direction = order == MatchCutOrder.SEQUENTIAL ? 1 : -1;
 					activeSource = eventSets.ElementAtOrDefault(FloorMod(eventSets.IndexOf(activeSource) + direction, eventSets.Count, out looped)) ?? eventSets.Primary;
 				} else {
-					seeds = seeds ?? matchCutShuffledSeed;
-					activeSource = Randoms.SourceRandomSelector.GetRandomInPool(eventSets, ref matchCutShuffledStatus, out looped, seeds);
+					seeds = seeds ?? baseShuffledSeed;
+					activeSource = Randoms.SourceRandomSelector.GetRandomInPool(eventSets, step, out looped, seeds);
 				}
 				return !looped;
 			};
@@ -1272,19 +1273,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 素材盲盒
 			long prevMeasures = 0, prevQuarters = 0;
 			int prevMarkerIndex = -1;
-			Action<long, int> NextLuckyDipSource = (step, markerIndex) => {
-				object[] seeds = { consistencyTracksSeed, step, markerIndex };
+			Action<long> NextLuckyDipSource = step => {
 				if (CombConfigLuckyDipLimitToSelected)
-					NextSourceByOrder(MatchCutOrder.SHUFFLED, seeds);
+					NextSourceByOrder(MatchCutOrder.SHUFFLED, baseShuffledSeed, step);
 				else {
-					NextSourceByDuration(seeds);
+					NextSourceByDuration(new object[] { baseShuffledSeed[0], step });
 					double maxLength = Math.Max(activeSource.audioLength, activeSource.videoLength);
-					sourceStartTime = Randoms.HashRandom.NextDouble(seeds) * maxLength;
+					sourceStartTime = Randoms.HashRandom.NextDouble(baseShuffledSeed, step) * maxLength;
 					sourceEndTime = sourceStartTime + maxLength;
 				}
 			};
 			if (CombConfigLuckyDip && CombConfigLuckyDipTrack && MidiConfigTracks.CurrentChannel != 0)
-				NextLuckyDipSource(-1, -1);
+				NextLuckyDipSource(-1);
 			#endregion
 
 			#region 规范化音频
@@ -1314,7 +1314,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						vegas.UpdateUI(); // 可以让 Vegas 实时更新 UI，但是会更慢。
 				}
 				if (progressForm.RequestAbort) break;
-				string _testName = null;
+				//string _testName = null;
 				NoteEvent noteEvent = midiEvent as NoteEvent;
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
 
@@ -1330,14 +1330,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						}
 						prevMeasures = measures; prevQuarters = quarters;
 					}
-					if (CombConfigLuckyDipMarker) {
-						TextEvent marker = midi.GetLeadingMarker(noteEvent, ref markerIndex);
+					if (CombConfigLuckyDipMarker && midi.MarkerTrack != null) {
+						TextEvent marker = midi.GetLeadingMarker(noteEvent, ref markerIndex, CombConfigLuckyDipBarOrBeat);
 						markerIndexEnabled = markerIndex != prevMarkerIndex && marker != null && marker.AbsoluteTime != 0;
 						if (markerIndexEnabled) prevMarkerIndex = markerIndex;
-						if (markerIndexEnabled) _testName = markerIndex.ToString();
+						//if (markerIndexEnabled) _testName = markerIndex.ToString();
 					}
 					if (targetStepEnabled || markerIndexEnabled)
-						NextLuckyDipSource(targetStep, markerIndex);
+						NextLuckyDipSource(targetStep + markerIndex);
 				}
 				#endregion
 
@@ -1564,7 +1564,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							videoEvent = trackHelper.AddEvent(activeSource.videoEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(videoEventDuration), out _index);
 							if (videoEvent == null) goto endVConfig;
 						}
-						if (!(_testName == null)) videoEvent.ActiveTake.Name = _testName;
+						//if (!(_testName == null)) videoEvent.ActiveTake.Name = _testName;
 						VideoTrack videoTrack = videoEvent.Track as VideoTrack;
 						PvVisualEffect anim;
 						if (!anims.TryGetValue(videoTrack, out anim))
@@ -6072,6 +6072,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </summary>
 		public IEnumerable<TextEvent> MarkerTrack { get; private set; }
 		/// <summary>
+		/// 标记元数据信息事件音轨，但是去除了与小节线（自定义素材盲盒）重叠的部分，避免两者同时累加。<br />
+		/// 该属性可写。由 <see cref="VariableTimeSignatureIntegrator" /> 类写入。
+		/// </summary>
+		public IEnumerable<TextEvent> MarkerDodgedMeasureTrack { get; set; }
+		/// <summary>
 		/// MIDI 文件路径。
 		/// </summary>
 		public string Path { get; private set; }
@@ -6202,9 +6207,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 根据指定 MIDI 事件获取当前或在此之前的标记事件。如果没有，返回 null。
 		/// </summary>
 		/// <param name="index">该标记在标记列表中的索引值。</param>
-		public TextEvent GetLeadingMarker(MidiEvent midiEvent, ref int index) {
-			if (!MarkerTrack.IsEmpty())
-				foreach (var textEvent in MarkerTrack.WithIndex().Reverse())
+		public TextEvent GetLeadingMarker(MidiEvent midiEvent, ref int index, bool dodgedWithMeasures) {
+			IEnumerable<TextEvent> track = dodgedWithMeasures && MarkerDodgedMeasureTrack != null ? MarkerDodgedMeasureTrack : MarkerTrack;
+			if (!track.IsEmpty())
+				foreach (IndexerEntry<TextEvent> textEvent in track.WithIndex().Reverse())
 					if (midiEvent.AbsoluteTime >= textEvent.Item.AbsoluteTime) {
 						index = textEvent.Index;
 						return textEvent.Item;
@@ -6346,25 +6352,55 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	public class VariableTimeSignatureIntegrator {
 		private readonly MIDI midi;
 		internal readonly TimeSignatureEvent[] timeSignatureTrack;
-		internal readonly TimeSignatureKeysData[] keysDatas;
+		internal readonly TimeSignatureKeysData[] beatKeysDatas;
+		internal readonly TimeSignatureKeysData[] beatWithMarkerKeysDatas;
 
 		public VariableTimeSignatureIntegrator(MIDI midi) {
 			this.midi = midi;
 			timeSignatureTrack = midi.TimeSignatureTrack.OfType<TimeSignatureEvent>().ToArray();
-			List<TimeSignatureKeysData> _keysDatas_list = new List<TimeSignatureKeysData>(timeSignatureTrack.Length);
-			TimeSignatureKeysData prevData = new TimeSignatureKeysData(0, 0, 0, 0, 0);
+			List<TimeSignatureKeysData> _beatKeysDatas_list = new List<TimeSignatureKeysData>(timeSignatureTrack.Length);
+			Func<TimeSignatureKeysData> GetFirstTimeSignature = () => {
+				TimeSignatureEvent firstTimeSignature = (TimeSignatureEvent)timeSignatureTrack[0].Clone();
+				firstTimeSignature.AbsoluteTime = 0;
+				return new TimeSignatureKeysData(0, 0, firstTimeSignature.Numerator, firstTimeSignature.GetDenominator(), 0, firstTimeSignature);
+			};
+			TimeSignatureKeysData prevData = GetFirstTimeSignature();
 			foreach (TimeSignatureEvent timeSignature in timeSignatureTrack) {
-				long ticks = timeSignature.AbsoluteTime;
-				if (prevData.numerator == 0) prevData.numerator = timeSignature.Numerator;
-				if (prevData.denominator == 0) prevData.denominator = timeSignature.GetDenominator();
-				double quartersPerMeasure = prevData.QuartersPerMeasure;
-				double prevQuarters = (ticks - prevData.ticks) / (double)midi.TicksPerQuarter;
-				int prevMeasures = (int)Math.Ceiling(prevQuarters / quartersPerMeasure);
-				TimeSignatureKeysData data = new TimeSignatureKeysData(prevData.measureIndex + prevMeasures, ticks, timeSignature.Numerator, timeSignature.GetDenominator(), prevData.passedQuarters + prevQuarters);
-				_keysDatas_list.Add(data);
+				TimeSignatureKeysData data = CreateTimeSignatureKeysData(timeSignature, prevData);
+				_beatKeysDatas_list.Add(data);
 				prevData = data;
 			}
-			keysDatas = _keysDatas_list.ToArray();
+			beatKeysDatas = _beatKeysDatas_list.ToArray();
+			if (midi.MarkerTrack == null) beatWithMarkerKeysDatas = beatKeysDatas;
+			else {
+				List<MetaEvent> mixedList = timeSignatureTrack.Cast<MetaEvent>().Concat(midi.MarkerTrack.Cast<MetaEvent>()).DistinctBy(meta => meta.AbsoluteTime).ToList();
+				mixedList.Sort((a, b) => a.AbsoluteTime.CompareTo(b.AbsoluteTime));
+				TimeSignatureKeysData prevData2 = GetFirstTimeSignature();
+				List<TimeSignatureKeysData> _beatWithMarkerKeysDatas_list = new List<TimeSignatureKeysData>(mixedList.Count);
+				foreach (MetaEvent meta in mixedList) {
+					TimeSignatureKeysData data = CreateTimeSignatureKeysData(meta, prevData2);
+					_beatKeysDatas_list.Add(data);
+					prevData2 = data;
+				}
+				beatWithMarkerKeysDatas = _beatWithMarkerKeysDatas_list.ToArray();
+			}
+		}
+
+		private TimeSignatureKeysData CreateTimeSignatureKeysData(MetaEvent _timeSignature, TimeSignatureKeysData prevData) {
+			TimeSignatureEvent timeSignature;
+			if (_timeSignature is TimeSignatureEvent) timeSignature = (TimeSignatureEvent)_timeSignature;
+			else {
+				timeSignature = (TimeSignatureEvent)prevData.@event.Clone();
+				timeSignature.AbsoluteTime = _timeSignature.AbsoluteTime;
+			}
+			long ticks = timeSignature.AbsoluteTime;
+			if (prevData.numerator == 0) prevData.numerator = timeSignature.Numerator;
+			if (prevData.denominator == 0) prevData.denominator = timeSignature.GetDenominator();
+			double quartersPerMeasure = prevData.QuartersPerMeasure;
+			double prevQuarters = (ticks - prevData.ticks) / (double)midi.TicksPerQuarter;
+			int prevMeasures = (int)Math.Ceiling(prevQuarters / quartersPerMeasure);
+			TimeSignatureKeysData data = new TimeSignatureKeysData(prevData.measureIndex + prevMeasures, ticks, timeSignature.Numerator, timeSignature.GetDenominator(), prevData.passedQuarters + prevQuarters, timeSignature);
+			return data;
 		}
 
 		/// <summary>
@@ -6376,6 +6412,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public int numerator;
 			public int denominator;
 			public double passedQuarters;
+			public TimeSignatureEvent @event;
 			/// <summary>
 			/// 存储拍号关键帧数据的类。
 			/// </summary>
@@ -6384,22 +6421,33 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// <param name="numerator">拍号分子。</param>
 			/// <param name="denominator">拍号分母。</param>
 			/// <param name="passedQuarters">之前所有数据四分音符数目的总和。</param>
-			public TimeSignatureKeysData(long measureIndex, long ticks, int numerator, int denominator, double passedQuarters) {
+			public TimeSignatureKeysData(long measureIndex, long ticks, int numerator, int denominator, double passedQuarters, TimeSignatureEvent @event) {
 				this.measureIndex = measureIndex;
 				this.ticks = ticks;
 				this.numerator = numerator;
 				this.denominator = denominator;
 				this.passedQuarters = passedQuarters;
+				this.@event = @event;
 			}
 			public double QuartersPerMeasure { get { return numerator * 4 / (double)denominator; } }
 		}
 
 		public long GetMeasureIndex(MidiEvent midiEvent) {
 			long ticks = midiEvent.AbsoluteTime;
-			foreach (TimeSignatureKeysData curData in keysDatas.Reverse())
+			foreach (TimeSignatureKeysData curData in beatKeysDatas.Reverse())
 				if (ticks >= curData.ticks) {
 					long measureIndex = curData.measureIndex + (long)/* Math.Floor */((ticks - curData.ticks) / (midi.TicksPerQuarter * curData.QuartersPerMeasure));
 					return measureIndex;
+				}
+			return 0;
+		}
+
+		public double GetMeasurePassed(MidiEvent midiEvent) {
+			long ticks = midiEvent.AbsoluteTime;
+			foreach (TimeSignatureKeysData curData in beatKeysDatas.Reverse())
+				if (ticks >= curData.ticks) {
+					double measurePassed = curData.measureIndex + (ticks - curData.ticks) / (midi.TicksPerQuarter * curData.QuartersPerMeasure);
+					return measurePassed;
 				}
 			return 0;
 		}
@@ -6422,7 +6470,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void GetSheetMeasureInfo(MidiEvent midiEvent, out double measureStartQuarters, out double measureEndQuarters) {
 			long ticks = midiEvent.AbsoluteTime;
-			foreach (TimeSignatureKeysData curData in keysDatas.Reverse())
+			foreach (TimeSignatureKeysData curData in beatKeysDatas.Reverse())
 				if (ticks >= curData.ticks) {
 					double measures = (ticks - curData.ticks) / (midi.TicksPerQuarter * curData.QuartersPerMeasure);
 					measureStartQuarters = curData.passedQuarters + Math.Floor(measures) * curData.QuartersPerMeasure;
@@ -6430,11 +6478,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					return;
 				}
 			{ // 在第一个拍号标记之前的音符，按理不应该进入这一环节。
-				TimeSignatureKeysData curData = keysDatas[0];
+				TimeSignatureKeysData curData = beatKeysDatas[0];
 				double measures = ticks / (midi.TicksPerQuarter * curData.QuartersPerMeasure);
 				measureStartQuarters = Math.Floor(measures) * curData.QuartersPerMeasure;
 				measureEndQuarters = Math.Floor(measures + 1) * curData.QuartersPerMeasure;
 			}
+		}
+
+		public void InitMarkerDodgedMeasureTrack(BarOrBeat period, BarOrBeat preparation) {
+			if (midi.MarkerTrack.IsEmpty()) return;
+			bool isBeat = period.Unit == BarOrBeat.Units.Beat;
+			midi.MarkerDodgedMeasureTrack = midi.MarkerTrack.Where(marker => {
+				float passed = (float)(isBeat ? GetQuarterPassed(marker) : GetMeasurePassed(marker)); // 降精度，避免下面的算式求得类似 0.000…001 之类的导致与 0 不等。
+				return (passed - preparation.Value) % period.Value != 0;
+			}).ToArray();
 		}
 	}
 
@@ -6456,17 +6513,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			// 用于映射到 double 精度范围的掩码 (2^53 - 1) 和 分母 (2^53)
 			private const ulong DOUBLE_PRECISION_MASK = 0x1FFFFFFFFFFFFFul;
-			private const double DOUBLE_DIVISOR = (double)0x20000000000000ul;
+			private const double DOUBLE_DIVISOR = 0x20000000000000ul;
 
 			// 用于处理 null 时的非确定性随机数生成器
 			private static readonly Random fallbackRandom = new Random();
+
+			// 与 SourceRandomSelector.GetRandomInPool 方法整合使用。
+			private const int DEFAULT_SHUFFLE_STEP = -1;
 
 			/// <summary>
 			/// 支持无限参数，包含各种数值、布尔值及 null。<br />
 			/// long, int, short, byte, bool 等均可隐式或显式转为 long。<br />
 			/// 如果包含 null，则返回不稳定的随机数。
 			/// </summary>
-			public static double NextDouble(params object[] seeds) {
+			public static double NextDouble(object[] seeds, long shuffleStep = DEFAULT_SHUFFLE_STEP) {
 				// 1. 预检查：如果参数数组本身为 null 或其中包含 null 元素
 				if (seeds == null) return fallbackRandom.NextDouble();
 
@@ -6479,9 +6539,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (input == null) return fallbackRandom.NextDouble();
 
 						// 3. 将不同类型统一转换为 8 字节 (long) 进行 Hash
-						long value;
-						if (input is bool) value = (bool)input ? 1L : 0L;
-						else value = Convert.ToInt64(input); // 处理 int, long, short, uint 等
+						long value = input is bool ? (bool)input ? 1L : 0L : Convert.ToInt64(input);
+						// 处理 int, long, short, uint 等
 
 						// 4. FNV-1a 逐字节混合
 						// 这里使用位移比 BitConverter.GetBytes 更快且无内存分配
@@ -6489,13 +6548,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							hash ^= (byte)((value >> (i * 8)) & 0xFF);
 							hash *= FNV_PRIME;
 						}
+
+						// +. 混合洗牌步骤索引，确保每一步随机数不同
+						if (shuffleStep >= 0) {
+							for (int i = 0; i < 8; i++) {
+								hash ^= (byte)((shuffleStep >> (i * 8)) & 0xFF);
+								hash *= FNV_PRIME;
+							}
+						}
 					}
 
 					// 5. 使用快速混合函数（Finalizer，类似 SplitMix64 核心逻辑）打乱位分布，确保随机性
 					// 这些常数是数学上精心挑选的，用于散列位分布
 					hash = (hash ^ (hash >> 30)) * MIXER_CONST_1;
 					hash = (hash ^ (hash >> 27)) * MIXER_CONST_2;
-					hash ^= (hash >> 31);
+					hash ^= hash >> 31;
 
 					// 6. 将 64 位整数映射到 [0.0, 1.0) 范围
 					// 0x1FFFFFFFFFFFFFL 是 2^53 - 1，对应 double 的 53 位精度
@@ -6504,17 +6571,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 
 			/// <inheritdoc cref="Random.Next(int, int)" />
-			public static int Next(int minValue, int maxValue, object[] seeds = null) {
+			public static int Next(int minValue, int maxValue, object[] seeds = null, int shuffleStep = DEFAULT_SHUFFLE_STEP) {
 				if (minValue > maxValue) throw new ArgumentOutOfRangeException("maxValue is less than minValue in Randoms.HashRandom.Next()");
 				else if (minValue == maxValue) return minValue;
 				if (seeds == null) return fallbackRandom.Next(minValue, maxValue);
-				double value = NextDouble(seeds);
+				double value = NextDouble(seeds, shuffleStep);
 				return EntryPoint.Map(value, 0d, 1d, minValue, maxValue);
 			}
 
 			/// <inheritdoc cref="Random.Next(int)" />
-			public static int Next(int maxValue, object[] seeds = null) {
-				return Next(0, maxValue, seeds);
+			public static int Next(int maxValue, object[] seeds = null, int shuffleStep = DEFAULT_SHUFFLE_STEP) {
+				return Next(0, maxValue, seeds, shuffleStep);
 			}
 		}
 
@@ -6560,41 +6627,38 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// 从列表抽取一个元素，并更新对应的布尔标记数组。
 			/// </summary>
 			/// <param name="pool">抽奖池列表。</param>
-			/// <param name="status">记录是否已抽取的布尔数组（应与 <paramref name="pool" /> 长度一致，不一致的话就会自动重新调整大小）。</param>
+			/// <param name="step">当前获取的步数。</param>
 			/// <param name="allPicked">现在是否全抽完了开启新的一轮了？</param>
-			public static T GetRandomInPool<T>(IReadOnlyList<T> pool, ref bool[] status, out bool allPicked, object[] seeds = null) {
+			/// <param name="seeds">种子们。必须是固定的，否则不保证保底性。</param>
+			public static T GetRandomInPool<T>(IReadOnlyList<T> pool, long step, out bool allPicked, object[] seeds = null) {
 				allPicked = false;
 				if (pool.IsEmpty()) return default(T);
-				if (status == null) status = new bool[pool.Count];
-				else if (status.Length != pool.Count) Array.Resize(ref status, pool.Count);
 
-				// 1. 快速扫描：检查是否检查是否已全部抽完（即全为 true，这一轮是否结束）
-				int pickedCount = status.Count(picked => picked);
-				if (pickedCount == status.Length) {
-					allPicked = true;
-					Array.Clear(status, 0, status.Length); // 开启新轮次：全部归零
+				// 1. 计算当前属于第几轮，以及在轮内的位置
+				long round = step / pool.Count;
+				int offset = (int)(step % pool.Count);
+
+				// 2. 构建这一轮的专属种子 (由 基础种子 + 轮次 组成)
+				object[] roundSeeds = seeds.Append(round).ToArray();
+
+				// 3. 使用确定性洗牌算法 (Fisher-Yates 变体)
+				// 我们不需要真的洗掉整个列表，只需要模拟洗牌过程直到找到 offset 位置的元素
+				List<int> indices = Enumerable.Range(0, pool.Count).ToList();
+
+				for (int i = 0; i <= offset; i++) {
+					// 为洗牌的每一步生成一个独立的确定性随机数
+					// 种子由 (轮次种子 + 洗牌步骤 i) 组成
+					double r = HashRandom.NextDouble(roundSeeds, i);
+					int targetIndex = i + (int)(r * (indices.Count - i));
+
+					// 交换位置
+					int temp = indices[i];
+					indices[i] = indices[targetIndex];
+					indices[targetIndex] = temp;
 				}
 
-				int selectedIndex = -1;
-				const int HYBRID_THRESHOLD = 64;
-				const double PICKED_RATIO = 0.8;
-
-				// 2. 性能优化混合策略：当总数超过阈值且剩余名额不足 20% 时，直接找索引，避免随机碰撞死循环
-				if (seeds != null || status.Length > HYBRID_THRESHOLD && pickedCount > status.Length * PICKED_RATIO) {
-					// 策略 A：索引提取法 (防止大规模下的“随机碰撞陷阱”)
-					int[] remainingIndices = status.Select((picked, index) => picked ? null : (int?)index).OfType<int>().ToArray();
-					int remainingCount = status.Length - pickedCount;
-					selectedIndex = remainingIndices[HashRandom.Next(remainingCount, seeds)];
-				} else {
-					// 策略 B：剩余名额多，直接随机撞大运（小规模或大规模前期，效率最高）
-					do
-						selectedIndex = HashRandom.Next(status.Length, seeds);
-					while (status[selectedIndex]); // 如果抽中了已标记为 true 的，重抽
-				}
-
-				// 3. 标记并返回
-				status[selectedIndex] = true;
-				return pool[selectedIndex];
+				// 4. 返回 offset 位置对应的元素
+				return pool[indices[offset]];
 			}
 		}
 	}
