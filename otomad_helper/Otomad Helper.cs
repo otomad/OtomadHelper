@@ -142,6 +142,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>滑音效果</summary>*/ private bool VConfigGlissando { get { return configForm.VideoGlissandoCheck.Checked; } }
 		/**<summary>滑音大小</summary>*/ private double VConfigGlissandoAmount { get { return (double)configForm.VideoGlissandoBox.Value; } }
 		/**<summary>首选轨道</summary>*/ private PreferredTrackWrapper<VideoTrack> VConfigPreferredTrack { get { return configForm.VideoPreferredTrackCombo.SelectedItem as PreferredTrackWrapper<VideoTrack>; } }
+		/**<summary>堆　　叠</summary>*/ private bool VConfigStack { get { return configForm.VideoStackCheck.Checked; } }
+		/**<summary>不重映射</summary>*/ private bool VConfigTimeUnremapping { get { return configForm.VideoTimeUnremappingCheck.Checked; } }
 		#endregion
 
 		#region 音频属性
@@ -177,6 +179,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>创建分组</summary>*/ private bool ConfigCreateEventGroup { get { return configForm.CreateEventGroupInAudioCheck.Checked; } }
 		/**<summary>复音多轨</summary>*/ private bool AConfigMultitrack { get { return configForm.AudioMultitrackForChordsCheck.Checked; } }
 		/**<summary>首选轨道</summary>*/ private PreferredTrackWrapper<AudioTrack> AConfigPreferredTrack { get { return configForm.AudioPreferredTrackCombo.SelectedItem as PreferredTrackWrapper<AudioTrack>; } }
+		/**<summary>堆　　叠</summary>*/ private bool AConfigStack { get { return configForm.AudioStackCheck.Checked; } }
+		/**<summary>不重映射</summary>*/ private bool AConfigTimeUnremapping { get { return configForm.AudioTimeUnremappingCheck.Checked; } }
 		#endregion
 
 		#region 迷笛属性
@@ -211,7 +215,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			get { return configIni.Read("LastMidiDirectory", "", "Source"); }
 			set { configIni.Write("LastMidiDirectory", value, "Source"); }
 		}
-		/**<summary>轨道分组</summary>*/ internal GroupTrackBy GroupTrackBy { get { return configForm.GroupTrackBy; } }
+		/**<summary>首选轨道</summary>*/ private bool IsStack { get { return AConfig && AConfigStack || VConfig && VConfigStack; } }
+		/**<summary>轨道分组</summary>*/ internal GroupTrackBy GroupTrackBy { get { return configForm.GroupTrackBy == GroupTrackBy.OFF ? GroupTrackBy.OFF : YtpConfig || IsStack ? GroupTrackBy.SESSION : configForm.GroupTrackBy; } }
 		/**<summary>折叠分组</summary>*/ private bool CollapseTrackGroups { get { return configForm.CollapseTrackGroupCheck.Checked; } }
 		#endregion
 
@@ -294,6 +299,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		internal static readonly Timecode oneTick = Timecode.FromMilliseconds(1);
 		VariableBpmIntegrator bpmIntegrator = null;
 		VariableTimeSignatureIntegrator beatIntegrator = null;
+		TrackHelper<object, object> stackTrackHelper = null;
 		/**
 		 * <summary>
 		 * <para>多素材属性 - 实例对象变量</para>
@@ -1188,7 +1194,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MIDI.TrackInfo currentChannel = MidiConfigTracks[0];
 			string name = currentChannel.Name; // 所选 MIDI 轨道名称。如果没有则为空串。
 			currentChannel.Resort(); // 重新排序。
-			NoteOnEvent prevNoteOnEvent = null;
+			NoteOnEvent prevNoteOnEvent = null; AudioEvent prevAudioEvent = null; VideoEvent prevVideoEvent = null;
 			bool requireGlissandoSwirl = VConfig && VConfigGlissando && !SheetConfig && currentChannel.HasPitchWheelEvents; // 五线谱效果开启时最好不要做滑音漩涡动画。
 			const double NOTE_ON_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL = 0.8;
 			const double PITCH_WHEEL_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL = 1 - NOTE_ON_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL;
@@ -1202,10 +1208,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 准备轨道
 			bool sonarMode = currentChannel.IsDrumKit && SonarConfig;
 			int topIndex = GenerateBelowTopAdjustmentTrack ? GetFirstNotAdjustmentTrackIndex() : 0;
-			var trackHelper = TrackHelper.New(this,
-				!AConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsAPreferredTrack ? AConfigPreferredTrack.Track as object : topIndex as object,
-				!VConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsVPreferredTrack ? VConfigPreferredTrack.Track as object : topIndex as object,
-				!AConfigMultitrack, !VConfigMultitrack && !sonarMode && !SheetConfig, name);
+			TrackHelper<object, object> trackHelper = null;
+			if (IsStack) trackHelper = stackTrackHelper;
+			if (trackHelper == null) {
+				trackHelper = TrackHelper.New(this,
+					!AConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsAPreferredTrack ? AConfigPreferredTrack.Track as object : topIndex as object,
+					!VConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsVPreferredTrack ? VConfigPreferredTrack.Track as object : topIndex as object,
+					!AConfigMultitrack, !VConfigMultitrack && !sonarMode && !SheetConfig, name);
+				if (IsStack) stackTrackHelper = trackHelper;
+			}
 			bool requireTwoKey = VConfigStartSize != VConfigEndSize || // 如果为起始尺寸与终止尺寸大小相等，则没有必要打两个关键帧了。
 				VConfigStartRotation != VConfigEndRotation ||
 				VConfigStartHTrans != VConfigEndHTrans ||
@@ -1505,6 +1516,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							AConfigScratch == StretchType.FLEXING_ONLY && duration < audioLength)
 							audioEvent.AdjustPlaybackRate(audioLength / duration, true);
 						audioEvent.Loop = AConfigLoop;
+						if (AConfigTimeUnremapping && prevAudioEvent != null) {
+							audioEvent.ActiveTake.Offset = prevAudioEvent.ActiveTake.Offset + prevAudioEvent.Length;
+							prevAudioEvent = audioEvent;
+						}
 
 						if (AConfigMethod != AudioTuningMethod.OSCILLATOR) {
 							audioEvent.FadeIn.Length = AConfigSetFadeBy == SetFadeByType.TIMECODE ? AConfigFadeinTimecode : Timecode.FromMilliseconds(audioEvent.Length.ToMilliseconds() * AConfigFadein / 100);
@@ -1617,6 +1632,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							VConfigScratch == StretchType.EXTENDING_ONLY && duration > videoLength ||
 							VConfigScratch == StretchType.FLEXING_ONLY && duration < videoLength)
 							videoEvent.AdjustPlaybackRate(videoLength / duration, true);
+						if (VConfigTimeUnremapping && prevVideoEvent != null) {
+							videoEvent.ActiveTake.Offset = prevVideoEvent.ActiveTake.Offset + prevVideoEvent.Length;
+							prevVideoEvent = videoEvent;
+						}
 						if (anim.IsReverse) ReverseVideo(videoEvent); // 结论：先拉伸后反转
 						if (VConfigFreezeFirstFrame) FreezeFirstFrame(videoEvent);
 						if (VConfigFreezeLastFrame) FreezeLastFrame(videoEvent, videoLength);
@@ -26363,7 +26382,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioStackCheck.Name = "AudioStackCheck";
 			this.AudioStackCheck.Size = new System.Drawing.Size(94, 36);
 			this.AudioStackCheck.TabIndex = 11;
-			this.AudioStackCheck.Text = "堆积";
+			this.AudioStackCheck.Text = "堆叠";
 			this.AudioStackCheck.UseVisualStyleBackColor = true;
 			//
 			// AudioTimeUnremappingCheck
@@ -28209,7 +28228,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoStackCheck.Name = "VideoStackCheck";
 			this.VideoStackCheck.Size = new System.Drawing.Size(94, 36);
 			this.VideoStackCheck.TabIndex = 13;
-			this.VideoStackCheck.Text = "堆积";
+			this.VideoStackCheck.Text = "堆叠";
 			this.VideoStackCheck.UseVisualStyleBackColor = true;
 			//
 			// VideoTimeUnremappingCheck
@@ -32157,6 +32176,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioLockStretchPitchCheck.Checked = configIni.Read("LockStretchPitch", false);
 			AudioReserveFormantCheck.Checked = configIni.Read("ReserveFormant", false);
 			AudioVocalFryCheck.UserChecked = configIni.Read("VocalFry", false);
+			AudioStackCheck.Checked = configIni.Read("Stack", false);
+			AudioTimeUnremappingCheck.Checked = configIni.Read("TimeUnremapping", false);
 			CreateEventGroupInAudioCheck.Checked = configIni.Read("CreateEventGroup", true);
 			configIni.EndSection();
 			#endregion
@@ -32213,6 +32234,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			VideoStartSaturationCurveCombo.SetIndex(configIni.Read("StartSaturationCurve", 1), 1);
 			VideoStartContrastCurveCombo.SetIndex(configIni.Read("StartContrastCurve", 1), 1);
 			VideoStartThresholdCurveCombo.SetIndex(configIni.Read("StartThresholdCurve", 1), 1);
+			VideoStackCheck.Checked = configIni.Read("Stack", false);
+			VideoTimeUnremappingCheck.Checked = configIni.Read("TimeUnremapping", false);
 			configIni.EndSection();
 			#endregion
 
@@ -32410,6 +32433,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("LockStretchPitch", AudioLockStretchPitchCheck.Checked);
 			configIni.Write("ReserveFormant", AudioReserveFormantCheck.Checked);
 			configIni.Write("VocalFry", AudioVocalFryCheck.UserChecked);
+			configIni.Write("Stack", AudioStackCheck.Checked);
+			configIni.Write("TimeUnremapping", AudioTimeUnremappingCheck.Checked);
 			configIni.Write("CreateEventGroup", CreateEventGroupInAudioCheck.Checked);
 			configIni.EndSection();
 			#endregion
@@ -32465,6 +32490,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("StartSaturationCurve", VideoStartSaturationCurveCombo.SelectedIndex);
 			configIni.Write("StartContrastCurve", VideoStartContrastCurveCombo.SelectedIndex);
 			configIni.Write("StartThresholdCurve", VideoStartThresholdCurveCombo.SelectedIndex);
+			configIni.Write("Stack", VideoStackCheck.Checked);
+			configIni.Write("TimeUnremapping", VideoTimeUnremappingCheck.Checked);
 			configIni.EndSection();
 			#endregion
 
@@ -32994,6 +33021,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			VideoLoopCheck.Text = str.video_loop;
 			VideoFreezeFirstFrameCheck.Text = str.freeze_first_frame;
 			AudioMultitrackForChordsCheck.Text = VideoMultitrackForChordsCheck.Text = str.multitrack_for_chords;
+			AudioStackCheck.Text = VideoStackCheck.Text = str.stack;
+			AudioTimeUnremappingCheck.Text = VideoTimeUnremappingCheck.Text = str.time_unremapping;
 			VideoParamsPresetsBtn.Text = str.presets;
 			SheetTab.Text = str.staff;
 			StaffLineThicknessLbl.Text = str.sheet_thickness;
@@ -36088,6 +36117,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			stop_generating_warning_title = "生成已终止",
 			match_cut_loop_warning = "警告：所需音符数已超出所选素材数。\n\n现在已停止生成。\n\n请重新填充足够的素材或启用 素材 > 踩点 > 循环 以恢复。",
 			linear_map_allow_reuse_existed_warning = "警告：所需音符数已超出当前 MIDI 的音轨数。\n\n已阻止本次生成。\n\n请重新填充足够的素材或启用 素材 > 线性映射输出 > 允许重用 以恢复。",
+			stack = "堆叠",
+			time_unremapping = "持续时间流",
 			__eol__ = "";
 
 		static Lang() {

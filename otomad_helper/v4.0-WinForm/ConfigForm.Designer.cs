@@ -115,6 +115,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTab = new System.Windows.Forms.TabPage();
 			this.SourceTabScrollPanel = new System.Windows.Forms.Panel();
 			this.MultiSourceConfigGroup = new System.Windows.Forms.GroupBox();
+			this.LinearMapPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.LinearMapDescendingCheck = new System.Windows.Forms.CheckBox();
+			this.LinearMapReuseCheck = new System.Windows.Forms.CheckBox();
 			this.LuckyDipPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.LuckyDipLimitToSelectedCheck = new System.Windows.Forms.CheckBox();
 			this.LuckyDipTrackCheck = new System.Windows.Forms.CheckBox();
@@ -135,11 +138,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutOrderReversedRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MatchCutOrderShuffleRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MatchCutLoopCheck = new System.Windows.Forms.CheckBox();
-			this.MatchCutLuckyDipCheck = new System.Windows.Forms.CheckBox();
-			this.MatchCutApplyEffectsByRoundCheck = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
 			this.MatchCutRepeatLbl = new System.Windows.Forms.Label();
 			this.MatchCutRepeatBox = new System.Windows.Forms.NumericUpDown();
+			this.MatchCutApplyEffectsByRoundCheck = new System.Windows.Forms.CheckBox();
+			this.MatchCutLuckyDipCheck = new System.Windows.Forms.CheckBox();
+			this.MatchCutAccumulateHarmonicsCheck = new System.Windows.Forms.CheckBox();
 			this.flowLayoutPanel13 = new System.Windows.Forms.FlowLayoutPanel();
 			this.MultiSourceOffRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.LuckyDipRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
@@ -573,10 +577,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.LinearMapPanel = new System.Windows.Forms.FlowLayoutPanel();
-			this.LinearMapDescendingCheck = new System.Windows.Forms.CheckBox();
-			this.LinearMapReuseCheck = new System.Windows.Forms.CheckBox();
-			this.MatchCutAccumulateHarmonicsCheck = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -596,6 +596,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTab.SuspendLayout();
 			this.SourceTabScrollPanel.SuspendLayout();
 			this.MultiSourceConfigGroup.SuspendLayout();
+			this.LinearMapPanel.SuspendLayout();
 			this.LuckyDipPanel.SuspendLayout();
 			this.LuckyDipBarOrBeatPeriodPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.LuckyDipBarOrBeatPeriodBox)).BeginInit();
@@ -725,7 +726,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
-			this.LinearMapPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -1743,6 +1743,44 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceConfigGroup.TabStop = false;
 			this.MultiSourceConfigGroup.Text = "多素材梳子";
 			// 
+			// LinearMapPanel
+			// 
+			this.LinearMapPanel.AutoSize = true;
+			this.LinearMapPanel.Controls.Add(this.LinearMapDescendingCheck);
+			this.LinearMapPanel.Controls.Add(this.LinearMapReuseCheck);
+			this.LinearMapPanel.Dock = System.Windows.Forms.DockStyle.Top;
+			this.LinearMapPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.LinearMapPanel.Location = new System.Drawing.Point(8, 559);
+			this.LinearMapPanel.Name = "LinearMapPanel";
+			this.LinearMapPanel.Padding = new System.Windows.Forms.Padding(28, 0, 0, 0);
+			this.LinearMapPanel.Size = new System.Drawing.Size(986, 84);
+			this.LinearMapPanel.TabIndex = 9;
+			this.LinearMapPanel.WrapContents = false;
+			// 
+			// LinearMapDescendingCheck
+			// 
+			this.LinearMapDescendingCheck.AutoSize = true;
+			this.LinearMapDescendingCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LinearMapDescendingCheck.Location = new System.Drawing.Point(31, 3);
+			this.LinearMapDescendingCheck.Name = "LinearMapDescendingCheck";
+			this.LinearMapDescendingCheck.Size = new System.Drawing.Size(142, 36);
+			this.LinearMapDescendingCheck.TabIndex = 15;
+			this.LinearMapDescendingCheck.Text = "递减";
+			this.LinearMapDescendingCheck.UseVisualStyleBackColor = true;
+			// 
+			// LinearMapReuseCheck
+			// 
+			this.LinearMapReuseCheck.AutoSize = true;
+			this.LinearMapReuseCheck.Checked = true;
+			this.LinearMapReuseCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.LinearMapReuseCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LinearMapReuseCheck.Location = new System.Drawing.Point(31, 45);
+			this.LinearMapReuseCheck.Name = "LinearMapReuseCheck";
+			this.LinearMapReuseCheck.Size = new System.Drawing.Size(142, 36);
+			this.LinearMapReuseCheck.TabIndex = 16;
+			this.LinearMapReuseCheck.Text = "允许重用";
+			this.LinearMapReuseCheck.UseVisualStyleBackColor = true;
+			// 
 			// LuckyDipPanel
 			// 
 			this.LuckyDipPanel.AutoSize = true;
@@ -2024,28 +2062,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutLoopCheck.Text = "循环";
 			this.MatchCutLoopCheck.UseVisualStyleBackColor = true;
 			// 
-			// MatchCutLuckyDipCheck
-			// 
-			this.MatchCutLuckyDipCheck.AutoSize = true;
-			this.MatchCutLuckyDipCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutLuckyDipCheck.Location = new System.Drawing.Point(31, 137);
-			this.MatchCutLuckyDipCheck.Name = "MatchCutLuckyDipCheck";
-			this.MatchCutLuckyDipCheck.Size = new System.Drawing.Size(499, 36);
-			this.MatchCutLuckyDipCheck.TabIndex = 15;
-			this.MatchCutLuckyDipCheck.Text = "素材盲盒";
-			this.MatchCutLuckyDipCheck.UseVisualStyleBackColor = true;
-			// 
-			// MatchCutApplyEffectsByRoundCheck
-			// 
-			this.MatchCutApplyEffectsByRoundCheck.AutoSize = true;
-			this.MatchCutApplyEffectsByRoundCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutApplyEffectsByRoundCheck.Location = new System.Drawing.Point(31, 95);
-			this.MatchCutApplyEffectsByRoundCheck.Name = "MatchCutApplyEffectsByRoundCheck";
-			this.MatchCutApplyEffectsByRoundCheck.Size = new System.Drawing.Size(499, 36);
-			this.MatchCutApplyEffectsByRoundCheck.TabIndex = 16;
-			this.MatchCutApplyEffectsByRoundCheck.Text = "按轮次应用视觉效果";
-			this.MatchCutApplyEffectsByRoundCheck.UseVisualStyleBackColor = true;
-			// 
 			// tableLayoutPanel5
 			// 
 			this.tableLayoutPanel5.AutoSize = true;
@@ -2093,6 +2109,39 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
             0,
             0,
             0});
+			// 
+			// MatchCutApplyEffectsByRoundCheck
+			// 
+			this.MatchCutApplyEffectsByRoundCheck.AutoSize = true;
+			this.MatchCutApplyEffectsByRoundCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MatchCutApplyEffectsByRoundCheck.Location = new System.Drawing.Point(31, 95);
+			this.MatchCutApplyEffectsByRoundCheck.Name = "MatchCutApplyEffectsByRoundCheck";
+			this.MatchCutApplyEffectsByRoundCheck.Size = new System.Drawing.Size(499, 36);
+			this.MatchCutApplyEffectsByRoundCheck.TabIndex = 16;
+			this.MatchCutApplyEffectsByRoundCheck.Text = "按轮次应用视觉效果";
+			this.MatchCutApplyEffectsByRoundCheck.UseVisualStyleBackColor = true;
+			// 
+			// MatchCutLuckyDipCheck
+			// 
+			this.MatchCutLuckyDipCheck.AutoSize = true;
+			this.MatchCutLuckyDipCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MatchCutLuckyDipCheck.Location = new System.Drawing.Point(31, 137);
+			this.MatchCutLuckyDipCheck.Name = "MatchCutLuckyDipCheck";
+			this.MatchCutLuckyDipCheck.Size = new System.Drawing.Size(499, 36);
+			this.MatchCutLuckyDipCheck.TabIndex = 15;
+			this.MatchCutLuckyDipCheck.Text = "素材盲盒";
+			this.MatchCutLuckyDipCheck.UseVisualStyleBackColor = true;
+			// 
+			// MatchCutAccumulateHarmonicsCheck
+			// 
+			this.MatchCutAccumulateHarmonicsCheck.AutoSize = true;
+			this.MatchCutAccumulateHarmonicsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MatchCutAccumulateHarmonicsCheck.Location = new System.Drawing.Point(31, 179);
+			this.MatchCutAccumulateHarmonicsCheck.Name = "MatchCutAccumulateHarmonicsCheck";
+			this.MatchCutAccumulateHarmonicsCheck.Size = new System.Drawing.Size(499, 36);
+			this.MatchCutAccumulateHarmonicsCheck.TabIndex = 21;
+			this.MatchCutAccumulateHarmonicsCheck.Text = "对和弦的泛音列独立累加";
+			this.MatchCutAccumulateHarmonicsCheck.UseVisualStyleBackColor = true;
 			// 
 			// flowLayoutPanel13
 			// 
@@ -4263,7 +4312,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioStackCheck.Name = "AudioStackCheck";
 			this.AudioStackCheck.Size = new System.Drawing.Size(94, 36);
 			this.AudioStackCheck.TabIndex = 11;
-			this.AudioStackCheck.Text = "堆积";
+			this.AudioStackCheck.Text = "堆叠";
 			this.AudioStackCheck.UseVisualStyleBackColor = true;
 			// 
 			// AudioTimeUnremappingCheck
@@ -6109,7 +6158,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoStackCheck.Name = "VideoStackCheck";
 			this.VideoStackCheck.Size = new System.Drawing.Size(94, 36);
 			this.VideoStackCheck.TabIndex = 13;
-			this.VideoStackCheck.Text = "堆积";
+			this.VideoStackCheck.Text = "堆叠";
 			this.VideoStackCheck.UseVisualStyleBackColor = true;
 			// 
 			// VideoTimeUnremappingCheck
@@ -8858,55 +8907,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			// 
-			// LinearMapPanel
-			// 
-			this.LinearMapPanel.AutoSize = true;
-			this.LinearMapPanel.Controls.Add(this.LinearMapDescendingCheck);
-			this.LinearMapPanel.Controls.Add(this.LinearMapReuseCheck);
-			this.LinearMapPanel.Dock = System.Windows.Forms.DockStyle.Top;
-			this.LinearMapPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.LinearMapPanel.Location = new System.Drawing.Point(8, 559);
-			this.LinearMapPanel.Name = "LinearMapPanel";
-			this.LinearMapPanel.Padding = new System.Windows.Forms.Padding(28, 0, 0, 0);
-			this.LinearMapPanel.Size = new System.Drawing.Size(986, 84);
-			this.LinearMapPanel.TabIndex = 9;
-			this.LinearMapPanel.WrapContents = false;
-			// 
-			// LinearMapDescendingCheck
-			// 
-			this.LinearMapDescendingCheck.AutoSize = true;
-			this.LinearMapDescendingCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LinearMapDescendingCheck.Location = new System.Drawing.Point(31, 3);
-			this.LinearMapDescendingCheck.Name = "LinearMapDescendingCheck";
-			this.LinearMapDescendingCheck.Size = new System.Drawing.Size(142, 36);
-			this.LinearMapDescendingCheck.TabIndex = 15;
-			this.LinearMapDescendingCheck.Text = "递减";
-			this.LinearMapDescendingCheck.UseVisualStyleBackColor = true;
-			// 
-			// LinearMapReuseCheck
-			// 
-			this.LinearMapReuseCheck.AutoSize = true;
-			this.LinearMapReuseCheck.Checked = true;
-			this.LinearMapReuseCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.LinearMapReuseCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LinearMapReuseCheck.Location = new System.Drawing.Point(31, 45);
-			this.LinearMapReuseCheck.Name = "LinearMapReuseCheck";
-			this.LinearMapReuseCheck.Size = new System.Drawing.Size(142, 36);
-			this.LinearMapReuseCheck.TabIndex = 16;
-			this.LinearMapReuseCheck.Text = "允许重用";
-			this.LinearMapReuseCheck.UseVisualStyleBackColor = true;
-			// 
-			// MatchCutAccumulateHarmonicsCheck
-			// 
-			this.MatchCutAccumulateHarmonicsCheck.AutoSize = true;
-			this.MatchCutAccumulateHarmonicsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutAccumulateHarmonicsCheck.Location = new System.Drawing.Point(31, 179);
-			this.MatchCutAccumulateHarmonicsCheck.Name = "MatchCutAccumulateHarmonicsCheck";
-			this.MatchCutAccumulateHarmonicsCheck.Size = new System.Drawing.Size(499, 36);
-			this.MatchCutAccumulateHarmonicsCheck.TabIndex = 21;
-			this.MatchCutAccumulateHarmonicsCheck.Text = "对和弦的泛音列独立累加";
-			this.MatchCutAccumulateHarmonicsCheck.UseVisualStyleBackColor = true;
-			// 
 			// ConfigForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -8955,6 +8955,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTabScrollPanel.PerformLayout();
 			this.MultiSourceConfigGroup.ResumeLayout(false);
 			this.MultiSourceConfigGroup.PerformLayout();
+			this.LinearMapPanel.ResumeLayout(false);
+			this.LinearMapPanel.PerformLayout();
 			this.LuckyDipPanel.ResumeLayout(false);
 			this.LuckyDipPanel.PerformLayout();
 			this.LuckyDipBarOrBeatPeriodPanel.ResumeLayout(false);
@@ -9175,8 +9177,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
-			this.LinearMapPanel.ResumeLayout(false);
-			this.LinearMapPanel.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
