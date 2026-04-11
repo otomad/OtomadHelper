@@ -131,6 +131,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPreparationLbl = new System.Windows.Forms.Label();
 			this.LuckyDipBarOrBeatPreparationBox = new System.Windows.Forms.NumericUpDown();
 			this.LuckyDipBarOrBeatPreparationUnitCombo = new System.Windows.Forms.ComboBox();
+			this.LuckyDipLotionBathCheck = new System.Windows.Forms.CheckBox();
+			this.LuckyDipLotionBathIntervalPanel = new System.Windows.Forms.TableLayoutPanel();
+			this.LuckyDipLotionBathIntervalLbl = new System.Windows.Forms.Label();
+			this.LuckyDipLotionBathIntervalBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
 			this.MatchCutPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.MatchCutOrderPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.MatchCutOrderLbl = new System.Windows.Forms.Label();
@@ -577,10 +581,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.LuckyDipLotionBathCheck = new System.Windows.Forms.CheckBox();
-			this.LuckyDipLotionBathIntervalPanel = new System.Windows.Forms.TableLayoutPanel();
-			this.LuckyDipLotionBathIntervalLbl = new System.Windows.Forms.Label();
-			this.LuckyDipLotionBathIntervalBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
+			this.ShupelunkerRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -606,6 +607,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			((System.ComponentModel.ISupportInitialize)(this.LuckyDipBarOrBeatPeriodBox)).BeginInit();
 			this.LuckyDipBarOrBeatPreparationPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.LuckyDipBarOrBeatPreparationBox)).BeginInit();
+			this.LuckyDipLotionBathIntervalPanel.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.LuckyDipLotionBathIntervalBox)).BeginInit();
 			this.MatchCutPanel.SuspendLayout();
 			this.MatchCutOrderPanel.SuspendLayout();
 			this.tableLayoutPanel5.SuspendLayout();
@@ -730,8 +733,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
-			this.LuckyDipLotionBathIntervalPanel.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.LuckyDipLotionBathIntervalBox)).BeginInit();
 			this.SuspendLayout();
 			//
 			// tableLayoutPanel1
@@ -1176,8 +1177,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioAltMethodCombo.FormattingEnabled = true;
 			this.AudioAltMethodCombo.Items.AddRange(new object[] {
 			"切换到移调效果插件",
-			"高 / 低八度",
-			"高 / 低八度（实验性）",
+			"升 / 降八度",
+			"升 / 降八度（实验性）",
 			"停靠在边缘",
 			"不发声"});
 			this.AudioAltMethodCombo.Location = new System.Drawing.Point(119, 111);
@@ -1233,7 +1234,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
 			this.menu.Padding = new System.Windows.Forms.Padding(10, 4, 0, 6);
-			this.menu.Size = new System.Drawing.Size(1092, 48);
+			this.menu.Size = new System.Drawing.Size(1092, 46);
 			this.menu.TabIndex = 2;
 			this.menu.Text = "menuStrip1";
 			//
@@ -1254,7 +1255,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.exitDiscardingChangesToolStripMenuItem,
 			this.exitToolStripMenuItem});
 			this.fileMenuItem.Name = "fileMenuItem";
-			this.fileMenuItem.Size = new System.Drawing.Size(108, 38);
+			this.fileMenuItem.Size = new System.Drawing.Size(108, 36);
 			this.fileMenuItem.Text = "文件(&F)";
 			//
 			// saveConfigToolStripMenuItem
@@ -1407,7 +1408,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.englishDocumentationsToolStripMenuItem,
 			this.chineseDocumentationsToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(113, 38);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(113, 36);
 			this.helpToolStripMenuItem.Text = "帮助(&H)";
 			//
 			// versionToolStripMenuItem
@@ -1607,7 +1608,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.vietnameseToolStripMenuItem,
 			this.indonesianToolStripMenuItem});
 			this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
-			this.languageToolStripMenuItem.Size = new System.Drawing.Size(195, 38);
+			this.languageToolStripMenuItem.Size = new System.Drawing.Size(195, 36);
 			this.languageToolStripMenuItem.Text = "语言/&Language";
 			//
 			// chineseToolStripMenuItem
@@ -1681,10 +1682,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.panel1.BackColor = System.Drawing.Color.Transparent;
 			this.panel1.Controls.Add(this.Tabs);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(0, 48);
+			this.panel1.Location = new System.Drawing.Point(0, 46);
 			this.panel1.Name = "panel1";
 			this.panel1.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
-			this.panel1.Size = new System.Drawing.Size(1092, 1054);
+			this.panel1.Size = new System.Drawing.Size(1092, 1056);
 			this.panel1.TabIndex = 3;
 			//
 			// Tabs
@@ -1704,7 +1705,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Tabs.Multiline = true;
 			this.Tabs.Name = "Tabs";
 			this.Tabs.SelectedIndex = 0;
-			this.Tabs.Size = new System.Drawing.Size(1068, 1054);
+			this.Tabs.Size = new System.Drawing.Size(1068, 1056);
 			this.Tabs.TabIndex = 2;
 			//
 			// SourceTab
@@ -1715,7 +1716,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTab.Location = new System.Drawing.Point(8, 46);
 			this.SourceTab.Margin = new System.Windows.Forms.Padding(0);
 			this.SourceTab.Name = "SourceTab";
-			this.SourceTab.Size = new System.Drawing.Size(1052, 1000);
+			this.SourceTab.Size = new System.Drawing.Size(1052, 1002);
 			this.SourceTab.TabIndex = 0;
 			this.SourceTab.Text = "素材";
 			this.SourceTab.UseVisualStyleBackColor = true;
@@ -1730,7 +1731,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTabScrollPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.SourceTabScrollPanel.Name = "SourceTabScrollPanel";
 			this.SourceTabScrollPanel.Padding = new System.Windows.Forms.Padding(8);
-			this.SourceTabScrollPanel.Size = new System.Drawing.Size(1052, 944);
+			this.SourceTabScrollPanel.Size = new System.Drawing.Size(1052, 946);
 			this.SourceTabScrollPanel.TabIndex = 5;
 			//
 			// MultiSourceConfigGroup
@@ -1975,6 +1976,57 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPreparationUnitCombo.TabIndex = 16;
 			this.LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndexChanged += new System.EventHandler(this.LuckyDipBarOrBeatPeriodUnitCombo_SelectedIndexChanged);
 			//
+			// LuckyDipLotionBathCheck
+			//
+			this.LuckyDipLotionBathCheck.AutoSize = true;
+			this.LuckyDipLotionBathCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LuckyDipLotionBathCheck.Location = new System.Drawing.Point(31, 259);
+			this.LuckyDipLotionBathCheck.Name = "LuckyDipLotionBathCheck";
+			this.LuckyDipLotionBathCheck.Size = new System.Drawing.Size(394, 36);
+			this.LuckyDipLotionBathCheck.TabIndex = 21;
+			this.LuckyDipLotionBathCheck.Text = "润肤浴战法";
+			this.LuckyDipLotionBathCheck.UseVisualStyleBackColor = true;
+			//
+			// LuckyDipLotionBathIntervalPanel
+			//
+			this.LuckyDipLotionBathIntervalPanel.AutoSize = true;
+			this.LuckyDipLotionBathIntervalPanel.ColumnCount = 2;
+			this.LuckyDipLotionBathIntervalPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.LuckyDipLotionBathIntervalPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 260F));
+			this.LuckyDipLotionBathIntervalPanel.Controls.Add(this.LuckyDipLotionBathIntervalLbl, 0, 0);
+			this.LuckyDipLotionBathIntervalPanel.Controls.Add(this.LuckyDipLotionBathIntervalBox, 1, 0);
+			this.LuckyDipLotionBathIntervalPanel.Dock = System.Windows.Forms.DockStyle.Left;
+			this.LuckyDipLotionBathIntervalPanel.Location = new System.Drawing.Point(28, 298);
+			this.LuckyDipLotionBathIntervalPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.LuckyDipLotionBathIntervalPanel.Name = "LuckyDipLotionBathIntervalPanel";
+			this.LuckyDipLotionBathIntervalPanel.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
+			this.LuckyDipLotionBathIntervalPanel.RowCount = 1;
+			this.LuckyDipLotionBathIntervalPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.LuckyDipLotionBathIntervalPanel.Size = new System.Drawing.Size(400, 44);
+			this.LuckyDipLotionBathIntervalPanel.TabIndex = 22;
+			//
+			// LuckyDipLotionBathIntervalLbl
+			//
+			this.LuckyDipLotionBathIntervalLbl.AutoSize = true;
+			this.LuckyDipLotionBathIntervalLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LuckyDipLotionBathIntervalLbl.Location = new System.Drawing.Point(32, 0);
+			this.LuckyDipLotionBathIntervalLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.LuckyDipLotionBathIntervalLbl.MinimumSize = new System.Drawing.Size(100, 0);
+			this.LuckyDipLotionBathIntervalLbl.Name = "LuckyDipLotionBathIntervalLbl";
+			this.LuckyDipLotionBathIntervalLbl.Size = new System.Drawing.Size(100, 44);
+			this.LuckyDipLotionBathIntervalLbl.TabIndex = 14;
+			this.LuckyDipLotionBathIntervalLbl.Text = "间隔";
+			this.LuckyDipLotionBathIntervalLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// LuckyDipLotionBathIntervalBox
+			//
+			this.LuckyDipLotionBathIntervalBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LuckyDipLotionBathIntervalBox.DoubleValue = 0D;
+			this.LuckyDipLotionBathIntervalBox.Location = new System.Drawing.Point(143, 3);
+			this.LuckyDipLotionBathIntervalBox.Name = "LuckyDipLotionBathIntervalBox";
+			this.LuckyDipLotionBathIntervalBox.Size = new System.Drawing.Size(254, 39);
+			this.LuckyDipLotionBathIntervalBox.TabIndex = 15;
+			//
 			// MatchCutPanel
 			//
 			this.MatchCutPanel.AutoSize = true;
@@ -2159,6 +2211,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel13.Controls.Add(this.MatchCutRadio);
 			this.flowLayoutPanel13.Controls.Add(this.LinearMapRadio);
 			this.flowLayoutPanel13.Controls.Add(this.ConsonantRadio);
+			this.flowLayoutPanel13.Controls.Add(this.ShupelunkerRadio);
 			this.flowLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Top;
 			this.flowLayoutPanel13.Location = new System.Drawing.Point(8, 40);
 			this.flowLayoutPanel13.Name = "flowLayoutPanel13";
@@ -2588,7 +2641,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.WarningInfoLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.WarningInfoLabel.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
 			this.WarningInfoLabel.ForeColor = System.Drawing.Color.Red;
-			this.WarningInfoLabel.Location = new System.Drawing.Point(0, 944);
+			this.WarningInfoLabel.Location = new System.Drawing.Point(0, 946);
 			this.WarningInfoLabel.MaximumSize = new System.Drawing.Size(864, 0);
 			this.WarningInfoLabel.Name = "WarningInfoLabel";
 			this.WarningInfoLabel.Padding = new System.Windows.Forms.Padding(8);
@@ -8915,56 +8968,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			//
-			// LuckyDipLotionBathCheck
+			// ShupelunkerRadio
 			//
-			this.LuckyDipLotionBathCheck.AutoSize = true;
-			this.LuckyDipLotionBathCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipLotionBathCheck.Location = new System.Drawing.Point(31, 259);
-			this.LuckyDipLotionBathCheck.Name = "LuckyDipLotionBathCheck";
-			this.LuckyDipLotionBathCheck.Size = new System.Drawing.Size(394, 36);
-			this.LuckyDipLotionBathCheck.TabIndex = 21;
-			this.LuckyDipLotionBathCheck.Text = "润肤浴战法";
-			this.LuckyDipLotionBathCheck.UseVisualStyleBackColor = true;
-			//
-			// LuckyDipLotionBathIntervalPanel
-			//
-			this.LuckyDipLotionBathIntervalPanel.AutoSize = true;
-			this.LuckyDipLotionBathIntervalPanel.ColumnCount = 2;
-			this.LuckyDipLotionBathIntervalPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LuckyDipLotionBathIntervalPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 260F));
-			this.LuckyDipLotionBathIntervalPanel.Controls.Add(this.LuckyDipLotionBathIntervalLbl, 0, 0);
-			this.LuckyDipLotionBathIntervalPanel.Controls.Add(this.LuckyDipLotionBathIntervalBox, 1, 0);
-			this.LuckyDipLotionBathIntervalPanel.Dock = System.Windows.Forms.DockStyle.Left;
-			this.LuckyDipLotionBathIntervalPanel.Location = new System.Drawing.Point(28, 298);
-			this.LuckyDipLotionBathIntervalPanel.Margin = new System.Windows.Forms.Padding(0);
-			this.LuckyDipLotionBathIntervalPanel.Name = "LuckyDipLotionBathIntervalPanel";
-			this.LuckyDipLotionBathIntervalPanel.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-			this.LuckyDipLotionBathIntervalPanel.RowCount = 1;
-			this.LuckyDipLotionBathIntervalPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.LuckyDipLotionBathIntervalPanel.Size = new System.Drawing.Size(400, 44);
-			this.LuckyDipLotionBathIntervalPanel.TabIndex = 22;
-			//
-			// LuckyDipLotionBathIntervalLbl
-			//
-			this.LuckyDipLotionBathIntervalLbl.AutoSize = true;
-			this.LuckyDipLotionBathIntervalLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipLotionBathIntervalLbl.Location = new System.Drawing.Point(32, 0);
-			this.LuckyDipLotionBathIntervalLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-			this.LuckyDipLotionBathIntervalLbl.MinimumSize = new System.Drawing.Size(100, 0);
-			this.LuckyDipLotionBathIntervalLbl.Name = "LuckyDipLotionBathIntervalLbl";
-			this.LuckyDipLotionBathIntervalLbl.Size = new System.Drawing.Size(100, 44);
-			this.LuckyDipLotionBathIntervalLbl.TabIndex = 14;
-			this.LuckyDipLotionBathIntervalLbl.Text = "间隔";
-			this.LuckyDipLotionBathIntervalLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
-			// LuckyDipLotionBathIntervalBox
-			//
-			this.LuckyDipLotionBathIntervalBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipLotionBathIntervalBox.DoubleValue = 0D;
-			this.LuckyDipLotionBathIntervalBox.Location = new System.Drawing.Point(143, 3);
-			this.LuckyDipLotionBathIntervalBox.Name = "LuckyDipLotionBathIntervalBox";
-			this.LuckyDipLotionBathIntervalBox.Size = new System.Drawing.Size(254, 39);
-			this.LuckyDipLotionBathIntervalBox.TabIndex = 15;
+			this.ShupelunkerRadio.AutoSize = true;
+			this.ShupelunkerRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ShupelunkerRadio.Enabled = false;
+			this.ShupelunkerRadio.Location = new System.Drawing.Point(670, 3);
+			this.ShupelunkerRadio.Name = "ShupelunkerRadio";
+			this.ShupelunkerRadio.Size = new System.Drawing.Size(284, 36);
+			this.ShupelunkerRadio.TabIndex = 6;
+			this.ShupelunkerRadio.Text = "原音系战法 / 鞑靼战法";
+			this.ShupelunkerRadio.UseVisualStyleBackColor = true;
 			//
 			// ConfigForm
 			//
@@ -9024,6 +9038,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPreparationPanel.ResumeLayout(false);
 			this.LuckyDipBarOrBeatPreparationPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.LuckyDipBarOrBeatPreparationBox)).EndInit();
+			this.LuckyDipLotionBathIntervalPanel.ResumeLayout(false);
+			this.LuckyDipLotionBathIntervalPanel.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.LuckyDipLotionBathIntervalBox)).EndInit();
 			this.MatchCutPanel.ResumeLayout(false);
 			this.MatchCutPanel.PerformLayout();
 			this.MatchCutOrderPanel.ResumeLayout(false);
@@ -9236,9 +9253,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
-			this.LuckyDipLotionBathIntervalPanel.ResumeLayout(false);
-			this.LuckyDipLotionBathIntervalPanel.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.LuckyDipLotionBathIntervalBox)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -9802,6 +9816,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.TableLayoutPanel LuckyDipLotionBathIntervalPanel;
 		public System.Windows.Forms.Label LuckyDipLotionBathIntervalLbl;
 		public TimecodeBox LuckyDipLotionBathIntervalBox;
+		public GroupedRadioButton ShupelunkerRadio;
 	}
 }
 

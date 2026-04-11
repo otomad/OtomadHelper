@@ -4145,9 +4145,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	public enum AudioAltTuningMethod {
 		/// <summary>切换到移调音效插件。</summary>
 		PLUGIN,
-		/// <summary>高 / 低八度。</summary>
+		/// <summary>升 / 降八度。</summary>
 		OCTAVE,
-		/// <summary>高 / 低八度（实验性）。</summary>
+		/// <summary>升 / 降八度（实验性）。</summary>
 		OCTAVE_EXP,
 		/// <summary>停靠在边缘。</summary>
 		DOCK,
@@ -22260,6 +22260,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPreparationLbl = new System.Windows.Forms.Label();
 			this.LuckyDipBarOrBeatPreparationBox = new System.Windows.Forms.NumericUpDown();
 			this.LuckyDipBarOrBeatPreparationUnitCombo = new System.Windows.Forms.ComboBox();
+			this.LuckyDipLotionBathCheck = new System.Windows.Forms.CheckBox();
+			this.LuckyDipLotionBathIntervalPanel = new System.Windows.Forms.TableLayoutPanel();
+			this.LuckyDipLotionBathIntervalLbl = new System.Windows.Forms.Label();
+			this.LuckyDipLotionBathIntervalBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
 			this.MatchCutPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.MatchCutOrderPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.MatchCutOrderLbl = new System.Windows.Forms.Label();
@@ -22706,10 +22710,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.LuckyDipLotionBathCheck = new System.Windows.Forms.CheckBox();
-			this.LuckyDipLotionBathIntervalPanel = new System.Windows.Forms.TableLayoutPanel();
-			this.LuckyDipLotionBathIntervalLbl = new System.Windows.Forms.Label();
-			this.LuckyDipLotionBathIntervalBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
+			this.ShupelunkerRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -22735,6 +22736,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			((System.ComponentModel.ISupportInitialize)(this.LuckyDipBarOrBeatPeriodBox)).BeginInit();
 			this.LuckyDipBarOrBeatPreparationPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.LuckyDipBarOrBeatPreparationBox)).BeginInit();
+			this.LuckyDipLotionBathIntervalPanel.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.LuckyDipLotionBathIntervalBox)).BeginInit();
 			this.MatchCutPanel.SuspendLayout();
 			this.MatchCutOrderPanel.SuspendLayout();
 			this.tableLayoutPanel5.SuspendLayout();
@@ -22859,8 +22862,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
-			this.LuckyDipLotionBathIntervalPanel.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.LuckyDipLotionBathIntervalBox)).BeginInit();
 			this.SuspendLayout();
 			//
 			// tableLayoutPanel1
@@ -23305,8 +23306,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioAltMethodCombo.FormattingEnabled = true;
 			this.AudioAltMethodCombo.Items.AddRange(new object[] {
 			"切换到移调效果插件",
-			"高 / 低八度",
-			"高 / 低八度（实验性）",
+			"升 / 降八度",
+			"升 / 降八度（实验性）",
 			"停靠在边缘",
 			"不发声"});
 			this.AudioAltMethodCombo.Location = new System.Drawing.Point(119, 111);
@@ -23362,7 +23363,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
 			this.menu.Padding = new System.Windows.Forms.Padding(10, 4, 0, 6);
-			this.menu.Size = new System.Drawing.Size(1092, 48);
+			this.menu.Size = new System.Drawing.Size(1092, 46);
 			this.menu.TabIndex = 2;
 			this.menu.Text = "menuStrip1";
 			//
@@ -23383,7 +23384,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.exitDiscardingChangesToolStripMenuItem,
 			this.exitToolStripMenuItem});
 			this.fileMenuItem.Name = "fileMenuItem";
-			this.fileMenuItem.Size = new System.Drawing.Size(108, 38);
+			this.fileMenuItem.Size = new System.Drawing.Size(108, 36);
 			this.fileMenuItem.Text = "文件(&F)";
 			//
 			// saveConfigToolStripMenuItem
@@ -23536,7 +23537,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.englishDocumentationsToolStripMenuItem,
 			this.chineseDocumentationsToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(113, 38);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(113, 36);
 			this.helpToolStripMenuItem.Text = "帮助(&H)";
 			//
 			// versionToolStripMenuItem
@@ -23736,7 +23737,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.vietnameseToolStripMenuItem,
 			this.indonesianToolStripMenuItem});
 			this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
-			this.languageToolStripMenuItem.Size = new System.Drawing.Size(195, 38);
+			this.languageToolStripMenuItem.Size = new System.Drawing.Size(195, 36);
 			this.languageToolStripMenuItem.Text = "语言/&Language";
 			//
 			// chineseToolStripMenuItem
@@ -23810,10 +23811,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.panel1.BackColor = System.Drawing.Color.Transparent;
 			this.panel1.Controls.Add(this.Tabs);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(0, 48);
+			this.panel1.Location = new System.Drawing.Point(0, 46);
 			this.panel1.Name = "panel1";
 			this.panel1.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
-			this.panel1.Size = new System.Drawing.Size(1092, 1054);
+			this.panel1.Size = new System.Drawing.Size(1092, 1056);
 			this.panel1.TabIndex = 3;
 			//
 			// Tabs
@@ -23833,7 +23834,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Tabs.Multiline = true;
 			this.Tabs.Name = "Tabs";
 			this.Tabs.SelectedIndex = 0;
-			this.Tabs.Size = new System.Drawing.Size(1068, 1054);
+			this.Tabs.Size = new System.Drawing.Size(1068, 1056);
 			this.Tabs.TabIndex = 2;
 			//
 			// SourceTab
@@ -23844,7 +23845,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTab.Location = new System.Drawing.Point(8, 46);
 			this.SourceTab.Margin = new System.Windows.Forms.Padding(0);
 			this.SourceTab.Name = "SourceTab";
-			this.SourceTab.Size = new System.Drawing.Size(1052, 1000);
+			this.SourceTab.Size = new System.Drawing.Size(1052, 1002);
 			this.SourceTab.TabIndex = 0;
 			this.SourceTab.Text = "素材";
 			this.SourceTab.UseVisualStyleBackColor = true;
@@ -23859,7 +23860,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTabScrollPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.SourceTabScrollPanel.Name = "SourceTabScrollPanel";
 			this.SourceTabScrollPanel.Padding = new System.Windows.Forms.Padding(8);
-			this.SourceTabScrollPanel.Size = new System.Drawing.Size(1052, 944);
+			this.SourceTabScrollPanel.Size = new System.Drawing.Size(1052, 946);
 			this.SourceTabScrollPanel.TabIndex = 5;
 			//
 			// MultiSourceConfigGroup
@@ -24104,6 +24105,57 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPreparationUnitCombo.TabIndex = 16;
 			this.LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndexChanged += new System.EventHandler(this.LuckyDipBarOrBeatPeriodUnitCombo_SelectedIndexChanged);
 			//
+			// LuckyDipLotionBathCheck
+			//
+			this.LuckyDipLotionBathCheck.AutoSize = true;
+			this.LuckyDipLotionBathCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LuckyDipLotionBathCheck.Location = new System.Drawing.Point(31, 259);
+			this.LuckyDipLotionBathCheck.Name = "LuckyDipLotionBathCheck";
+			this.LuckyDipLotionBathCheck.Size = new System.Drawing.Size(394, 36);
+			this.LuckyDipLotionBathCheck.TabIndex = 21;
+			this.LuckyDipLotionBathCheck.Text = "润肤浴战法";
+			this.LuckyDipLotionBathCheck.UseVisualStyleBackColor = true;
+			//
+			// LuckyDipLotionBathIntervalPanel
+			//
+			this.LuckyDipLotionBathIntervalPanel.AutoSize = true;
+			this.LuckyDipLotionBathIntervalPanel.ColumnCount = 2;
+			this.LuckyDipLotionBathIntervalPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.LuckyDipLotionBathIntervalPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 260F));
+			this.LuckyDipLotionBathIntervalPanel.Controls.Add(this.LuckyDipLotionBathIntervalLbl, 0, 0);
+			this.LuckyDipLotionBathIntervalPanel.Controls.Add(this.LuckyDipLotionBathIntervalBox, 1, 0);
+			this.LuckyDipLotionBathIntervalPanel.Dock = System.Windows.Forms.DockStyle.Left;
+			this.LuckyDipLotionBathIntervalPanel.Location = new System.Drawing.Point(28, 298);
+			this.LuckyDipLotionBathIntervalPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.LuckyDipLotionBathIntervalPanel.Name = "LuckyDipLotionBathIntervalPanel";
+			this.LuckyDipLotionBathIntervalPanel.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
+			this.LuckyDipLotionBathIntervalPanel.RowCount = 1;
+			this.LuckyDipLotionBathIntervalPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.LuckyDipLotionBathIntervalPanel.Size = new System.Drawing.Size(400, 44);
+			this.LuckyDipLotionBathIntervalPanel.TabIndex = 22;
+			//
+			// LuckyDipLotionBathIntervalLbl
+			//
+			this.LuckyDipLotionBathIntervalLbl.AutoSize = true;
+			this.LuckyDipLotionBathIntervalLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LuckyDipLotionBathIntervalLbl.Location = new System.Drawing.Point(32, 0);
+			this.LuckyDipLotionBathIntervalLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.LuckyDipLotionBathIntervalLbl.MinimumSize = new System.Drawing.Size(100, 0);
+			this.LuckyDipLotionBathIntervalLbl.Name = "LuckyDipLotionBathIntervalLbl";
+			this.LuckyDipLotionBathIntervalLbl.Size = new System.Drawing.Size(100, 44);
+			this.LuckyDipLotionBathIntervalLbl.TabIndex = 14;
+			this.LuckyDipLotionBathIntervalLbl.Text = "间隔";
+			this.LuckyDipLotionBathIntervalLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// LuckyDipLotionBathIntervalBox
+			//
+			this.LuckyDipLotionBathIntervalBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LuckyDipLotionBathIntervalBox.DoubleValue = 0D;
+			this.LuckyDipLotionBathIntervalBox.Location = new System.Drawing.Point(143, 3);
+			this.LuckyDipLotionBathIntervalBox.Name = "LuckyDipLotionBathIntervalBox";
+			this.LuckyDipLotionBathIntervalBox.Size = new System.Drawing.Size(254, 39);
+			this.LuckyDipLotionBathIntervalBox.TabIndex = 15;
+			//
 			// MatchCutPanel
 			//
 			this.MatchCutPanel.AutoSize = true;
@@ -24288,6 +24340,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel13.Controls.Add(this.MatchCutRadio);
 			this.flowLayoutPanel13.Controls.Add(this.LinearMapRadio);
 			this.flowLayoutPanel13.Controls.Add(this.ConsonantRadio);
+			this.flowLayoutPanel13.Controls.Add(this.ShupelunkerRadio);
 			this.flowLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Top;
 			this.flowLayoutPanel13.Location = new System.Drawing.Point(8, 40);
 			this.flowLayoutPanel13.Name = "flowLayoutPanel13";
@@ -24717,7 +24770,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.WarningInfoLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.WarningInfoLabel.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
 			this.WarningInfoLabel.ForeColor = System.Drawing.Color.Red;
-			this.WarningInfoLabel.Location = new System.Drawing.Point(0, 944);
+			this.WarningInfoLabel.Location = new System.Drawing.Point(0, 946);
 			this.WarningInfoLabel.MaximumSize = new System.Drawing.Size(864, 0);
 			this.WarningInfoLabel.Name = "WarningInfoLabel";
 			this.WarningInfoLabel.Padding = new System.Windows.Forms.Padding(8);
@@ -31044,56 +31097,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			//
-			// LuckyDipLotionBathCheck
+			// ShupelunkerRadio
 			//
-			this.LuckyDipLotionBathCheck.AutoSize = true;
-			this.LuckyDipLotionBathCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipLotionBathCheck.Location = new System.Drawing.Point(31, 259);
-			this.LuckyDipLotionBathCheck.Name = "LuckyDipLotionBathCheck";
-			this.LuckyDipLotionBathCheck.Size = new System.Drawing.Size(394, 36);
-			this.LuckyDipLotionBathCheck.TabIndex = 21;
-			this.LuckyDipLotionBathCheck.Text = "润肤浴战法";
-			this.LuckyDipLotionBathCheck.UseVisualStyleBackColor = true;
-			//
-			// LuckyDipLotionBathIntervalPanel
-			//
-			this.LuckyDipLotionBathIntervalPanel.AutoSize = true;
-			this.LuckyDipLotionBathIntervalPanel.ColumnCount = 2;
-			this.LuckyDipLotionBathIntervalPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.LuckyDipLotionBathIntervalPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 260F));
-			this.LuckyDipLotionBathIntervalPanel.Controls.Add(this.LuckyDipLotionBathIntervalLbl, 0, 0);
-			this.LuckyDipLotionBathIntervalPanel.Controls.Add(this.LuckyDipLotionBathIntervalBox, 1, 0);
-			this.LuckyDipLotionBathIntervalPanel.Dock = System.Windows.Forms.DockStyle.Left;
-			this.LuckyDipLotionBathIntervalPanel.Location = new System.Drawing.Point(28, 298);
-			this.LuckyDipLotionBathIntervalPanel.Margin = new System.Windows.Forms.Padding(0);
-			this.LuckyDipLotionBathIntervalPanel.Name = "LuckyDipLotionBathIntervalPanel";
-			this.LuckyDipLotionBathIntervalPanel.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-			this.LuckyDipLotionBathIntervalPanel.RowCount = 1;
-			this.LuckyDipLotionBathIntervalPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.LuckyDipLotionBathIntervalPanel.Size = new System.Drawing.Size(400, 44);
-			this.LuckyDipLotionBathIntervalPanel.TabIndex = 22;
-			//
-			// LuckyDipLotionBathIntervalLbl
-			//
-			this.LuckyDipLotionBathIntervalLbl.AutoSize = true;
-			this.LuckyDipLotionBathIntervalLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipLotionBathIntervalLbl.Location = new System.Drawing.Point(32, 0);
-			this.LuckyDipLotionBathIntervalLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-			this.LuckyDipLotionBathIntervalLbl.MinimumSize = new System.Drawing.Size(100, 0);
-			this.LuckyDipLotionBathIntervalLbl.Name = "LuckyDipLotionBathIntervalLbl";
-			this.LuckyDipLotionBathIntervalLbl.Size = new System.Drawing.Size(100, 44);
-			this.LuckyDipLotionBathIntervalLbl.TabIndex = 14;
-			this.LuckyDipLotionBathIntervalLbl.Text = "间隔";
-			this.LuckyDipLotionBathIntervalLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
-			// LuckyDipLotionBathIntervalBox
-			//
-			this.LuckyDipLotionBathIntervalBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipLotionBathIntervalBox.DoubleValue = 0D;
-			this.LuckyDipLotionBathIntervalBox.Location = new System.Drawing.Point(143, 3);
-			this.LuckyDipLotionBathIntervalBox.Name = "LuckyDipLotionBathIntervalBox";
-			this.LuckyDipLotionBathIntervalBox.Size = new System.Drawing.Size(254, 39);
-			this.LuckyDipLotionBathIntervalBox.TabIndex = 15;
+			this.ShupelunkerRadio.AutoSize = true;
+			this.ShupelunkerRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ShupelunkerRadio.Enabled = false;
+			this.ShupelunkerRadio.Location = new System.Drawing.Point(670, 3);
+			this.ShupelunkerRadio.Name = "ShupelunkerRadio";
+			this.ShupelunkerRadio.Size = new System.Drawing.Size(284, 36);
+			this.ShupelunkerRadio.TabIndex = 6;
+			this.ShupelunkerRadio.Text = "原音系战法 / 鞑靼战法";
+			this.ShupelunkerRadio.UseVisualStyleBackColor = true;
 			//
 			// ConfigForm
 			//
@@ -31153,6 +31167,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPreparationPanel.ResumeLayout(false);
 			this.LuckyDipBarOrBeatPreparationPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.LuckyDipBarOrBeatPreparationBox)).EndInit();
+			this.LuckyDipLotionBathIntervalPanel.ResumeLayout(false);
+			this.LuckyDipLotionBathIntervalPanel.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.LuckyDipLotionBathIntervalBox)).EndInit();
 			this.MatchCutPanel.ResumeLayout(false);
 			this.MatchCutPanel.PerformLayout();
 			this.MatchCutOrderPanel.ResumeLayout(false);
@@ -31365,9 +31382,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
-			this.LuckyDipLotionBathIntervalPanel.ResumeLayout(false);
-			this.LuckyDipLotionBathIntervalPanel.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.LuckyDipLotionBathIntervalBox)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -31931,6 +31945,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.TableLayoutPanel LuckyDipLotionBathIntervalPanel;
 		public System.Windows.Forms.Label LuckyDipLotionBathIntervalLbl;
 		public TimecodeBox LuckyDipLotionBathIntervalBox;
+		public GroupedRadioButton ShupelunkerRadio;
 	}
 	#endregion
 
@@ -33296,6 +33311,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			LinearMapDescendingCheck.Text = str.descending;
 			LinearMapReuseCheck.Text = str.linear_map_allow_reuse_existed;
 			ConsonantRadio.Text = str.consonant_time;
+			ShupelunkerRadio.Text = str.shupelunker + " / " + str.tartar;
 			Text = str.otomad_helper_config;
 		}
 
@@ -35339,17 +35355,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			no_to_restart_to_effect_language = "不重启以生效",
 			version_number = "版本号",
 			revision_date = "最后修订日期",
-			vegas_version = "VEGAS Pro 版本",
+			vegas_version = "Vegas Pro 版本",
 			otomad_helper_version = "Otomad Helper 版本",
 			naudio_version = "NAudio 版本",
 			script_supported_vegas_version = "脚本支持版本",
-			unsupported_vegas_version = "警告：当前脚本与你当前所使用的 VEGAS 版本不匹配，部分功能可能不能正常工作！请重新安装正确版本的脚本。\n脚本支持的版本为：VEGAS Pro {0}\n当前软件的版本为：VEGAS Pro {1}",
+			unsupported_vegas_version = "警告：当前脚本与你当前所使用的 Vegas 版本不匹配，部分功能可能不能正常工作！请重新安装正确版本的脚本。\n脚本支持的版本为：Vegas Pro {0}\n当前软件的版本为：Vegas Pro {1}",
 			unsupported_vegas_version_title = "版本不匹配",
-			unsupported_vegas_version_feature = "低于 VEGAS Pro {0} 的版本不支持本功能。",
+			unsupported_vegas_version_feature = "低于 Vegas Pro {0} 的版本不支持本功能。",
 			check_update_title = "更新脚本",
 			check_update_found = "检测到新版本，是否立即更新？\n\n最新版本：{0}\n当前版本：{1}",
 			check_update_not_found = "已是最新版本！\n\n最新版本：{0}",
-			check_update_unsupport_future_version = "已检测到新版本，但是你当前的 VEGAS 版本过低，新版本不支持你的 VEGAS 版本。请更新你的 VEGAS 软件，然后才能使用新版本。\n\n新版最低支持：VEGAS Pro {2}\n你当前正使用：VEGAS Pro {3}\n\n最新版本：{0}\n当前版本：{1}",
+			check_update_unsupport_future_version = "已检测到新版本，但是你当前的 Vegas 版本过低，新版本不支持你的 Vegas 版本。请更新你的 Vegas 软件，然后才能使用新版本。\n\n新版最低支持：Vegas Pro {2}\n你当前正使用：Vegas Pro {3}\n\n最新版本：{0}\n当前版本：{1}",
 			check_update_on_startup = "启动时自动检查更新",
 			download_latest_version = "下载最新版本",
 			quick_config = "快速配置",
@@ -35443,7 +35459,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			separation_replaced_info = "已选中 {0} 段轨道剪辑，其中 {1} 段音频剪辑，{2} 段视频剪辑。",
 			separation_set_replaced = "将所选 {0} 段剪辑设为被替换项",
 			separation_set_replacer = "将所选 {0} 段剪辑设为替换项",
-			separation_back_to_select = "返回 VEGAS 选定剪辑",
+			separation_back_to_select = "返回 Vegas 选定剪辑",
 			separation_use_clip_group = "同时替换分组内其它剪辑",
 			separation_reserve_original_name = "保留原剪辑名称",
 			separation_reserve_original_offset = "保留原剪辑偏移量",
@@ -35459,7 +35475,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			select_how_many = "每次要选取几段",
 			reset_select = "重置选择(&R)",
 			quick_select_interval = "快速间隔选择",
-			select_interval_info = "请先在 VEGAS 轨道中选中一些素材，然后再打开本对话框，使用下面的功能。",
+			select_interval_info = "请先在 Vegas 轨道中选中一些素材，然后再打开本对话框，使用下面的功能。",
 			select_events_count_info = "已选中 {0} 段轨道剪辑。",
 			select_videotracks_count_info = "已选中 {0} 条视频轨道。",
 			select_audioevents_count_info = "已选中 {0} 段音频轨道剪辑。",
@@ -35604,8 +35620,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			square_wave = "方波",
 			sawtooth_wave = "锯齿波",
 			tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用 Vegas Video 2.0 至 Vegas Pro 8.0 中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”表示通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
-			audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
-			alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
+			audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”方法，那么将会禁用拉伸音频功能。",
+			alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“升 / 降八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“升 / 降八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 Vegas 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 			preview_beep_duration_tooltip = "预听标准音高所持续的时间。\n单位：毫秒。",
 			preview_tune_audio_tooltip = "勾选后，预听音频时会将音频素材调整到主音高中央 C。\n否则，预听标准音高将会播放原始音高处所设定的音高。",
 			sheet_position_tooltip = "五线谱中间第三根线到屏幕中心的距离，上正下负。\n单位：像素。",
@@ -35976,7 +35992,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			automator_configform_info = "自动为添加到视频剪辑中的每种效果在各帧添加随机关键帧。",
 			stutter_configform_info = "通过随机时间间隔的正放与倒放来制造卡顿效果。",
 			camera_shake_configform_info = "运用平移/裁切来摇晃或摆动剪辑。",
-			otomad_helper_config = "Otomad Helper for VEGAS - 配置",
+			otomad_helper_config = "Otomad Helper for Vegas - 配置",
 			reset_config_successful = "重置完成，请重新启动脚本。",
 			reset_config_successful_title = "重置用户配置",
 			sure_to_reset_config = "确定要重置用户配置吗？\n\n重置后你的用户配置数据将会丢失。",
@@ -36000,20 +36016,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			no_media_exception = "错误：未选择媒体文件。\n\n请重新打开脚本参数配置对话框，然后在“媒体属性”分组中点击“浏览”按钮，打开一项有效的媒体文件。",
 			no_track_info_exception = "错误：MIDI 文件中不包含任何音轨。\n\n可能的原因：\n\n1. 该 MIDI 文件中确实没有任何音轨。\n这很有可能是你忘记从宿主软件中导出 MIDI 音轨了，请再检查一遍你的原始项目。\n如果你使用的是 FL Studio，请务必确保在导出 MIDI 之前执行了“准备进行 MIDI 导出”宏操作。\n\n2. 该 MIDI 文件格式不受支持或已损坏。\n请用宿主软件导入该 MIDI，然后重新导出一份新的 MIDI 文件。\n由于 NAudio.Midi 库支持的 MIDI 种类数目不全面，脚本不保证都能够正确读取。",
 			no_midi_track_selected_exception = "错误：没有选择任何 MIDI 音轨。\n\n解决方法：请选择至少一条 MIDI 音轨。",
-			no_plugin_pitch_shift_exception = "错误：无法调用移调插件。\n\n请按照教程文档 {0} 的指引正确操作。\n不过，根据这个更新版本的脚本，按理应当是中英文版本均可正常运行的。\n因此很有可能你是使用其它语言的 VEGAS 造成的。",
-			no_plugin_presets_exception = "错误：无法调用移调插件的预设效果。\n\n请按照教程文档 {0} 的指引正确操作。\n确保在移调插件中手动添加了所有的 25 套预设，且命名正确。\n\n补充说明：具体可见上述链接专栏中对于安装方法的说明。这 25 套预设是上下一个八度以内的所有变调种类，\n缺少任何一套都有可能出错。手动添加预设的确非常麻烦，但 VEGAS 无法使用脚本来指定变调的具体参数，\n因此只好绕这个弯子。",
-			no_plugin_name_exception = "错误：无法调用{0}插件。\n\n可能你使用的 VEGAS 版本不支持该插件。",
-			no_take_exception_ps = "补充说明：若仍不能解决，说明该素材文件可能是 VEGAS 不支持的格式，\n可以手动把该文件拖入 VEGAS 中看一下是否视频音频都正常。",
+			no_plugin_pitch_shift_exception = "错误：无法调用移调插件。\n\n请按照教程文档 {0} 的指引正确操作。\n不过，根据这个更新版本的脚本，按理应当是中英文版本均可正常运行的。\n因此很有可能你是使用其它语言的 Vegas 造成的。",
+			no_plugin_presets_exception = "错误：无法调用移调插件的预设效果。\n\n请按照教程文档 {0} 的指引正确操作。\n确保在移调插件中手动添加了所有的 25 套预设，且命名正确。\n\n补充说明：具体可见上述链接专栏中对于安装方法的说明。这 25 套预设是上下一个八度以内的所有变调种类，\n缺少任何一套都有可能出错。手动添加预设的确非常麻烦，但 Vegas 无法使用脚本来指定变调的具体参数，\n因此只好绕这个弯子。",
+			no_plugin_name_exception = "错误：无法调用{0}插件。\n\n可能你使用的 Vegas 版本不支持该插件。",
+			no_take_exception_ps = "补充说明：若仍不能解决，说明该素材文件可能是 Vegas 不支持的格式，\n可以手动把该文件拖入 Vegas 中看一下是否视频音频都正常。",
 			no_audio_take_exception = "错误：无法读取音频媒体流。\n\n在设置界面，纯视频/图片素材不要勾选“生成音频”。\n\n",
 			no_video_take_exception = "错误：无法读取视频媒体流。\n\n在设置界面，纯音频素材不要勾选“生成画面”。\n\n",
-			no_media_take_exception = "错误：无法读取媒体。\n\n你所选的文件格式不受 VEGAS 支持，请检查该媒体文件是否损坏，或未安装对应的 VEGAS 解码器。\n\n",
+			no_media_take_exception = "错误：无法读取媒体。\n\n你所选的文件格式不受 Vegas 支持，请检查该媒体文件是否损坏，或未安装对应的 Vegas 解码器。\n\n",
 			not_a_midi_file_exception = "错误：无法读取 MIDI 文件。\n\n解决方法：用宿主软件导入该 MIDI，然后重新导出一份新的 MIDI 文件。\n\n补充说明：MIDI 文件有多种格式，脚本不保证都能够正确读取。所幸主流宿主软件在\n默认设置下导出的 MIDI 文件一般是可以读取的。（目前测试过 FL Studio、LMMS \n与 Music Studio for iPad。）",
 			midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有任何音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
 			no_selected_exception_ps = "补充说明：如果你想手动在文件夹中选择一项媒体素材，那么请点击其右边的“浏览”按钮，\n选择一项媒体素材。并确保左侧的下拉菜单中选中的是你所选文件所在的路径。",
 			no_selected_media_exception = "错误：没有在项目媒体窗口中选择任何媒体。\n\n请在项目媒体窗口中选择一项媒体，然后重新打开参数配置窗口，并在素材设置中选择“所选项目媒体”。\n\n",
 			no_selected_clip_exception_short = "错误：没有在轨道中选择任何剪辑。",
 			no_selected_clip_exception = "错误：没有在轨道中选择任何剪辑。\n\n请在轨道中选择一段剪辑，然后重新打开参数配置窗口，并在素材设置中选择“所选轨道事件”。\n\n",
-			no_time_stretch_pitch_shift_exception = "错误：选定素材音调转换方法被设置为不调音。\n\n很有可能你使用的是“所选轨道事件”。出现了这种错误不怪你，要怪就怪 VEGAS 这种脑残设计。\n\n解决方法：请重新选中你的轨道素材，右键音频部分，选择底部的“属性”。将“时间拉伸/音调转换”的“方法”设定为“élastique”。\n然后点击确定即可。\n\n补充说明：如果某段音频事件没有进行变调操作，然后打开了它的属性，那么其属性中的“时间拉伸/音调转换”的“方法”会被\n自动修改为“无”，点击确定就会生效。这时你会发现键盘上的 +、- 键调音操作无效了。这时必须重新打开音频事件的属性，\n将“时间拉伸/音调转换”的“方法”设定为“élastique”，不必设置“音调更改”，点击确定即可。",
+			no_time_stretch_pitch_shift_exception = "错误：选定素材音调转换方法被设置为不调音。\n\n很有可能你使用的是“所选轨道事件”。出现了这种错误不怪你，要怪就怪 Vegas 这种脑残设计。\n\n解决方法：请重新选中你的轨道素材，右键音频部分，选择底部的“属性”。将“时间拉伸/音调转换”的“方法”设定为“élastique”。\n然后点击确定即可。\n\n补充说明：如果某段音频事件没有进行变调操作，然后打开了它的属性，那么其属性中的“时间拉伸/音调转换”的“方法”会被\n自动修改为“无”，点击确定就会生效。这时你会发现键盘上的 +、- 键调音操作无效了。这时必须重新打开音频事件的属性，\n将“时间拉伸/音调转换”的“方法”设定为“élastique”，不必设置“音调更改”，点击确定即可。",
 			read_config_fail_exception = "错误：读取参数配置文件失败。\n\n很遗憾你遇到了这种不可预见的错误。我们将会清除用户配置设置并恢复为默认值以便解决问题。\n建议将这种错误告诉作者以便快速解决问题。\n将会退出此脚本，然后劳烦阁下手动重新打开此脚本。",
 			fail_to_select_clips_exception = "错误：选取轨道剪辑出错。\n\n请先在轨道窗口中选取部分轨道剪辑。",
 			fail_to_select_tracks_exception = "错误：选取轨道出错。\n\n请先在轨道窗口中选取部分视频轨道。",
@@ -36021,18 +36037,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			ytp_in_media_generator_exception = "错误：对媒体生成器产生的媒体应用 YTP。\n\n应用 YTP 必须使用本地媒体文件，不要使用媒体生成器生成的媒体。",
 			ytp_eliminate_duplicates_finally_null_exception = "技术异常：对 YTP 素材列表进行去重操作，最后列表为空了！（雾‽）\n\n这是一种不应该发生的错误。",
 			unknown_exception = "错误：未知异常。\n\n请展开详细信息查看具体错误内容，并将错误信息反馈给作者。",
-			use_pic_in_pic_on_unsupported_vegas_exception = "错误：不支持在低版本 VEGAS 中使用该画中画插件的效果。\n\n根本原因：VEGAS 在新版本“画中画”效果插件中增加了一些新的功能和参数，这些新参数不能在低版本的 VEGAS 插件中使用。\n\n解决方法：在当前 VEGAS 版本不能使用该画面节奏视觉效果（如扩缩类等），请使用其它视觉效果。或更新 VEGAS 软件。",
+			use_pic_in_pic_on_unsupported_vegas_exception = "错误：不支持在低版本 Vegas 中使用该画中画插件的效果。\n\n根本原因：Vegas 在新版本“画中画”效果插件中增加了一些新的功能和参数，这些新参数不能在低版本的 Vegas 插件中使用。\n\n解决方法：在当前 Vegas 版本不能使用该画面节奏视觉效果（如扩缩类等），请使用其它视觉效果。或更新 Vegas 软件。",
 			unsupported_curve_enum_exception = "错误：使用不支持的曲线枚举类型作为参数。\n\n{0} 不是曲线枚举类型。",
 			convert_music_beats_not_one_audio_event_exception = "错误：在转换音乐节拍工具中选择了的音频剪辑数目不恰好等于一段。\n\n应当选择 1 段音频，却选择了 {0} 段音频。",
-			convert_music_beats_unsupported_beats_exception = "错误：当前 VEGAS 设定的节拍不是在四四拍、四三拍、八六拍之中的其一。",
+			convert_music_beats_unsupported_beats_exception = "错误：当前 Vegas 设定的节拍不是在四四拍、四三拍、八六拍之中的其一。",
 			invalid_mapping_velocity_values_exception = "错误：使用不合法的映射力度参数。\n\n解决方法：确保音频和画面的映射力度参数中，\n1. 较小值不能大于较大值；\n2. “力度”的较小值和较大值不能相等。\n否则将无法完成映射力度的操作。",
 			invalid_glissando_amount_exception = "错误：使用不合法的滑音大小参数。\n\n滑音大小不能为 0。",
 			cannot_get_script_dir_exception = "错误：无法获取脚本目录路径！",
 			cannot_get_xvid_path_exception = "错误：无法获取 XviD 安装路径！",
 			install_xvid_info = "未安装 XviD 编解码器。脚本将立即安装它，并可能会要求管理员权限。",
 			install_xvid_admin_failed = "错误：安装 XviD 时管理员权限被拒绝。",
-			install_xvid_succeed = "XviD 已安装，并为当前帧率生成了渲染模板。请重新启动 VEGAS 并再次运行该脚本。",
-			render_template_generate_completed = "已为当前帧速率生成了渲染模板。请重新启动 VEGAS 并再次运行该脚本。",
+			install_xvid_succeed = "XviD 已安装，并为当前帧率生成了渲染模板。请重新启动 Vegas 并再次运行该脚本。",
+			render_template_generate_completed = "已为当前帧速率生成了渲染模板。请重新启动 Vegas 并再次运行该脚本。",
 			unexpected_exception = "未知异常：",
 			unexpected_render_status = "非预期的渲染状态：",
 			datamix_selection_position_exception = "错误：选区必须从大于或等于第 1 帧开始！",
@@ -36096,7 +36112,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			all_tracks = "所有轨道",
 			video_tracks = "视频轨道",
 			audio_tracks = "音频轨道",
-			vegas_track_list = "VEGAS 轨道列表",
+			vegas_track_list = "Vegas 轨道列表",
 			midi_track_list = "MIDI 轨道列表",
 			midi_channel_list = "MIDI 通道列表",
 			midi_instrument_list = "MIDI 乐器列表",
@@ -36151,16 +36167,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			multi_select = "多选",
 			select_midi_track_count_info = "已选中 {0} 条音轨",
 			select_midi_tracks_count_info = "已选中 {0} 条音轨",
-			failed_to_auto_change_project_bpm_exception = "错误：自动更改项目速度失败！\n\nVEGAS 仅支持 {0} 范围内的速度，当前设定的速度为 {1}。",
-			failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
-			failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
+			failed_to_auto_change_project_bpm_exception = "错误：自动更改项目速度失败！\n\nVegas 仅支持 {0} 范围内的速度，当前设定的速度为 {1}。",
+			failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVegas 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
+			failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVegas 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
 			generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
 			lucky_dip_bar_without_time_signature_exception = "错误：MIDI 文件缺失拍号信息，无法在素材盲盒中按小节切换一次素材。\n\n解决方法：以下任一即可。\n1. 请尝试更换其它 MIDI 文件；\n2. 不要用“小节”作为素材切换时机的单位；\n3. 关闭“每小节或每拍切换一次”；\n4. 关闭“素材盲盒”。",
 			oscillator = "粒子振荡器",
 			alt_multiple = "多次使用音效插件",
 			alt_plugin = "切换到移调音效插件",
-			alt_octave = "高 / 低八度",
-			alt_octaveExp = "高 / 低八度（实验性）",
+			alt_octave = "升 / 降八度",
+			alt_octaveExp = "升 / 降八度（实验性）",
 			alt_dock = "停靠在边缘",
 			alt_silent = "不发声",
 			multiply_gain = "乘以当前增益",
@@ -36203,6 +36219,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			time_unremapping = "持续时间流",
 			lotion_bath = "润肤浴战法",
 			interval = "间隔",
+			shupelunker = "原音系战法",
+			tartar = "鞑靼战法",
 			__eol__ = null;
 
 		static Lang() {
@@ -36218,17 +36236,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				no_to_restart_to_effect_language = "Re-render",
 				version_number = "Version",
 				revision_date = "Last revision date",
-				vegas_version = "VEGAS Pro version",
+				vegas_version = "Vegas Pro version",
 				otomad_helper_version = "Otomad Helper version",
 				naudio_version = "NAudio version",
 				script_supported_vegas_version = "Script supported version",
-				unsupported_vegas_version = "Warning: The current script does not match the version of VEGAS you are currently using. Some features may not work properly! Please reinstall the correct version of the script.\nSupported version: VEGAS Pro {0}\nCurrent version: VEGAS Pro {1}",
+				unsupported_vegas_version = "Warning: The current script does not match the version of Vegas you are currently using. Some features may not work properly! Please reinstall the correct version of the script.\nSupported version: Vegas Pro {0}\nCurrent version: Vegas Pro {1}",
 				unsupported_vegas_version_title = "Version mismatch",
-				unsupported_vegas_version_feature = "Versions below VEGAS Pro {0} do not support this feature.",
+				unsupported_vegas_version_feature = "Versions below Vegas Pro {0} do not support this feature.",
 				check_update_title = "Update script",
 				check_update_found = "New version detected, update now?\n\nLatest version: {0}\nCurrent version: {1}",
 				check_update_not_found = "Already the latest version!\n\nLatest version: {0}",
-				check_update_unsupport_future_version = "New version detected, but your current VEGAS version is too low and the new version does not support your VEGAS version. Please update your VEGAS software before you can use the new version.\n\nMinimum supported version: VEGAS Pro {2}\nCurrent version: VEGAS Pro {3}\n\nLatest version: {0}\nCurrent version: {1}",
+				check_update_unsupport_future_version = "New version detected, but your current Vegas version is too low and the new version does not support your Vegas version. Please update your Vegas software before you can use the new version.\n\nMinimum supported version: Vegas Pro {2}\nCurrent version: Vegas Pro {3}\n\nLatest version: {0}\nCurrent version: {1}",
 				check_update_on_startup = "Check for updates at startup",
 				download_latest_version = "Download the latest",
 				quick_config = "Quickly configure",
@@ -36322,7 +36340,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				separation_replaced_info = "{0} track clips selected, containing {1} audio clip, {2} video clips.",
 				separation_set_replaced = "Set the selected {0} clips as the replaced",
 				separation_set_replacer = "Set the selected {0} clips as the replacement",
-				separation_back_to_select = "Back to VEGAS to select clips",
+				separation_back_to_select = "Back to Vegas to select clips",
 				separation_use_clip_group = "Also replace other clips in the track group",
 				separation_reserve_original_name = "Reserve original clip name",
 				separation_reserve_original_offset = "Reserve original clip offset",
@@ -36338,7 +36356,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				select_how_many = "Select how many at a time",
 				reset_select = "&Reset selection",
 				quick_select_interval = "Quick Select Interval",
-				select_interval_info = "Please select some clips in the VEGAS track window first, and then open this dialog box to use the following functions.",
+				select_interval_info = "Please select some clips in the Vegas track window first, and then open this dialog box to use the following functions.",
 				select_events_count_info = "{0} track events have been selected.",
 				select_videotracks_count_info = "{0} video tracks have been selected.",
 				select_audioevents_count_info = "{0} audio track events have been selected.",
@@ -36481,9 +36499,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				triangle_wave = "Triangle",
 				square_wave = "Square",
 				sawtooth_wave = "Sawtooth",
-				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
-				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
-				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
+				tune_method_tooltip = "\"Pitch Shift Audio Effect Plugin\" indicates using the \"Pitch Shift\" effect plugin in \"Audio FX\" to change pitch, and the presets requires to be configured.\n\"Elastic Pitch Change\" indicates using the \"Élastique\" algorithm to change pitch, that is, the + and - keys on the keyboard directly change pitch, with pitch range limitations.\n\"Classic Pitch Change\" indicates using the algorithm from Vegas Video 2.0 through Vegas Pro 8.0 to change pitch, with pitch range limitations.\n\"Scaleless Tuning\" indicates locking the stretch and pitch, and changes the stretch to get the corresponding pitch regardless of the actual note pitch.\n\"Granular Oscillator\" simulates a specific pitch by repeatedly playing a short sample rapidly over a specific period, generates a pulse sequence corresponds to the pitch and\nforms a continuous pitch by exploiting the perception fusion effect of the human ear on fast pulses.",
+				audio_lock_stretch_pitch_tooltip = "Uses resampling to change pitch as speed changes. Due to not stretching the audio, the sound quality will be better.\nIf the \"Elastic Pitch Change\" or \"Classic Pitch Change\" method is used, the stretch audio will be disabled.",
+				alt_tuning_method_tooltip = "Handles notes that out of range with an alternative method.\n\"Switch to Pitch Shift Audio Effect Plugin\" indicates reaching any pitch by using the Pitch Shift Audio Effect Plugin repeatedly.\n\"Raise/Lower Octaves\" indicates avoiding at least dissonant intervals by raising or lowering the octave scale to the range of {0}.\n\"Raise/Lower Octaves (Experimental)\" same as above, but the range extends to {1}. If locks stretch and pitch, the range extends to {2}.\nPlease use with caution as it may cause Vegas to crash.\n\"Dock at Top/Bottom\" indicates docking at the highest or lowest key within the range of {0}.\n\"Silent\" indicates muting those notes.",
 				preview_beep_duration_tooltip = "The duration of pre-listening to the base pitch.\nUnit: milliseconds.",
 				preview_tune_audio_tooltip = "If checked, the audio source will be tuned to the tonic central C when pre-listening the audio.\nOtherwise, the tone which set by the base pitch will be produced when pre-listening the base pitch.",
 				sheet_position_tooltip = "The distance from the third line in the middle of the staff to the center of the screen. Up plus down minus.\nUnit: pixel.",
@@ -36854,7 +36872,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				automator_configform_info = "Adds random keyframes to each frame automatically for each effect you have added to the video clips",
 				stutter_configform_info = "Stutters the clips by forwarding and reversing them in randomized intervals",
 				camera_shake_configform_info = "Shakes or wiggles the clips by using Pan/Crop",
-				otomad_helper_config = "Otomad Helper for VEGAS - Config",
+				otomad_helper_config = "Otomad Helper for Vegas - Config",
 				reset_config_successful = "The reset is complete, please restart the script.",
 				reset_config_successful_title = "Reset User Configuration",
 				sure_to_reset_config = "Are you sure you want to reset the user configuration?\n\nYour user configuration data will be lost.",
@@ -36876,22 +36894,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				preview_audio_track_name = "Preview Audio Track (Should be DELETED!)",
 				no_midi_exception = "Error: No MIDI file selected.\n\nPlease reopen the script configuration dialog box, and then click the \"Browse\" button in the \"MIDI Configuration\" group to open a valid MIDI file.",
 				no_media_exception = "Error: No media file selected.\n\nPlease reopen the script configuration dialog box, and then click the \"Browse\" button in the \"Media Configuration\" group to open a valid media file.",
-				no_track_info_exception = "Error: The MIDI file does not contain any tracks.\n\nPossible reasons:\n\nThere are indeed no tracks in this MIDI file.\nIt is highly likely that you forgot to export any MIDI tracks from the host software. Please double check your original project.\nIf you are using FL Studio, make sure to perform the \"Prepare for MIDI Export\" macro operation before exporting MIDI.\n\n2. The MIDI file format is unsupported or corrupted.\nPlease import the MIDI using the host software and then re-export a new MIDI file.\nDue to the incomplete range of MIDI types supported by the NAudio.Midi library, scripts cannot guarantee that they will all be read correctly.",
-				no_midi_track_selected_exception = "Error: No MIDI track selected.\nSolution: Please select at least one MIDI track.",
-				no_plugin_pitch_shift_exception = "Error: Unable to call the Pitch Shift plugin.\n\nPlease follow the instructions of the tutorial document {0} to operate correctly.\nHowever, according to this updated version of the script, the Chinese and English versions should work properly.\nSo it is very likely that you are using VEGAS in other languages.",
-				no_plugin_presets_exception = "Error: Cannot call the preset effect of the Pitch Shift plugin.\n\nPlease follow the instructions of the tutorial document {0} to operate correctly.\nMake sure that all 25 presets are manually added in the transposition plugin and named correctly.\n\nSupplementary explanation: For details, please refer to the explanation of the installation method in the above link column. These 25 presets are all the types of pitch changes within the next octave.\nMissing any of them may cause errors. It is indeed very troublesome to manually add presets, but VEGAS cannot use scripts to specify the specific parameters of\nthe pitch shift, so I had to go around this trick.",
-				no_plugin_name_exception = "Error: The {0} plugin could not be called.\n\nMaybe the version of VEGAS you are using does not support that plugin.",
-				no_take_exception_ps = "Supplementary note: If it still cannot be resolved, it means that the media file may be in a format not supported by VEGAS.\nYou can manually drag the file into VEGAS to see if the video and audio files are working properly.",
+				no_track_info_exception = "Error: The MIDI file does not contain any tracks.\n\nPossible reasons:\n\n1. There are indeed no tracks in this MIDI file.\nIt is highly likely that you forgot to export any MIDI tracks from the host software. Please double check your original project.\nIf you are using FL Studio, make sure to perform the \"Prepare for MIDI Export\" macro operation before exporting MIDI.\n\n2. The MIDI file format is unsupported or corrupted.\nPlease import the MIDI using the host software and then re-export a new MIDI file.\nDue to the incomplete range of MIDI types supported by the NAudio.Midi library, scripts cannot guarantee that they will all be read correctly.",
+				no_midi_track_selected_exception = "Error: No MIDI track selected.\n\nSolution: Please select at least one MIDI track.",
+				no_plugin_pitch_shift_exception = "Error: Unable to call the Pitch Shift plugin.\n\nPlease follow the instructions of the tutorial document {0} to operate correctly.\nHowever, according to this updated version of the script, the Chinese and English versions should work properly.\nSo it is very likely that you are using Vegas in other languages.",
+				no_plugin_presets_exception = "Error: Cannot call the preset effect of the Pitch Shift plugin.\n\nPlease follow the instructions of the tutorial document {0} to operate correctly.\nMake sure that all 25 presets are manually added in the transposition plugin and named correctly.\n\nSupplementary explanation: For details, please refer to the explanation of the installation method in the above link column. These 25 presets are all the types of pitch changes within the next octave.\nMissing any of them may cause errors. It is indeed very troublesome to manually add presets, but Vegas cannot use scripts to specify the specific parameters of\nthe pitch shift, so I had to go around this trick.",
+				no_plugin_name_exception = "Error: The {0} plugin could not be called.\n\nMaybe the version of Vegas you are using does not support that plugin.",
+				no_take_exception_ps = "Supplementary note: If it still cannot be resolved, it means that the media file may be in a format not supported by Vegas.\nYou can manually drag the file into Vegas to see if the video and audio files are working properly.",
 				no_audio_take_exception = "Error: Unable to read audio media stream.\n\nIn the setting interface, do not check \"Enabled Audio\" for pure video/picture media.\n\n",
 				no_video_take_exception = "Error: Unable to read the video media stream.\n\nIn the settings user interface, do not check \"Enabled Video\" for pure audio media.\n\n",
-				no_media_take_exception = "Error: Unable to read the media.\n\nThe file format you selected is not supported by VEGAS. Please check if the media file is damaged or the corresponding VEGAS decoder is not installed.\n\n",
+				no_media_take_exception = "Error: Unable to read the media.\n\nThe file format you selected is not supported by Vegas. Please check if the media file is damaged or the corresponding Vegas decoder is not installed.\n\n",
 				not_a_midi_file_exception = "Error: Unable to read MIDI file.\n\nSolution: Import the MIDI with the host software, and then re-export a new MIDI file.\n\nSupplementary note: There are multiple formats of MIDI files, and the script does not guarantee that all of them can be read correctly. Fortunately,\nMIDI files exported by mainstream host software under default settings are generally readable. (Currently tested FL Studio, LMMS \nand Music Studio for iPad.)",
 				midi_contains_velocity_zero_exception = "Error: Your MIDI file contains notes with a velocity of 0.\nCheck to make sure there isn't any notes that have a velocity value of 0 (aka notes that have no volume), and if so, please delete them.\n\nSupplementary note: The NAudio.Midi library does not support MIDI files containing notes with a velocity of 0. The future version of Otomad Helper will resolve this issue by changing the parsing engine.",
 				no_selected_exception_ps = "Additional note: If you want to manually select a media in the folder, please click the \"Browse\" button on the right to\nselect a media. And make sure that the path of the file you selected is selected in the drop-down menu on the left.",
 				no_selected_media_exception = "Error: No media is selected in the project media window.\n\nPlease select a media in the project media window, then reopen the configuration dialog, and select \"selected media file\" in the source configuration.\n\n",
 				no_selected_clip_exception_short = "Error: No clips are selected in the track.",
 				no_selected_clip_exception = "Error: No clips are selected in the track.\n\nPlease select a clip in the track, then reopen the configuration dialog, and select \"selected track clips\" in the source configuration.\n\n",
-				no_time_stretch_pitch_shift_exception = "Error: The pitch conversion method of the selected clip is set to no tuning.\n\nMost likely you are using \"selected track clips\". You are not to blame for this error, but for the brain-dead design of VEGAS.\n\nSolution: Please reselect your track clips, right-click the audio part, and select \"Properties\" at the bottom. Set the \"Method\" of \"Time Stretch/Pitch Conversion\" to \"élastique\".\nThen click OK.\n\nSupplementary note: If an audio event has not been transposed and its properties are opened, then the “Method” of “Time Stretch/Pitch Conversion” in its properties will be\nautomatically modified to “None”, and click OK. Take effect. At this time, you will find that the + and-key tuning operations on the keyboard are invalid. At this time, you must reopen the properties of the audio event,\nset the \"Method\" of \"Time Stretch/Pitch Conversion\" to \"élastique\", you don't need to set \"Pitch Change\", just click OK.",
+				no_time_stretch_pitch_shift_exception = "Error: The pitch conversion method of the selected clip is set to no tuning.\n\nMost likely you are using \"selected track clips\". You are not to blame for this error, but for the brain-dead design of Vegas.\n\nSolution: Please reselect your track clips, right-click the audio part, and select \"Properties\" at the bottom. Set the \"Method\" of \"Time Stretch/Pitch Conversion\" to \"élastique\".\nThen click OK.\n\nSupplementary note: If an audio event has not been transposed and its properties are opened, then the “Method” of “Time Stretch/Pitch Conversion” in its properties will be\nautomatically modified to “None”, and click OK. Take effect. At this time, you will find that the + and-key tuning operations on the keyboard are invalid. At this time, you must reopen the properties of the audio event,\nset the \"Method\" of \"Time Stretch/Pitch Conversion\" to \"élastique\", you don't need to set \"Pitch Change\", just click OK.",
 				read_config_fail_exception = "Error: Failed to read the parameter configuration file.\n\nUnfortunately you encountered this unforeseen error. We will clear the user configuration settings and restore them to default settings in order to solve the problem.\nIt is recommended to tell the author of this error in order to solve the problem quickly.\nThis script will be exited, and then I will bother you to reopen it manually.",
 				fail_to_select_clips_exception = "Error: Error selecting track clips.\n\nPlease select some track clips in the track window first.",
 				fail_to_select_tracks_exception = "Error: Error selecting tracks.\n\nPlease select some video tracks in the track window first.",
@@ -36899,18 +36917,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				ytp_in_media_generator_exception = "Error: Apply YTP to the media generated by the media generator.\n\nThe application of YTP must use local media files, do not use the media generated by the media generator.",
 				ytp_eliminate_duplicates_finally_null_exception = "Technical Exception: Remove duplicate from YTP source list. Finally, the list is empty!\n\nThis is an error that should not happen.",
 				unknown_exception = "Error: Unknown exception.\n\nPlease expand the details to see the specific error content and feed the error information back to the author.",
-				use_pic_in_pic_on_unsupported_vegas_exception = "Error: Use of the Picture-in-Picture plugin effect in lower versions of VEGAS is not supported.\n\nRoot cause: VEGAS has added some new features and parameters to the new Picture-in-Picture effect plugin, which cannot be used in lower versions of VEGAS plugin.\n\nSolution: The current version of VEGAS cannot use this PV rhythm visual effects (such as expansion aspects), please use other visual effects. Or update your VEGAS software.",
+				use_pic_in_pic_on_unsupported_vegas_exception = "Error: Use of the Picture-in-Picture plugin effect in lower versions of Vegas is not supported.\n\nRoot cause: Vegas has added some new features and parameters to the new Picture-in-Picture effect plugin, which cannot be used in lower versions of Vegas plugin.\n\nSolution: The current version of Vegas cannot use this PV rhythm visual effects (such as expansion aspects), please use other visual effects. Or update your Vegas software.",
 				unsupported_curve_enum_exception = "Error: Use unsupported curve enumeration types as parameters.\n\n{0} is not a curve enumeration type.",
 				convert_music_beats_not_one_audio_event_exception = "Error: The number of audio clips selected in the convert music beats tool is not exactly equal to one.\n\n1 audio should be selected, but {0} audio are selected.",
-				convert_music_beats_unsupported_beats_exception = "Error: Current VEGAS beats are not in 4/4, 3/4, 6/8.",
+				convert_music_beats_unsupported_beats_exception = "Error: Current Vegas beats are not in 4/4, 3/4, 6/8.",
 				invalid_mapping_velocity_values_exception = "Error: Illegal mapping velocity parameters used.\n\nSolution: Make sure the mapping velocity parameters of audio and video,\n1. The smaller value cannot be greater than the larger value;\n2. The smaller and larger values of VELOCITY cannot be equal.\nOtherwise, this will not complete the mapping velocity operation.",
 				invalid_glissando_amount_exception = "Error: Illegal glissando amount parameter used.\n\nGlissando amount cannot be zero.",
 				cannot_get_script_dir_exception = "Error: Couldn't get script directory path!",
 				cannot_get_xvid_path_exception = "Error: Couldn't get XviD install path!",
 				install_xvid_info = "XviD codec not installed. The script will install it now and may ask for admin access to install it.",
 				install_xvid_admin_failed = "Error: Admin privilege for XviD installation refused.",
-				install_xvid_succeed = "XviD installed and render template generated for the current frame rate. Please restart VEGAS and run the script again.",
-				render_template_generate_completed = "Render template generated for the current frame rate. Please restart VEGAS and run the script again.",
+				install_xvid_succeed = "XviD installed and render template generated for the current frame rate. Please restart Vegas and run the script again.",
+				render_template_generate_completed = "Render template generated for the current frame rate. Please restart Vegas and run the script again.",
 				unexpected_exception = "Unexpected exception: ",
 				unexpected_render_status = "Unexpected render status: ",
 				datamix_selection_position_exception = "Error: Selection must start at frame ≥ 1!",
@@ -36974,7 +36992,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				all_tracks = "All tracks",
 				video_tracks = "Video tracks",
 				audio_tracks = "Audio tracks",
-				vegas_track_list = "VEGAS track list",
+				vegas_track_list = "Vegas track list",
 				midi_track_list = "MIDI track list",
 				midi_channel_list = "MIDI channel list",
 				midi_instrument_list = "MIDI instrument list",
@@ -37029,17 +37047,60 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				multi_select = "Multi",
 				select_midi_track_count_info = "{0} track selected",
 				select_midi_tracks_count_info = "{0} tracks selected",
-				failed_to_auto_change_project_bpm_exception = "Error: Failed to automatically change project tempo!\n\nVEGAS only supports tempi within the range of {0}, and the currently set tempo is {1}.",
-				failed_to_auto_change_project_beat_numerator_exception = "Error: Failed to automatically change the numerator of time signature!\n\nVEGAS only supports numerators within the range of {0}, and the currently set numerator of time signature is {1}.",
-				failed_to_auto_change_project_beat_denominator_exception = "Error: Failed to automatically change the denominator of time signature!\n\nVEGAS only supports denominators within the range of {0}, and the currently set denominator of time signature is {1}.",
+				failed_to_auto_change_project_bpm_exception = "Error: Failed to automatically change project tempo!\n\nVegas only supports tempi within the range of {0}, and the currently set tempo is {1}.",
+				failed_to_auto_change_project_beat_numerator_exception = "Error: Failed to automatically change the numerator of time signature!\n\nVegas only supports numerators within the range of {0}, and the currently set numerator of time signature is {1}.",
+				failed_to_auto_change_project_beat_denominator_exception = "Error: Failed to automatically change the denominator of time signature!\n\nVegas only supports denominators within the range of {0}, and the currently set denominator of time signature is {1}.",
 				generate_staff_visualizer_without_time_signature_exception = "Error: Generation of Staff Visualizer failed due to missing time signature information.\n\nThe current MIDI file can generate YTPMV/otoMAD, but cannot generate Staff Visualizer.\nThis is because the MIDI file does not contain any time signature information. Please try to edit the MIDI file to allocate any time signature, or try another MIDI file.",
-				oscillator = "粒子振荡器",
-				alt_multiple = "多次使用音效插件",
-				alt_plugin = "切换到移调音效插件",
-				alt_octave = "高 / 低八度",
-				alt_octaveExp = "高 / 低八度（实验性）",
-				alt_dock = "停靠在边缘",
-				alt_silent = "不发声",
+				lucky_dip_bar_without_time_signature_exception = "Error: MIDI file is missing time signature information, unable to switch sources once per measure in Lucky Dip.\n\nSolution: Any of the following is sufficient.\n1. Please try replacing other MIDI files;\n2. Do not use \"bar\" as the unit of source switching moment;\n3. Disable \"Switch once per bar or beat\";\n4. Disable \"Lucky Dip\".",
+				oscillator = "Granular Oscillator",
+				alt_multiple = "Use Audio Effect Plugin Multiple Times",
+				alt_plugin = "Switch to Pitch Shift Audio Effect Plugin",
+				alt_octave = "Raise/Lower Octaves",
+				alt_octaveExp = "Raise/Lower Octaves (Experimental)",
+				alt_dock = "Dock at Top/Bottom",
+				alt_silent = "Silent",
+				multiply_gain = "Multiply current gain",
+				vocal_fry = "Vocal fry",
+				alt_tuning_method = "If exceeds range",
+				track_group = "Grouping tracks",
+				track_group_off = "Ungrouped",
+				track_group_by_track = "Group by MIDI track",
+				track_group_by_session = "Group by task session",
+				collapse_track_groups = "Collapse track groups by default",
+				multisource_comb = "Multisource comb",
+				off = "Off",
+				lucky_dip = "Lucky dip",
+				match_cut = "Beat sync match cut",
+				linear_map = "Linear map output",
+				consonant_time = "Consonant time",
+				lucky_dip_limit_to_selected = "Limited to selected sources",
+				lucky_dip_track = "Make each track different",
+				lucky_dip_marker = "Switch once per marker",
+				lucky_dip_bar_or_beat = "Switch once per bar or beat",
+				lucky_dip_period = "Period",
+				lucky_dip_preparation = "Preparation",
+				bar = "bar",
+				beat = "beat",
+				order = "Order",
+				sequential = "Sequential",
+				reversed = "Reversed",
+				shuffled = "Shuffled",
+				match_cut_round = "Apply visual effects by rounds",
+				match_cut_repeat = "Repetitions per clip",
+				sheet_lengthen_to_bar_end = "Lengthen to bar end",
+				sample_audio_track_name = "Sample Audio Track (Should be DELETED!)",
+				sample_video_track_name = "Sample Video Track (Should be DELETED!)",
+				linear_map_allow_reuse_existed = "Allow reuse",
+				match_cut_accumulate_harmonics = "Accumulate overtones of chords separately",
+				stop_generating_warning_title = "Generation Terminated",
+				match_cut_loop_warning = "Warning: The number of notes required is greater than the number of selected sources.\n\nThe generation has now stopped.\n\nPlease refill enough sources or enable Source > Beat sync match cut > Loop to restore.",
+				linear_map_allow_reuse_existed_warning = "Warning: The number of notes required is greater than the number of current MIDI tracks.\n\nThis generation has been blocked.\n\nPlease refill enough sources or enable Source > Linear map output > Allow reuse to restore.",
+				stack = "Stack",
+				time_unremapping = "Time unremapping",
+				lotion_bath = "Lotion Bath Tactics",
+				interval = "Interval",
+				shupelunker = "Shupelunker Tactics",
+				tartar = "Tartar Tactics",
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -37052,17 +37113,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				no_to_restart_to_effect_language = "不重啟以生效",
 				version_number = "版本號",
 				revision_date = "最後修訂日期",
-				vegas_version = "VEGAS Pro 版本",
+				vegas_version = "Vegas Pro 版本",
 				otomad_helper_version = "Otomad Helper 版本",
 				naudio_version = "NAudio 版本",
 				script_supported_vegas_version = "腳本支援版本",
-				unsupported_vegas_version = "警告：當前腳本與你當前所使用的 VEGAS 版本不匹配，部分功能可能不能正常工作！請重新安裝正確版本的腳本。\n腳本支援的版本為：VEGAS Pro {0}\n當前軟體的版本為：VEGAS Pro {1}",
+				unsupported_vegas_version = "警告：當前腳本與你當前所使用的 Vegas 版本不匹配，部分功能可能不能正常工作！請重新安裝正確版本的腳本。\n腳本支援的版本為：Vegas Pro {0}\n當前軟體的版本為：Vegas Pro {1}",
 				unsupported_vegas_version_title = "版本不匹配",
-				unsupported_vegas_version_feature = "低於 VEGAS Pro {0} 的版本不支援本功能。",
+				unsupported_vegas_version_feature = "低於 Vegas Pro {0} 的版本不支援本功能。",
 				check_update_title = "更新腳本",
 				check_update_found = "偵測到新版本，是否立即更新？ \n\n最新版本：{0}\n當前版本：{1}",
 				check_update_not_found = "已是最新版本！\n\n最新版本：{0}",
-				check_update_unsupport_future_version = "已偵測到新版本，但是你當前的 VEGAS 版本過低，新版本不支援你的 VEGAS 版本。請更新你的 VEGAS 軟體，然後才能使用新版本。\n\n新版最低支援：VEGAS Pro {2}\n你當前正使用：VEGAS Pro {3}\n\n最新版本：{0}\n當前版本：{1}",
+				check_update_unsupport_future_version = "已偵測到新版本，但是你當前的 Vegas 版本過低，新版本不支援你的 Vegas 版本。請更新你的 Vegas 軟體，然後才能使用新版本。\n\n新版最低支援：Vegas Pro {2}\n你當前正使用：Vegas Pro {3}\n\n最新版本：{0}\n當前版本：{1}",
 				check_update_on_startup = "啟動時自動檢查更新",
 				download_latest_version = "下載最新版本",
 				quick_config = "快速配置",
@@ -37083,8 +37144,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				crop = "修剪",
 				bz_masking = "貝茲蒙版",
 				cookie_cutter = "區域裁切",
-				check_pitch_shift_presets = "正在檢查移調插件的預設是否可用⋯⋯",
-				no_pitch_shift_presets = "由於你試圖使用「移調」效果插件調音，但是系統發現你並沒有完全配置好所需的所有音效預設。你可嘗試由腳本嘗試為你自動添加預設，可能會添加失敗。如果失敗，則請按照使用教程的說明來手動操作。是否由腳本為你自動添加預設？",
+				check_pitch_shift_presets = "正在檢查移調外掛的預設是否可用⋯⋯",
+				no_pitch_shift_presets = "由於你試圖使用「移調」效果外掛調音，但是系統發現你並沒有完全配置好所需的所有音效預設。你可嘗試由腳本嘗試為你自動添加預設，可能會添加失敗。如果失敗，則請按照使用教程的說明來手動操作。是否由腳本為你自動添加預設？",
 				yes_to_add_pitch_shift_presets = "自動添加",
 				no_to_add_pitch_shift_presets = "返回配置",
 				no_pitch_shift_presets_title = "未找到所有的移調音效預設",
@@ -37124,7 +37185,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				wave = "波浪",
 				multi_beat_delay = "多拍延遲",
 				spherize = "球面化",
-				warning_missing_plugin = "警告：找不到插件「{0}」！",
+				warning_missing_plugin = "警告：找不到外掛「{0}」！",
 				midi_channel = "通道",
 				midi_notes_count = "音符數",
 				midi_begin_note = "起音",
@@ -37156,7 +37217,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				separation_replaced_info = "已選中 {0} 段軌道剪輯，其中 {1} 段音訊剪輯，{2} 段視訊剪輯。",
 				separation_set_replaced = "將所選 {0} 段剪輯設為被替換項",
 				separation_set_replacer = "將所選 {0} 段剪輯設為替換項",
-				separation_back_to_select = "返回 VEGAS 選定剪輯",
+				separation_back_to_select = "返回 Vegas 選定剪輯",
 				separation_use_clip_group = "同時替換分組內其它剪輯",
 				separation_reserve_original_name = "保留原始剪輯名稱",
 				separation_reserve_original_offset = "保留原始剪輯偏移量",
@@ -37172,7 +37233,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				select_how_many = "每次要選取幾段",
 				reset_select = "重設選擇(&R)",
 				quick_select_interval = "快速間隔選擇",
-				select_interval_info = "請先在 VEGAS 軌道中選中一些素材，然後再啟動本對話方塊，使用下面的功能。",
+				select_interval_info = "請先在 Vegas 軌道中選中一些素材，然後再啟動本對話方塊，使用下面的功能。",
 				select_events_count_info = "已選中 {0} 段軌道剪輯。",
 				select_videotracks_count_info = "已選中 {0} 條視訊軌道。",
 				select_audioevents_count_info = "已选中 {0} 條音訊軌道剪輯。",
@@ -37221,7 +37282,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				descending = "遞減次序",
 				ascending = "遞增次序",
 				change_tune_method = "更改調音算法",
-				change_tune_method_info = "僅支援音訊事件内容中的調音方法，不支援「移調」插件中的調音方法。",
+				change_tune_method_info = "僅支援音訊事件内容中的調音方法，不支援「移調」外掛中的調音方法。",
 				time_stretch_pitch_shift = "時間拉伸/音調轉換",
 				formant_change = "共振峰移位",
 				pitch_change = "音調更改",
@@ -37307,7 +37368,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				source_start_time_tooltip = "此處填寫媒體素材裁剪的開始時間。\n單位：秒。",
 				source_end_time_tooltip = "注意如果此處填寫的數值比入點時間小或相等，則始終表示持續到素材時間末尾。\n單位：秒。",
 				no_tune = "不調音",
-				pitch_shift_plugin = "移調效果插件",
+				pitch_shift_plugin = "移調效果外掛",
 				elastique_method = "彈性音調更改",
 				classic_method = "古典音調更改",
 				fool_tuning_method = "無音階調音",
@@ -37315,9 +37376,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				triangle_wave = "三角波",
 				square_wave = "方波",
 				sawtooth_wave = "鋸齒波",
-				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
-				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
-				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
+				tune_method_tooltip = "「移調效果外掛」表示使用「音訊 FX」中的「移調」效果外掛改變音調，需要配置預設。\n「彈性音調更改」表示使用「Élastique」演算法改變音調，也就是鍵盤上 +、- 鍵直接改變音調，有音高範圍限制。\n「古典音調更改」表示使用 Vegas Video 2.0 至 Vegas Pro 8.0 中的演算法改變音調，有音高範圍限制。\n「無音階調音」表示鎖定伸縮與音調，完全通過更改拉伸值來獲取相應的音調，而不考慮音符的實際音高。\n「粒子振盪器」表示通過將短促的素材採樣音效以特定週期高速重複播放，生成對應音高的脈衝序列，\n利用人耳對快速脈衝的感知融合效應形成連續音高來模擬特定音高。",
+				audio_lock_stretch_pitch_tooltip = "採用重採樣方式，隨著速度變化而改變音高。由於不進行拉伸音訊，音質會更好。\n如果使用的是「彈性音調更改」或「古典音調更改」方法，那麼將會禁用拉伸音訊功能。",
+				alt_tuning_method_tooltip = "使用另一種平替方法來處理超出音域範圍之外的音符。\n「切換到移調音效外掛」表示通過反復使用移調音訊效果外掛從而達到任意音高。\n「升 / 降八度」表示通過升高或降低八度到 {0} 的音域範圍內來至少避免不協和音程。\n「升 / 降八度（實驗性）」同上，但將音域範圍擴展到 {1}。\n如果鎖定伸縮與音調，則音域範圍擴展到 {2}。\n請謹慎使用，有可能會導致 Vegas 崩潰。\n「停靠在邊緣」表示停靠在 {0} 音域範圍內的最高或最低音調。\n「不發聲」表示將那些音符靜音。",
 				preview_beep_duration_tooltip = "預聽標準音高所持續的時間。\n單位：毫秒。",
 				preview_tune_audio_tooltip = "勾選後，預聽音訊時會將音訊素材調整到主音高中央 C。\n否則，預聽標準音高將會播放原始音高處所設定的音高。",
 				sheet_position_tooltip = "五線譜中間第三根線到荧幕中心的距離，上正下負。\n單位：點數。",
@@ -37334,7 +37395,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				reset_config = "重設組態(&R)",
 				exit_discarding_changes = "放棄更改並退出(&D)",
 				exit = "退出(&X)",
-				pitch_shift_preset = "移調插件預設(&P)",
+				pitch_shift_preset = "移調外掛預設(&P)",
 				load_presets = "加載預設(&L)",
 				unload_presets = "卸載預設(&U)",
 				form_size = "表單大小(&F)",
@@ -37687,7 +37748,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				automator_configform_info = "自動為添加到視訊短片中的每種效果在各幀添加隨機關鍵幀。",
 				stutter_configform_info = "通過隨機時間間隔的正放與倒放來製造卡頓效果。",
 				camera_shake_configform_info = "運用平移/裁切來搖晃或擺動剪輯。",
-				otomad_helper_config = "Otomad Helper for VEGAS - 設定",
+				otomad_helper_config = "Otomad Helper for Vegas - 設定",
 				reset_config_successful = "重設完成，請重新啟動腳本。",
 				reset_config_successful_title = "重設使用者組態",
 				sure_to_reset_config = "確定要重設使用者組態嗎？\n\n重設後你的使用者組態設定資料將會遺失。",
@@ -37711,20 +37772,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				no_media_exception = "錯誤：未選擇媒體檔案。\n\n請重新啟動腳本參數設定對話方塊，然後在「媒體設定」分組中點擊「瀏覽」按鈕，開啟一項有效的媒體檔案。",
 				no_track_info_exception = "錯誤：MIDI 檔案中不包含任何音軌。\n\n可能的原因：\n\n1. 該 MIDI 檔案中確實沒有任何音軌。\n這很有可能是你忘記從宿主軟體中匯出 MIDI 音軌了，請再檢查一遍你的原始專案。\n如果你使用的是 FL Studio，請務必確保在匯出 MIDI 之前執行了“準備進行 MIDI 匯出”宏操作。\n\n2. 該 MIDI 檔案格式不受支援或已損壞。\n請用宿主軟體導入該 MIDI，然後重新匯出一份新的 MIDI 檔案。\n由於 NAudio.Midi 庫支援的 MIDI 種類數目不全面，腳本不保證都能夠正確讀取。",
 				no_midi_track_selected_exception = "錯誤：沒有選擇任何 MIDI 音軌。\n\n解決方法：請選擇至少一條 MIDI 音軌。",
-				no_plugin_pitch_shift_exception = "錯誤：無法調用移調插件。\n\n請按照教程檔案 {0} 的指引正確操作。\n不過，根據這個更新版本的腳本，按理應當是中英文版本均可正常運行的。\n因此很有可能你是使用其它語言的 VEGAS 造成的。",
-				no_plugin_presets_exception = "錯誤：無法調用移調插件的預設效果。\n\n請按照教程檔案 {0} 的指引正確操作。\n確保在移調插件中手動添加了所有的 25 套預設，且命名正確。\n\n補充說明：具體可見上述連結專欄中對於安裝方法的說明。這 25 套預設是上下一個八度以內的所有變調種類，\n缺少任何一套都有可能出錯。手動添加預設的確非常麻煩，但 VEGAS 無法使用腳本來指定變調的具體參數，\n囙此只好繞這個彎子。",
-				no_plugin_name_exception = "錯誤：無法調用 {0} 插件。\n\n可能你使用的 VEGAS 版本不支援該插件。",
-				no_take_exception_ps = "補充說明：若仍不能解决，說明該素材檔案可能是 VEGAS 不支援的格式，\n可以手動把該檔案拖入 VEGAS 中看一下是否視訊音訊都正常。",
+				no_plugin_pitch_shift_exception = "錯誤：無法調用移調外掛。\n\n請按照教程檔案 {0} 的指引正確操作。\n不過，根據這個更新版本的腳本，按理應當是中英文版本均可正常運行的。\n因此很有可能你是使用其它語言的 Vegas 造成的。",
+				no_plugin_presets_exception = "錯誤：無法調用移調外掛的預設效果。\n\n請按照教程檔案 {0} 的指引正確操作。\n確保在移調外掛中手動添加了所有的 25 套預設，且命名正確。\n\n補充說明：具體可見上述連結專欄中對於安裝方法的說明。這 25 套預設是上下一個八度以內的所有變調種類，\n缺少任何一套都有可能出錯。手動添加預設的確非常麻煩，但 Vegas 無法使用腳本來指定變調的具體參數，\n囙此只好繞這個彎子。",
+				no_plugin_name_exception = "錯誤：無法調用 {0} 外掛。\n\n可能你使用的 Vegas 版本不支援該外掛。",
+				no_take_exception_ps = "補充說明：若仍不能解决，說明該素材檔案可能是 Vegas 不支援的格式，\n可以手動把該檔案拖入 Vegas 中看一下是否視訊音訊都正常。",
 				no_audio_take_exception = "錯誤：無法讀取音訊媒體流。\n\n在設定介面，純視訊/圖片素材不要勾選「生成音訊」。\n\n",
 				no_video_take_exception = "錯誤：無法讀取視訊媒體流。\n\n在設定介面，純音訊素材不要勾選「生成畫面」。\n\n",
-				no_media_take_exception = "錯誤：無法讀取媒體。\n\n你所選的檔案格式不受 VEGAS 支援，請檢查該媒體檔案是否損壞，或未安裝對應的 VEGAS 解碼器。\n\n",
+				no_media_take_exception = "錯誤：無法讀取媒體。\n\n你所選的檔案格式不受 Vegas 支援，請檢查該媒體檔案是否損壞，或未安裝對應的 Vegas 解碼器。\n\n",
 				not_a_midi_file_exception = "錯誤：無法讀取 MIDI 檔案。\n\n解決方法：用宿主軟體導入該 MIDI，然後重新匯出一份新的 MIDI 檔案。\n\n補充說明：MIDI 檔案有多種格式，腳本不保證都能够正確讀取。所幸主流宿主軟體在\n默認設定下匯出的 MIDI 檔案一般是可以讀取的。（現時測試過 FL Studio、LMMS\n與 Music Studio for iPad。）",
 				midi_contains_velocity_zero_exception = "錯誤：你的 MIDI 檔案中包含力度值為 0 的音符。\n請檢查是否還有任何音符的力度值為 0（即沒有音量），如果有，請刪除它們。\n\n補充說明：NAudio.Midi 庫不支援包含力度為 0 音符的 MIDI 檔案，未來版本的 Otomad Helper 會通過更換解析引擎來解決此問題。",
 				no_selected_exception_ps = "補充說明：如果你想手動在資料夾中選擇一項媒體素材，那麼請點擊其右邊的「瀏覽」按鈕，\n選擇一項媒體素材。並確保左側的下拉式功能表中選中的是你所選檔案所在的路徑。",
 				no_selected_media_exception = "錯誤：沒有在專案媒體視窗中選擇任何媒體。\n\n請在專案媒體視窗中選擇一項媒體，然後重新啟動參數設定視窗，並在素材設定中選擇「所選專案媒體」。\n\n",
 				no_selected_clip_exception_short = "錯誤：沒有在軌道中選擇任何剪輯。",
 				no_selected_clip_exception = "錯誤：沒有在軌道中選擇任何剪輯。\n\n請在軌道中選擇一段剪輯，然後重新啟動參數設定視窗，並在素材設定中選擇「所選軌道事件」。\n\n",
-				no_time_stretch_pitch_shift_exception = "錯誤：選定素材音調轉換方法被設定為不調音。\n\n很有可能你使用的是「所選軌道事件」。出現了這種錯誤不怪你，要怪就怪 VEGAS 這種腦殘設計。\n\n解決方法：請重新選中你的軌道素材，右鍵音訊部分，選擇底部的「內容」。將「時間拉伸/音調轉換」的「方法」設定為“élastique”。\n然後點擊確定即可。\n\n補充說明：如果某段音訊事件沒有進行變調操作，然後開啟了它的內容，那麼其內容中的「時間拉伸/音調轉換」的「方法」會被\n自動修改為「無」，點擊確定就會生效。這時你會發現鍵盤上的 +、- 鍵調音操作無效了。這時必須重新開啟音訊事件的內容，\n將「時間拉伸/音調轉換」的「方法」設定為“élastique”，不必設定「音調更改」，點擊確定即可。",
+				no_time_stretch_pitch_shift_exception = "錯誤：選定素材音調轉換方法被設定為不調音。\n\n很有可能你使用的是「所選軌道事件」。出現了這種錯誤不怪你，要怪就怪 Vegas 這種腦殘設計。\n\n解決方法：請重新選中你的軌道素材，右鍵音訊部分，選擇底部的「內容」。將「時間拉伸/音調轉換」的「方法」設定為“élastique”。\n然後點擊確定即可。\n\n補充說明：如果某段音訊事件沒有進行變調操作，然後開啟了它的內容，那麼其內容中的「時間拉伸/音調轉換」的「方法」會被\n自動修改為「無」，點擊確定就會生效。這時你會發現鍵盤上的 +、- 鍵調音操作無效了。這時必須重新開啟音訊事件的內容，\n將「時間拉伸/音調轉換」的「方法」設定為“élastique”，不必設定「音調更改」，點擊確定即可。",
 				read_config_fail_exception = "錯誤：讀取參數設定檔失敗。\n\n很遺憾你遇到了這種不可預見的錯誤。我們將會清除使用者組態設定並恢復為預設值以便解决問題。\n建議將這種錯誤告訴作者以便快速解决問題。\n將會退出此腳本，然後勞煩閣下手動重新啟動此腳本。",
 				fail_to_select_clips_exception = "錯誤：選取軌道剪輯出錯。\n\n請先在軌道視窗中選取部分軌道剪輯。",
 				fail_to_select_tracks_exception = "錯誤：選取軌道出錯。\n\n請先在軌道視窗中選取部分視訊軌道。",
@@ -37732,18 +37793,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				ytp_in_media_generator_exception = "錯誤：對媒體產生器產生的媒體應用 YTP。\n\n應用 YTP 必須使用本地媒體檔案，不要使用媒體產生器生成的媒體。",
 				ytp_eliminate_duplicates_finally_null_exception = "技術異常：對 YTP 素材清單進行去重操作，最後清單為空了！\n\n這是一種不應該被發生的錯誤。",
 				unknown_exception = "錯誤：未知異常。\n\n請展開詳細資訊查看具體錯誤內容，並將錯誤資訊回饋給作者。",
-				use_pic_in_pic_on_unsupported_vegas_exception = "錯誤：不支援在低版本 VEGAS 中使用該畫中畫插件的效果。\n\n根本原因：VEGAS 在新版本“畫中畫”效果插件中新增了一些新的功能和參數，這些新參數不能在低版本的 VEGAS 插件中使用。\n\n解決方法：在當前 VEGAS 版本不能使用該畫面節奏視覺效果（如擴縮類等），請使用其它視覺效果。或更新你的 VEGAS 軟體。",
+				use_pic_in_pic_on_unsupported_vegas_exception = "錯誤：不支援在低版本 Vegas 中使用該畫中畫外掛的效果。\n\n根本原因：Vegas 在新版本“畫中畫”效果外掛中新增了一些新的功能和參數，這些新參數不能在低版本的 Vegas 外掛中使用。\n\n解決方法：在當前 Vegas 版本不能使用該畫面節奏視覺效果（如擴縮類等），請使用其它視覺效果。或更新你的 Vegas 軟體。",
 				unsupported_curve_enum_exception = "錯誤：使用不支援的曲線枚舉類型作為參數。\n\n{0} 不是曲線枚舉類型。",
 				convert_music_beats_not_one_audio_event_exception = "錯誤：在轉換音樂節拍工具中選擇了的音訊剪輯數目不恰好等於一段。\n\n應當選擇 1 段音訊，卻選擇了 {0} 段音訊。",
-				convert_music_beats_unsupported_beats_exception = "錯誤：當前 VEGAS 設定的節拍不是在四四拍、四三拍、八六拍之中的其一。",
+				convert_music_beats_unsupported_beats_exception = "錯誤：當前 Vegas 設定的節拍不是在四四拍、四三拍、八六拍之中的其一。",
 				invalid_mapping_velocity_values_exception = "錯誤：使用不合法的映射力度參數。\n\n解決方法：確保音訊和畫面的映射力度參數中，\n1. 較小值不能大於較大值；\n2. 「力度」的較小值和較大值不能相等。\n否則將無法完成映射力度的操作。",
 				invalid_glissando_amount_exception = "錯誤：使用不合法的滑音大小參數。\n\n滑音大小不能為 0。",
 				cannot_get_script_dir_exception = "錯誤：無法獲取腳本目錄路徑！",
 				cannot_get_xvid_path_exception = "錯誤：無法獲取 XviD 安裝路徑！",
 				install_xvid_info = "未安裝 XviD 轉碼器。腳本將立即安裝它，並可能會要求管理員權限。",
 				install_xvid_admin_failed = "錯誤：安裝 XviD 時管理員權限被拒絕。",
-				install_xvid_succeed = "XviD 已安裝，並為當前幀率生成了彩現範本。請重新啟動 VEGAS 並再次運行該腳本。",
-				render_template_generate_completed = "已為當前畫面播放速率生成了彩現範本。請重新啟動 VEGAS 並再次運行該腳本。",
+				install_xvid_succeed = "XviD 已安裝，並為當前幀率生成了彩現範本。請重新啟動 Vegas 並再次運行該腳本。",
+				render_template_generate_completed = "已為當前畫面播放速率生成了彩現範本。請重新啟動 Vegas 並再次運行該腳本。",
 				unexpected_exception = "未知異常：",
 				unexpected_render_status = "非預期的彩現狀態：",
 				datamix_selection_position_exception = "錯誤：選區必須從大於或等於第 1 幀開始！",
@@ -37807,7 +37868,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				all_tracks = "所有軌道",
 				video_tracks = "視訊軌道",
 				audio_tracks = "音訊軌道",
-				vegas_track_list = "VEGAS 軌道清單",
+				vegas_track_list = "Vegas 軌道清單",
 				midi_track_list = "MIDI 軌道清單",
 				midi_channel_list = "MIDI 通道清單",
 				midi_instrument_list = "MIDI 樂器清單",
@@ -37862,17 +37923,60 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				multi_select = "多選",
 				select_midi_track_count_info = "已选中 {0} 條音軌",
 				select_midi_tracks_count_info = "已选中 {0} 條音軌",
-				failed_to_auto_change_project_bpm_exception = "錯誤：自動更改專案速度失敗！\n\nVEGAS 僅支援 {0} 範圍內的速度，當前設定的速度為 {1}。",
-				failed_to_auto_change_project_beat_numerator_exception = "錯誤：自動更改專案拍號分子失敗！\n\nVEGAS 僅支援分子在 {0} 範圍內的拍號，當前設定拍號的分子為 {1}。",
-				failed_to_auto_change_project_beat_denominator_exception = "錯誤：自動更改專案拍號分母失敗！\n\nVEGAS 僅支援分母在 {0} 範圍內的拍號，當前設定拍號的分母為 {1}。",
+				failed_to_auto_change_project_bpm_exception = "錯誤：自動更改專案速度失敗！\n\nVegas 僅支援 {0} 範圍內的速度，當前設定的速度為 {1}。",
+				failed_to_auto_change_project_beat_numerator_exception = "錯誤：自動更改專案拍號分子失敗！\n\nVegas 僅支援分子在 {0} 範圍內的拍號，當前設定拍號的分子為 {1}。",
+				failed_to_auto_change_project_beat_denominator_exception = "錯誤：自動更改專案拍號分母失敗！\n\nVegas 僅支援分母在 {0} 範圍內的拍號，當前設定拍號的分母為 {1}。",
 				generate_staff_visualizer_without_time_signature_exception = "錯誤：因缺失拍號資訊導致生成五線譜視覺化失敗。\n\n當前 MIDI 檔案可以生成音 MAD / YTPMV，但不能生成五線譜視覺化。\n這是因為該 MIDI 檔案中未包含任何拍號資訊。請嘗試編輯該 MIDI 檔案以分配拍號資訊，或更換其它 MIDI 檔案。",
-				oscillator = "粒子振荡器",
-				alt_multiple = "多次使用音效插件",
-				alt_plugin = "切换到移调音效插件",
-				alt_octave = "高 / 低八度",
-				alt_octaveExp = "高 / 低八度（实验性）",
-				alt_dock = "停靠在边缘",
-				alt_silent = "不发声",
+				lucky_dip_bar_without_time_signature_exception = "錯誤：MIDI 檔缺失拍號資訊，無法在素材盲盒中按小節切換一次素材。\n\n解決方法：以下任一即可。\n1. 請嘗試更換其它 MIDI 文件；\n2. 不要用「小節」作為素材切換時機的單位；\n3. 關閉「每小節或每拍切換一次」；\n4. 關閉「素材盲盒」。",
+				oscillator = "粒子振盪器",
+				alt_multiple = "多次使用音效外掛",
+				alt_plugin = "切換到移調音效外掛",
+				alt_octave = "升 / 降八度",
+				alt_octaveExp = "升 / 降八度（實驗性）",
+				alt_dock = "停靠在邊緣",
+				alt_silent = "不發聲",
+				multiply_gain = "乘以當前增益",
+				vocal_fry = "氣泡音",
+				alt_tuning_method = "超出音域",
+				track_group = "軌道組",
+				track_group_off = "不分組",
+				track_group_by_track = "按 MIDI 音軌分組",
+				track_group_by_session = "按任務會話分組",
+				collapse_track_groups = "預設情況下折疊軌道組",
+				multisource_comb = "多素材梳子",
+				off = "關",
+				lucky_dip = "素材盲盒",
+				match_cut = "踩點",
+				linear_map = "線性映射輸出",
+				consonant_time = "輔音時間",
+				lucky_dip_limit_to_selected = "限制在所選素材",
+				lucky_dip_track = "使每條音軌不同",
+				lucky_dip_marker = "每處標記切換一次",
+				lucky_dip_bar_or_beat = "每小節或每拍切換一次",
+				lucky_dip_period = "週期",
+				lucky_dip_preparation = "預備",
+				bar = "小節",
+				beat = "拍",
+				order = "次序",
+				sequential = "順序",
+				reversed = "逆序",
+				shuffled = "亂序",
+				match_cut_round = "按輪次應用視覺效果",
+				match_cut_repeat = "每段重複次數",
+				sheet_lengthen_to_bar_end = "持續到小節結尾",
+				sample_audio_track_name = "範例音訊軌道（應該被刪除！）",
+				sample_video_track_name = "範例視頻軌道（應該被刪除！）",
+				linear_map_allow_reuse_existed = "允許重用",
+				match_cut_accumulate_harmonics = "對和絃的泛音列獨立累加",
+				stop_generating_warning_title = "生成已終止",
+				match_cut_loop_warning = "警告：所需音符數已超出所選素材數。\n\n現在已停止生成。\n\n請重新填充足夠的素材或啟用 素材 > 踩點 > 迴圈 以恢復。",
+				linear_map_allow_reuse_existed_warning = "警告：所需音符數已超出當前 MIDI 的音軌數。\n\n已阻止本次生成。\n\n請重新填充足夠的素材或啟用 素材 > 線性映射輸出 > 允許重用 以恢復。",
+				stack = "堆疊",
+				time_unremapping = "持續時間流",
+				lotion_bath = "潤膚浴戰法",
+				interval = "間隔",
+				shupelunker = "原音系戰法",
+				tartar = "韃靼戰法",
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
@@ -37885,17 +37989,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				no_to_restart_to_effect_language = "有効にするために再起動しません",
 				version_number = "バージョン番号",
 				revision_date = "最終改訂日",
-				vegas_version = "VEGAS Proバージョン",
+				vegas_version = "Vegas Proバージョン",
 				otomad_helper_version = "Otomad Helperバージョン",
 				naudio_version = "NAudioバージョン",
 				script_supported_vegas_version = "スクリプトでサポートされているバージョン",
-				unsupported_vegas_version = "警告：現在のスクリプトは現在使用しているVEGASバージョンと一緻せず、一部の機能が正常に動作しない可能性があります！正しいバージョンのスクリプトを再インストールしてください。\nサポートされているバージョン：VEGAS Pro {0}\n現在のバージョン：VEGAS Pro {1}",
+				unsupported_vegas_version = "警告：現在のスクリプトは現在使用しているVegasバージョンと一緻せず、一部の機能が正常に動作しない可能性があります！正しいバージョンのスクリプトを再インストールしてください。\nサポートされているバージョン：Vegas Pro {0}\n現在のバージョン：Vegas Pro {1}",
 				unsupported_vegas_version_title = "バージョンが一緻しません",
-				unsupported_vegas_version_feature = "VEGAS Pro {0} 以下のバージョンは、本機能をサポートしていません。",
+				unsupported_vegas_version_feature = "Vegas Pro {0} 以下のバージョンは、本機能をサポートしていません。",
 				check_update_title = "スクリプトの更新",
 				check_update_found = "新しいバージョンが検出されました。すぐに更新しますか？\n\n最新バージョン：{0}\n現行のバージョン：{1}",
 				check_update_not_found = "すでに最新バージョン！\n\n最新バージョン：{0}",
-				check_update_unsupport_future_version = "新しいバージョンが検出されましたが、現在のVEGASバージョンは古すぎるため、新しいバージョンはVEGASバージョンをサポートしていません。新しいバージョンを使用する前に、VEGASソフトウェアを更新してください。\n\nサポートされる最小バージョン：VEGAS Pro {2}\n現在のバージョン：VEGAS Pro {3}\n\n最新バージョン：{0}\n現行のバージョン：{1}",
+				check_update_unsupport_future_version = "新しいバージョンが検出されましたが、現在のVegasバージョンは古すぎるため、新しいバージョンはVegasバージョンをサポートしていません。新しいバージョンを使用する前に、Vegasソフトウェアを更新してください。\n\nサポートされる最小バージョン：Vegas Pro {2}\n現在のバージョン：Vegas Pro {3}\n\n最新バージョン：{0}\n現行のバージョン：{1}",
 				check_update_on_startup = "起動時に更新を確認",
 				download_latest_version = "最新のダウンロード",
 				quick_config = "迅速な設定",
@@ -37989,7 +38093,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				separation_replaced_info = "{0}トラッククリップが選択されました。そのうち{1}オーディオクリップ、{2}ビデオクリップ。",
 				separation_set_replaced = "選択した{0}アセットを置換されたみ",
 				separation_set_replacer = "選択した{0}アセットを置換项",
-				separation_back_to_select = "VEGASに戻る選択した素材",
+				separation_back_to_select = "Vegasに戻る選択した素材",
 				separation_use_clip_group = "グループ内の他のクリップも交換してください",
 				separation_reserve_original_name = "元のクリップ名を保持",
 				separation_reserve_original_offset = "元のクリップオフセットを保持",
@@ -38005,7 +38109,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				select_how_many = "一度にいくつ選択する",
 				reset_select = "リセット選択(&R)",
 				quick_select_interval = "クイックセレクト間隔",
-				select_interval_info = "最初にVEGASトラックウィンドウでいくつかのクリップを選択してから、このダイアログボックスを開いて次の機能を使用してください。",
+				select_interval_info = "最初にVegasトラックウィンドウでいくつかのクリップを選択してから、このダイアログボックスを開いて次の機能を使用してください。",
 				select_events_count_info = "{0}トラックイベントが選択されました。",
 				select_videotracks_count_info = "{0}ビデオトラックが選択されました。",
 				select_audioevents_count_info = "{0}オーディオトラックイベントが選択されました。",
@@ -38149,9 +38253,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				triangle_wave = "三角波",
 				square_wave = "方形波",
 				sawtooth_wave = "鋸歯状波",
-				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
-				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
-				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
+				tune_method_tooltip = "「ピッチシフトオーディオエフェクトプラグイン」は、「オーディオFX」の「ピッチシフト」エフェクトプラグインを使用してピッチを変更することを示し、プリセットの設定が必要です。\n「エラスティックピッチチェンジ」は、「エラスティック」アルゴリズムを使用してピッチを変更することを示し、キーボードの+キーと-キーで直接ピッチを変更できますが、ピッチ範囲に制限があります。\n「クラシックピッチチェンジ」は、Vegas Video 2.0からVegas Pro 8.0までのアルゴリズムを使用してピッチを変更することを示し、ピッチ範囲に制限があります。\n「スケールレスチューニング」は、ストレッチとピッチを固定し、実際の音のピッチに関係なく、ストレッチを変更して対応するピッチを取得することを示します。\n「グラニュラーオシレーター」は、特定の期間にわたって短いサンプルを高速で繰り返し再生することで特定のピッチをシミュレートし、ピッチに対応するパルスシーケンスを生成し、高速パルスに対する人間の耳の知覚融合効果を利用して連続的なピッチを形成します。",
+				audio_lock_stretch_pitch_tooltip = "速度変化に合わせてピッチを変更するためにリサンプリングを使用します。音声の引き伸ばしを行わないため、音質が向上します。\n「エラスティックピッチ変更」または「クラシックピッチ変更」方式を使用する場合、音声の引き伸ばしは無効になります。",
+				alt_tuning_method_tooltip = "範囲外の音符を別の方法で処理します。\n「ピッチシフトオーディオエフェクトプラグインに切り替える」は、ピッチシフトオーディオエフェクトプラグインを繰り返し使用することで任意のピッチに到達できることを示します。\n\n「オクターブを上げる/下げる」は、オクターブスケールを{0}の範囲に上げ下げすることで不協和音程を回避できることを示します。\n「オクターブを上げる/下げる（実験的）」は上記と同じですが、範囲が{1}まで拡張されます。ロックが伸縮およびピッチをロックする場合は、範囲が{2}まで拡張されます。Vegasがクラッシュする可能性があるため、注意して使用してください。\n「上/下にドッキング」は、{0}の範囲内で最も高いキーまたは最も低いキーにドッキングできることを示します。\n「サイレント」は、該当する音符をミュートできることを示します。",
 				preview_beep_duration_tooltip = "ベースピッチにプレビューの持続時間。\n単位：ミリ秒。",
 				preview_tune_audio_tooltip = "チェックを付けると、オーディオの予聴時に、オーディオ素材を主音の高い中央Cに調整します。\n標準音の高さを予聴すると、元の音の高さに設定された音の高さが再生されます。",
 				sheet_position_tooltip = "五線譜中央の第三線から画面中央までの距離。アッププラスダウンマイナス。\n単位：ピクセル。",
@@ -38522,7 +38626,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				automator_configform_info = "選択したビデオエフェクトのランダムな値を自動的に設定します。",
 				stutter_configform_info = "スタータークリップ/イベント（再生、逆再生……）。",
 				camera_shake_configform_info = "パン/クロップを使用して、選択したレイヤーをブレさせます。",
-				otomad_helper_config = "Otomad Helper for VEGAS - 設定",
+				otomad_helper_config = "Otomad Helper for Vegas - 設定",
 				reset_config_successful = "リセットが完了しました。スクリプトを再起動してください。",
 				reset_config_successful_title = "ユーザ設定のリセット",
 				sure_to_reset_config = "ユーザー構成をリセットしてもよろしいですか？\n\nリセット後、ユーザープロファイルデータは失われます。",
@@ -38536,7 +38640,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「オーディオを有効」と「ビデオを有効」は同時にチェックアウトされます。少なくとも一つを有効にしてください。",
 				why_ok_btn_is_disabled_no_media_take = "選択されたメディア素材のソースには、有効なメディアリソースが含まれていません。",
 				why_ok_btn_is_disabled_no_midi_select = "音MAD/YTPMVを生成するには、まずMIDIシーケンスファイルを選択してください。",
-				why_ok_btn_is_disabled_no_midi_track_select = "你没有选择任何 MIDI 音轨，请选择至少一条 MIDI 音轨。",
+				why_ok_btn_is_disabled_no_midi_track_select = "MIDIトラックが選択されていません。少なくとも1つのMIDIトラックを選択してください。",
 				why_ok_btn_is_disabled_in_helper_tab = "誤操作を避けるためには、「ツール」と「モッシュ」タブで作成操作を提出しないでください。",
 				why_ok_btn_is_disabled_unknown_problem = "原因は不明です。",
 				no_selected_media_warning = "警告：プロジェクトメディアウィンドウで有効なメディアを選択していません！",
@@ -38544,22 +38648,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				preview_audio_track_name = "オーディオトラックのプレビュー（削除する必要があります！）",
 				no_midi_exception = "エラー：MIDIファイルが選択されていません。\n\nスクリプト設定ダイアログボックスを再度開き、「MIDI設定」グループの「参照」ボタンをクリックして、有効なMIDIファイルを開いてください。",
 				no_media_exception = "エラー：メディアファイルが選択されていません。\n\nスクリプト設定ダイアログボックスを再度開き、「メディア設定」グループの「参照」ボタンをクリックして、有効なメディアファイルを開いてください。",
-				no_track_info_exception = "错误：MIDI 文件中不包含任何音轨。\n\n可能的原因：\n\n1. 该 MIDI 文件中确实没有任何音轨。\n这很有可能是你忘记从宿主软件中导出 MIDI 音轨了，请再检查一遍你的原始项目。\n如果你使用的是 FL Studio，请务必确保在导出 MIDI 之前执行了“准备进行 MIDI 导出”宏操作。\n\n2. 该 MIDI 文件格式不受支持或已损坏。\n请用宿主软件导入该 MIDI，然后重新输出一个新的 MIDI 文件。\n由于 NAudio.Midi 库支持的 MIDI 种类数目不全面，脚本不保证都能够正确读取。",
-				no_midi_track_selected_exception = "错误：没有选择任何 MIDI 音轨。\n\n解决方法：请选择至少一条 MIDI 音轨。",
-				no_plugin_pitch_shift_exception = "エラー：ピッチシフトプラグインを呼び出すことができません。\n\n正しく動作するには、チュートリアルドキュメント{0}の指示に従ってください。\nただし、この更新されたバージョンのスクリプトによると、中国語と英語のバージョンは正常に機能するはずです。\nしたがって、他の言語でVEGASを使用している可能性が非常に高くなります。",
-				no_plugin_presets_exception = "エラー：ピッチシフトプラグインのプリセットエフェクトを呼び出すことはできません。\n\n正しく動作するには、チュートリアルドキュメント{0}の指示に従ってください。\n25個のプリセットすべてが転置プラグインに手動で追加され、正しく名前が付けられていることを確認してください。\n\n補足：詳細については、上記リンク欄の設定方法の説明を参照してください。これらの25のプリセットは、次のオクターブ内のすべてのタイプのピッチ変更です。\nそれらのいずれかが欠落していると、エラーが発生する可能性があります。手動でプリセットを追加するのは確かに非常に面倒ですが、VEGASはスクリプトを使用し\nてピッチシフトの特定のパラメーターを指定できないため、このトリックを回避する必要がありました。",
-				no_plugin_name_exception = "エラー：{0}プラグインを呼び出すことができませんでした。\n\n使用している VEGAS のバージョンがこのプラグインをサポートしていない可能性があります。",
-				no_take_exception_ps = "補足：それでも解決できない場合は、メディアファイルがVEGASでサポートされていない形式である可能性があることを意味します。\nファイルを手動でVEGASにドラッグして、ビデオとオーディオが正常かどうかを確認できます。",
+				no_track_info_exception = "エラー：MIDIファイルにトラックが含まれていません。\n\n考えられる原因：\n\n1. このMIDIファイルには実際にトラックが含まれていません。\nホストソフトウェアからMIDIトラックをエクスポートし忘れた可能性が高いです。元のプロジェクトを再度ご確認ください。\nFL Studioを使用している場合は、MIDIをエクスポートする前に「MIDIエクスポートの準備」マクロ操作を実行してください。\n\n2. MIDIファイル形式がサポートされていないか、破損しています。\nホストソフトウェアを使用してMIDIをインポートし、新しいMIDIファイルを再度エクスポートしてください。\nNAudio.MidiライブラリがサポートするMIDIタイプは完全ではないため、スクリプトがすべてのMIDIタイプを正しく読み取れるとは限りません。",
+				no_midi_track_selected_exception = "エラー：MIDIトラックが選択されていません。\n\n解決策：少なくとも1つのMIDIトラックを選択してください。",
+				no_plugin_pitch_shift_exception = "エラー：ピッチシフトプラグインを呼び出すことができません。\n\n正しく動作するには、チュートリアルドキュメント{0}の指示に従ってください。\nただし、この更新されたバージョンのスクリプトによると、中国語と英語のバージョンは正常に機能するはずです。\nしたがって、他の言語でVegasを使用している可能性が非常に高くなります。",
+				no_plugin_presets_exception = "エラー：ピッチシフトプラグインのプリセットエフェクトを呼び出すことはできません。\n\n正しく動作するには、チュートリアルドキュメント{0}の指示に従ってください。\n25個のプリセットすべてが転置プラグインに手動で追加され、正しく名前が付けられていることを確認してください。\n\n追記：詳細については、上記リンク欄の設定方法の説明を参照してください。これらの25のプリセットは、次のオクターブ内のすべてのタイプのピッチ変更です。\nそれらのいずれかが欠落していると、エラーが発生する可能性があります。手動でプリセットを追加するのは確かに非常に面倒ですが、Vegasはスクリプトを使用し\nてピッチシフトの特定のパラメーターを指定できないため、このトリックを回避する必要がありました。",
+				no_plugin_name_exception = "エラー：{0}プラグインを呼び出すことができませんでした。\n\n使用している Vegas のバージョンがこのプラグインをサポートしていない可能性があります。",
+				no_take_exception_ps = "追記：それでも解決できない場合は、メディアファイルがVegasでサポートされていない形式である可能性があることを意味します。\nファイルを手動でVegasにドラッグして、ビデオとオーディオが正常かどうかを確認できます。",
 				no_audio_take_exception = "エラー：オーディオメディアストリームを読み取ることができません。\n\n設定インターフェイスで、純粋なビデオ／画像メディアの「有効なオーディオ」をチェックしないでください。\n\n",
 				no_video_take_exception = "エラー：ビデオメディアストリームを読み取ることができません。\n\n設定画面で、純粋なオーディオメディアの[有効なビデオ]をチェックしないでください。\n\n",
-				no_media_take_exception = "エラー：メディアを読み取ることができません。\n\n選択したファイル形式はVEGASではサポートされていません。メディアファイルが破損していないか、対応するVEGASデコーダーがインストールされていないか確認してください。\n\n",
-				not_a_midi_file_exception = "エラー：MIDIファイルを読み取ることができません。\n\n解決策：ホストソフトウェアでMIDIをインポートしてから、新しいMIDIファイルを再出力します。\n\n補足：MIDIファイルには複数の形式があり、スクリプトはそれらすべてが正しく読み取れることを保証するものではありません。幸い、\nデフォルト設定で主流のホストソフトウェアによってエクスポートされたMIDIファイルは一般的に読み取り可能です。（現在テスト済みのFL Studio、LMMS、\nおよびMusic Studio for iPadです。）",
-				midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有任何音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
+				no_media_take_exception = "エラー：メディアを読み取ることができません。\n\n選択したファイル形式はVegasではサポートされていません。メディアファイルが破損していないか、対応するVegasデコーダーがインストールされていないか確認してください。\n\n",
+				not_a_midi_file_exception = "エラー：MIDIファイルを読み取ることができません。\n\n解決策：ホストソフトウェアでMIDIをインポートしてから、新しいMIDIファイルを再出力します。\n\n追記：MIDIファイルには複数の形式があり、スクリプトはそれらすべてが正しく読み取れることを保証するものではありません。幸い、\nデフォルト設定で主流のホストソフトウェアによってエクスポートされたMIDIファイルは一般的に読み取り可能です。（現在テスト済みのFL Studio、LMMS、\nおよびMusic Studio for iPadです。）",
+				midi_contains_velocity_zero_exception = "エラー：MIDIファイルにベロシティが0のノートが含まれています。\nベロシティが0のノート（音量のないノート）がないか確認し、もしあれば削除してください。\n\n追記：NAudio.Midiライブラリは、ベロシティが0のノートを含むMIDIファイルをサポートしていません。Otomad Helperの今後のバージョンでは、解析エンジンを変更することでこの問題を解決します。",
 				no_selected_exception_ps = "追記：フォルダ内のメディアを手動で選択する場合は、右側の\n[参照]ボタンをクリックしてメディアを選択してください。また、左側のドロップダウンメニューで、選択したファイルのパスが選択されていることを確認してください。",
 				no_selected_media_exception = "エラー：プロジェクトメディアウィンドウでメディアが選択されていません。\n\nプロジェクトメディアウィンドウでメディアを選択してから、構成ダイアログを再度開き、素材設定で「選択したメディアファイル」を選択してください。\n\n",
 				no_selected_clip_exception_short = "エラー：トラックでクリップが選択されていません。",
 				no_selected_clip_exception = "エラー：トラックでクリップが選択されていません。\n\nトラック内のクリップを選択してから、構成ダイアログを再度開き、素材設定で「選択したトラッククリップ」を選択してください。\n\n",
-				no_time_stretch_pitch_shift_exception = "エラー：選択したクリップのピッチ変換方法がチューニングなしに設定されています。\n\n「選択したトラッククリップ」を使用している可能性があります。あなたはこのエラーのせいではなく、ベガスの脳死したデザインのせいです。\n\n解決策：トラッククリップを再度選択し、オーディオパーツを右クリックして、下部にある[プロパティ]を選択してください。「タイムストレッチ／ピッチ変換」の「方法」を「エラスティック」に設定します。\n次に、[OK]をクリックします。\n\n補足：オーディオイベントが移調されておらず、そのプロパティが開かれている場合、そのプロパティの「タイムストレッチ／ピッチ変換」の「メソッド」は次のようになります。\n自動的に「なし」に変更され、「OK」をクリックします。有効にします。現時点では、キーボードの+および-キーのチューニング操作が無効であることがわかります。このとき、オーディオイベントのプロパティを\n再度開き、「タイムストレッチ／ピッチ変換」の「方法」を「エラスティック」に設定する必要があります。「ピッチ変更」を設定する必要はありません。「OK」をクリックするだけです。",
+				no_time_stretch_pitch_shift_exception = "エラー：選択したクリップのピッチ変換方法がチューニングなしに設定されています。\n\n「選択したトラッククリップ」を使用している可能性があります。あなたはこのエラーのせいではなく、ベガスの脳死したデザインのせいです。\n\n解決策：トラッククリップを再度選択し、オーディオパーツを右クリックして、下部にある[プロパティ]を選択してください。「タイムストレッチ／ピッチ変換」の「方法」を「エラスティック」に設定します。\n次に、[OK]をクリックします。\n\n追記：オーディオイベントが移調されておらず、そのプロパティが開かれている場合、そのプロパティの「タイムストレッチ／ピッチ変換」の「メソッド」は次のようになります。\n自動的に「なし」に変更され、「OK」をクリックします。有効にします。現時点では、キーボードの+および-キーのチューニング操作が無効であることがわかります。このとき、オーディオイベントのプロパティを\n再度開き、「タイムストレッチ／ピッチ変換」の「方法」を「エラスティック」に設定する必要があります。「ピッチ変更」を設定する必要はありません。「OK」をクリックするだけです。",
 				read_config_fail_exception = "エラー：パラメータ構成ファイルの読み取りに失敗しました。\n\n残念ながら、この予期しないエラーが発生しました。問題を解決するために、ユーザー構成設定をクリアしてデフォルト設定に復元します。\n問題を迅速に解決するために、このエラーの作成者に伝えることをお勧めします。\nこのスクリプトは終了します。その後、手動で再度開く必要があります。",
 				fail_to_select_clips_exception = "エラー：トラッククリップの選択中にエラーが発生しました。\n\n最初にトラックウィンドウでいくつかのトラッククリップを選択してください。",
 				fail_to_select_tracks_exception = "エラー：トラックの選択中にエラーが発生しました。\n\n最初にトラックウィンドウでいくつかのビデオトラックを選択してください。",
@@ -38567,18 +38671,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				ytp_in_media_generator_exception = "エラー：メディアジェネレーターによって生成されたメディアにYTPを適用します。\n\nYTPのアプリケーションは、ローカルメディアファイルを使用する必要があります。メディアジェネレーターによって生成されたメディアは使用しないでください。",
 				ytp_eliminate_duplicates_finally_null_exception = "技術異常：YTP素材リストの重複値除去操作を行い、最後のリストが空きました。\n\nこれは起こるべきではないエラーです。",
 				unknown_exception = "エラー：不明の異常です。\n\n詳細を展開して、具体的なエラー内容を確認し、エラー情報を著者にフィードバックしてください。",
-				use_pic_in_pic_on_unsupported_vegas_exception = "エラー：低バージョンVEGASでは、この絵にプラグインを描く効果はサポートされていません。\n\n根本的な理由：VEGASは新しいバージョンの「絵に描いた」効果プラグインに新しい機能とパラメータを追加しました。これらの新しいパラメータは低バージョンのVEGASプラグインでは使用できません。\n\n解決方法：現在のVEGASバージョンでは、この映像リズム視覚効果（拡張クラスなど）は使用できません。他の視覚効果を使用してください。またはVEGASソフトウェアを更新します。",
+				use_pic_in_pic_on_unsupported_vegas_exception = "エラー：低バージョンVegasでは、この絵にプラグインを描く効果はサポートされていません。\n\n根本的な理由：Vegasは新しいバージョンの「絵に描いた」効果プラグインに新しい機能とパラメータを追加しました。これらの新しいパラメータは低バージョンのVegasプラグインでは使用できません。\n\n解決方法：現在のVegasバージョンでは、この映像リズム視覚効果（拡張クラスなど）は使用できません。他の視覚効果を使用してください。またはVegasソフトウェアを更新します。",
 				unsupported_curve_enum_exception = "エラー：サポートされていないカーブ列挙タイプをパラメータとして使用します。\n\n{0} は曲線列挙型ではありません。",
 				convert_music_beats_not_one_audio_event_exception = "エラー：音楽ビート変換ツールで選択されたオーディオクリップの数は1つに等しくありません。\n\nオーディオは1つ選択する必要がありますが、オーディオは{0}つ選択されています。",
-				convert_music_beats_unsupported_beats_exception = "エラー：現在VEGASが設定しているビートは、四四拍、四三拍、八六拍のうちの1つではありません。",
+				convert_music_beats_unsupported_beats_exception = "エラー：現在Vegasが設定しているビートは、四四拍、四三拍、八六拍のうちの1つではありません。",
 				invalid_mapping_velocity_values_exception = "エラー：使用される違法なマッピングベロシティパラメタ。\n\n解決策：オーディオとビデオのマッピングベロシティパラメータを確認します。\n1. より小さい値は、より大きい値より大きくない；\n2. ベロシティの小さい値と大きい値は等しくはなりません。\nさもなければ、これはマッピングベロシティ操作を完了しません。",
 				invalid_glissando_amount_exception = "エラー：不正なグリッサンド量パラメータが使用されています。\n\nグリッサンド量をゼロにすることはできません。",
 				cannot_get_script_dir_exception = "エラー：スクリプトディレクトリのパスが取得できませんでした！",
 				cannot_get_xvid_path_exception = "エラー：XviDのインストールパスが取得できませんでした！",
 				install_xvid_info = "XviDコーデックがインストールされていません。スクリプトは今それをインストールし、それをインストールするために管理者権限を要求することができます。",
 				install_xvid_admin_failed = "エラー：XviDインストールのための管理者権限が拒否されました。",
-				install_xvid_succeed = "XviDがインストールされ、現在のフレームレート用にレンダーテンプレートが生成されました。VEGASを再起動し、スクリプトを再度実行してください。",
-				render_template_generate_completed = "現在のフレームレート用にレンダーテンプレートが生成されました。VEGASを再起動し、スクリプトを再実行してください。",
+				install_xvid_succeed = "XviDがインストールされ、現在のフレームレート用にレンダーテンプレートが生成されました。Vegasを再起動し、スクリプトを再度実行してください。",
+				render_template_generate_completed = "現在のフレームレート用にレンダーテンプレートが生成されました。Vegasを再起動し、スクリプトを再実行してください。",
 				unexpected_exception = "予期しない例外が発生しました：",
 				unexpected_render_status = "予期しないレンダリングステータスです：",
 				datamix_selection_position_exception = "エラー：選択は、フレーム ≥ 1 で開始する必要があります！",
@@ -38642,7 +38746,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				all_tracks = "すべてのトラック",
 				video_tracks = "ビデオトラック",
 				audio_tracks = "オーディオトラック",
-				vegas_track_list = "VEGAS トラックリスト",
+				vegas_track_list = "Vegas トラックリスト",
 				midi_track_list = "MIDI トラックリスト",
 				midi_channel_list = "MIDI チャネルリスト",
 				midi_instrument_list = "MIDI 楽器リスト",
@@ -38664,50 +38768,93 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				dispatch_instrument_to_channel = "楽器をチャネルにスケジューリングする",
 				export_loop_region_only = "循環領域のみエクスポート",
 				failed_to_quick_config = "MIDIファイルのパスが変更されているか、定義されていないため、高速生成操作を実行できません。直接構成インタフェースを開いて手動で構成してください。",
-				video_clips = "Video clips",
-				audio_clips = "Audio clips",
-				hide = "Hide",
-				mute = "Mute",
-				@lock = "Lock",
-				loop = "Loop",
-				maintain_aspect_ratio = "Maintain aspect ratio",
-				reduce_interlace = "Reduce interlace flicker",
-				invert_phase = "Invert phase",
-				resample_mode = "Resample mode",
-				unset_resample_mode = "Unset",
-				project_resample_mode = "Use project resample mode",
-				smart_resample_mode = "Smart resample (Frame blend)",
-				force_resample_mode = "Force resample",
-				disable_resample_mode = "Disable resample",
-				optical_flow = "Optical flow",
-				unset_playback_rate = "Unset playback rate",
-				set_playback_rate = "Set playback rate",
-				multiply_playback_rate = "Multiply playback rate",
-				set_undersample_rate = "Set undersample rate",
-				unset_opacity = "Unset opacity",
-				set_opacity = "Set opacity",
-				multiply_opacity = "Multiply opacity",
-				unset_volume = "Unset volume",
-				set_volume = "Set volume",
-				multiply_volume = "Multiply volume",
-				no_recalc_norm_gain = "Don't recalculate normalize gains",
-				recalc_new_norm_gain = "Recalculate new normalize gains only",
-				recalc_all_norm_gain = "Recalculate all normalize gains",
-				single_select = "单选",
-				multi_select = "多选",
-				select_midi_track_count_info = "已选中 {0} 条音轨",
-				select_midi_tracks_count_info = "已选中 {0} 条音轨",
-				failed_to_auto_change_project_bpm_exception = "错误：自动更改项目速度失败！\n\nVEGAS 仅支持 {0} 范围内的速度，当前设定的速度为 {1}。",
-				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
-				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
-				generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
-				oscillator = "粒子振荡器",
-				alt_multiple = "多次使用音效插件",
-				alt_plugin = "切换到移调音效插件",
-				alt_octave = "高 / 低八度",
-				alt_octaveExp = "高 / 低八度（实验性）",
-				alt_dock = "停靠在边缘",
-				alt_silent = "不发声",
+				video_clips = "ビデオクリップ",
+				audio_clips = "オーディオクリップ",
+				hide = "隠れる",
+				mute = "ミュート",
+				@lock = "ロック",
+				loop = "ループ",
+				maintain_aspect_ratio = "アスペクト比を維持",
+				reduce_interlace = "インターレースのちらつきを軽減",
+				invert_phase = "逆位相",
+				resample_mode = "リサンプルモード",
+				unset_resample_mode = "未設定",
+				project_resample_mode = "プロジェクトリサンプルモードを使用する",
+				smart_resample_mode = "スマートリサンプリング（フレームブレンド）",
+				force_resample_mode = "強制リサンプリング",
+				disable_resample_mode = "リサンプリングを無効にする",
+				optical_flow = "オプティカルフロー",
+				unset_playback_rate = "再生速度が設定されていません",
+				set_playback_rate = "再生速度を設定",
+				multiply_playback_rate = "再生速度を乗算",
+				set_undersample_rate = "アンダーサンプリングレートを設定",
+				unset_opacity = "不透明度を設定しない",
+				set_opacity = "不透明度を設定",
+				multiply_opacity = "不透明度を乗算",
+				unset_volume = "音量未設定",
+				set_volume = "音量を設定",
+				multiply_volume = "音量を乗算",
+				no_recalc_norm_gain = "正規化ゲインを再計算しないでください",
+				recalc_new_norm_gain = "新しい正規化ゲインのみを再計算します",
+				recalc_all_norm_gain = "正規化ゲインをすべて再計算します",
+				single_select = "単一",
+				multi_select = "複数",
+				select_midi_track_count_info = "{0}トラック選択済み",
+				select_midi_tracks_count_info = "{0}トラック選択済み",
+				failed_to_auto_change_project_bpm_exception = "エラー：プロジェクトのテンポを自動変更できませんでした！\n\nVegasは{0}の範囲内のテンポのみをサポートしており、現在設定されているテンポは{1}です。",
+				failed_to_auto_change_project_beat_numerator_exception = "エラー：拍子記号の分子の自動変更に失敗しました！\n\nVegasは{0}の範囲内の分子のみをサポートしていますが、現在設定されている拍子記号の分子は{1}です。",
+				failed_to_auto_change_project_beat_denominator_exception = "エラー：拍子記号の分母の自動変更に失敗しました！\n\nVegasは{0}の範囲内の分母のみをサポートしていますが、現在設定されている拍子記号の分母は{1}です。",
+				generate_staff_visualizer_without_time_signature_exception = "エラー：拍子記号情報が不足しているため、スタッフビジュアライザーの生成に失敗しました。\n\n現在のMIDIファイルは音MADは生成できますが、スタッフビジュアライザーは生成できません。\nこれは、MIDIファイルに拍子記号情報が含まれていないためです。MIDIファイルを編集して拍子記号を追加するか、別のMIDIファイルをお試しください。",
+				lucky_dip_bar_without_time_signature_exception = "エラー：MIDIファイルに拍子記号情報が欠落しているため、素材盲の箱で1小節ごとにソースを切り替えることができません。\n\n解決策：以下のいずれかをお試しください。\n1. 他のMIDIファイルと置き換えてみてください。\n2. ソース切り替えの単位として「小節」を使用しないでください。\n3. 「1小節または1拍ごとに切り替える」を無効にしてください。\n4. 「素材盲の箱」を無効にしてください。",
+				oscillator = "グラニュラーオシレーター",
+				alt_multiple = "オーディオエフェクトプラグインを複数回使用",
+				alt_plugin = "ピッチシフトオーディオエフェクトプラグインに切り替える",
+				alt_octave = "オクターブを上げる/下げる",
+				alt_octaveExp = "オクターブを上げる/下げる（実験的）",
+				alt_dock = "上部/下部にドッキング",
+				alt_silent = "サイレント",
+				multiply_gain = "現在のゲインを乗算",
+				vocal_fry = "ボーカルフライ",
+				alt_tuning_method = "範囲を超えた場合",
+				track_group = "トラックのグループ化",
+				track_group_off = "グループ化解除",
+				track_group_by_track = "MIDIトラックでグループ化",
+				track_group_by_session = "タスクセッションでグループ化",
+				collapse_track_groups = "デフォルトでトラックグループを折りたたむ",
+				multisource_comb = "マルチソースコーム",
+				off = "オフ",
+				lucky_dip = "ラッキーディップ",
+				match_cut = "ビートシンクマッチカット",
+				linear_map = "複数の素材を櫛",
+				consonant_time = "子音タイム",
+				lucky_dip_limit_to_selected = "選択したソースに限定",
+				lucky_dip_track = "各トラックを異なるものにする",
+				lucky_dip_marker = "マーカーごとに1回切り替える",
+				lucky_dip_bar_or_beat = "小節または拍ごとに1回切り替える",
+				lucky_dip_period = "ピリオド",
+				lucky_dip_preparation = "準備",
+				bar = "小節",
+				beat = "拍",
+				order = "順序",
+				sequential = "シーケンシャル",
+				reversed = "リバース",
+				shuffled = "シャッフル",
+				match_cut_round = "ラウンドごとに視覚効果を適用",
+				match_cut_repeat = "クリップごとの繰り返し",
+				sheet_lengthen_to_bar_end = "小節の終わりまで延長",
+				sample_audio_track_name = "オーディオトラックをサンプリング（削除してください！）",
+				sample_video_track_name = "ビデオトラックをサンプリング（削除してください！）",
+				linear_map_allow_reuse_existed = "許可再利用",
+				match_cut_accumulate_harmonics = "コードの倍音を個別に蓄積する",
+				stop_generating_warning_title = "生成終了",
+				match_cut_loop_warning = "警告：必要な音符の数が、選択した音源の数を超えています。\n\n生成処理は停止しました。\n\n十分な数の音源を追加するか、「音源」＞「ビート同期マッチカット」＞「ループ」を有効にして処理を再開してください。",
+				linear_map_allow_reuse_existed_warning = "警告：必要なノート数が現在のMIDIトラック数を超えています。\n\nこの生成処理はブロックされました。\n\nソースを十分に補充するか、「ソース」＞「リニアマップ出力」＞「再利用を許可」を有効にして復元してください。",
+				stack = "スタック",
+				time_unremapping = "時間の再マッピング解除",
+				lotion_bath = "ローション風呂戦法",
+				interval = "間隔",
+				shupelunker = "シュペランカー戦法",
+				tartar = "韃靼戦法",
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -38720,17 +38867,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				no_to_restart_to_effect_language = "Не перезагружается чтобы вступить в силу",
 				version_number = "Номер версии",
 				revision_date = "Дата последнего изменения",
-				vegas_version = "Версия VEGAS Pro",
+				vegas_version = "Версия Vegas Pro",
 				otomad_helper_version = "Версия Otomad Helper",
 				naudio_version = "Версия NAudio",
 				script_supported_vegas_version = "Версия с поддержкой скрипта",
-				unsupported_vegas_version = "Предупреждение: Текущий скрипт не соответствует версии VEGAS, которую вы сейчас используете. Некоторые функции могут работать некорректно! Пожалуйста, переустановите правильную версию скрипта.\nПоддерживаемая версия: VEGAS Pro {0}\nТекущая версия: VEGAS Pro {1}",
+				unsupported_vegas_version = "Предупреждение: Текущий скрипт не соответствует версии Vegas, которую вы сейчас используете. Некоторые функции могут работать некорректно! Пожалуйста, переустановите правильную версию скрипта.\nПоддерживаемая версия: Vegas Pro {0}\nТекущая версия: Vegas Pro {1}",
 				unsupported_vegas_version_title = "Несоответствие версий",
-				unsupported_vegas_version_feature = "Версии ниже VEGAS Pro {0} не поддерживают эту функцию.",
+				unsupported_vegas_version_feature = "Версии ниже Vegas Pro {0} не поддерживают эту функцию.",
 				check_update_title = "Скрипт обновления",
 				check_update_found = "Обнаружена новая версия, обновить сейчас?\nПоследняя версия: {0}\nТекущая версия: {1}",
 				check_update_not_found = "Уже последняя версия!\n\nПоследняя версия: {0}",
-				check_update_unsupport_future_version = "Обнаружена новая версия, но ваша текущая версия VEGAS слишком низкая, и новая версия не поддерживает вашу версию VEGAS. Пожалуйста, обновите программное обеспечение VEGAS, прежде чем использовать новую версию.\n\nМинимальная поддерживаемая версия: VEGAS Pro {2}\nТекущая версия: VEGAS Pro {3}\n\nПоследняя версия: {0}\nТекущая версия: {1}",
+				check_update_unsupport_future_version = "Обнаружена новая версия, но ваша текущая версия Vegas слишком низкая, и новая версия не поддерживает вашу версию Vegas. Пожалуйста, обновите программное обеспечение Vegas, прежде чем использовать новую версию.\n\nМинимальная поддерживаемая версия: Vegas Pro {2}\nТекущая версия: Vegas Pro {3}\n\nПоследняя версия: {0}\nТекущая версия: {1}",
 				check_update_on_startup = "Проверять наличие обновлений при запуске",
 				download_latest_version = "Загрузите последнюю",
 				quick_config = "Быстрая настройка",
@@ -38840,7 +38987,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				select_how_many = "Выберите, сколько за раз",
 				reset_select = "&Сбросить выбор",
 				quick_select_interval = "Интервал быстрого выбора",
-				select_interval_info = "Сначала выберите несколько клипов в окне трека VEGAS, а затем откройте это диалоговое окно, чтобы использовать следующие функции.",
+				select_interval_info = "Сначала выберите несколько клипов в окне трека Vegas, а затем откройте это диалоговое окно, чтобы использовать следующие функции.",
 				select_events_count_info = "Выбрано событий отслеживания {0}.",
 				select_videotracks_count_info = "Выбрано {0} видео дорожек.",
 				select_audioevents_count_info = "Выбран набор дорожек для аудио {0}.",
@@ -38984,9 +39131,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				triangle_wave = "треугольная",
 				square_wave = "прямоугольная",
 				sawtooth_wave = "пилообразная",
-				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
-				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
-				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
+				tune_method_tooltip = "«Плагин аудиоэффекта «Сдвиг высоты тона»» означает использование плагина эффекта «Сдвиг высоты тона» в «Аудиоэффектах» для изменения высоты тона, при этом необходимо настроить предустановки.\n«Эластичный сдвиг высоты тона» означает использование алгоритма «Élastique» для изменения высоты тона, то есть клавиши + и - на клавиатуре напрямую изменяют высоту тона с ограничениями диапазона высоты тона.\n«Классический сдвиг высоты тона» означает использование алгоритма из Vegas Video 2.0 — Vegas Pro 8.0 для изменения высоты тона с ограничениями диапазона высоты тона.\n«Безмасштабная настройка» означает блокировку растяжения и высоты тона и изменение растяжения для получения соответствующей высоты тона независимо от фактической высоты ноты.\n«Гранулярный осциллятор» имитирует определенную высоту тона путем многократного быстрого воспроизведения короткого сэмпла в течение определенного периода, генерирует последовательность импульсов, соответствующую высоте тона, и формирует непрерывную высоту тона, используя эффект слияния восприятия человеческим ухом быстрых импульсов.",
+				audio_lock_stretch_pitch_tooltip = "Использует передискретизацию для изменения высоты тона в зависимости от скорости. Благодаря отсутствию растягивания звука, качество звучания будет лучше.\nЕсли используется метод «Эластическое изменение высоты тона» или «Классическое изменение высоты тона», растягивание звука будет отключено.",
+				alt_tuning_method_tooltip = "Обрабатывает ноты, выходящие за пределы диапазона, альтернативным методом.\n\"Переключиться на плагин звукового эффекта сдвига высоты тона\" означает достижение любой высоты тона путем многократного использования плагина звукового эффекта сдвига высоты тона.\n\"Повышение/понижение октав\" означает избегание диссонантных интервалов путем повышения или понижения октавной гаммы до диапазона {0}.\n\"Повышение/понижение октав (экспериментально)\" аналогично вышеописанному, но диапазон расширен до {1}. Если блокировки растягиваются и изменяют высоту тона, диапазон расширен до {2}. Используйте с осторожностью, так как это может привести к сбою Vegas.\n\"Закрепить на верхней/нижней клавише\" означает закрепление на самой высокой или самой низкой клавише в диапазоне {0}.\n\"Без звука\" означает отключение звука для этих нот.",
 				preview_beep_duration_tooltip = "время ожидания стандартного фонетического сигнала.\nв миллисекундах.",
 				preview_tune_audio_tooltip = "после включения, при предварительном прослушивании аудио материал будет скорректирован на основной звук средней школы с.\nВ противном случае стандартная высота звука будет воспроизвести заданную высота звука.",
 				sheet_position_tooltip = "Расстояние от третьей строки посередине нотоносца до центра экрана. Вверх плюс вниз минус.\nЕдиница: пиксель.",
@@ -39357,7 +39504,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				automator_configform_info = "Быстро и автоматически устанавливает случайные значения автоматизации для видеоэффектов.",
 				stutter_configform_info = "Заикание клипов/событий (воспроизведение вперед, назад, ...).",
 				camera_shake_configform_info = "Использует функцию панорама/урожай, чтобы заставить выбранные слои дрожать.",
-				otomad_helper_config = "Otomad Helper for VEGAS - Конфигурация",
+				otomad_helper_config = "Otomad Helper for Vegas - Конфигурация",
 				reset_config_successful = "Сброс завершен, перезапустите скрипт.",
 				reset_config_successful_title = "Сбросить конфигурацию пользователя",
 				sure_to_reset_config = "Вы уверены, что хотите сбросить настройки пользователя?\n\nДанные вашего профиля пользователя будут потеряны после сброса.",
@@ -39371,7 +39518,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "создание аудио и создание видео были отменены одновременно. Выберите хотя бы один из них.",
 				why_ok_btn_is_disabled_no_media_take = "выбранный источник материалов для СМИ не содержит никаких эффективных средств массовой информации.",
 				why_ok_btn_is_disabled_no_midi_select = "для создания YTPMV/otoMAD Выберите файл последовательности MIDI.",
-				why_ok_btn_is_disabled_no_midi_track_select = "你没有选择任何 MIDI 音轨，请选择至少一条 MIDI 音轨。",
+				why_ok_btn_is_disabled_no_midi_track_select = "MIDI-дорожка не выбрана. Пожалуйста, выберите хотя бы одну MIDI-дорожку.",
 				why_ok_btn_is_disabled_in_helper_tab = "во избежание неправильной операции не следует представлять генерирующие операции на вкладке «Инструменты» и «Мош».",
 				why_ok_btn_is_disabled_unknown_problem = "Неизвестная причина.",
 				no_selected_media_warning = "Предупреждение: Вы не выбрали ни одного допустимого носителя в окне мультимедиа проекта!",
@@ -39379,17 +39526,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				preview_audio_track_name = "Предварительный просмотр аудиодорожки (УДАЛЕНО!)",
 				no_midi_exception = "Ошибка: не выбран MIDI-файл.\n\nПожалуйста, снова откройте диалоговое окно конфигурации сценария, а затем нажмите кнопку «Обзор» в группе «Конфигурация MIDI», чтобы открыть допустимый файл MIDI.",
 				no_media_exception = "Ошибка: медиафайл не выбран.\n\nСнова откройте диалоговое окно конфигурации сценария, а затем нажмите кнопку «Обзор» в группе «Конфигурация мультимедиа», чтобы открыть допустимый файл мультимедиа.",
-				no_track_info_exception = "错误：MIDI 文件中不包含任何音轨。\n\n可能的原因：\n\n1. 该 MIDI 文件中确实没有任何音轨。\n这很有可能是你忘记从宿主软件中导出 MIDI 音轨了，请再检查一遍你的原始项目。\n如果你使用的是 FL Studio，请务必确保在导出 MIDI 之前执行了“准备进行 MIDI 导出”宏操作。\n\n2. 该 MIDI 文件格式不受支持或已损坏。\n请用宿主软件导入该 MIDI，然后重新输出一个新的 MIDI 文件。\n由于 NAudio.Midi 库支持的 MIDI 种类数目不全面，脚本不保证都能够正确读取。",
-				no_midi_track_selected_exception = "错误：没有选择任何 MIDI 音轨。\n\n解决方法：请选择至少一条 MIDI 音轨。",
-				no_plugin_pitch_shift_exception = "Ошибка: невозможно вызвать плагин Pitch Shift.\n\nДля правильной работы следуйте инструкциям учебного документа {0}.\nОднако, согласно этой обновленной версии скрипта, китайская и английская версии должны работать нормально.\nПоэтому очень вероятно, что вы используете VEGAS на других языках.",
-				no_plugin_presets_exception = "Ошибка: невозможно вызвать предустановленный эффект плагина Pitch Shift.\n\nДля правильной работы следуйте инструкциям учебного документа {0}.\nУбедитесь, что все 25 пресетов вручную добавлены в плагин транспонирования и названы правильно.\n\nДополнительное объяснение: Для получения подробной информации, пожалуйста, обратитесь к объяснению метода установки в приведенном выше столбце ссылок. Эти 25 предустановок представляют собой все типы изменения высоты звука в пределах следующей октавы.\nОтсутствие любого из них может вызвать ошибки. Действительно, добавлять пресеты вручную очень сложно, но VEGAS не может использовать скрипты для определения конкретных параметров\nизменения высоты звука, поэтому мне пришлось обойти этот трюк.",
-				no_plugin_name_exception = "Ошибка: не удалось вызвать подключаемый модуль {0}.\n\nВозможно, используемая вами версия VEGAS не поддерживает этот плагин.",
-				no_take_exception_ps = "Дополнительное примечание: если проблема по-прежнему не может быть решена, это означает, что медиа-файл может иметь формат, не поддерживаемый VEGAS.\nВы можете вручную перетащить файл в Лас-Вегас, чтобы проверить, в порядке ли видео и звук.",
+				no_track_info_exception = "Ошибка: MIDI-файл не содержит дорожек.\n\nВозможные причины:\n\n1. В этом MIDI-файле действительно отсутствуют дорожки.\nВесьма вероятно, что вы забыли экспортировать MIDI-дорожки из хост-программы. Пожалуйста, перепроверьте свой исходный проект.\nЕсли вы используете FL Studio, обязательно выполните операцию макроса «Подготовка к экспорту MIDI» перед экспортом MIDI.\n\n2. Формат MIDI-файла не поддерживается или поврежден.\nПожалуйста, импортируйте MIDI с помощью хост-программы, а затем экспортируйте новый MIDI-файл.\nИз-за неполного набора типов MIDI, поддерживаемых библиотекой NAudio.Midi, скрипты не могут гарантировать корректное чтение всех из них.",
+				no_midi_track_selected_exception = "Ошибка: Не выбрана ни одна MIDI-дорожка.\n\nРешение: Пожалуйста, выберите хотя бы одну MIDI-дорожку.",
+				no_plugin_pitch_shift_exception = "Ошибка: невозможно вызвать плагин Pitch Shift.\n\nДля правильной работы следуйте инструкциям учебного документа {0}.\nОднако, согласно этой обновленной версии скрипта, китайская и английская версии должны работать нормально.\nПоэтому очень вероятно, что вы используете Vegas на других языках.",
+				no_plugin_presets_exception = "Ошибка: невозможно вызвать предустановленный эффект плагина Pitch Shift.\n\nДля правильной работы следуйте инструкциям учебного документа {0}.\nУбедитесь, что все 25 пресетов вручную добавлены в плагин транспонирования и названы правильно.\n\nДополнительное объяснение: Для получения подробной информации, пожалуйста, обратитесь к объяснению метода установки в приведенном выше столбце ссылок. Эти 25 предустановок представляют собой все типы изменения высоты звука в пределах следующей октавы.\nОтсутствие любого из них может вызвать ошибки. Действительно, добавлять пресеты вручную очень сложно, но Vegas не может использовать скрипты для определения конкретных параметров\nизменения высоты звука, поэтому мне пришлось обойти этот трюк.",
+				no_plugin_name_exception = "Ошибка: не удалось вызвать подключаемый модуль {0}.\n\nВозможно, используемая вами версия Vegas не поддерживает этот плагин.",
+				no_take_exception_ps = "Дополнительное примечание: если проблема по-прежнему не может быть решена, это означает, что медиа-файл может иметь формат, не поддерживаемый Vegas.\nВы можете вручную перетащить файл в Лас-Вегас, чтобы проверить, в порядке ли видео и звук.",
 				no_audio_take_exception = "Ошибка: невозможно прочитать аудиопоток.\n\nВ интерфейсе настроек не устанавливайте флажок «Включено аудио» для чистых видео / изображений.\n\n",
 				no_video_take_exception = "Ошибка: невозможно прочитать видеопоток.\n\nВ пользовательском интерфейсе настроек не устанавливайте флажок «Включенное видео» для чистого аудио.\n\n",
-				no_media_take_exception = "Ошибка: невозможно прочитать носитель.\n\nВыбранный формат файла не поддерживается VEGAS. Пожалуйста, проверьте, не поврежден ли медиафайл или не установлен ли соответствующий декодер VEGAS.\n\n",
+				no_media_take_exception = "Ошибка: невозможно прочитать носитель.\n\nВыбранный формат файла не поддерживается Vegas. Пожалуйста, проверьте, не поврежден ли медиафайл или не установлен ли соответствующий декодер Vegas.\n\n",
 				not_a_midi_file_exception = "Ошибка: невозможно прочитать файл MIDI.\n\nРешение: импортируйте MIDI с помощью программного обеспечения хоста, а затем повторно выведите новый файл MIDI.\n\nДополнительное примечание: существует несколько форматов файлов MIDI, и сценарий не гарантирует, что все они могут быть правильно прочитаны. К счастью,\nфайлы MIDI, экспортированные основным программным обеспечением хоста с настройками по умолчанию, обычно читаются. (В настоящее время протестированы FL Studio, LMMS\nи Music Studio для iPad.)",
-				midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有任何音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
+				midi_contains_velocity_zero_exception = "Ошибка: Ваш MIDI-файл содержит ноты с нулевой громкостью.\nУбедитесь, что в нем нет нот с нулевой громкостью (то есть нот, не имеющих значения громкости), и если таковые имеются, удалите их.\n\nДополнительная заметка: Библиотека NAudio.Midi не поддерживает MIDI-файлы, содержащие ноты с нулевой громкостью. В будущей версии Otomad Helper эта проблема будет решена путем изменения механизма анализа.",
 				no_selected_exception_ps = "Дополнительное примечание: если вы хотите вручную выбрать носитель в папке, нажмите кнопку «Обзор» справа, чтобы\nвыбрать носитель. И убедитесь, что путь к выбранному вами файлу выбран в раскрывающемся меню слева.",
 				no_selected_media_exception = "Ошибка: в окне мультимедиа проекта не выбран ни один носитель.\n\nВыберите носитель в окне мультимедиа проекта, затем снова откройте диалоговое окно конфигурации и выберите «выбранный файл мультимедиа» в настройках источника.\n\n",
 				no_selected_clip_exception_short = "Ошибка: на дорожке не выбраны клипы.",
@@ -39402,7 +39549,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				ytp_in_media_generator_exception = "Ошибка: примените YTP к носителю, созданному генератором мультимедиа.\n\nПриложение YTP должно использовать локальные медиа-файлы, а не медиа, созданные медиа-генератором.",
 				ytp_eliminate_duplicates_finally_null_exception = "Технические Аномалии: для удаления повторяющихся значений в списке материалов YTP последний список пуст! \n\nЭто ошибка, которая не должна была произойти.",
 				unknown_exception = "Ошибка: неизвестная ошибка.\n\nВключите подробную информацию, чтобы просмотреть содержимое конкретной ошибки, и отправьте сообщение об ошибке автору.",
-				use_pic_in_pic_on_unsupported_vegas_exception = "Ошибка: Использование эффекта плагина «Картинка в картинке» в более ранних версиях VEGAS не поддерживается.\n\nОсновная причина: VEGAS добавила некоторые новые функции и параметры в новый подключаемый модуль эффекта «картинка в картинке», которые нельзя использовать в более ранних версиях подключаемого модуля VEGAS.\n\nРешение: Текущая версия VEGAS не может использовать визуальные эффекты этого ритма PV (например, аспекты расширения), пожалуйста, используйте другие визуальные эффекты. Или обновите программное обеспечение VEGAS.",
+				use_pic_in_pic_on_unsupported_vegas_exception = "Ошибка: Использование эффекта плагина «Картинка в картинке» в более ранних версиях Vegas не поддерживается.\n\nОсновная причина: Vegas добавила некоторые новые функции и параметры в новый подключаемый модуль эффекта «картинка в картинке», которые нельзя использовать в более ранних версиях подключаемого модуля Vegas.\n\nРешение: Текущая версия Vegas не может использовать визуальные эффекты этого ритма PV (например, аспекты расширения), пожалуйста, используйте другие визуальные эффекты. Или обновите программное обеспечение Vegas.",
 				unsupported_curve_enum_exception = "Ошибка: Используйте неподдерживаемые типы перечисления кривых в качестве параметров.\n\n{0} не является типом перечисления кривых.",
 				convert_music_beats_not_one_audio_event_exception = "Ошибка: количество аудиоклипов, выбранных в инструменте преобразования музыкальных ритмов, не равно единице.\n\nДолжен быть выбран 1 звук, но выбрано {0} звука.",
 				convert_music_beats_unsupported_beats_exception = "Ошибка: Текущие биты Вегаса не в размере 4/4, 3/4, 6/8.",
@@ -39412,8 +39559,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				cannot_get_xvid_path_exception = "Ошибка: Не удалось получить путь установки XviD!",
 				install_xvid_info = "Кодек XviD не установлен. Сценарий установит его сейчас и может запросить доступ администратора для его установки.",
 				install_xvid_admin_failed = "Ошибка: Привилегия администратора для установки XviD отклонена.",
-				install_xvid_succeed = "XviD установлен и сгенерирован шаблон рендеринга для текущей частоты кадров. Пожалуйста, перезапустите VEGAS и запустите скрипт снова.",
-				render_template_generate_completed = "Создан шаблон рендеринга для текущей частоты кадров. Пожалуйста, перезапустите VEGAS и запустите скрипт снова.",
+				install_xvid_succeed = "XviD установлен и сгенерирован шаблон рендеринга для текущей частоты кадров. Пожалуйста, перезапустите Vegas и запустите скрипт снова.",
+				render_template_generate_completed = "Создан шаблон рендеринга для текущей частоты кадров. Пожалуйста, перезапустите Vegas и запустите скрипт снова.",
 				unexpected_exception = "Неожиданное исключение: ",
 				unexpected_render_status = "Неожиданное состояние рендеринга: ",
 				datamix_selection_position_exception = "Ошибка: Выборка должна начинаться с кадра ≥ 1!",
@@ -39477,7 +39624,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				all_tracks = "Все треки",
 				video_tracks = "Видеодорожки",
 				audio_tracks = "Аудиодорожки",
-				vegas_track_list = "Треклист VEGAS",
+				vegas_track_list = "Треклист Vegas",
 				midi_track_list = "Треклист MIDI",
 				midi_channel_list = "Список каналов MIDI",
 				midi_instrument_list = "Список инструментов MIDI",
@@ -39499,50 +39646,93 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				dispatch_instrument_to_channel = "Отправка инструмента на канал",
 				export_loop_region_only = "Экспортировать только область петли",
 				failed_to_quick_config = "Путь к файлу MIDI был изменен или не определен, и операция быстрого создания не может быть выполнена. Пожалуйста, откройте пользовательский интерфейс конфигурации непосредственно для ручной настройки.",
-				video_clips = "Video clips",
-				audio_clips = "Audio clips",
-				hide = "Hide",
-				mute = "Mute",
-				@lock = "Lock",
-				loop = "Loop",
-				maintain_aspect_ratio = "Maintain aspect ratio",
-				reduce_interlace = "Reduce interlace flicker",
-				invert_phase = "Invert phase",
-				resample_mode = "Resample mode",
-				unset_resample_mode = "Unset",
-				project_resample_mode = "Use project resample mode",
-				smart_resample_mode = "Smart resample (Frame blend)",
-				force_resample_mode = "Force resample",
-				disable_resample_mode = "Disable resample",
-				optical_flow = "Optical flow",
-				unset_playback_rate = "Unset playback rate",
-				set_playback_rate = "Set playback rate",
-				multiply_playback_rate = "Multiply playback rate",
-				set_undersample_rate = "Set undersample rate",
-				unset_opacity = "Unset opacity",
-				set_opacity = "Set opacity",
-				multiply_opacity = "Multiply opacity",
-				unset_volume = "Unset volume",
-				set_volume = "Set volume",
-				multiply_volume = "Multiply volume",
-				no_recalc_norm_gain = "Don't recalculate normalize gains",
-				recalc_new_norm_gain = "Recalculate new normalize gains only",
-				recalc_all_norm_gain = "Recalculate all normalize gains",
-				single_select = "单选",
-				multi_select = "多选",
-				select_midi_track_count_info = "已选中 {0} 条音轨",
-				select_midi_tracks_count_info = "已选中 {0} 条音轨",
-				failed_to_auto_change_project_bpm_exception = "错误：自动更改项目速度失败！\n\nVEGAS 仅支持 {0} 范围内的速度，当前设定的速度为 {1}。",
-				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
-				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
-				generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
-				oscillator = "粒子振荡器",
-				alt_multiple = "多次使用音效插件",
-				alt_plugin = "切换到移调音效插件",
-				alt_octave = "高 / 低八度",
-				alt_octaveExp = "高 / 低八度（实验性）",
-				alt_dock = "停靠在边缘",
-				alt_silent = "不发声",
+				video_clips = "Видеоклипы",
+				audio_clips = "Аудиоклипы",
+				hide = "Скрыть",
+				mute = "Отключить звук",
+				@lock = "Заблокировать",
+				loop = "Зациклить",
+				maintain_aspect_ratio = "Сохранить соотношение сторон",
+				reduce_interlace = "Уменьшить мерцание чересстрочной развертки",
+				invert_phase = "Инвертировать фазу",
+				resample_mode = "Режим передискретизации",
+				unset_resample_mode = "Отменить настройку",
+				project_resample_mode = "Использовать режим передискретизации проекта",
+				smart_resample_mode = "Интеллектуальная передискретизация (смешивание кадров)",
+				force_resample_mode = "Принудительная передискретизация",
+				disable_resample_mode = "Отключить передискретизацию",
+				optical_flow = "Оптический поток",
+				unset_playback_rate = "Отменить настройку скорости воспроизведения",
+				set_playback_rate = "Установить скорость воспроизведения",
+				multiply_playback_rate = "Умножить скорость воспроизведения",
+				set_undersample_rate = "Установить частоту пониженной дискретизации",
+				unset_opacity = "Отменить настройку прозрачности",
+				set_opacity = "Установить настройку прозрачности",
+				multiply_opacity = "Умножить настройку прозрачности",
+				unset_volume = "Отменить настройку громкости",
+				set_volume = "Установить громкость",
+				multiply_volume = "Умножить громкость",
+				no_recalc_norm_gain = "Не пересчитывать коэффициенты нормализации",
+				recalc_new_norm_gain = "Пересчитывать только новые коэффициенты нормализации",
+				recalc_all_norm_gain = "Пересчитывать все коэффициенты нормализации",
+				single_select = "Одиночный",
+				multi_select = "Многоканальный",
+				select_midi_track_count_info = "Выбран {0} трек",
+				select_midi_tracks_count_info = "Выбраны {0} трека",
+				failed_to_auto_change_project_bpm_exception = "Ошибка: Не удалось автоматически изменить темп проекта!\n\nVegas поддерживает темпы только в диапазоне {0}, а текущий установленный темп равен {1}.",
+				failed_to_auto_change_project_beat_numerator_exception = "Ошибка: Не удалось автоматически изменить числитель размера!\n\nVegas поддерживает только числители в диапазоне {0}, а текущий установленный числитель размера — {1}.",
+				failed_to_auto_change_project_beat_denominator_exception = "Ошибка: Не удалось автоматически изменить знаменатель размера!\n\nVegas поддерживает только знаменатели в диапазоне {0}, а текущий установленный знаменатель размера равен {1}.",
+				generate_staff_visualizer_without_time_signature_exception = "Ошибка: Не удалось создать визуализатор нотного стана из-за отсутствия информации о размере такта.\n\nТекущий MIDI-файл может генерировать YTPMV/otoMAD, но не может создать визуализатор нотного стана.\nЭто связано с тем, что MIDI-файл не содержит информации о размере такта. Пожалуйста, попробуйте отредактировать MIDI-файл, чтобы добавить информацию о размере такта, или попробуйте другой MIDI-файл.",
+				lucky_dip_bar_without_time_signature_exception = "Ошибка: В MIDI-файле отсутствует информация о размере такта, невозможно переключать источники один раз за такт в режиме Lucky Dip.\nРешение: Достаточно любого из следующих вариантов:\n1. Попробуйте заменить другие MIDI-файлы;\n2. Не используйте «Такт» в качестве единицы измерения момента переключения источников;\n3. Отключите «Переключать один раз за такт или долю»;\n4. Отключите «Lucky Dip».",
+				oscillator = "Гранулярный осциллятор",
+				alt_multiple = "Использовать плагин аудиоэффектов несколько раз",
+				alt_plugin = "Переключиться на плагин аудиоэффекта «Сдвиг высоты тона»",
+				alt_octave = "Повышение/понижение октав",
+				alt_octaveExp = "Повышение/понижение октав (экспериментально)",
+				alt_dock = "Закрепить вверху/внизу",
+				alt_silent = "Без звука",
+				multiply_gain = "Умножить текущее усиление",
+				vocal_fry = "Фрикер вокала",
+				alt_tuning_method = "Если выходит за пределы диапазона",
+				track_group = "Группировка дорожек",
+				track_group_off = "Разгруппировка",
+				track_group_by_track = "Группировка по MIDI-дорожке",
+				track_group_by_session = "Группировка по сессии задач",
+				collapse_track_groups = "Свернуть группы дорожек по умолчанию",
+				multisource_comb = "Многоисточниковый гребенчатый эффект",
+				off = "Выкл.",
+				lucky_dip = "Удачная выборка",
+				match_cut = "Совпадение синхронизации с ритмом",
+				linear_map = "Линейный вывод карты",
+				consonant_time = "Время согласных",
+				lucky_dip_limit_to_selected = "Ограничено выбранными источниками",
+				lucky_dip_track = "Сделать каждую дорожку уникальной",
+				lucky_dip_marker = "Переключаться один раз для каждого маркера",
+				lucky_dip_bar_or_beat = "Переключаться один раз для каждого такта или доли",
+				lucky_dip_period = "Период",
+				lucky_dip_preparation = "Подготовка",
+				bar = "такт",
+				beat = "доля",
+				order = "Порядок",
+				sequential = "Последовательный",
+				reversed = "Обратный",
+				shuffled = "Перетасованный",
+				match_cut_round = "Применить визуальные эффекты по раундам",
+				match_cut_repeat = "Повторения для клипа",
+				sheet_lengthen_to_bar_end = "Удлинить до конца такта",
+				sample_audio_track_name = "Сэмпл аудиодорожки (должен быть УДАЛЕН!)",
+				sample_video_track_name = "Сэмпл видеодорожки (должен быть УДАЛЕНО!)",
+				linear_map_allow_reuse_existed = "Разрешить повторное использование",
+				match_cut_accumulate_harmonics = "Накопление обертонов аккордов по отдельности",
+				stop_generating_warning_title = "Поколение завершено",
+				match_cut_loop_warning = "Внимание: Количество необходимых нот превышает количество выбранных источников.\n\nГенерация остановлена.\n\nПожалуйста, пополните запас источников или включите Source > Beat sync match cut > Loop для восстановления.",
+				linear_map_allow_reuse_existed_warning = "Внимание: Количество необходимых нот превышает количество существующих MIDI-дорожек.\n\nЭта генерация заблокирована.\n\nПожалуйста, пополните достаточное количество источников или включите Source > Linear map output > Allow reuse для восстановления.",
+				stack = "Куча",
+				time_unremapping = "Временная деконструкция",
+				lotion_bath = "Тактика лосьон для ванны",
+				interval = "Интервал",
+				shupelunker = "Тактика Шупелункера",
+				tartar = "Тактика тартарская",
 			};
 			Vietnamese = new Lang {
 				__name__ = "Tiếng Việt",
@@ -39555,17 +39745,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				no_to_restart_to_effect_language = "Không k.động lại",
 				version_number = "Phiên bản",
 				revision_date = "Ngày sửa đổi lần cuối",
-				vegas_version = "Phiên bản VEGAS Pro",
+				vegas_version = "Phiên bản Vegas Pro",
 				otomad_helper_version = "Phiên bản Otomad Helper",
 				naudio_version = "Phiên bản NAudio",
 				script_supported_vegas_version = "Phiên bản được hỗ trợ script",
-				unsupported_vegas_version = "Cảnh báo: Script hiện tại không khớp với phiên bản VEGAS bạn đang dùng. Một số tính năng có thể không hoạt động đúng cách! Vui lòng cài đặt lại đúng phiên bản của script.\nPhiên bản được hỗ trợ: VEGAS Pro {0}\nPhiên bản hiện tại: VEGAS Pro {1}",
+				unsupported_vegas_version = "Cảnh báo: Script hiện tại không khớp với phiên bản Vegas bạn đang dùng. Một số tính năng có thể không hoạt động đúng cách! Vui lòng cài đặt lại đúng phiên bản của script.\nPhiên bản được hỗ trợ: Vegas Pro {0}\nPhiên bản hiện tại: Vegas Pro {1}",
 				unsupported_vegas_version_title = "Phiên bản không khớp",
-				unsupported_vegas_version_feature = "Những phiên bản dưới VEGAS Pro {0} không hỗ trợ tính năng này.",
+				unsupported_vegas_version_feature = "Những phiên bản dưới Vegas Pro {0} không hỗ trợ tính năng này.",
 				check_update_title = "Cập nhật script",
 				check_update_found = "Đã phát hiện phiên bản mới, cập nhật ngay?\n\nPhiên bản mới nhất: {0}\nPhiên bản hiện tại: {1}",
 				check_update_not_found = "Hiện đã ở phiên bản mới nhất!\n\nPhiên bản mới nhất: {0}",
-				check_update_unsupport_future_version = "Đã phát hiện phiên bản mới, nhưng phiên bản VEGAS hiện tại của bạn quá thấp và phiên bản mới không hỗ trợ phiên bản VEGAS của bạn. Vui lòng cập nhật phần mềm VEGAS của bạn trước khi có thể sử dụng phiên bản mới.\n\nPhiên bản được hỗ trợ tối thiểu: VEGAS Pro {2}\nPhiên bản hiện tại: VEGAS Pro {3}\n\nPhiên bản mới nhất: {0}\nPhiên bản hiện tại: {1}",
+				check_update_unsupport_future_version = "Đã phát hiện phiên bản mới, nhưng phiên bản Vegas hiện tại của bạn quá thấp và phiên bản mới không hỗ trợ phiên bản Vegas của bạn. Vui lòng cập nhật phần mềm Vegas của bạn trước khi có thể sử dụng phiên bản mới.\n\nPhiên bản được hỗ trợ tối thiểu: Vegas Pro {2}\nPhiên bản hiện tại: Vegas Pro {3}\n\nPhiên bản mới nhất: {0}\nPhiên bản hiện tại: {1}",
 				check_update_on_startup = "Kiểm tra bản cập nhật khi khởi động",
 				download_latest_version = "Tải xuống phiên bản mới nhất",
 				quick_config = "Nhanh chóng thiết lập",
@@ -39659,7 +39849,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				separation_replaced_info = "{0} track clip đã chọn, bao gồm {1} audio clip, {2} video clip.",
 				separation_set_replaced = "Đặt {0} clip đã chọn là đã thay thế",
 				separation_set_replacer = "Đặt {0} clip đã chọn là thay thế",
-				separation_back_to_select = "Trở lại VEGAS để chọn các clip",
+				separation_back_to_select = "Trở lại Vegas để chọn các clip",
 				separation_use_clip_group = "Ngoài ra thay thế các clip khác trong track group",
 				separation_reserve_original_name = "Giữ tên clip gốc",
 				separation_reserve_original_offset = "Giữ độ lệch clip gốc",
@@ -39675,7 +39865,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				select_how_many = "Chọn bao nhiêu cùng một lúc",
 				reset_select = "&Đặt lại lựa chọn",
 				quick_select_interval = "Chọn Nhanh Khoảng Thời Gian",
-				select_interval_info = "Vui lòng chọn một số clip trong track window của VEGAS trước, và mở hộp thoại này để sử dụng các chức năng.",
+				select_interval_info = "Vui lòng chọn một số clip trong track window của Vegas trước, và mở hộp thoại này để sử dụng các chức năng.",
 				select_events_count_info = "{0} track event đã chọn.",
 				select_videotracks_count_info = "{0} video track đã chọn.",
 				select_audioevents_count_info = "{0} audio track event đã chọn.",
@@ -39820,7 +40010,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				sawtooth_wave = "Sawtooth",
 				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
 				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
-				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
+				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“升 / 降八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“升 / 降八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 Vegas 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "Thời lượng nghe trước cao độ cơ bản.\nĐơn vị: milli giây.",
 				preview_tune_audio_tooltip = "Nếu được chọn, audio nguồn sẽ được điều chỉnh thành tonic center C khi nghe trước âm thanh.\nNếu không, tone được đặt bởi cao độ cơ bản sẽ được tạo ra khi nghe trước cao độ cơ bản.",
 				sheet_position_tooltip = "Khoảng cách từ vạch thứ ba ở giữa khung đến tâm màn hình. Lên là cộng, xuống là trừ.\nĐơn vị: pixel.",
@@ -40191,7 +40381,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				automator_configform_info = "Đặt giá trị automation ngẫu nhiên cho hiệu ứng video nhanh chóng và tự động.",
 				stutter_configform_info = "Stutter clips/events (phát về trước, lùi, ...).",
 				camera_shake_configform_info = "Dùng Pan/crop để làm cho các lớp phủ (layer) đã chọn rung lắc.",
-				otomad_helper_config = "Otomad Helper dành cho VEGAS - Thiết Lập (Việt hoá bởi Cyahega)",
+				otomad_helper_config = "Otomad Helper dành cho Vegas - Thiết Lập (Việt hoá bởi Cyahega)",
 				reset_config_successful = "Đặt lại hoàn tất, vui lòng khởi động lại script.",
 				reset_config_successful_title = "Đặt lại thiết lập người dùng",
 				sure_to_reset_config = "Bạn có chắc muốn đặt lại thiết lập người dùng?\n\nDữ liệu thiết lập người dùng của bạn sẽ bị mất.",
@@ -40213,22 +40403,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				preview_audio_track_name = "Xem trước Audio Track (Nên bị XOÁ!)",
 				no_midi_exception = "Lỗi: Không có file MIDI đã chọn.\n\nVui lòng mở lại hộp thoại thiết lập script, rồi bấm vào nút \"Duyệt tìm\" trong group \"Thiết lập MIDI\" để mở một file MIDI có hiệu lực.",
 				no_media_exception = "Lỗi: Không có file phương tiện đã chọn.\n\nVui lòng mở lại hộp thoại thiết lập script, rồi bấm vào nút \"Duyệt tìm\" trong group \"Thiết lập media\" để mở một file phương tiện có hiệu lực.",
-				no_track_info_exception = "错误：MIDI 文件中不包含任何音轨。\n\n可能的原因：\n\n1. 该 MIDI 文件中确实没有任何音轨。\n这很有可能是你忘记从宿主软件中导出 MIDI 音轨了，请再检查一遍你的原始项目。\n如果你使用的是 FL Studio，请务必确保在导出 MIDI 之前执行了“准备进行 MIDI 导出”宏操作。\n\n2. 该 MIDI 文件格式不受支持或已损坏。\n请用宿主软件导入该 MIDI，然后重新输出一个新的 MIDI 文件。\n由于 NAudio.Midi 库支持的 MIDI 种类数目不全面，脚本不保证都能够正确读取。",
-				no_midi_track_selected_exception = "错误：没有选择任何 MIDI 音轨。\n\n解决方法：请选择至少一条 MIDI 音轨。",
-				no_plugin_pitch_shift_exception = "Lỗi: Không thể gọi được plugin Pitch Shift.\n\nVui lòng làm theo hướng dẫn của tài liệu hướng dẫn {0} để thao tác một cách chính xác.\nTuy nhiên, theo phiên bản cập nhật này của script, phiên bản tiếng Trung và tiếng Anh sẽ hoạt động bình thường.\nVì vậy, rất có thể bạn đang sử dụng VEGAS bằng ngôn ngữ khác.",
-				no_plugin_presets_exception = "Lỗi: Không thể gọi preset hiệu ứng của plugin Pitch Shift.\n\nVui lòng làm theo hướng dẫn của tài liệu hướng dẫn {0} để thao tác một cách chính xác.\nĐảm bảo rằng tất cả 25 preset đều được thêm thủ công vào plugin chuyển vị và được đặt tên chính xác.\n\nGiải thích bổ sung: Để biết chi tiết, vui lòng tham khảo phần giải thích về phương pháp cài đặt trong cột link ở trên. 25 preset này là tất cả các loại thay đổi cao độ trong quãng tám tiếp theo.\nThiếu một trong số chúng có thể xảy ra lỗi. Thực sự rất rắc rối khi thêm các preset theo cách thủ công, nhưng VEGAS không thể sử dụng script\nđể chỉ định các tham số cụ thể của sự thay đổi cao độ, vì vậy tôi phải thực hiện trick này.",
-				no_plugin_name_exception = "Lỗi: Không thể gọi plugin {0}.\n\nCó thể phiên bản VEGAS bạn đang dùng không hỗ trợ plugin này.",
-				no_take_exception_ps = "Lưu ý bổ sung: Nếu vẫn không giải quyết được, điều đó có nghĩa là file phương tiện có thể ở định dạng không được VEGAS hỗ trợ.\nBạn có thể kéo file vào VEGAS theo cách thủ công để xem file video và âm thanh có hoạt động bình thường không.",
+				no_track_info_exception = "???",
+				no_midi_track_selected_exception = "???",
+				no_plugin_pitch_shift_exception = "Lỗi: Không thể gọi được plugin Pitch Shift.\n\nVui lòng làm theo hướng dẫn của tài liệu hướng dẫn {0} để thao tác một cách chính xác.\nTuy nhiên, theo phiên bản cập nhật này của script, phiên bản tiếng Trung và tiếng Anh sẽ hoạt động bình thường.\nVì vậy, rất có thể bạn đang sử dụng Vegas bằng ngôn ngữ khác.",
+				no_plugin_presets_exception = "Lỗi: Không thể gọi preset hiệu ứng của plugin Pitch Shift.\n\nVui lòng làm theo hướng dẫn của tài liệu hướng dẫn {0} để thao tác một cách chính xác.\nĐảm bảo rằng tất cả 25 preset đều được thêm thủ công vào plugin chuyển vị và được đặt tên chính xác.\n\nGiải thích bổ sung: Để biết chi tiết, vui lòng tham khảo phần giải thích về phương pháp cài đặt trong cột link ở trên. 25 preset này là tất cả các loại thay đổi cao độ trong quãng tám tiếp theo.\nThiếu một trong số chúng có thể xảy ra lỗi. Thực sự rất rắc rối khi thêm các preset theo cách thủ công, nhưng Vegas không thể sử dụng script\nđể chỉ định các tham số cụ thể của sự thay đổi cao độ, vì vậy tôi phải thực hiện trick này.",
+				no_plugin_name_exception = "Lỗi: Không thể gọi plugin {0}.\n\nCó thể phiên bản Vegas bạn đang dùng không hỗ trợ plugin này.",
+				no_take_exception_ps = "Lưu ý bổ sung: Nếu vẫn không giải quyết được, điều đó có nghĩa là file phương tiện có thể ở định dạng không được Vegas hỗ trợ.\nBạn có thể kéo file vào Vegas theo cách thủ công để xem file video và âm thanh có hoạt động bình thường không.",
 				no_audio_take_exception = "Lỗi: Không thể đọc phương tiện audio stream.\n\nTrong giao diện cài đặt, không tích vào \"Bật âm thanh\" để cho ra chỉ duy nhất phương tiện video/hình ảnh.\n\n",
 				no_video_take_exception = "Lỗi: Không thể đọc phương tiện video stream.\n\nTrong giao diện cài đặt, không tích vào \"Bật Video\" để cho ra chỉ duy nhất phương tiện âm thanh.\n\n",
-				no_media_take_exception = "Lỗi: Không thể đọc phương tiện.\n\nĐịnh dạng file bạn đã chọn không được VEGAS hỗ trợ. Vui lòng kiểm tra xem file phương tiện có bị hỏng hoặc bộ giải mã (decoder) VEGAS tương ứng chưa được cài đặt hay không.\n\n",
+				no_media_take_exception = "Lỗi: Không thể đọc phương tiện.\n\nĐịnh dạng file bạn đã chọn không được Vegas hỗ trợ. Vui lòng kiểm tra xem file phương tiện có bị hỏng hoặc bộ giải mã (decoder) Vegas tương ứng chưa được cài đặt hay không.\n\n",
 				not_a_midi_file_exception = "Lỗi: Không thể đọc file MIDI.\n\nGiải pháp: Nhập MIDI bằng phần mềm máy chủ, sau đó xuất lại file MIDI mới.\n\nLưu ý bổ sung: Có nhiều định dạng tệp MIDI và script không đảm bảo rằng tất cả chúng đều có thể được đọc chính xác. May thay,\nCác file MIDI được xuất bởi phần mềm máy chủ chính trong cài đặt mặc định thường có thể đọc được. (Hiện đã thử với FL Studio, LMMS \nvà Music Studio dành cho iPad.)",
 				midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有任何音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
 				no_selected_exception_ps = "Lưu ý thêm: Nếu bạn muốn chọn thủ công một phương tiện trong thư mục, vui lòng bấm vào nút \"Duyệt tìm\" ở bên phải để\nchọn một phương tiện. Và đảm bảo rằng đường dẫn của file bạn đã chọn được chọn trong menu ở dưới bên trái.",
 				no_selected_media_exception = "Lỗi: Không có phương tiện đã chọn trong project media window.\n\nVui lòng chọn một phương tiện trong project media window, sau đó mở lại hộp thoại thiết lập script, và chọn \"File phương tiện đã chọn\" trong thiết lập nguồn.\n\n",
 				no_selected_clip_exception_short = "Lỗi: Không có clip đã chọn trong track.",
 				no_selected_clip_exception = "Lỗi: Không có clip đã chọn trong track.\n\nVui lòng chọn một clip trong track, sau đó mở lại hộp thoại thiết lập script, và chọn \"Track clip đã chọn\" trong thiết lập nguồn.\n\n",
-				no_time_stretch_pitch_shift_exception = "Lỗi: Phương thức chuyển đổi cao độ của clip đã chọn được đặt thành không tuning.\n\nNhiều khả năng bạn đang dùng \"Track clip đã chọn\". Bạn không cần đổ lỗi cho lỗi này, mà đổ lỗi cho thiết kế ncct của VEGAS.\n\nGiải pháp: Vui lòng chọn lại track clip của bạn, chuột phải vào đoạn âm thanh, và chọn \"Properties\" ở dưới cùng. Đặt \"Method\" của \"Time Stretch/Pitch Conversion\" thành \"élastique\".\nSau đó bấm OK.\n\nLưu ý bổ sung: Nếu một audio event chưa được chuyển đổi và các thuộc tính (propeties) của nó được mở, Thì “Method” của “Time Stretch/Pitch Conversion” trong propeties của nó sẽ được\ntự động đổi thành “None”, và bấm OK. Có hiệu lực. Ngay lúc đó, bạn sẽ thấy rằng các thao tác điều chỉnh phím + và - trên bàn phím không hợp lệ. Ngay lúc đó, bạn phải mở lại phần propeties của audio event,\nđặt \"Method\" của \"Time Stretch/Pitch Conversion\" thành \"élastique\", bạn không cần phải đặt \"Pitch Change\", cứ bấm OK.",
+				no_time_stretch_pitch_shift_exception = "Lỗi: Phương thức chuyển đổi cao độ của clip đã chọn được đặt thành không tuning.\n\nNhiều khả năng bạn đang dùng \"Track clip đã chọn\". Bạn không cần đổ lỗi cho lỗi này, mà đổ lỗi cho thiết kế ncct của Vegas.\n\nGiải pháp: Vui lòng chọn lại track clip của bạn, chuột phải vào đoạn âm thanh, và chọn \"Properties\" ở dưới cùng. Đặt \"Method\" của \"Time Stretch/Pitch Conversion\" thành \"élastique\".\nSau đó bấm OK.\n\nLưu ý bổ sung: Nếu một audio event chưa được chuyển đổi và các thuộc tính (propeties) của nó được mở, Thì “Method” của “Time Stretch/Pitch Conversion” trong propeties của nó sẽ được\ntự động đổi thành “None”, và bấm OK. Có hiệu lực. Ngay lúc đó, bạn sẽ thấy rằng các thao tác điều chỉnh phím + và - trên bàn phím không hợp lệ. Ngay lúc đó, bạn phải mở lại phần propeties của audio event,\nđặt \"Method\" của \"Time Stretch/Pitch Conversion\" thành \"élastique\", bạn không cần phải đặt \"Pitch Change\", cứ bấm OK.",
 				read_config_fail_exception = "Lỗi: Không thể đọc file thiết lập thông số.\n\nThật không may, bạn đã gặp phải lỗi không lường trước này. Chúng tôi sẽ xóa cài đặt thiết lập người dùng và khôi phục chúng về cài đặt mặc định để giải quyết vấn đề.\nĐề nghị báo cho tác giả lỗi này để khắc phục sự cố nhanh chóng.\nScript này sẽ bị thoát ra, và sau đó phiền bạn mở lại nó theo cách thủ công.",
 				fail_to_select_clips_exception = "Lỗi: Lỗi chọn các track clip\n\nVui lòng chọn một vài track clip trong track window trước.",
 				fail_to_select_tracks_exception = "Lỗi: Lỗi chọn các track\n\nVui lòng chọn một vài video track trong track window trước.",
@@ -40236,18 +40426,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				ytp_in_media_generator_exception = "Lỗi: Áp dụng YTP cho phương tiện được tạo bởi trình tạo phương tiện.\n\nỨng dụng của YTP phải sử dụng các tệp phương tiện cục bộ (local file), không sử dụng phương tiện được tạo bởi trình tạo phương tiện.",
 				ytp_eliminate_duplicates_finally_null_exception = "Lỗi kỹ thuật ngoại lệ: Xóa các trùng lặp (duplicate) khỏi danh sách nguồn YTP. Cuối cùng, danh sách trống!\n\nĐây là lỗi không nên xuất hiện",
 				unknown_exception = "Lỗi: Lỗi ngoại lệ không rõ.\n\nVui lòng mở rộng chi tiết để xem nội dung lỗi cụ thể và cung cấp thông tin lỗi lại cho tác giả.",
-				use_pic_in_pic_on_unsupported_vegas_exception = "Lỗi: Không hỗ trợ sử dụng hiệu ứng plugin Picture-in-Picture (PiP) trong các phiên bản thấp hơn của VEGAS.\n\nNguyên nhân gốc rễ: VEGAS đã thêm một số tính năng và thông số mới cho plugin hiệu ứng Picture-in-Picture mới, không thể sử dụng tính năng này trong các phiên bản plugin VEGAS thấp hơn.\n\nGiải pháp: Phiên bản hiện tại của VEGAS không thể sử dụng hiệu ứng nhịp điệu PV visual này (chẳng hạn như mở rộng khung hình), vui lòng sử dụng các hiệu ứng visual khác. Hoặc cập nhật phần mềm VEGAS của bạn.",
+				use_pic_in_pic_on_unsupported_vegas_exception = "Lỗi: Không hỗ trợ sử dụng hiệu ứng plugin Picture-in-Picture (PiP) trong các phiên bản thấp hơn của Vegas.\n\nNguyên nhân gốc rễ: Vegas đã thêm một số tính năng và thông số mới cho plugin hiệu ứng Picture-in-Picture mới, không thể sử dụng tính năng này trong các phiên bản plugin Vegas thấp hơn.\n\nGiải pháp: Phiên bản hiện tại của Vegas không thể sử dụng hiệu ứng nhịp điệu PV visual này (chẳng hạn như mở rộng khung hình), vui lòng sử dụng các hiệu ứng visual khác. Hoặc cập nhật phần mềm Vegas của bạn.",
 				unsupported_curve_enum_exception = "Lỗi: Sử dụng các kiểu trích xuất đường cong không được hỗ trợ làm tham số.\n\n{0} không phải là kiểu trích xuất đường cong.",
 				convert_music_beats_not_one_audio_event_exception = "Lỗi: Số lượng clip âm thanh được chọn trong công cụ chuyển đổi beat nhạc không chính xác bằng một.\n\n1 đoạn âm thanh đáng lẽ đã chọn, nhưng {0} đoạn âm thanh đã chọn.",
-				convert_music_beats_unsupported_beats_exception = "Lỗi: Beat của VEGAS hiện tại không trong khoảng 4/4, 3/4, hoặc 6/8.",
+				convert_music_beats_unsupported_beats_exception = "Lỗi: Beat của Vegas hiện tại không trong khoảng 4/4, 3/4, hoặc 6/8.",
 				invalid_mapping_velocity_values_exception = "Lỗi: Thông số lập bản đồ velocity không hợp lệ được sử dụng.\n\nGiải pháp: Đảm bảo các thông số lập bản đồ velocity của âm thanh và video,\n1. Giá trị nhỏ hơn không thể lớn hơn giá trị lớn hơn;\n2. Các giá trị nhỏ hơn và lớn hơn của VELOCITY không thể bằng nhau.\nNếu không, nó sẽ không hoàn thành thao tác lập bản đồ velocity.",
 				invalid_glissando_amount_exception = "Lỗi: Đã sử dụng thông số lượng glissando sai.\n\nSố lượng glissando không thể bằng 0.",
 				cannot_get_script_dir_exception = "Lỗi: Không nhận được đường dẫn của script!",
 				cannot_get_xvid_path_exception = "Lỗi: Không nhận được đường dẫn cài đặt XviD!",
 				install_xvid_info = "XviD codec chưa được cài đặt. Script sẽ cài đặt nó ngay và có thể hỏi bạn quyền truy cập admin để cài đặt nó.",
 				install_xvid_admin_failed = "Lỗi: Quyền admin để cài đặt XviD bị từ chối.",
-				install_xvid_succeed = "XviD đã cài đặt và render template được tạo cho tốc độ khung hình hiện tại. Vui lòng khởi động lại VEGAS và khởi chạy lại script.",
-				render_template_generate_completed = "Render template được tạo cho tốc độ khung hình hiện tại. Vui lòng khởi động lại VEGAS và khởi chạy lại script.",
+				install_xvid_succeed = "XviD đã cài đặt và render template được tạo cho tốc độ khung hình hiện tại. Vui lòng khởi động lại Vegas và khởi chạy lại script.",
+				render_template_generate_completed = "Render template được tạo cho tốc độ khung hình hiện tại. Vui lòng khởi động lại Vegas và khởi chạy lại script.",
 				unexpected_exception = "Ngoại lệ không mong muốn: ",
 				unexpected_render_status = "Tình trạng render không mong muốn: ",
 				datamix_selection_position_exception = "Lỗi: Phần được chọn phải bắt đầu ở khung hình ≥ 1!",
@@ -40311,7 +40501,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				all_tracks = "Tất cả các track",
 				video_tracks = "Các track video",
 				audio_tracks = "Các track âm thanh",
-				vegas_track_list = "Danh sách track VEGAS",
+				vegas_track_list = "Danh sách track Vegas",
 				midi_track_list = "Danh sách track MIDI",
 				midi_channel_list = "Danh sách MIDI channel",
 				midi_instrument_list = "Danh sách nhạc cụ MIDI",
@@ -40366,17 +40556,60 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				multi_select = "多选",
 				select_midi_track_count_info = "已选中 {0} 条音轨",
 				select_midi_tracks_count_info = "已选中 {0} 条音轨",
-				failed_to_auto_change_project_bpm_exception = "错误：自动更改项目速度失败！\n\nVEGAS 仅支持 {0} 范围内的速度，当前设定的速度为 {1}。",
-				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
-				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
+				failed_to_auto_change_project_bpm_exception = "错误：自动更改项目速度失败！\n\nVegas 仅支持 {0} 范围内的速度，当前设定的速度为 {1}。",
+				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVegas 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
+				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVegas 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
 				generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
+				lucky_dip_bar_without_time_signature_exception = "错误：MIDI 文件缺失拍号信息，无法在素材盲盒中按小节切换一次素材。\n\n解决方法：以下任一即可。\n1. 请尝试更换其它 MIDI 文件；\n2. 不要用“小节”作为素材切换时机的单位；\n3. 关闭“每小节或每拍切换一次”；\n4. 关闭“素材盲盒”。",
 				oscillator = "粒子振荡器",
 				alt_multiple = "多次使用音效插件",
 				alt_plugin = "切换到移调音效插件",
-				alt_octave = "高 / 低八度",
-				alt_octaveExp = "高 / 低八度（实验性）",
+				alt_octave = "升 / 降八度",
+				alt_octaveExp = "升 / 降八度（实验性）",
 				alt_dock = "停靠在边缘",
 				alt_silent = "不发声",
+				multiply_gain = "乘以当前增益",
+				vocal_fry = "气泡音",
+				alt_tuning_method = "超出音域",
+				track_group = "轨道组",
+				track_group_off = "不分组",
+				track_group_by_track = "按 MIDI 音轨分组",
+				track_group_by_session = "按任务会话分组",
+				collapse_track_groups = "默认情况下折叠轨道组",
+				multisource_comb = "多素材梳子",
+				off = "关",
+				lucky_dip = "素材盲盒",
+				match_cut = "踩点",
+				linear_map = "线性映射输出",
+				consonant_time = "辅音时间",
+				lucky_dip_limit_to_selected = "限制在所选素材",
+				lucky_dip_track = "使每条音轨不同",
+				lucky_dip_marker = "每处标记切换一次",
+				lucky_dip_bar_or_beat = "每小节或每拍切换一次",
+				lucky_dip_period = "周期",
+				lucky_dip_preparation = "预备",
+				bar = "小节",
+				beat = "拍",
+				order = "次序",
+				sequential = "顺序",
+				reversed = "逆序",
+				shuffled = "乱序",
+				match_cut_round = "按轮次应用视觉效果",
+				match_cut_repeat = "每段重复次数",
+				sheet_lengthen_to_bar_end = "持续到小节结尾",
+				sample_audio_track_name = "范例音频轨道（应该被删除！）",
+				sample_video_track_name = "范例视频轨道（应该被删除！）",
+				linear_map_allow_reuse_existed = "允许重用",
+				match_cut_accumulate_harmonics = "对和弦的泛音列独立累加",
+				stop_generating_warning_title = "生成已终止",
+				match_cut_loop_warning = "警告：所需音符数已超出所选素材数。\n\n现在已停止生成。\n\n请重新填充足够的素材或启用 素材 > 踩点 > 循环 以恢复。",
+				linear_map_allow_reuse_existed_warning = "警告：所需音符数已超出当前 MIDI 的音轨数。\n\n已阻止本次生成。\n\n请重新填充足够的素材或启用 素材 > 线性映射输出 > 允许重用 以恢复。",
+				stack = "堆叠",
+				time_unremapping = "持续时间流",
+				lotion_bath = "润肤浴战法",
+				interval = "间隔",
+				shupelunker = "原音系战法",
+				tartar = "鞑靼战法",
 			};
 			Indonesian = new Lang {
 				__name__ = "Bahasa Indonesia",
@@ -40389,17 +40622,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				no_to_restart_to_effect_language = "Re-render",
 				version_number = "Versi",
 				revision_date = "Tanggal revisi terakhir",
-				vegas_version = "Versi VEGAS Pro",
+				vegas_version = "Versi Vegas Pro",
 				otomad_helper_version = "Versi Otomad Helper",
 				naudio_version = "Versi NAudio",
 				script_supported_vegas_version = "Versi yang didukung skrip",
-				unsupported_vegas_version = "Peringatan: Skrip ini tidak cocok dengan versi VEGAS ini. Beberapa fitur tidak akan berkerja dengan baik. Harap install ulang sesuai dengan versi VEGAS ini!.\nVersi didukung: VEGAS Pro {0}\nVersi VEGAS: VEGAS Pro {1}",
+				unsupported_vegas_version = "Peringatan: Skrip ini tidak cocok dengan versi Vegas ini. Beberapa fitur tidak akan berkerja dengan baik. Harap install ulang sesuai dengan versi Vegas ini!.\nVersi didukung: Vegas Pro {0}\nVersi Vegas: Vegas Pro {1}",
 				unsupported_vegas_version_title = "Ketidakcocokan versi",
-				unsupported_vegas_version_feature = "Versi di bawah VEGAS Pro {0} tidak mendukung fitur ini.",
+				unsupported_vegas_version_feature = "Versi di bawah Vegas Pro {0} tidak mendukung fitur ini.",
 				check_update_title = "Update script",
 				check_update_found = "Versi baru terdeteksi! Update sekarang?\n\nVersi terbaru: {0}\nVersi sekarang: {1}",
 				check_update_not_found = "Sudah versi terbaru!\n\nVersi terbaru: {0}",
-				check_update_unsupport_future_version = "Versi baru terdeteksi, tetapi versi VEGAS Anda saat ini terlalu rendah dan versi baru tidak mendukung versi VEGAS Anda. Harap perbarui perangkat lunak VEGAS Anda sebelum Anda dapat menggunakan versi baru.\n\nVersi minimum yang didukung: VEGAS Pro {2}\nVersi saat ini: VEGAS Pro {3}\n\nVersi terbaru: {0}\nVersi sekarang: {1}",
+				check_update_unsupport_future_version = "Versi baru terdeteksi, tetapi versi Vegas Anda saat ini terlalu rendah dan versi baru tidak mendukung versi Vegas Anda. Harap perbarui perangkat lunak Vegas Anda sebelum Anda dapat menggunakan versi baru.\n\nVersi minimum yang didukung: Vegas Pro {2}\nVersi saat ini: Vegas Pro {3}\n\nVersi terbaru: {0}\nVersi sekarang: {1}",
 				check_update_on_startup = "Periksa update saat startup",
 				download_latest_version = "Download yang terbaru",
 				quick_config = "Konfigurasikan dengan cepat",
@@ -40493,7 +40726,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				separation_replaced_info = "{0} klip lagu dipilih, berisi {1} klip audio, {2} klip video.",
 				separation_set_replaced = "Atur {0} klip yang dipilih sebagai yang diganti",
 				separation_set_replacer = "Tetapkan {0} klip yang dipilih sebagai pengganti",
-				separation_back_to_select = "Kembali ke VEGAS untuk memilih klip",
+				separation_back_to_select = "Kembali ke Vegas untuk memilih klip",
 				separation_use_clip_group = "Ganti juga klip lain di grup trek",
 				separation_reserve_original_name = "Simpan nama klip asli",
 				separation_reserve_original_offset = "Simpan offset klip asli",
@@ -40509,7 +40742,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				select_how_many = "Pilih berapa banyak sekaligus",
 				reset_select = "&Setel ulang pilihan",
 				quick_select_interval = "Cepat Pilih Interval",
-				select_interval_info = "Silakan pilih beberapa klip di jendela trek VEGAS terlebih dahulu, lalu buka kotak dialog ini untuk menggunakan fungsi berikut.",
+				select_interval_info = "Silakan pilih beberapa klip di jendela trek Vegas terlebih dahulu, lalu buka kotak dialog ini untuk menggunakan fungsi berikut.",
 				select_events_count_info = "{0} track events telah dipilih.",
 				select_videotracks_count_info = "{0} trek video telah dipilih.",
 				select_audioevents_count_info = "{0} audio track events telah dipilih.",
@@ -40652,9 +40885,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				triangle_wave = "Triangle",
 				square_wave = "Square",
 				sawtooth_wave = "Sawtooth",
-				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
-				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
-				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
+				tune_method_tooltip = "\"Plugin Efek Audio Pitch Shift\" menunjukkan penggunaan plugin efek \"Pitch Shift\" di \"Audio FX\" untuk mengubah pitch, dan preset perlu dikonfigurasi.\n\"Perubahan Pitch Elastis\" menunjukkan penggunaan algoritma \"Élastique\" untuk mengubah pitch, yaitu, tombol + dan - pada keyboard secara langsung mengubah pitch, dengan batasan rentang pitch.\n\"Perubahan Pitch Klasik\" menunjukkan penggunaan algoritma dari Vegas Video 2.0 hingga Vegas Pro 8.0 untuk mengubah pitch, dengan batasan rentang pitch.\n\"Penyetelan Tanpa Skala\" menunjukkan penguncian peregangan dan pitch, dan mengubah peregangan untuk mendapatkan pitch yang sesuai terlepas dari pitch not sebenarnya.\n\"Osilator Granular\" mensimulasikan pitch tertentu dengan memainkan sampel pendek secara berulang-ulang dengan cepat selama periode tertentu, menghasilkan urutan pulsa yang sesuai dengan pitch dan membentuk pitch kontinu dengan memanfaatkan efek fusi persepsi telinga manusia pada pulsa cepat.",
+				audio_lock_stretch_pitch_tooltip = "Menggunakan resampling untuk mengubah nada saat kecepatan berubah. Karena tidak meregangkan audio, kualitas suara akan lebih baik.\nJika metode \"Perubahan Nada Elastis\" atau \"Perubahan Nada Klasik\" digunakan, peregangan audio akan dinonaktifkan.",
+				alt_tuning_method_tooltip = "Menangani nada yang berada di luar jangkauan dengan metode alternatif.\n\"Beralih ke Plugin Efek Audio Pitch Shift\" menunjukkan mencapai nada apa pun dengan menggunakan Plugin Efek Audio Pitch Shift berulang kali.\n\"Naikkan/Turunkan Oktaf\" menunjukkan menghindari interval disonan dengan menaikkan atau menurunkan skala oktaf ke rentang {0}.\n\"Naikkan/Turunkan Oktaf (Eksperimental)\" sama seperti di atas, tetapi rentangnya diperluas hingga {1}. Jika mengunci peregangan dan nada, rentangnya diperluas hingga {2}. Harap gunakan dengan hati-hati karena dapat menyebabkan Vegas macet.\n\"Tempel di Atas/Bawah\" menunjukkan menempelkan pada kunci tertinggi atau terendah dalam rentang {0}.\n\"Diam\" menunjukkan membisukan nada tersebut.",
 				preview_beep_duration_tooltip = "Durasi pra-mendengarkan nada dasar.\nUnit: milidetik.",
 				preview_tune_audio_tooltip = "Jika dicentang, sumber audio akan disetel ke nada dasar tonik C saat mendengarkan audio terlebih dahulu.\nJika tidak, nada yang diatur oleh nada dasar akan dihasilkan saat mendengarkan nada dasar terlebih dahulu.",
 				sheet_position_tooltip = "Jarak dari baris ketiga di tengah tongkat ke tengah layar. Naik plus turun dikurangi.\nSatuan: piksel.",
@@ -41025,7 +41258,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				automator_configform_info = "Menetapkan nilai otomatisasi acak untuk efek video dengan cepat dan otomatis.",
 				stutter_configform_info = "Stutters klip/events (maju-mundur, ...).",
 				camera_shake_configform_info = "Gunakan Pan/crop untuk membuat lapisan yang dipilih bergetar.",
-				otomad_helper_config = "Otomad Helper untuk VEGAS - Konfig",
+				otomad_helper_config = "Otomad Helper untuk Vegas - Konfig",
 				reset_config_successful = "Reset selesai! Harap mulai ulang skripnya.",
 				reset_config_successful_title = "Reset Konfigurasi",
 				sure_to_reset_config = "Yakin ingin menyetel ulang konfigurasi pengguna?\nData konfigurasi pengguna kamu akan hilang.",
@@ -41039,7 +41272,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "Audio yang Diaktifkan dan Video yang Diaktifkan keduanya tidak dicentang. Harap centang untuk mengaktifkan setidaknya salah satunya.",
 				why_ok_btn_is_disabled_no_media_take = "Sumber media yang dipilih tidak berisi pengambilan media yang valid.",
 				why_ok_btn_is_disabled_no_midi_select = "Untuk menghasilkan otoMAD/YTPMV, pilih file MIDI dulu.",
-				why_ok_btn_is_disabled_no_midi_track_select = "你没有选择任何 MIDI 音轨，请选择至少一条 MIDI 音轨。",
+				why_ok_btn_is_disabled_no_midi_track_select = "Tidak ada trek MIDI yang dipilih. Silakan pilih setidaknya satu trek MIDI.",
 				why_ok_btn_is_disabled_in_helper_tab = "Untuk menghindari error, jangan kirim build di tab Alat dan Mosh.",
 				why_ok_btn_is_disabled_unknown_problem = "Alasan tidak diketahui.",
 				no_selected_media_warning = "Peringatan: Kamu belum memilih media yang valid di jendela media proyek!",
@@ -41047,22 +41280,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				preview_audio_track_name = "Preview Trek Audio (Harus DIHAPUS!)",
 				no_midi_exception = "Error: Tidak ada file MIDI yang dipilih.\n\nHarap buka kembali kotak dialog konfigurasi skrip, lalu klik tombol \"Jelajahi\" di grup \"Konfigurasi MIDI\" untuk membuka file MIDI yang valid.",
 				no_media_exception = "Error: Tidak ada berkas media yang dipilih.\n\nBuka kembali kotak dialog konfigurasi skrip, lalu klik tombol \"Jelajahi\" di grup \"Konfigurasi Media\" untuk membuka berkas media yang valid.",
-				no_track_info_exception = "错误：MIDI 文件中不包含任何音轨。\n\n可能的原因：\n\n1. 该 MIDI 文件中确实没有任何音轨。\n这很有可能是你忘记从宿主软件中导出 MIDI 音轨了，请再检查一遍你的原始项目。\n如果你使用的是 FL Studio，请务必确保在导出 MIDI 之前执行了“准备进行 MIDI 导出”宏操作。\n\n2. 该 MIDI 文件格式不受支持或已损坏。\n请用宿主软件导入该 MIDI，然后重新输出一个新的 MIDI 文件。\n由于 NAudio.Midi 库支持的 MIDI 种类数目不全面，脚本不保证都能够正确读取。",
-				no_midi_track_selected_exception = "错误：没有选择任何 MIDI 音轨。\n\n解决方法：请选择至少一条 MIDI 音轨。",
-				no_plugin_pitch_shift_exception = "Error: Unable to call the Pitch Shift plugin.\n\nPlease follow the instructions of the tutorial document {0} to operate correctly.\nHowever, according to this updated version of the script, the Chinese and English versions should work properly.\nSo it is very likely that you are using VEGAS in other languages.",
-				no_plugin_presets_exception = "Error: Tidak dapat memanggil preset efek dari plugin Ptich shift.\n\nIkuti petunjuk dari dokumen tutorial {0} untuk mengoperasikan dengan benar.\nPastikan bahwa semua 25 preset ditambahkan secara manual di plugin transposisi dan diberi nama dengan benar.\n\nPenjelasan tambahan: Untuk lebih jelasnya silahkan simak penjelasan cara pemasangan pada kolom link di atas. Ke-25 preset ini adalah semua jenis perubahan nada dalam oktaf berikutnya.\nKehilangan salah satu dari preset tersebut dapat menyebabkan kesalahan. Memang sangat merepotkan untuk menambahkan preset secara manual, tetapi VEGAS tidak dapat menggunakan skrip untuk menentukan parameter spesifik\npergeseran nada, jadi saya harus menggunakan trik ini.",
-				no_plugin_name_exception = "Error: Plugin {0} tidak dapat dipanggil.\n\nMungkin versi VEGAS yang Kamu gunakan tidak mendukung plugin tersebut.",
-				no_take_exception_ps = "Supplementary note: Jika masih tidak dapat diselesaikan, berarti file media mungkin dalam format yang tidak didukung oleh VEGAS.\nCoba menyeret file secara manual ke VEGAS untuk melihat apakah file video dan audio berfungsi dengan benar.",
+				no_track_info_exception = "Kesalahan: File MIDI tidak berisi trek apa pun.\n\nKemungkinan penyebabnya:\n\n1. Memang tidak ada trek dalam file MIDI ini.\nKemungkinan besar Anda lupa mengekspor trek MIDI apa pun dari perangkat lunak host. Harap periksa kembali proyek asli Anda.\nJika Anda menggunakan FL Studio, pastikan untuk menjalankan operasi makro \"Persiapkan untuk Ekspor MIDI\" sebelum mengekspor MIDI.\n\n2. Format file MIDI tidak didukung atau rusak.\nHarap impor MIDI menggunakan perangkat lunak host dan kemudian ekspor ulang file MIDI baru.\nKarena rentang tipe MIDI yang didukung oleh pustaka NAudio.Midi tidak lengkap, skrip tidak dapat menjamin bahwa semuanya akan dibaca dengan benar.",
+				no_midi_track_selected_exception = "Kesalahan: Tidak ada trek MIDI yang dipilih.\n\nSolusi: Silakan pilih setidaknya satu trek MIDI.",
+				no_plugin_pitch_shift_exception = "Error: Unable to call the Pitch Shift plugin.\n\nPlease follow the instructions of the tutorial document {0} to operate correctly.\nHowever, according to this updated version of the script, the Chinese and English versions should work properly.\nSo it is very likely that you are using Vegas in other languages.",
+				no_plugin_presets_exception = "Error: Tidak dapat memanggil preset efek dari plugin Ptich shift.\n\nIkuti petunjuk dari dokumen tutorial {0} untuk mengoperasikan dengan benar.\nPastikan bahwa semua 25 preset ditambahkan secara manual di plugin transposisi dan diberi nama dengan benar.\n\nPenjelasan tambahan: Untuk lebih jelasnya silahkan simak penjelasan cara pemasangan pada kolom link di atas. Ke-25 preset ini adalah semua jenis perubahan nada dalam oktaf berikutnya.\nKehilangan salah satu dari preset tersebut dapat menyebabkan kesalahan. Memang sangat merepotkan untuk menambahkan preset secara manual, tetapi Vegas tidak dapat menggunakan skrip untuk menentukan parameter spesifik\npergeseran nada, jadi saya harus menggunakan trik ini.",
+				no_plugin_name_exception = "Error: Plugin {0} tidak dapat dipanggil.\n\nMungkin versi Vegas yang Kamu gunakan tidak mendukung plugin tersebut.",
+				no_take_exception_ps = "Supplementary note: Jika masih tidak dapat diselesaikan, berarti file media mungkin dalam format yang tidak didukung oleh Vegas.\nCoba menyeret file secara manual ke Vegas untuk melihat apakah file video dan audio berfungsi dengan benar.",
 				no_audio_take_exception = "Error: Tidak dapat membaca streaming media audio.\n\nDi antarmuka setelan, jangan centang \"Enabled Audio\" untuk media video/gambar murni.\n\n",
 				no_video_take_exception = "Error: Tidak dapat membaca streaming media video.\n\nDi antarmuka setelan, jangan centang \"Enabled Video\" untuk media Audio murni.\n\n",
-				no_media_take_exception = "Error: Tidak dapat membaca media.\n\nFormat file yang Anda pilih tidak didukung oleh VEGAS. Silakan periksa apakah file media rusak atau dekoder VEGAS yang sesuai tidak terpasang.\n\n",
+				no_media_take_exception = "Error: Tidak dapat membaca media.\n\nFormat file yang Anda pilih tidak didukung oleh Vegas. Silakan periksa apakah file media rusak atau dekoder Vegas yang sesuai tidak terpasang.\n\n",
 				not_a_midi_file_exception = "Error: Tidak dapat membaca file MIDI.\n\nSolusi: Impor MIDI dengan perangkat lunak host, lalu keluarkan kembali file MIDI baru.\n\nCatatan tambahan: Ada beberapa format file MIDI, dan skrip tidak menjamin hal itu semuanya dapat dibaca dengan benar. Untungnya,\nfile MIDI yang diekspor oleh software host mainstream dengan setelan default biasanya dapat dibaca. (FL Studio, LMMS \ndan Studio Musik untuk iPad yang saat ini diuji.)",
-				midi_contains_velocity_zero_exception = "错误：你的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有任何音符的力度值为 0（即没有音量），如果有，请删除它们。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
+				midi_contains_velocity_zero_exception = "Kesalahan: File MIDI Anda berisi not dengan kecepatan 0.\nPeriksa untuk memastikan tidak ada not yang memiliki nilai kecepatan 0 (yaitu not yang tidak memiliki volume), dan jika ada, harap hapus not tersebut.\n\nCatatan tambahan: Pustaka NAudio.Midi tidak mendukung file MIDI yang berisi not dengan kecepatan 0. Versi Otomad Helper mendatang akan mengatasi masalah ini dengan mengubah mesin penguraian.",
 				no_selected_exception_ps = "Catatan tambahan: Jika ingin memilih media dalam folder secara manual, klik tombol \"Jelajahi\" di sebelah kanan untuk\nmemilih media. Dan pastikan jalur file yang Anda pilih dipilih di menu tarik-turun di sebelah kiri.",
 				no_selected_media_exception = "Error: Tidak ada media yang dipilih di jendela media proyek.\n\nSilakan pilih media di jendela media proyek, lalu buka kembali dialog konfigurasi, dan pilih \"file media yang dipilih\" di konfigurasi sumber.\n\n",
 				no_selected_clip_exception_short = "Error: Tidak ada klip yang dipilih di trek.",
 				no_selected_clip_exception = "Error: Tidak ada klip yang dipilih di trek.\n\nSilakan pilih klip di trek, lalu buka kembali dialog konfigurasi, dan pilih \"klip trek yang dipilih\" di konfigurasi sumber.\n\n",
-				no_time_stretch_pitch_shift_exception = "Error: Metode konversi nada dari klip yang dipilih disetel ke tanpa penyetelan.\n\nKemungkinan besar Anda menggunakan \"klip trek yang dipilih\". Anda tidak dapat disalahkan atas kesalahan ini, tetapi karena desain VEGAS yang mati otak.\n\nSolusi: Harap pilih ulang klip trek Anda, klik kanan bagian audio, dan pilih \"Properti\" di bagian bawah. Setel \"Metode\" dari \"Rentang Waktu/Konversi Nada\" menjadi \"élastique\". Kemudian klik Oke.\n\nCatatan tambahan: Jika peristiwa audio belum diubah urutannya dan propertinya dibuka, maka \"Metode\" dari \"Rentang Waktu/Konversi Lapangan\" di propertinya akan\nsecara otomatis diubah menjadi \"Tidak Ada\", dan klik OK. Berpengaruh. Saat ini, Anda akan menemukan bahwa operasi penyetelan + dan tombol pada keyboard tidak valid. Saat ini, Anda harus membuka kembali properti peristiwa audio,\n\nmenyetel \"Metode\" dari \"Time Stretch/Pitch Conversion\" menjadi \"élastique\", Anda tidak perlu menyetel \"Pitch shift \", klik saja OK.",
+				no_time_stretch_pitch_shift_exception = "Error: Metode konversi nada dari klip yang dipilih disetel ke tanpa penyetelan.\n\nKemungkinan besar Anda menggunakan \"klip trek yang dipilih\". Anda tidak dapat disalahkan atas kesalahan ini, tetapi karena desain Vegas yang mati otak.\n\nSolusi: Harap pilih ulang klip trek Anda, klik kanan bagian audio, dan pilih \"Properti\" di bagian bawah. Setel \"Metode\" dari \"Rentang Waktu/Konversi Nada\" menjadi \"élastique\". Kemudian klik Oke.\n\nCatatan tambahan: Jika peristiwa audio belum diubah urutannya dan propertinya dibuka, maka \"Metode\" dari \"Rentang Waktu/Konversi Lapangan\" di propertinya akan\nsecara otomatis diubah menjadi \"Tidak Ada\", dan klik OK. Berpengaruh. Saat ini, Anda akan menemukan bahwa operasi penyetelan + dan tombol pada keyboard tidak valid. Saat ini, Anda harus membuka kembali properti peristiwa audio,\n\nmenyetel \"Metode\" dari \"Time Stretch/Pitch Conversion\" menjadi \"élastique\", Anda tidak perlu menyetel \"Pitch shift \", klik saja OK.",
 				read_config_fail_exception = "Kesalahan: Gagal membaca file konfigurasi parameter.\n\nKasian deh lo Kmengalami kesalahan tak terduga ini. Kami akan menghapus pengaturan konfigurasi pengguna dan mengembalikannya ke pengaturan default untuk menyelesaikan masalah.\nDisarankan untuk memberi tahu pembuat kesalahan ini untuk menyelesaikan masalah dengan cepat.\nSkrip ini akan dikeluarkan, dan kemudian gw akan mengganggu Kamu untuk membukanya kembali secara manual.",
 				fail_to_select_clips_exception = "Error: Error saat memilih klip lagu.\n\nPilih beberapa klip lagu di jendela lagu terlebih dahulu.",
 				fail_to_select_tracks_exception = "Error: Error saat memilih trek.\n\nPilih beberapa trek video di jendela trek terlebih dahulu.",
@@ -41070,18 +41303,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				ytp_in_media_generator_exception = "Error: Terapkan YTP ke media yang dibuat oleh media generator.\n\nPenerapan YTP harus menggunakan file media lokal, jangan gunakan media yang dibuat oleh media generator.",
 				ytp_eliminate_duplicates_finally_null_exception = "Pengecualian Teknis: Hapus duplikat dari daftar sumber YTP. Akhirnya, daftarnya kosong!\n\nIni adalah kesalahan yang seharusnya tidak terjadi.",
 				unknown_exception = "Error: Pengecualian tidak diketahui.\n\nHarap luaskan detailnya untuk melihat konten kesalahan spesifik dan berikan informasi Error kembali ke pembuatnya.",
-				use_pic_in_pic_on_unsupported_vegas_exception = "Error: Penggunaan efek plugin Gambar-dalam-Gambar di VEGAS versi lebih rendah tidak didukung.\n\nAkar penyebab: VEGAS telah menambahkan beberapa fitur dan parameter baru ke plugin efek Picture-in-Picture baru, yang tidak dapat digunakan di versi rendah versi plugin VEGAS.\n\nSolusi: Versi VEGAS saat ini tidak dapat menggunakan efek visual ritme PV ini (seperti aspek ekspansi), harap gunakan efek visual lainnya. Atau update VEGAS Lu.",
+				use_pic_in_pic_on_unsupported_vegas_exception = "Error: Penggunaan efek plugin Gambar-dalam-Gambar di Vegas versi lebih rendah tidak didukung.\n\nAkar penyebab: Vegas telah menambahkan beberapa fitur dan parameter baru ke plugin efek Picture-in-Picture baru, yang tidak dapat digunakan di versi rendah versi plugin Vegas.\n\nSolusi: Versi Vegas saat ini tidak dapat menggunakan efek visual ritme PV ini (seperti aspek ekspansi), harap gunakan efek visual lainnya. Atau update Vegas Lu.",
 				unsupported_curve_enum_exception = "Error: Gunakan jenis pencacahan kurva yang tidak didukung sebagai parameter.\n\n{0} bukan jenis pencacahan kurva.",
 				convert_music_beats_not_one_audio_event_exception = "Error: Jumlah klip audio yang dipilih di alat konversi ketukan musik tidak sama persis dengan satu.\n\n1 audio harus dipilih, tetapi {0} audio dipilih.",
-				convert_music_beats_unsupported_beats_exception = "Error: Ketukan VEGAS saat ini tidak dalam 4/4, 3/4, 6/8.",
+				convert_music_beats_unsupported_beats_exception = "Error: Ketukan Vegas saat ini tidak dalam 4/4, 3/4, 6/8.",
 				invalid_mapping_velocity_values_exception = "Error: Parameter kecepatan pemetaan ilegal digunakan.\n\nSolusi: Pastikan parameter velocity pemetaan audio dan video,\n1. Nilai yang lebih kecil tidak boleh lebih besar dari nilai yang lebih besar;\n2. Nilai VELOCITY yang lebih kecil dan lebih besar tidak boleh sama.\nJika tidak, ini tidak akan menyelesaikan operasi kecepatan pemetaan.",
 				invalid_glissando_amount_exception = "Error: Parameter jumlah glissando ilegal digunakan.\n\nJumlah Glissando tidak boleh nol.",
 				cannot_get_script_dir_exception = "Error: Tidak bisa mendapatkan jalur direktori skrip!",
 				cannot_get_xvid_path_exception = "Error: Tidak bisa mendapatkan jalur direktori instalasi XviD!",
 				install_xvid_info = "Codec XviD tidak diinstal. Skrip akan menginstalnya sekarang dan mungkin meminta akses admin untuk menginstalnya.",
 				install_xvid_admin_failed = "Error: instalasi XviD ditolak Admin.",
-				install_xvid_succeed = "XviD diinstal dan render template yang dihasilkan untuk frame rate saat ini. Harap restart VEGAS dan jalankan skrip lagi.",
-				render_template_generate_completed = "Render template yang dibuat untuk frekuensi gambar saat ini. Harap restart VEGAS dan jalankan skrip lagi.",
+				install_xvid_succeed = "XviD diinstal dan render template yang dihasilkan untuk frame rate saat ini. Harap restart Vegas dan jalankan skrip lagi.",
+				render_template_generate_completed = "Render template yang dibuat untuk frekuensi gambar saat ini. Harap restart Vegas dan jalankan skrip lagi.",
 				unexpected_exception = "Pengecualian tak terduga: ",
 				unexpected_render_status = "Status render tak terduga: ",
 				datamix_selection_position_exception = "Error: Harus dimulai pada frame ≥ 1!",
@@ -41145,7 +41378,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				all_tracks = "Semua trek",
 				video_tracks = "Trek video",
 				audio_tracks = "Trek audio",
-				vegas_track_list = "Daftar lagu VEGAS",
+				vegas_track_list = "Daftar lagu Vegas",
 				midi_track_list = "Daftar lagu MIDI",
 				midi_channel_list = "Daftar saluran MIDI",
 				midi_instrument_list = "Daftar instrumen MIDI",
@@ -41167,50 +41400,93 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				dispatch_instrument_to_channel = "Kirim instrumen ke saluran",
 				export_loop_region_only = "Ekspor wilayah loop saja",
 				failed_to_quick_config = "Jalur file MIDI telah diubah atau tidak ditentukan, dan operasi pembuatan cepat tidak dapat dilakukan. Silakan buka UI konfigurasi secara langsung untuk konfigurasi manual.",
-				video_clips = "Video clips",
-				audio_clips = "Audio clips",
-				hide = "Hide",
-				mute = "Mute",
-				@lock = "Lock",
-				loop = "Loop",
-				maintain_aspect_ratio = "Maintain aspect ratio",
-				reduce_interlace = "Reduce interlace flicker",
-				invert_phase = "Invert phase",
-				resample_mode = "Resample mode",
-				unset_resample_mode = "Unset",
-				project_resample_mode = "Use project resample mode",
-				smart_resample_mode = "Smart resample (Frame blend)",
-				force_resample_mode = "Force resample",
-				disable_resample_mode = "Disable resample",
-				optical_flow = "Optical flow",
-				unset_playback_rate = "Unset playback rate",
-				set_playback_rate = "Set playback rate",
-				multiply_playback_rate = "Multiply playback rate",
-				set_undersample_rate = "Set undersample rate",
-				unset_opacity = "Unset opacity",
-				set_opacity = "Set opacity",
-				multiply_opacity = "Multiply opacity",
-				unset_volume = "Unset volume",
-				set_volume = "Set volume",
-				multiply_volume = "Multiply volume",
-				no_recalc_norm_gain = "Don't recalculate normalize gains",
-				recalc_new_norm_gain = "Recalculate new normalize gains only",
-				recalc_all_norm_gain = "Recalculate all normalize gains",
-				single_select = "单选",
-				multi_select = "多选",
-				select_midi_track_count_info = "已选中 {0} 条音轨",
-				select_midi_tracks_count_info = "已选中 {0} 条音轨",
-				failed_to_auto_change_project_bpm_exception = "错误：自动更改项目速度失败！\n\nVEGAS 仅支持 {0} 范围内的速度，当前设定的速度为 {1}。",
-				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
-				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
-				generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
-				oscillator = "粒子振荡器",
-				alt_multiple = "多次使用音效插件",
-				alt_plugin = "切换到移调音效插件",
-				alt_octave = "高 / 低八度",
-				alt_octaveExp = "高 / 低八度（实验性）",
-				alt_dock = "停靠在边缘",
-				alt_silent = "不发声",
+				video_clips = "Klip video",
+				audio_clips = "Klip audio",
+				hide = "Sembunyikan",
+				mute = "Bisukan",
+				@lock = "Kunci",
+				loop = "Putar ulang",
+				maintain_aspect_ratio = "Pertahankan rasio aspek",
+				reduce_interlace = "Kurangi kedipan interlace",
+				invert_phase = "Balikkan fase",
+				resample_mode = "Mode resampling",
+				unset_resample_mode = "Hapus pengaturan",
+				project_resample_mode = "Gunakan mode resampling proyek",
+				smart_resample_mode = "Resampling cerdas (Frame blend)",
+				force_resample_mode = "Paksa resampling",
+				disable_resample_mode = "Nonaktifkan resampling",
+				optical_flow = "Aliran optik",
+				unset_playback_rate = "Hapus pengaturan kecepatan pemutaran",
+				set_playback_rate = "Atur kecepatan pemutaran",
+				multiply_playback_rate = "Kalikan kecepatan pemutaran",
+				set_undersample_rate = "Atur kecepatan undersampling",
+				unset_opacity = "Hapus pengaturan opasitas",
+				set_opacity = "Atur opasitas",
+				multiply_opacity = "Kalikan opasitas",
+				unset_volume = "Hapus pengaturan volume",
+				set_volume = "Atur volume",
+				multiply_volume = "Kalikan volume",
+				no_recalc_norm_gain = "Jangan hitung ulang gain normalisasi",
+				recalc_new_norm_gain = "Hitung ulang gain normalisasi baru saja",
+				recalc_all_norm_gain = "Hitung ulang semua gain normalisasi",
+				single_select = "Tunggal",
+				multi_select = "Ganda",
+				select_midi_track_count_info = "{0} trek terpilih",
+				select_midi_tracks_count_info = "{0} trek terpilih",
+				failed_to_auto_change_project_bpm_exception = "Kesalahan: Gagal mengubah tempo proyek secara otomatis!\n\nVegas hanya mendukung tempo dalam rentang {0}, dan tempo yang saat ini diatur adalah {1}.",
+				failed_to_auto_change_project_beat_numerator_exception = "Kesalahan: Gagal mengubah pembilang tanda birama secara otomatis!\n\nVegas hanya mendukung pembilang dalam rentang {0}, dan pembilang tanda birama yang saat ini ditetapkan adalah {1}.",
+				failed_to_auto_change_project_beat_denominator_exception = "Kesalahan: Gagal mengubah penyebut tanda birama secara otomatis!\n\nVegas hanya mendukung penyebut dalam rentang {0}, dan penyebut tanda birama yang saat ini ditetapkan adalah {1}.",
+				generate_staff_visualizer_without_time_signature_exception = "Kesalahan: Pembuatan Visualizer Staf gagal karena informasi tanda birama hilang.\n\nBerkas MIDI saat ini dapat menghasilkan YTPMV/otoMAD, tetapi tidak dapat menghasilkan Visualizer Staf.\nHal ini karena berkas MIDI tidak berisi informasi tanda birama. Silakan coba edit berkas MIDI untuk menambahkan tanda birama, atau coba berkas MIDI lain.",
+				lucky_dip_bar_without_time_signature_exception = "Kesalahan: File MIDI tidak memiliki informasi tanda birama, tidak dapat beralih sumber sekali per birama di Lucky Dip.\n\nSolusi: Salah satu dari berikut ini sudah cukup.\n1. Silakan coba mengganti file MIDI lain;\n2. Jangan gunakan \"Birama\" sebagai satuan momen peralihan sumber;\n3. Nonaktifkan \"Beralih sekali per birama atau ketukan\";\n4. Nonaktifkan \"Lucky Dip\".",
+				oscillator = "Osilator Granular",
+				alt_multiple = "Gunakan Plugin Efek Audio Beberapa Kali",
+				alt_plugin = "Beralih ke Plugin Efek Audio Pergeseran Nada",
+				alt_octave = "Naikkan/Turunkan Oktaf",
+				alt_octaveExp = "Naikkan/Turunkan Oktaf (Eksperimental)",
+				alt_dock = "Tambatan di Atas/Bawah",
+				alt_silent = "Diam",
+				multiply_gain = "Kalikan penguatan saat ini",
+				vocal_fry = "Vokal serak",
+				alt_tuning_method = "Jika melebihi rentang",
+				track_group = "Pengelompokan trek",
+				track_group_off = "Tidak dikelompokkan",
+				track_group_by_track = "Kelompokkan berdasarkan trek MIDI",
+				track_group_by_session = "Kelompokkan berdasarkan sesi tugas",
+				collapse_track_groups = "Ciutkan grup trek secara default",
+				multisource_comb = "Sisir multisumber",
+				off = "Mati",
+				lucky_dip = "Undian beruntung",
+				match_cut = "Pencocokan sinkronisasi ketukan",
+				linear_map = "Output peta linier",
+				consonant_time = "Waktu konsonan",
+				lucky_dip_limit_to_selected = "Terbatas pada sumber yang dipilih",
+				lucky_dip_track = "Buat setiap trek berbeda",
+				lucky_dip_marker = "Beralih sekali per penanda",
+				lucky_dip_bar_or_beat = "Beralih sekali per bar atau ketukan",
+				lucky_dip_period = "Periode",
+				lucky_dip_preparation = "Persiapan",
+				bar = "bar",
+				beat = "ketukan",
+				order = "Urutan",
+				sequential = "Berurutan",
+				reversed = "Terbalik",
+				shuffled = "Diacak",
+				match_cut_round = "Terapkan efek visual per putaran",
+				match_cut_repeat = "Pengulangan per klip",
+				sheet_lengthen_to_bar_end = "Perpanjang hingga akhir bar",
+				sample_audio_track_name = "Trek Audio Sampel (Harus DIHAPUS!)",
+				sample_video_track_name = "Trek Video Sampel (Harus DIHAPUS!)",
+				linear_map_allow_reuse_existed = "Izinkan penggunaan kembali",
+				match_cut_accumulate_harmonics = "Mengakumulasi nada harmonik dari akord secara terpisah",
+				stop_generating_warning_title = "Generasi Berakhir",
+				match_cut_loop_warning = "Peringatan: Jumlah not yang dibutuhkan lebih besar daripada jumlah sumber yang dipilih.\n\nProses pembuatan not telah berhenti.\n\nSilakan isi ulang sumber yang cukup atau aktifkan Sumber > Sinkronisasi ketukan > Putar Ulang untuk melanjutkan.",
+				linear_map_allow_reuse_existed_warning = "Peringatan: Jumlah not yang dibutuhkan lebih besar daripada jumlah trek MIDI saat ini.\n\nGenerasi ini telah diblokir.\n\nHarap isi ulang sumber yang cukup atau aktifkan Sumber > Keluaran peta linier > Izinkan penggunaan kembali untuk memulihkan.",
+				stack = "Tumpukan",
+				time_unremapping = "Pemetaan ulang waktu",
+				lotion_bath = "Taktik Mandi dengan Losion",
+				interval = "Selang",
+				shupelunker = "Taktik Shupelunker",
+				tartar = "Taktik Tartar",
 			};
 		}
 	}
