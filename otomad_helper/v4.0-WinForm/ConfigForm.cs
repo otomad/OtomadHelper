@@ -108,6 +108,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endif
 			SourceConfigGroup.AllowDrop = MidiConfigGroup.AllowDrop = true;
 			SonarList_SelectedIndexChanged_Timer.Tick += SonarList_SelectedIndexChanged_Timer_Tick;
+			foreach (Control tabPage in new TabPage[] { ConsonantTab, ShupelunkerTab })
+				tabPage.Enabled = false;
+			Load += MultiSourceCombTabs_SelectedIndexChanged;
 			#endregion
 
 			#region 优化界面颜色和外观
@@ -1376,7 +1379,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void MidiGradientTracksBtn_Click(object sender, EventArgs e) {
-
+			CommingSoon();
 		}
 
 		private void ResetAutoLayoutTracksBtn_Click(object sender, EventArgs e) {
@@ -1421,6 +1424,43 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void LuckyDipBarOrBeatPeriodUnitCombo_SelectedIndexChanged(object sender, EventArgs e) {
 			LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndex = LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex;
+		}
+
+		private void MultiSourceCombTabs_Selecting(object sender, TabControlCancelEventArgs e) {
+			if (e == null || e.TabPageIndex < 0) return;
+			if (e.Cancel = !e.TabPage.Enabled)
+				CommingSoon();
+		}
+
+		private void MultiSourceCombTabs_SelectedIndexChanged(object sender, EventArgs e) {
+			TabControl tabControl = MultiSourceCombTabs;
+			if (tabControl == null || tabControl.SelectedTab == null) return;
+
+			TabPage page = tabControl.SelectedTab;
+			int contentHeight = 0;
+
+			// 1. 获取内部唯一控件的高度
+			if (page.Controls.Count > 0) {
+				Control mainCtrl = page.Controls[0];
+				// 如果控件是隐藏的，Bottom 可能为 0，确保它可见或直接取 PreferredSize
+				contentHeight = mainCtrl.PreferredSize.Height;
+			}
+
+			// 2. 计算标签栏（Header）占用的高度
+			// TabControl.Height = 内部内容高度 + (TabControl总高度 - 内部可用显示区域高度)
+			// 这样无论标签是单行还是多行，差值永远是标签栏的实时高度
+			int headerHeight = tabControl.Height - tabControl.DisplayRectangle.Height;
+
+			// 3. 更新高度（加少量 Padding 补差，避免出现滚动条）
+			int newHeight = contentHeight + headerHeight + page.Padding.Vertical;
+
+			// 只有在高度确实改变时才赋值，减少界面闪烁
+			if (tabControl.Height != newHeight)
+				tabControl.Height = newHeight;
+		}
+
+		private void CommingSoon() {
+			MessageBox.Show("Comming soon!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 	}
 }

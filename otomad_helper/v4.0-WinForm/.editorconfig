@@ -107,17 +107,17 @@ csharp_prefer_braces = false:suggestion
 dotnet_diagnostic.IDE0055.severity = none
 
 # IDE0025: 使用表达式主体来表示属性
-#dotnet_diagnostic.IDE0025.severity = none
+dotnet_diagnostic.IDE0025.severity = none
 
 # IDE0018: 可以内联变量声明
-#dotnet_diagnostic.IDE0018.severity = none
+dotnet_diagnostic.IDE0018.severity = none
 
 # IDE0019: 使用模式匹配
-#dotnet_diagnostic.IDE0019.severity = none
-#dotnet_diagnostic.IDE0038.severity = none
+dotnet_diagnostic.IDE0019.severity = none
+dotnet_diagnostic.IDE0038.severity = none
 
 # IDE0032: 使用自动属性
-#dotnet_diagnostic.IDE0032.severity = error
+dotnet_diagnostic.IDE0032.severity = error
 
 # IDE0044: 添加只读修饰符
 dotnet_diagnostic.IDE0044.severity = warning
