@@ -1139,14 +1139,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void NextSequentialSourceByStep(double interval, long step, out EventSet source, out int index, out double startTime) {
 			IEnumerable<double> lengths = eventSets.Select(set => FloorToNearest(AConfig && VConfig ? Math.Min(set.audioLength, set.videoLength) : AConfig ? set.audioLength : set.videoLength, interval));
-			IEnumerable<double> sumLengths = lengths.Select((_, i) => lengths.Take(i + 1).Sum());
-			double sum = sumLengths.LastOrDefault(), stepInRound = interval * step % sum;
+			IEnumerable<double> sumLengths = lengths.Select((_, i) => lengths.Take(i).Sum());
+			double sum = lengths.Sum(), stepInRound = interval * step % sum;
 			sumLengths.FindLastLessOrEqual(length => length, stepInRound, out index);
 			if (index == -1) index = 0;
 			source = eventSets[index];
-			startTime = stepInRound - (index <= 0 ? 0 : sumLengths.ElementAt(index - 1));
-			S.s = interval + " - "+ index + " - " + string.Join(",", sumLengths);
-			//source.videoEvent.ActiveTake.Name = index.ToString();
+			startTime = stepInRound - (index < 0 ? 0 : sumLengths.ElementAt(index));
 		}
 
 		/// <summary>
