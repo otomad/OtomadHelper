@@ -1462,5 +1462,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void CommingSoon() {
 			MessageBox.Show("Comming soon!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
+
+		private void DatamoshInfoLbl_MouseEnter(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void DatamoshInfoLbl_MouseLeave(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
 	}
 }

@@ -223,7 +223,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		#region 多素材属性
 		/**<summary>需多素材</summary>*/ private bool ShouldMultisource { get { return YtpConfig || CombConfigLuckyDip || CombConfigMatchCut || CombConfigLinearMap; } }
 		#region 素材盲盒
-		/**<summary>素材盲盒</summary>*/ private bool CombConfigLuckyDip { get { return configForm.LuckyDipTab.Selected(); } }
+		/**<summary>启　　用</summary>*/ private bool CombConfigLuckyDip { get { return configForm.LuckyDipTab.Selected(); } }
 		/**<summary>音轨差异</summary>*/ private bool CombConfigLuckyDipTrack { get { return configForm.LuckyDipTrackCheck.Checked; } }
 		/**<summary>小节或拍</summary>*/ private bool CombConfigLuckyDipBarOrBeat { get { return configForm.LuckyDipBarOrBeatCheck.Checked; } }
 		/**<summary>周　　期</summary>*/ private BarOrBeat CombConfigLuckyDipBarOrBeatPeriod { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPeriodBox.Value, configForm.LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex); } }
@@ -234,7 +234,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>间　　隔</summary>*/ private int CombConfigLuckyDipLotionBathInterval { get { return configForm.LuckyDipLotionBathIntervalBox.Value; } }
 		#endregion
 		#region 踩　　点
-		/**<summary>踩　　点</summary>*/ private bool CombConfigMatchCut { get { return configForm.MatchCutTab.Selected(); } }
+		/**<summary>启　　用</summary>*/ private bool CombConfigMatchCut { get { return configForm.MatchCutTab.Selected(); } }
 		/**<summary>次　　序</summary>*/ private MatchCutOrder CombConfigMatchCutOrder { get { return configForm.MatchCutOrder; } }
 		/**<summary>循　　环</summary>*/ private bool CombConfigMatchCutLoop { get { return configForm.MatchCutLoopCheck.Checked; } }
 		/**<summary>重复次数</summary>*/ private int CombConfigMatchCutRepeatCount { get { return (int)configForm.MatchCutRepeatBox.Value; } }
@@ -242,8 +242,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>轮次效果</summary>*/ private bool CombConfigMatchCutApplyEffectsByRound { get { return configForm.MatchCutApplyEffectsByRoundCheck.Checked; } }
 		/**<summary>累加泛音</summary>*/ private bool CombConfigMatchCutAccumulateHarmonics { get { return configForm.MatchCutAccumulateHarmonicsCheck.Checked; } }
 		#endregion
-		#region 线性映射
-		/**<summary>线性映射</summary>*/ private bool CombConfigLinearMap { get { return configForm.LinearMapTab.Selected(); } }
+		#region 素材乐团
+		/**<summary>启　　用</summary>*/ private bool CombConfigLinearMap { get { return configForm.LinearMapTab.Selected(); } }
 		/**<summary>递　　减</summary>*/ private bool CombConfigLinearMapDescending { get { return configForm.LinearMapDescendingCheck.Checked; } }
 		/**<summary>允许重用</summary>*/ private bool CombConfigLinearMapAllowReuse { get { return configForm.LinearMapReuseCheck.Checked; } }
 		#endregion
@@ -1328,7 +1328,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				NextLuckyDipSource(-1);
 			#endregion
 
-			#region 线性映射输出
+			#region 素材乐团
 			if (CombConfigLinearMap)
 				activeSource = eventSets.ElementWrappedAt(!CombConfigLinearMapDescending ? MidiConfigTracks.CurrentChannel : -MidiConfigTracks.CurrentChannel - 1) ?? eventSets.Primary;
 			#endregion
@@ -4440,7 +4440,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		LUCKY_DIP,
 		/// <summary>踩点。</summary>
 		MATCH_CUT,
-		/// <summary>线性映射输出。</summary>
+		/// <summary>素材乐团。</summary>
 		LINEAR_MAP,
 		/// <summary>辅音时间。</summary>
 		CONSONANT,
@@ -24036,9 +24036,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceCombTabs.Controls.Add(this.ShupelunkerTab);
 			this.MultiSourceCombTabs.Dock = System.Windows.Forms.DockStyle.Top;
 			this.MultiSourceCombTabs.Location = new System.Drawing.Point(8, 40);
-			this.MultiSourceCombTabs.Multiline = false;
 			this.MultiSourceCombTabs.Name = "MultiSourceCombTabs";
 			this.MultiSourceCombTabs.SelectedIndex = 0;
+			this.MultiSourceCombTabs.ShowToolTips = true;
 			this.MultiSourceCombTabs.Size = new System.Drawing.Size(986, 407);
 			this.MultiSourceCombTabs.TabIndex = 10;
 			this.MultiSourceCombTabs.SelectedIndexChanged += new System.EventHandler(this.MultiSourceCombTabs_SelectedIndexChanged);
@@ -24053,6 +24053,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceOffTab.Size = new System.Drawing.Size(970, 353);
 			this.MultiSourceOffTab.TabIndex = 0;
 			this.MultiSourceOffTab.Text = "关";
+			this.MultiSourceOffTab.ToolTipText = "经典单素材模式，不启用多素材梳子。";
 			this.MultiSourceOffTab.UseVisualStyleBackColor = true;
 			//
 			// MultiSourceOffInfoLbl
@@ -24076,6 +24077,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipTab.Size = new System.Drawing.Size(1004, 353);
 			this.LuckyDipTab.TabIndex = 1;
 			this.LuckyDipTab.Text = "素材盲盒";
+			this.LuckyDipTab.ToolTipText = "无需有意挑选多项素材，只需点选至少一段长素材，它将自动随机挑取片段的入点。";
 			this.LuckyDipTab.UseVisualStyleBackColor = true;
 			//
 			// LuckyDipPanel
@@ -24307,6 +24309,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutTab.Size = new System.Drawing.Size(1004, 353);
 			this.MatchCutTab.TabIndex = 2;
 			this.MatchCutTab.Text = "踩点";
+			this.MatchCutTab.ToolTipText = "点选多项素材，将通过自动踩点依次轮流应用这些素材。";
 			this.MatchCutTab.UseVisualStyleBackColor = true;
 			//
 			// MatchCutPanel
@@ -24493,7 +24496,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LinearMapTab.Name = "LinearMapTab";
 			this.LinearMapTab.Size = new System.Drawing.Size(1004, 353);
 			this.LinearMapTab.TabIndex = 3;
-			this.LinearMapTab.Text = "线性映射输出";
+			this.LinearMapTab.Text = "素材乐团";
+			this.LinearMapTab.ToolTipText = "点选多项素材，它们将依次映射到可用音轨（多余的素材或音轨会被剔除）。";
 			this.LinearMapTab.UseVisualStyleBackColor = true;
 			//
 			// LinearMapPanel
@@ -24542,6 +24546,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ConsonantTab.Size = new System.Drawing.Size(1004, 353);
 			this.ConsonantTab.TabIndex = 4;
 			this.ConsonantTab.Text = "辅音时间";
+			this.ConsonantTab.ToolTipText = "为防止辅音被拉伸或延迟，可以将同一音视频素材的辅音与元音部分分割开，以便于为素材的辅音部分应用特殊优化。";
 			this.ConsonantTab.UseVisualStyleBackColor = true;
 			//
 			// ShupelunkerTab
@@ -24551,6 +24556,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ShupelunkerTab.Size = new System.Drawing.Size(1004, 353);
 			this.ShupelunkerTab.TabIndex = 5;
 			this.ShupelunkerTab.Text = "原音系战法 / 鞑靼战法";
+			this.ShupelunkerTab.ToolTipText = "一种不调音的音MAD制作手法。它在不改变音高的情况下，通过使用与旋律音高相同的原素材片段来演奏旋律。";
 			this.ShupelunkerTab.UseVisualStyleBackColor = true;
 			//
 			// SourceConfigGroup
@@ -30695,15 +30701,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			// DatamoshInfoLbl
 			//
-			this.DatamoshInfoLbl.AutoSize = true;
 			this.DatamoshInfoLbl.Dock = System.Windows.Forms.DockStyle.Top;
 			this.DatamoshInfoLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
 			this.DatamoshInfoLbl.Location = new System.Drawing.Point(3, 3);
 			this.DatamoshInfoLbl.Name = "DatamoshInfoLbl";
 			this.DatamoshInfoLbl.Padding = new System.Windows.Forms.Padding(4, 10, 4, 0);
-			this.DatamoshInfoLbl.Size = new System.Drawing.Size(550, 42);
+			this.DatamoshInfoLbl.Size = new System.Drawing.Size(1012, 42);
 			this.DatamoshInfoLbl.TabIndex = 10;
 			this.DatamoshInfoLbl.Text = "数据抹失是一种磨损素材以产生故障效果的技术。";
+			this.DatamoshInfoLbl.MouseEnter += new System.EventHandler(this.DatamoshInfoLbl_MouseEnter);
+			this.DatamoshInfoLbl.MouseLeave += new System.EventHandler(this.DatamoshInfoLbl_MouseLeave);
 			//
 			// HelperTab
 			//
@@ -32982,7 +32989,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			Lang str = Lang.str;
 			TrackLegatoMenu.Font = menu.Font = Font = new Font(str.ui_font, 9F);
 			WarningInfoLabel.Font = new Font(str.info_label_font, 11F, FontStyle.Bold);
-			Label[] infoLabels = { SheetConfigInfoLabel, YtpLbl, HelperLbl, DatamoshInfoLbl, MultiSourceOffInfoLbl };
+			Label[] infoLabels = { SheetConfigInfoLabel, YtpLbl, HelperLbl, DatamoshInfoLbl, DatamoshNotInstalledInfo, MultiSourceOffInfoLbl };
 			foreach (Label label in infoLabels)
 				label.Font = new Font(str.info_label_font, 9F);
 			latestVersionToolStripMenuItemInBar.Font = stretchLegatoTracksToolStripMenuItem.Font = new Font(str.ui_font, 9F, FontStyle.Bold);
@@ -33387,7 +33394,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			CloseAfterOpenMoshCheck.Text = str.close_after_open_helper;
 			DownloadDatamoshLink.Text = str.datamosh_install;
 			MoshTab.Text = str.mosh;
-			DatamoshInfoLbl.Text = str.datamosh_info;
+			DatamoshInfoLbl.Text = str.datamosh_info_glitchy;
 			DatamoshClipsFolderButton.Text = str.browse;
 			DatamoshClipsFolderGroup.Text = str.datamosh_clips_folder;
 			DatamoshNotInstalledInfo.Text = str.datamosh_not_installed_info;
@@ -33442,6 +33449,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MidiAutoChangeProjectBpmCheck.Text = str.tempo;
 			MidiAutoChangeProjectBeatCheck.Text = str.midi_beat;
 			MultiSourceOffInfoLbl.Text = str.multisource_off_info;
+			MultiSourceOffTab.ToolTipText = str.multisource_off_tooltip;
+			LuckyDipTab.ToolTipText = str.mystery_box_tooltip;
+			MatchCutTab.ToolTipText = str.syncopator_tooltip;
+			LinearMapTab.ToolTipText = str.orchestra_tooltip;
+			ConsonantTab.ToolTipText = str.consonant_tooltip;
+			ShupelunkerTab.ToolTipText = str.shupelunker_tooltip;
 			Text = str.otomad_helper_config;
 		}
 
@@ -35476,6 +35489,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void CommingSoon() {
 			AutoClosingMessageBox.Show(1000, "Comming soon!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
+
+		private void DatamoshInfoLbl_MouseEnter(object sender, EventArgs e) {
+			DatamoshInfoLbl.Text = Lang.str.datamosh_info;
+		}
+
+		private void DatamoshInfoLbl_MouseLeave(object sender, EventArgs e) {
+			DatamoshInfoLbl.Text = Lang.str.datamosh_info_glitchy;
+		}
 	}
 
 	#region 翻译
@@ -36153,7 +36174,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			datamosh_not_installed_info = "未安装数据抹失扩展包，下载后方可使用全部功能。",
 			datamosh_install = "下载扩展包",
 			datamosh_no_clips_folder_info = "请先指定一个用于存放生成的数据抹失片段的文件夹。",
-			datamosh_info = "锘挎藪琚沬妷是一种通过磨损素材以产生故障效果的技术。",
+			datamosh_info = "数据抹失是一种通过磨损素材以产生故障效果的技术。",
+			datamosh_info_glitchy = "锘挎薮琚沬妷缇㊀種嗵過礳陨嫊豺姒浐泩诂瘴効淉菂攲朮。",
 			datamosh = "数据抹失",
 			datamix = "数据抹拭",
 			layering = "多层叠化",
@@ -36402,6 +36424,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			auto_change_project_ruler_properties = "自动更改项目标尺属性",
 			tempo = "速度",
 			multisource_off_info = "当前是经典单素材模式。\n你可以通过切换选项卡以尝试其它多素材模式。",
+			multisource_off_tooltip = "经典单素材模式，不启用多素材梳子。",
+			mystery_box_tooltip = "无需有意挑选多项素材，只需点选至少一段长素材，它将自动随机挑取片段的入点。\n每一次重新尝试都是一场未知的惊喜。",
+			syncopator_tooltip = "点选多项素材，将匹配节奏通过自动踩点依次轮流应用这些素材。",
+			orchestra_tooltip = "点选多项素材，它们将依次映射到可用的乐曲多音轨（多余的素材或音轨会被剔除）。",
+			consonant_tooltip = "为防止辅音被拉伸或延迟，可以将同一音视频素材的辅音与元音部分分割开，以便于为素材的辅音部分应用特殊优化。\n若至少选中两段音频剪辑或视频剪辑，则第一段被视为首辅音部分，第二段被视为元音部分，第三段（如果有）被视为尾辅音部分。",
+			shupelunker_tooltip = "原音系战法：一种不调音的音 MAD 制作手法。它在不改变音高的情况下，通过使用与旋律音高相同的原素材片段来演奏旋律。\n鞑靼战法：同样不改变音高，它通过切分素材而非调音来使素材与原曲节拍同步。",
 			__eol__ = null;
 
 		static Lang() {
@@ -37036,9 +37064,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				mosh = "Mosh",
 				datamosh_clips_folder = "Datamosh clips folder",
 				datamosh_not_installed_info = "The Datamosh extension pack is not installed and will not be available for full features until it is downloaded.",
-				datamosh_install = "Download the expansion pack",
+				datamosh_install = "Download the extension pack",
 				datamosh_no_clips_folder_info = "Please select a folder to put generated datamoshed clips into.",
-				datamosh_info = "Datą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸̲͙͛̐̄̎̚͜a̢̨̝̟͎̾̔̊ǎ̤̞͈͑a͈̪̣̍mo̻̪̬̘̲͆͂͠o̸͍̞͔̓̆̊̀o̗͊̇̇̈́̇ǫ͇͗̏̕͜ơ̬͍͚̦̯̓̊͌ò͈̦̫̈́̓o̦̣̲̊̀o̪̪͚̺̘͛̽̏̈́sh is a technique of damaging clips to create glitchy effects.",
+				datamosh_info = "Datamosh is a technique of damaging clips to create glitchy effects.",
+				datamosh_info_glitchy = "Ða̵̝̻͔͎͋̇͑̆ƭą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸̲͙͛̐̄̎̚͜a̢̨̝̟͎̾̔̊ǎ̤̞͈͑a͈̪̣̍₥o̻̪̬̘̲͆͂͠o̸͍̞͔̓̆̊̀o̗͊̇̇̈́̇ǫ͇͗̏̕͜ơ̬͍͚̦̯̓̊͌ò͈̦̫̈́̓o̦̣̲̊̀o̪̪͚̺̘͛̽̏̈́ƨλ ïƨ á ƭèçλñï9úè ôƒ δá₥áϱïñϱ çℓïƥƨ ƭô çřèáƭè ϱℓïƭçλ¥ èƒƒèçƭƨ.",
 				datamosh = "Datamosh",
 				datamix = "Datamix",
 				layering = "Layer",
@@ -37287,6 +37316,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				auto_change_project_ruler_properties = "Auto change project ruler properties",
 				tempo = "Tempo",
 				multisource_off_info = "Currently it is the classic single source mode.\nYou can try other multisource modes by switching tabs.",
+				multisource_off_tooltip = "Classic single source mode, which means disable multisource comb.",
+				mystery_box_tooltip = "No need to select multiple sources intentionally, just select at least one long source. Then it will randomly select the in point of each clips automatically.\nEvery new attempt is an unknown surprise.",
+				syncopator_tooltip = "Select multiple sources that will be applied in turn by synchronizing the beat automatically.",
+				orchestra_tooltip = "Select multiple sources that will be mapped to available score multitracks in order (excess sources or tracks will be omitted).",
+				consonant_tooltip = "To prevent consonants from being stretched or delayed, you can separate the consonant and vowel parts of the same audio or video source so that special optimization can be applied to the consonant part of the source.\nIf at least two audio or video clips are selected, the first clip is considered the initial consonant part, the second clip is considered the vowel part, and the third segment (if any) is considered the final consonant part.",
+				shupelunker_tooltip = "Shupelunker Tactics: a non-tuning YTPMV/otoMAD creation technique. It plays the melody by using the source clips that have the same pitch to the melody, without tuning.\nTartar Tactics: also unpitched. It synchronizes the source with the beat by chopping it rather than tuning it.",
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -37919,7 +37954,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				datamosh_not_installed_info = "未安裝資料狂舞擴展包，下載後方可使用全部功能",
 				datamosh_install = "下載擴展包",
 				datamosh_no_clips_folder_info = "請先指定一個用於存放生成的資料狂舞片段的資料夾。",
-				datamosh_info = "嚜踵貲炓狅橆是一種通過磨損素材以產生故障效果的科技。",
+				datamosh_info = "資料狂舞是一種通過磨損素材以產生故障效果的科技。",
+				datamosh_info_glitchy = "嚜輯貲炓狅橆緹懿種熥鐹礳隕嫊豺鉯滻泩詁瘴滧輠菂嵙攲。",
 				datamosh = "資料狂舞",
 				datamix = "資料相融",
 				layering = "多階層化",
@@ -38168,6 +38204,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				auto_change_project_ruler_properties = "自動更改專案尺規屬性",
 				tempo = "速度",
 				multisource_off_info = "當前是經典單素材模式。\n你可以通過切換選項卡以嘗試其它多素材模式。",
+				multisource_off_tooltip = "經典單素材模式，不啟用多素材梳子。",
+				mystery_box_tooltip = "無需有意挑選多項素材，只需點選至少一段長素材，它將自動隨機挑取片段的入點。\n每一次重新嘗試都是一場未知的驚喜。",
+				syncopator_tooltip = "點選多項素材，將匹配節奏通過自動踩點依次輪流應用這些素材。",
+				orchestra_tooltip = "點選多項素材，它們將依次映射到可用的樂曲多音軌（多餘的素材或音軌會被剔除）。",
+				consonant_tooltip = "為防止輔音被拉伸或延遲，可以將同一音視頻素材的輔音與母音部分分割開，以便於為素材的輔音部分應用特殊優化。\n若至少選中兩段音訊剪輯或視訊短片，則第一段被視為首輔音部分，第二段被視為母音部分，第三段（如果有）被視為尾輔音部分。",
+				shupelunker_tooltip = "原音系戰法：一種不調音的音 MAD 製作手法。它在不改變音高的情況下，通過使用與旋律音高相同的原素材片段來演奏旋律。\n韃靼戰法：同樣不改變音高，它通過切分素材而非調音來使素材與原曲節拍同步。",
+
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
@@ -38802,7 +38845,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				datamosh_not_installed_info = "データモッシュ拡張パックはインストールされていないため、ダウンロードするまではフル機能を利用することはできません。",
 				datamosh_install = "拡張パックをダウンロードする",
 				datamosh_no_clips_folder_info = "生成されたデータモッシュクリップを格納するフォルダを選択してください。",
-				datamosh_info = "繝ﾃﾞ繧ｰﾀ縺ﾓ薙ｯ橸｢ｼ縲ｭ･は素材に損傷を与えてグリッチ効果を作成する技術です。",
+				datamosh_info = "データモッシュは素材に損傷を与えてグリッチ効果を作成する技術です。",
+				datamosh_info_glitchy = "繝ﾃﾞ繧ｰﾀ縺ﾓ薙ｯ橸｢ｼ縲ｭ･ﾚよ素木オﾚﾆ才員傷を与ぇτ勹″⺉⺍于交力果をイ乍成すゑ才支ㄔ朮テτ″す。",
 				datamosh = "データモッシュ",
 				datamix = "データミックス",
 				layering = "レイヤー",
@@ -39051,6 +39095,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				auto_change_project_ruler_properties = "プロジェクト定規のプロパティを自動変更",
 				tempo = "テンポ",
 				multisource_off_info = "現在は従来のシングルソースモードです。\nタブを切り替えることで、他のマルチソースモードを試すことができます。",
+				multisource_off_tooltip = "従来のシングルソースモードとは、複数の素材を櫛を無効にすることを意味します。",
+				mystery_box_tooltip = "複数のソースを意図的に選択する必要はありません。少なくとも1つの長いソースを選択するだけで十分です。そうすれば、各クリップの開始位置が自動的にランダムに選択されます。\n毎回、新たな発見があります。",
+				syncopator_tooltip = "複数の音源を選択すると、自動的にビートを同期させて順番に適用されます。",
+				orchestra_tooltip = "利用可能なスコアのマルチトラックにマッピングされる複数のソースを順番に選択してください（余分なソースまたはトラックは省略されます）。",
+				consonant_tooltip = "子音の引き伸ばしや遅延を防ぐため、同一の音声または動画ソースから子音部分と母音部分を分離し、子音部分に特別な最適化を適用することができます。\n少なくとも2つの音声または動画クリップを選択した場合、最初のクリップが最初の子音部分、2番目のクリップが母音部分、そして3番目のクリップ（存在する場合）が最後の子音部分とみなされます。",
+				shupelunker_tooltip = "シュペランカー戦法：チューニングを使わない音MAD制作テクニック。メロディーと同じピッチの音源クリップを使用し、チューニングせずにメロディーを再生します。\n韃靼戦法：こちらもチューニングなし。音源をチューニングするのではなく、切り刻むことでビートに同期させます。",
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -39589,7 +39639,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				ytp_high_contrast = "Высокая контрастность (добавляйте громко)",
 				ytp_oversaturation = "Перенасыщение (возможно, добавление эффекта тангажа)",
 				ytp_emphasize_thrice = "тройной акцент (дополнительный эффект усиления)",
-				ytp_info = "Нажмите кнопку «Завершить» под текущей вкладкой, YTP будет создан вместо YTPMV/otoMAD.\nНастройки параметров, отличные от «Enabled Audio» и «Enabled Video», не будут действовать в YTP.",
+				ytp_info = "Нажмите кнопку «Завершить» под текущей вкладкой, ЮТП будет создан вместо ЮТПМВ/отоМАД.\nНастройки параметров, отличные от «Enabled Audio» и «Enabled Video», не будут действовать в ЮТП.",
 				video_preset_fade_out = "Исчезать",
 				flashlight = "Фонарик",
 				horizontal_movement = "Горизонтальное Движение",
@@ -39650,7 +39700,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				quick_config_properties = "Свойства Быстрой Настройки",
 				quick_config_properties_configform_info = "Устанавливает свойства (например, нормализовать, растягивать) для всех выбранных клипов в партиях.",
 				replace_clips_configform_info = "Замените несколько клипов дорожки указанными новыми клипами дорожки.",
-				auto_layout_tracks_configform_info = "Автоматическая компоновка выбранных треков в стиле YTPMV.",
+				auto_layout_tracks_configform_info = "Автоматическая компоновка выбранных треков в стиле ЮТПМВ.",
 				change_tune_method_configform_info = "преобразовать несколько звуковых дорожек в указанные алгоритмы тонального регулирования.",
 				batch_subtitle_generation_configform_info = "Заранее установите предустановку «Субтитры и Текст», после чего добавьте несколько строк текста.",
 				find_clips_configform_info = "Выберите все клипы дорожки, соответствующие указанным критериям, таким как название клипа, тот же материал, что и у выбранного клипа и т.д.",
@@ -39685,7 +39735,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				datamosh_not_installed_info = "Пакет расширения датамош не установлен и не будет доступен для полных функций, пока он не будет загружен.",
 				datamosh_install = "Скачать пакет расширения",
 				datamosh_no_clips_folder_info = "Пожалуйста, выберите папку, в которую будут помещены созданные клипы датамош.",
-				datamosh_info = "Д҉а҉т҉а҉м꙰о꙰ж꙰ - это техника повреждения клипов для создания глючных эффектов.",
+				datamosh_info = "Датамош - это техника повреждения клипов для создания глючных эффектов.",
+				datamosh_info_glitchy = "Д҉а҉т҉а҉м꙰о꙰ж꙰ - эта техника павреждения клипафф длия саздания глюффных эффектаф.",
 				datamosh = "Датамош",
 				datamix = "Датамикс",
 				layering = "Слой",
@@ -39715,7 +39766,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				why_ok_btn_is_disabled_info = "Пожалуйста, проверьте вопрос по порядку:",
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "создание аудио и создание видео были отменены одновременно. Выберите хотя бы один из них.",
 				why_ok_btn_is_disabled_no_media_take = "выбранный источник материалов для СМИ не содержит никаких эффективных средств массовой информации.",
-				why_ok_btn_is_disabled_no_midi_select = "для создания YTPMV/otoMAD Выберите файл последовательности MIDI.",
+				why_ok_btn_is_disabled_no_midi_select = "для создания ЮТПМВ/отоМАД Выберите файл последовательности MIDI.",
 				why_ok_btn_is_disabled_no_midi_track_select = "MIDI-дорожка не выбрана. Пожалуйста, выберите хотя бы одну MIDI-дорожку.",
 				why_ok_btn_is_disabled_in_helper_tab = "во избежание неправильной операции не следует представлять генерирующие операции на вкладке «Инструменты» и «Мош».",
 				why_ok_btn_is_disabled_unknown_problem = "Неизвестная причина.",
@@ -39743,9 +39794,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				read_config_fail_exception = "Ошибка: не удалось прочитать файл конфигурации параметров.\n\nК сожалению, вы столкнулись с этой непредвиденной ошибкой. Мы очистим пользовательские настройки конфигурации и восстановим их до настроек по умолчанию, чтобы решить проблему.\nРекомендуется сообщить автору об этой ошибке, чтобы быстро решить проблему.\nЭтот скрипт будет закрыт, и я побеспокою вас, чтобы вы снова открыли его вручную.",
 				fail_to_select_clips_exception = "Ошибка: ошибка при выборе клипов дорожки.\n\nПожалуйста, сначала выберите несколько дорожек клипов в окне дорожек.",
 				fail_to_select_tracks_exception = "Ошибка: ошибка при выборе треков.\n\nПожалуйста, сначала выберите несколько видеодорожек в окне дорожек.",
-				ytp_over_length_exception = "Ошибка: указанная минимальная длина YTP превышает длину носителя.\n\nУказанная минимальная длина YTP слишком велика, попробуйте меньшее значение. Или длина выбранного носителя слишком мала.",
-				ytp_in_media_generator_exception = "Ошибка: примените YTP к носителю, созданному генератором мультимедиа.\n\nПриложение YTP должно использовать локальные медиа-файлы, а не медиа, созданные медиа-генератором.",
-				ytp_eliminate_duplicates_finally_null_exception = "Технические Аномалии: для удаления повторяющихся значений в списке материалов YTP последний список пуст! \n\nЭто ошибка, которая не должна была произойти.",
+				ytp_over_length_exception = "Ошибка: указанная минимальная длина ЮТП превышает длину носителя.\n\nУказанная минимальная длина ЮТП слишком велика, попробуйте меньшее значение. Или длина выбранного носителя слишком мала.",
+				ytp_in_media_generator_exception = "Ошибка: примените ЮТП к носителю, созданному генератором мультимедиа.\n\nПриложение ЮТП должно использовать локальные медиа-файлы, а не медиа, созданные медиа-генератором.",
+				ytp_eliminate_duplicates_finally_null_exception = "Технические Аномалии: для удаления повторяющихся значений в списке материалов ЮТП последний список пуст! \n\nЭто ошибка, которая не должна была произойти.",
 				unknown_exception = "Ошибка: неизвестная ошибка.\n\nВключите подробную информацию, чтобы просмотреть содержимое конкретной ошибки, и отправьте сообщение об ошибке автору.",
 				use_pic_in_pic_on_unsupported_vegas_exception = "Ошибка: Использование эффекта плагина «Картинка в картинке» в более ранних версиях Vegas не поддерживается.\n\nОсновная причина: Vegas добавила некоторые новые функции и параметры в новый подключаемый модуль эффекта «картинка в картинке», которые нельзя использовать в более ранних версиях подключаемого модуля Vegas.\n\nРешение: Текущая версия Vegas не может использовать визуальные эффекты этого ритма PV (например, аспекты расширения), пожалуйста, используйте другие визуальные эффекты. Или обновите программное обеспечение Vegas.",
 				unsupported_curve_enum_exception = "Ошибка: Используйте неподдерживаемые типы перечисления кривых в качестве параметров.\n\n{0} не является типом перечисления кривых.",
@@ -39880,7 +39931,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				failed_to_auto_change_project_bpm_exception = "Ошибка: Не удалось автоматически изменить темп проекта!\n\nVegas поддерживает темпы только в диапазоне {0}, а текущий установленный темп равен {1}.",
 				failed_to_auto_change_project_beat_numerator_exception = "Ошибка: Не удалось автоматически изменить числитель размера!\n\nVegas поддерживает только числители в диапазоне {0}, а текущий установленный числитель размера — {1}.",
 				failed_to_auto_change_project_beat_denominator_exception = "Ошибка: Не удалось автоматически изменить знаменатель размера!\n\nVegas поддерживает только знаменатели в диапазоне {0}, а текущий установленный знаменатель размера равен {1}.",
-				generate_staff_visualizer_without_time_signature_exception = "Ошибка: Не удалось создать визуализатор нотного стана из-за отсутствия информации о размере такта.\n\nТекущий MIDI-файл может генерировать YTPMV/otoMAD, но не может создать визуализатор нотного стана.\nЭто связано с тем, что MIDI-файл не содержит информации о размере такта. Пожалуйста, попробуйте отредактировать MIDI-файл, чтобы добавить информацию о размере такта, или попробуйте другой MIDI-файл.",
+				generate_staff_visualizer_without_time_signature_exception = "Ошибка: Не удалось создать визуализатор нотного стана из-за отсутствия информации о размере такта.\n\nТекущий MIDI-файл может генерировать ЮТПМВ/отоМАД, но не может создать визуализатор нотного стана.\nЭто связано с тем, что MIDI-файл не содержит информации о размере такта. Пожалуйста, попробуйте отредактировать MIDI-файл, чтобы добавить информацию о размере такта, или попробуйте другой MIDI-файл.",
 				lucky_dip_bar_without_time_signature_exception = "Ошибка: В MIDI-файле отсутствует информация о размере такта, невозможно переключать источники один раз за такт в режиме Mystery Box.\nРешение: Достаточно любого из следующих вариантов:\n1. Попробуйте заменить другие MIDI-файлы;\n2. Не используйте «Такт» в качестве единицы измерения момента переключения источников;\n3. Отключите «Переключать один раз за такт или долю»;\n4. Отключите «Mystery Box».",
 				oscillator = "Гранулярный осциллятор",
 				alt_multiple = "Использовать плагин аудиоэффектов несколько раз",
@@ -39934,6 +39985,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				auto_change_project_ruler_properties = "Автоматическое изменение свойств линейки проекта",
 				tempo = "Темп",
 				multisource_off_info = "В данный момент это классический режим с одним источником.\nВы можете попробовать другие режимы с несколькими источниками, переключаясь между вкладками.",
+				multisource_off_tooltip = "Классический режим с одним источником, что означает отключение многоисточникового комбинированного режима.",
+				mystery_box_tooltip = "Нет необходимости намеренно выбирать несколько источников, достаточно выбрать хотя бы один длинный источник. Тогда система автоматически случайным образом выберет начальную точку каждого клипа.\nКаждая новая попытка — это неожиданный сюрприз.",
+				syncopator_tooltip = "Выберите несколько источников, которые будут применяться по очереди, автоматически синхронизируя ритм.",
+				orchestra_tooltip = "Выберите несколько источников, которые будут сопоставлены с доступными многодорожечными записями партитуры в указанном порядке (лишние источники или дорожки будут пропущены).",
+				consonant_tooltip = "Чтобы предотвратить растяжение или задержку согласных звуков, можно разделить согласные и гласные части одного и того же аудио- или видеоисточника, чтобы к согласной части источника можно было применить специальную оптимизацию.\nЕсли выбрано как минимум два аудио- или видеоклипа, первый клип считается начальной согласной частью, второй клип — гласной частью, а третий сегмент (если таковой имеется) — конечной согласной частью.",
+				shupelunker_tooltip = "Shupelunker Tactics: техника создания ЮТПМВ/отоМАД без настройки. Она воспроизводит мелодию, используя исходные клипы, имеющие ту же высоту тона, что и мелодия, без настройки.\nTartar Tactics: также без настройки тона. Она синхронизирует исходный звук с ритмом, нарезая его, а не настраивая.",
 			};
 			Vietnamese = new Lang {
 				__name__ = "Tiếng Việt",
@@ -40565,9 +40622,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				mosh = "Mosh",
 				datamosh_clips_folder = "Thư mục clip Datamosh",
 				datamosh_not_installed_info = "Datamosh extension pack chưa được cài đặt và sẽ không khả dụng với đầy đủ tính năng cho đến khi nó được tải xuống.",
-				datamosh_install = "Tải xuống expansion pack",
+				datamosh_install = "Tải xuống extension pack",
 				datamosh_no_clips_folder_info = "Vui lòng chọn một thư mục để đặt các clip datamoshed đã tạo vào.",
-				datamosh_info = "])4t4m0sh là một kĩ thuật làm biến dạng video để tạo hiệu ứng glitch.",
+				datamosh_info = "Datamosh là một kĩ thuật làm biến dạng video để tạo hiệu ứng glitch.",
+				datamosh_info_glitchy = "])4t4m0sh |_4\\` m0^.t kj~ thu4^.t |_4\\`m |313^'n ])4.ng vj])30 +)3^? t4.0 hj3^.u u\"ng g|1tch.",
 				datamosh = "Datamosh",
 				datamix = "Datamix",
 				layering = "Layer",
@@ -40816,6 +40874,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				auto_change_project_ruler_properties = "Auto change project ruler properties",
 				tempo = "Nhịp độ",
 				multisource_off_info = "Now it is classic single source mode.\nYou can try other multisource modes by switching tabs.",
+				multisource_off_tooltip = "Classic single source mode, which means disable multisource comb.",
+				mystery_box_tooltip = "No need to select multiple sources intentionally, just select at least one long source. Then it will randomly select the in point of each clips automatically.\nEvery new attempt is an unknown surprise.",
+				syncopator_tooltip = "Select multiple sources that will be applied in turn by synchronizing the beat automatically.",
+				orchestra_tooltip = "Select multiple sources that will be mapped to available score multitracks in order (excess sources or tracks will be omitted)",
+				consonant_tooltip = "To prevent consonants from being stretched or delayed, you can separate the consonant and vowel parts of the same audio or video source so that special optimization can be applied to the consonant part of the source.\nIf at least two audio or video clips are selected, the first clip is considered the initial consonant part, the second clip is considered the vowel part, and the third segment (if any) is considered the final consonant part.",
+				shupelunker_tooltip = "Shupelunker Tactics: an non-tuning YTPMV/otoMAD creation technique. It plays the melody by using the source clips that have the same pitch to the melody, without tuning.\nTartar Tactics: also unpitched. It synchronizes the source with the beat by chopping it rather than tuning it.",
 			};
 			Indonesian = new Lang {
 				__name__ = "Bahasa Indonesia",
@@ -41449,7 +41513,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				datamosh_not_installed_info = "Paket ekstensi Datamosh tidak diinstal dan tidak akan tersedia untuk fitur lengkap hingga diunduh.",
 				datamosh_install = "Download paket ekspansi",
 				datamosh_no_clips_folder_info = "Silakan pilih folder untuk memasukkan klip datamoshed yang dihasilkan.",
-				datamosh_info = "Đátá๓ơšի ada teknik yang membuat video kalian jadi ancur dan nge-glitch.",
+				datamosh_info = "Datamosh ada teknik yang membuat video kalian jadi ancur dan nge-glitch.",
+				datamosh_info_glitchy = "Đátá๓ơšի áđá tεкดίк ўáดg ๓ε๓طůát vίđεơ кáլίáด ذáđί áด¢ůя đáด ดgε-gլίt¢ի.",
 				datamosh = "Datamosh",
 				datamix = "Datamix",
 				layering = "Layar",
@@ -41698,6 +41763,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				auto_change_project_ruler_properties = "Ubah otomatis properti penggaris proyek",
 				tempo = "Tempo",
 				multisource_off_info = "Saat ini, mode yang digunakan adalah mode sumber tunggal klasik.\nAnda dapat mencoba mode multisumber lainnya dengan beralih tab.",
+				multisource_off_tooltip = "Mode sumber tunggal klasik, yang berarti menonaktifkan kombinasi multisumber.",
+				mystery_box_tooltip = "Tidak perlu memilih beberapa sumber secara sengaja, cukup pilih setidaknya satu sumber yang panjang. Kemudian sistem akan secara otomatis memilih titik masuk setiap klip secara acak.\nSetiap percobaan baru adalah kejutan yang tak terduga.",
+				syncopator_tooltip = "Pilih beberapa sumber yang akan diterapkan secara bergantian dengan menyinkronkan ketukan secara otomatis.",
+				orchestra_tooltip = "Pilih beberapa sumber yang akan dipetakan ke multitrack skor yang tersedia secara berurutan (sumber atau track yang berlebihan akan dihilangkan).",
+				consonant_tooltip = "Untuk mencegah konsonan diregangkan atau tertunda, Anda dapat memisahkan bagian konsonan dan vokal dari sumber audio atau video yang sama sehingga optimasi khusus dapat diterapkan pada bagian konsonan dari sumber tersebut.\nJika setidaknya dua klip audio atau video dipilih, klip pertama dianggap sebagai bagian konsonan awal, klip kedua dianggap sebagai bagian vokal, dan segmen ketiga (jika ada) dianggap sebagai bagian konsonan akhir.",
+				shupelunker_tooltip = "Taktik Shupelunker: teknik pembuatan YTPMV/otoMAD tanpa penyetelan nada. Teknik ini memainkan melodi dengan menggunakan klip sumber yang memiliki nada yang sama dengan melodi, tanpa penyetelan nada.\nTaktik Tartar: juga tanpa penyetelan nada. Teknik ini menyinkronkan sumber dengan ketukan dengan memotongnya, bukan menyetel nadanya.",
 			};
 		}
 	}

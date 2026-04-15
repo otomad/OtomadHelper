@@ -1761,6 +1761,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceCombTabs.Location = new System.Drawing.Point(8, 40);
 			this.MultiSourceCombTabs.Name = "MultiSourceCombTabs";
 			this.MultiSourceCombTabs.SelectedIndex = 0;
+			this.MultiSourceCombTabs.ShowToolTips = true;
 			this.MultiSourceCombTabs.Size = new System.Drawing.Size(986, 407);
 			this.MultiSourceCombTabs.TabIndex = 10;
 			this.MultiSourceCombTabs.SelectedIndexChanged += new System.EventHandler(this.MultiSourceCombTabs_SelectedIndexChanged);
@@ -1775,6 +1776,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceOffTab.Size = new System.Drawing.Size(970, 353);
 			this.MultiSourceOffTab.TabIndex = 0;
 			this.MultiSourceOffTab.Text = "关";
+			this.MultiSourceOffTab.ToolTipText = "经典单素材模式，不启用多素材梳子。";
 			this.MultiSourceOffTab.UseVisualStyleBackColor = true;
 			// 
 			// MultiSourceOffInfoLbl
@@ -1795,9 +1797,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipTab.Controls.Add(this.LuckyDipPanel);
 			this.LuckyDipTab.Location = new System.Drawing.Point(8, 46);
 			this.LuckyDipTab.Name = "LuckyDipTab";
-			this.LuckyDipTab.Size = new System.Drawing.Size(970, 353);
+			this.LuckyDipTab.Size = new System.Drawing.Size(1004, 353);
 			this.LuckyDipTab.TabIndex = 1;
 			this.LuckyDipTab.Text = "素材盲盒";
+			this.LuckyDipTab.ToolTipText = "无需有意挑选多项素材，只需点选至少一段长素材，它将自动随机挑取片段的入点。";
 			this.LuckyDipTab.UseVisualStyleBackColor = true;
 			// 
 			// LuckyDipPanel
@@ -1816,7 +1819,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipPanel.Location = new System.Drawing.Point(0, 0);
 			this.LuckyDipPanel.Name = "LuckyDipPanel";
 			this.LuckyDipPanel.Padding = new System.Windows.Forms.Padding(3);
-			this.LuckyDipPanel.Size = new System.Drawing.Size(970, 353);
+			this.LuckyDipPanel.Size = new System.Drawing.Size(1004, 353);
 			this.LuckyDipPanel.TabIndex = 8;
 			this.LuckyDipPanel.WrapContents = false;
 			// 
@@ -2026,9 +2029,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutTab.Controls.Add(this.MatchCutPanel);
 			this.MatchCutTab.Location = new System.Drawing.Point(8, 46);
 			this.MatchCutTab.Name = "MatchCutTab";
-			this.MatchCutTab.Size = new System.Drawing.Size(970, 353);
+			this.MatchCutTab.Size = new System.Drawing.Size(1004, 353);
 			this.MatchCutTab.TabIndex = 2;
 			this.MatchCutTab.Text = "踩点";
+			this.MatchCutTab.ToolTipText = "点选多项素材，将通过自动踩点依次轮流应用这些素材。";
 			this.MatchCutTab.UseVisualStyleBackColor = true;
 			// 
 			// MatchCutPanel
@@ -2045,7 +2049,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutPanel.Location = new System.Drawing.Point(0, 0);
 			this.MatchCutPanel.Name = "MatchCutPanel";
 			this.MatchCutPanel.Padding = new System.Windows.Forms.Padding(3);
-			this.MatchCutPanel.Size = new System.Drawing.Size(970, 353);
+			this.MatchCutPanel.Size = new System.Drawing.Size(1004, 353);
 			this.MatchCutPanel.TabIndex = 6;
 			this.MatchCutPanel.WrapContents = false;
 			// 
@@ -2213,9 +2217,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LinearMapTab.Controls.Add(this.LinearMapPanel);
 			this.LinearMapTab.Location = new System.Drawing.Point(8, 46);
 			this.LinearMapTab.Name = "LinearMapTab";
-			this.LinearMapTab.Size = new System.Drawing.Size(970, 353);
+			this.LinearMapTab.Size = new System.Drawing.Size(1004, 353);
 			this.LinearMapTab.TabIndex = 3;
-			this.LinearMapTab.Text = "线性映射输出";
+			this.LinearMapTab.Text = "素材乐团";
+			this.LinearMapTab.ToolTipText = "点选多项素材，它们将依次映射到可用音轨（多余的素材或音轨会被剔除）。";
 			this.LinearMapTab.UseVisualStyleBackColor = true;
 			// 
 			// LinearMapPanel
@@ -2229,7 +2234,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LinearMapPanel.Location = new System.Drawing.Point(0, 0);
 			this.LinearMapPanel.Name = "LinearMapPanel";
 			this.LinearMapPanel.Padding = new System.Windows.Forms.Padding(3);
-			this.LinearMapPanel.Size = new System.Drawing.Size(970, 353);
+			this.LinearMapPanel.Size = new System.Drawing.Size(1004, 353);
 			this.LinearMapPanel.TabIndex = 9;
 			this.LinearMapPanel.WrapContents = false;
 			// 
@@ -2261,18 +2266,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 
 			this.ConsonantTab.Location = new System.Drawing.Point(8, 46);
 			this.ConsonantTab.Name = "ConsonantTab";
-			this.ConsonantTab.Size = new System.Drawing.Size(970, 353);
+			this.ConsonantTab.Size = new System.Drawing.Size(1004, 353);
 			this.ConsonantTab.TabIndex = 4;
 			this.ConsonantTab.Text = "辅音时间";
+			this.ConsonantTab.ToolTipText = "为防止辅音被拉伸或延迟，可以将同一音视频素材的辅音与元音部分分割开，以便于为素材的辅音部分应用特殊优化。";
 			this.ConsonantTab.UseVisualStyleBackColor = true;
 			// 
 			// ShupelunkerTab
 			// 
 			this.ShupelunkerTab.Location = new System.Drawing.Point(8, 46);
 			this.ShupelunkerTab.Name = "ShupelunkerTab";
-			this.ShupelunkerTab.Size = new System.Drawing.Size(970, 353);
+			this.ShupelunkerTab.Size = new System.Drawing.Size(1004, 353);
 			this.ShupelunkerTab.TabIndex = 5;
 			this.ShupelunkerTab.Text = "原音系战法 / 鞑靼战法";
+			this.ShupelunkerTab.ToolTipText = "一种不调音的音MAD制作手法。它在不改变音高的情况下，通过使用与旋律音高相同的原素材片段来演奏旋律。";
 			this.ShupelunkerTab.UseVisualStyleBackColor = true;
 			// 
 			// SourceConfigGroup
@@ -8417,15 +8424,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 
 			// DatamoshInfoLbl
 			// 
-			this.DatamoshInfoLbl.AutoSize = true;
 			this.DatamoshInfoLbl.Dock = System.Windows.Forms.DockStyle.Top;
 			this.DatamoshInfoLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
 			this.DatamoshInfoLbl.Location = new System.Drawing.Point(3, 3);
 			this.DatamoshInfoLbl.Name = "DatamoshInfoLbl";
 			this.DatamoshInfoLbl.Padding = new System.Windows.Forms.Padding(4, 10, 4, 0);
-			this.DatamoshInfoLbl.Size = new System.Drawing.Size(550, 42);
+			this.DatamoshInfoLbl.Size = new System.Drawing.Size(1012, 42);
 			this.DatamoshInfoLbl.TabIndex = 10;
 			this.DatamoshInfoLbl.Text = "数据抹失是一种磨损素材以产生故障效果的技术。";
+			this.DatamoshInfoLbl.MouseEnter += new System.EventHandler(this.DatamoshInfoLbl_MouseEnter);
+			this.DatamoshInfoLbl.MouseLeave += new System.EventHandler(this.DatamoshInfoLbl_MouseLeave);
 			// 
 			// HelperTab
 			// 
