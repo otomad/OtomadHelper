@@ -1137,6 +1137,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return true;
 		}
 
+		public void NextSequentialSourceByStep(double interval, long step, out EventSet source, out int index, out double startTime) {
+			IEnumerable<double> lengths = eventSets.Select(set => FloorToNearest(AConfig && VConfig ? Math.Min(set.audioLength, set.videoLength) : AConfig ? set.audioLength : set.videoLength, interval));
+			IEnumerable<double> sumLengths = lengths.Select((_, i) => lengths.Take(i + 1).Sum());
+			double sum = sumLengths.LastOrDefault(), stepInRound = interval * step % sum;
+			sumLengths.FindLastLessOrEqual(length => length, stepInRound, out index);
+			if (index == -1) index = 0;
+			source = eventSets[index];
+			startTime = stepInRound - (index <= 0 ? 0 : sumLengths.ElementAt(index - 1));
+			S.s = interval + " - "+ index + " - " + string.Join(",", sumLengths);
+			//source.videoEvent.ActiveTake.Name = index.ToString();
+		}
+
 		/// <summary>
 		/// 生成音系 Music Anime Dōga / YouTube Poop Music Video。
 		/// </summary>
@@ -1315,8 +1327,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			int prevMarkerIndex = -1;
 			Action<long> NextLuckyDipSource = step => {
 				if ((CombConfigLuckyDip && CombConfigLuckyDipLimitToSelected) && !(CombConfigMatchCut && CombConfigMatchCutLuckyDip))
-					NextSourceByOrder(MatchCutOrder.SHUFFLED, baseShuffledSeed, step);
-				else {
+					if (CombConfigLuckyDip && CombConfigLuckyDipLotionBath) NextSourceByOrder(MatchCutOrder.SEQUENTIAL, baseShuffledSeed, MidiConfigTracks.CurrentChannel + step);
+					else NextSourceByOrder(MatchCutOrder.SHUFFLED, baseShuffledSeed, step);
+				else if (CombConfigLuckyDipLotionBath) {
+					int _;
+					NextSequentialSourceByStep(CombConfigLuckyDipLotionBathInterval, !CombConfigLuckyDipTrack ? step : step + MidiConfigTracks.CurrentChannel, out activeSource, out _, out sourceStartTime);
+					double maxLength = Math.Max(activeSource.audioLength, activeSource.videoLength);
+					sourceEndTime = sourceStartTime + maxLength;
+				} else {
 					object[] seeds = { baseShuffledSeed[0], step };
 					NextSourceByDuration(seeds);
 					double maxLength = Math.Max(activeSource.audioLength, activeSource.videoLength);
@@ -1325,7 +1343,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 			};
 			if (CombConfigLuckyDip && CombConfigLuckyDipTrack && MidiConfigTracks.CurrentChannel != 0)
-				NextLuckyDipSource(-1);
+				NextLuckyDipSource(CombConfigLuckyDipLotionBath ? 0 : -1); // TODO: 还是不对？
 			#endregion
 
 			#region 素材乐团
@@ -2954,6 +2972,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		/// <summary>
+		/// 将一个数值向下取整到指定基数的倍数，然后确保结果不小于基数。
+		/// </summary>
+		public static double FloorToNearest(double a, double b) {
+			return Math.Max(Math.Floor(a / b) * b, b);
+		}
+
+		/// <summary>
 		/// 确定指定值是否有限（零、次正规或正规）。
 		/// </summary>
 		/// <param name="value">双精度浮点数。</param>
@@ -4131,6 +4156,29 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			TabControl tabControl = tabPage.Parent as TabControl;
 			if (tabControl == null) return false;
 			return tabControl.SelectedTab == tabPage;
+		}
+
+		/// <summary>
+		/// 通过二分法寻找小于等于目标值的最后一个元素。
+		/// </summary>
+		public static T FindLastLessOrEqual<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, TKey value, out int resultIndex) where TKey : IComparable<TKey> {
+			IReadOnlyList<T> list = source as IReadOnlyList<T> ?? source.ToList(); // 转换为列表以支持快速索引访问
+			int low = 0, high = list.Count - 1;
+			resultIndex = -1;
+
+			while (low <= high) {
+				int mid = low + ((high - low) >> 1); // 防止溢出的中点写法（>> 1 约等于 / 2 再 trunc）
+				TKey midValue = selector(list[mid]);
+
+				if (midValue.CompareTo(value) <= 0) { // 当前值 <= 目标值，可能是它，但也可能右侧还有更接近的
+					resultIndex = mid;
+					low = mid + 1;
+				} else { // 当前值 > 目标值，往左找
+					high = mid - 1;
+				}
+			}
+
+			return resultIndex != -1 ? list[resultIndex] : default(T);
 		}
 	}
 
@@ -6429,16 +6477,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <param name="index">该标记在标记列表中的索引值。</param>
 		public TextEvent GetLeadingMarker(MidiEvent midiEvent, out int index, bool dodgedWithMeasures) {
 			IEnumerable<TextEvent> track = dodgedWithMeasures && MarkerDodgedMeasureTrack != null ? MarkerDodgedMeasureTrack : MarkerTrack;
+			TextEvent result = null;
+			index = 0;
 			if (!track.IsEmpty()) {
 				int beginWith = track.First().AbsoluteTime == 0 ? 0 : 1;
-				foreach (IndexerEntry<TextEvent> textEvent in track.WithIndex().Reverse())
-					if (midiEvent.AbsoluteTime >= textEvent.Item.AbsoluteTime) {
-						index = textEvent.Index + beginWith;
-						return textEvent.Item;
-					}
+				result = track.FindLastLessOrEqual(textEvent => textEvent.AbsoluteTime, midiEvent.AbsoluteTime, out index);
+				index += beginWith;
 			}
-			index = 0;
-			return null;
+			return result;
 		}
 		public bool IsVariableBeat { get { return TimeSignatureTrack != null && TimeSignatureTrack.DistinctBy(evt => ValueTuple.Create(evt.Numerator, evt.Denominator)).Count() > 1; } }
 		public bool IsVariableBpm { get { return MsPerQuarterTrack != null && MsPerQuarterTrack.DistinctBy(tempo => tempo.Tempo).Count() > 1; } }
@@ -6634,22 +6680,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public long GetMeasureIndex(MidiEvent midiEvent) {
 			long ticks = midiEvent.AbsoluteTime;
-			foreach (TimeSignatureKeysData curData in beatKeysDatas.Reverse())
-				if (ticks >= curData.ticks) {
-					long measureIndex = curData.measureIndex + (long)/* Math.Floor */((ticks - curData.ticks) / (midi.TicksPerQuarter * curData.QuartersPerMeasure));
-					return measureIndex;
-				}
-			return 0;
+			int _;
+			TimeSignatureKeysData curData = beatKeysDatas.FindLastLessOrEqual(data => data.ticks, ticks, out _);
+			if (curData == null) return 0;
+			long measureIndex = curData.measureIndex + (long)/* Math.Floor */((ticks - curData.ticks) / (midi.TicksPerQuarter * curData.QuartersPerMeasure));
+			return measureIndex;
 		}
 
 		public double GetMeasurePassed(MidiEvent midiEvent) {
 			long ticks = midiEvent.AbsoluteTime;
-			foreach (TimeSignatureKeysData curData in beatKeysDatas.Reverse())
-				if (ticks >= curData.ticks) {
-					double measurePassed = curData.measureIndex + (ticks - curData.ticks) / (midi.TicksPerQuarter * curData.QuartersPerMeasure);
-					return measurePassed;
-				}
-			return 0;
+			int _;
+			TimeSignatureKeysData curData = beatKeysDatas.FindLastLessOrEqual(data => data.ticks, ticks, out _);
+			if (curData == null) return 0;
+			double measurePassed = curData.measureIndex + (ticks - curData.ticks) / (midi.TicksPerQuarter * curData.QuartersPerMeasure);
+			return measurePassed;
 		}
 
 		public long GetQuarterIndex(MidiEvent midiEvent) {
@@ -32180,6 +32224,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				StaffLengthenToBarEndCheck.CheckedChanged += e;
 				LuckyDipLotionBathCheck.CheckedChanged += e;
 				MatchCutLuckyDipCheck.CheckedChanged += e;
+				LuckyDipLimitToSelectedCheck.CheckedChanged += e;
 			}
 			AudioMainKeyCombo.MouseWheel += AudioMainKeyCombo_MouseWheel;
 			SourceConfigGroup.AllowDrop = MidiConfigGroup.AllowDrop = true;
@@ -33681,7 +33726,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			LuckyDipBarOrBeatPanel.Enabled = LuckyDipBarOrBeatCheck.Checked;
 			MatchCutOrderPanel.Enabled = !MatchCutLuckyDipCheck.Checked;
-			LuckyDipLotionBathIntervalPanel.Enabled = LuckyDipLotionBathCheck.Checked;
+			LuckyDipLotionBathIntervalPanel.Enabled = LuckyDipLotionBathCheck.Checked && !LuckyDipLimitToSelectedCheck.Checked;
 
 			PreviewBeepWaveFormCombo.Enabled = PreviewBeepEngineCombo.SelectedIndex == 2;
 
