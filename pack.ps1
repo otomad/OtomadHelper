@@ -1,4 +1,9 @@
-Set-location (Join-Path $PSScriptRoot "\distribution")
+$distributionFolderName = "distribution"
+$distributionPath = Join-Path $PSScriptRoot $distributionFolderName
+if (-not (Test-Path -Path $distributionPath)) {
+	New-Item -Path $distributionFolderName -ItemType Directory
+}
+Set-location ($distributionPath)
 
 function Use-SrcPath {
 	Param (

@@ -85,7 +85,7 @@ Vegas Pro 13+ supported.
 
 Vegas Pro 16 and above support all features, and Vegas Pro 13 ~ 15 are compatible to run (some features are missing). The correct version must be installed though.
 
-Tested **fine** on Vegas Pro 17, 18, 19, 20, 21, 22.
+Tested **fine** on Vegas Pro 17, 18, 19, 20, 21, 22, 23, 2026.
 
 ### Glossary
 You could learn about many features more easily through pictures.
@@ -186,7 +186,7 @@ Inspired by:
 <h2 align="center">General Instructions (for commonly all scripts)</h2>
 
 ### Tips
-Various scripts for MAGIX Vegas **(v14 and above)**.
+Various scripts for MAGIX VEGAS and BorisFX Vegas **(v14 and above)**.
 
 Compilation note for Sony Vegas **(v13 and under)**:
 * The namespace name of the *.NET assembly* has changed from `Sony.Vegas` to `ScriptPortal.Vegas` in **v14 and onward**.

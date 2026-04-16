@@ -76,7 +76,7 @@ Vegas Pro 13+ didukung.
 
 Vegas Pro 16 dan versi keatas mendukung semua fitur, dan Vegas Pro 13 ~ 15 kompatibel untuk dijalankan (beberapa fitur hilang). Versi yang benar harus diinstal.
 
-Telah di uji **bisa** di Vegas Pro 17, 18, 19, 20, 21, 22.
+Telah di uji **bisa** di Vegas Pro 17, 18, 19, 20, 21, 22, 23, 2026.
 
 ### Glossary
 Kalian dapat mempelajari banyak fitur dengan lebih mudah melalui gambar.
@@ -176,7 +176,7 @@ Inspirasi oleh:
 <h2 align="center">General Instructions (for commonly all scripts)</h2>
 
 ### Tips
-Berbagai skrip untuk MAGIX Vegas **(v14 ke atas)**.
+Berbagai skrip untuk MAGIX VEGAS dan BorisFX Vegas **(v14 ke atas)**.
 
 Catatan kompilasi untuk Sony Vegas **(v13 ke bawah)**:
 * Nama namespace dari *.NET Assembly* telah berubah dari `Sony.Vegas` menjadi `ScriptPortal.Vegas` di **v14 dan seterusnya**.

@@ -1,6 +1,6 @@
 /**
- * 音 MAD 助手，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
- * Vegas 16 及以上的版本支持所有功能，Vegas 13 及以上的版本可以兼容运行。
+ * 音 MAD 助手，旨在使 Vegas Pro 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
+ * Vegas Pro 16 及以上的版本支持所有功能，Vegas Pro 13 及以上的版本可以兼容运行。
  * 将本脚本及其它所有附属文件放置在您 Vegas 安装目录下的 Script Menu 文件夹中。
  * 具体说明请参见下方的说明文档链接。
  * 本脚本基于原作者 Chaosinism 的开源代码二次开发，此外使用了 NAudio 库。
@@ -21,9 +21,9 @@
  *
  ***********************************************************************************************
  *
- * Otomad Helper for Vegas, which is designed to allow Vegas to accept MIDI files as input,
+ * Otomad Helper for Vegas, which is designed to allow Vegas Pro to accept MIDI files as input,
  * and automatically generate Otomad/YTPMV tracks.
- * Vegas 16 and above support all features, and Vegas 13 and above are compatible to run.
+ * Vegas Pro 16 and above support all features, and Vegas Pro 13 and above are compatible to run.
  * Place this script and all other attached files in the Script Menu folder in your Vegas installation directory.
  * See the documentation link for instructions.
  * The script is redeveloped based on the original author Chaosinism's open source code and uses the NAudio library.
@@ -44,12 +44,12 @@
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#define VEGAS_ENVIRONMENT // Vegas 运行环境。取消定义后避免在 Visual Studio 中调试时因缺少环境而导致报错。
+#define VEGAS_ENVIRONMENT // Vegas Pro 运行环境。取消定义后避免在 Visual Studio 中调试时因缺少环境而导致报错。
 #define INTERNATIONALIZED // 启用国际化翻译操作。取消定义后可暂时禁用翻译操作并锁定为简体中文，如不需要翻译时也许可以加快脚本启动速度，但其实也没快多少。
 #define PRODUCTION // 用于生产环境。定义后可以吞掉一些无关紧要的错误。取消定义后可以展现一些可能会产生隐患的错误。
 // 以下宏定义为版本号标记。如您的软件本体版本号低于这些标记，应注释掉它们。注意若启用高版本号的标记，比它更低的版本号标记必须同时启用。
-#define VER_GEQ_16 // Vegas 版本号大于或等于 16。定义后可正常使用调音算法属性等功能。
-#define VER_GEQ_14 // Vegas 版本号大于或等于 14。定义后将依赖库切换到 Magix 版本。
+#define VER_GEQ_16 // Vegas Pro 版本号大于或等于 16。定义后可正常使用调音算法属性等功能。
+#define VER_GEQ_14 // Vegas Pro 版本号大于或等于 14。定义后将依赖库切换到 Magix / BorisFX 版本。
 
 using System;
 using System.Collections;
@@ -85,7 +85,7 @@ using NAudio.Wave.SampleProviders;
 namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 	/// <summary>
-	/// Vegas 入口类。
+	/// Vegas Pro 入口类。
 	/// </summary>
 	public sealed class EntryPoint {
 		/// <summary>版本号</summary>
@@ -1730,7 +1730,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 								Effect picInPic = videoEvent.Effects.AddEffect(Plugin.picInPic);
 								OFXDoubleParameter scale = picInPic.OFXEffect.FindParameterByName("Scale") as OFXDoubleParameter;
 								scale.Value = SheetConfigGap * 2.0 / virtualHeight;
-								OFXDoubleParameter scaleY = picInPic.OFXEffect.FindParameterByName("DistortionScaleY") as OFXDoubleParameter; // Vegas 15 及以下版本不支持。
+								OFXDoubleParameter scaleY = picInPic.OFXEffect.FindParameterByName("DistortionScaleY") as OFXDoubleParameter; // Vegas Pro 15 及以下版本不支持。
 								if (scaleY != null) scaleY.Value = scale.Value;
 								OFXDouble2DParameter location = picInPic.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter;
 								double positionX = -virtualWidth / 2 + SheetConfigPaddingLeft + sheetConfigWidth / barLength * (startQuarters - barStartQuarters);
@@ -6151,7 +6151,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			private const string DEFAULT_PARAMETER = "[Sys] Default all parameters";
 			/// <summary>
-			/// 针对 Vegas 15 及以下版本兼容而使用的传统移调插件调音方式。
+			/// 针对 Vegas Pro 15 及以下版本兼容而使用的传统移调插件调音方式。
 			/// </summary>
 			/// <param name="audioEvent">音频轨道事件。</param>
 			/// <param name="pitchDelta">移调值。</param>
@@ -34031,7 +34031,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (selectedAudioClipsCount != 1)
 				ConvertMusicBeatsBtn.Enabled = false;
 
-			// 低于 Vegas 16 的版本不支持更改调音算法。
+			// 低于 Vegas Pro 16 的版本不支持更改调音算法。
 			#if !VER_GEQ_16
 				ChangeTuneMethodBtn.Enabled = false;
 				ChangeTuneMethodBtn.CommandLinkNote = str.change_tune_method_configform_info + '\n' +

@@ -76,7 +76,7 @@ Vegas Pro 13+ được hỗ trợ.
 
 Vegas Pro 16 và các phiên bản mới hơn trên phiên bản này hỗ trợ tất cả tính năng, và Vegas Pro 13 ~ 15 tương thích để chạy script (Một vài tính năng sẽ thiếu). Cần phải cài đúng phiên bản của script
 
-Đã test **ổn định** ở Vegas Pro 17, 18, 19, 20, 21, 22.
+Đã test **ổn định** ở Vegas Pro 17, 18, 19, 20, 21, 22, 23, 2026.
 
 ### Chú giải
 Bạn có thể tìm hiểu về nhiều tính năng dễ dàng hơn thông qua hình ảnh.

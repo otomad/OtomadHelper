@@ -8,7 +8,7 @@ The new roadmap has been moved to [GitHub Project](https://github.com/users/otom
 ### Basic feature
 - [x] Trim sources.
 - [x] Using sources in media pool or track.
-- [x] New tuning method (which will be faster) (for Vegas 16+ only).
+- [x] New tuning method (which will be faster) (for Vegas Pro 16+ only).
 - [x] Integrate Staff Visualizer.
 - [x] Integrate Select Interval.
 - [x] Preview base pitch.
@@ -22,7 +22,7 @@ The new roadmap has been moved to [GitHub Project](https://github.com/users/otom
 - [x] I18n (5 languages currently).
 - [x] Change tune method.
 - [x] Tracks legato.
-- [x] Compatible with Vegas 13~15.
+- [x] Compatible with Vegas Pro 13~15.
 - [x] Multiple track for video clips option.
 - [x] Increase spacing.
 - [x] Stacking clips for all tracks.
