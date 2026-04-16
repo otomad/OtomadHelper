@@ -57,7 +57,7 @@ Bạn cũng có thể đọc [tài liệu](https://docs.google.com/document/d/1P
 ### Hướng dẫn cài đặt
 1. [Tải xuống](https://github.com/otomad/OtomadHelper/releases/latest) phiên bản mới nhất của script này.
 2. Giải nén **TẤT CẢ** file trong file zip bạn vừa tải về tới thư mục "Script Menu" trong đường dẫn cài đặt của Vegas.
-> (Ví dụ. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
+> (Ví dụ. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu)
 3. Đảm bảo rằng là file DLL `(DLL\NAudio.dll)` không bị khoá. **Các bước cụ thể:**
 	1. Trong đường dẫn cài đặt của Vegas, vào thư mục `Script Menu\DLL`.
 	2. Chuột phải vào file NAudio.dll và chọn "**Properties**".

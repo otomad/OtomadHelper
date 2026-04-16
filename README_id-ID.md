@@ -57,7 +57,7 @@ Kalian bisa baca ini: [@Evauation](https://github.com/Evauation)'s [documentatio
 ### Instalasi
 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) versi terbaru.
 2. Unzip (Ekstrak) **Semua** file di dalam zip file yang barusan kalian download ke folder "Script Menu" (Lokasinya di tempat folder Vegas).
-> (yaitu. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
+> (yaitu. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu)
 3. Pastikan file DLL-nya `(DLL\NAudio.dll)` ga terlock. **Langkah spesifik:**
 	1. Di direktori instalasi Vegas, masukkan folder `Script Menu\DLL`.
 	2. Klik kanan file NAudio.dll dan pilih properties.
@@ -185,9 +185,9 @@ Catatan kompilasi untuk Sony Vegas **(v13 ke bawah)**:
 
 ### Instalasi
 * Skrip termasuk dalam direktori instalasi Vegas, di folder "Menu Skrip".
-	* (yaitu. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
+	* (yaitu. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu)
 * Beberapa skrip memerlukan DLL tambahan, letakkan di folder "DLL" di folder "Menu Skrip".
-	* (yaitu. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu\\DLL)
+	* (yaitu. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu\\DLL)
 * Ingat! file dll jangan lupa di Unblock. -->
 
 </div>

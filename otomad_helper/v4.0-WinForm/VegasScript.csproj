@@ -111,7 +111,7 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="ScriptPortal.Vegas">
-      <HintPath>..\..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 22.0\ScriptPortal.Vegas.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\BorisFX\Vegas Pro 2026\ScriptPortal.Vegas.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.dll</HintPath>

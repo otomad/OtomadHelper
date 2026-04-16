@@ -581,6 +581,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.currentVersionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -1231,7 +1232,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
             this.fileMenuItem,
             this.helpToolStripMenuItem,
             this.languageToolStripMenuItem,
-            this.latestVersionToolStripMenuItemInBar});
+            this.latestVersionToolStripMenuItemInBar,
+            this.currentVersionMenuItem});
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
 			this.menu.Padding = new System.Windows.Forms.Padding(10, 4, 0, 6);
@@ -8964,6 +8966,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			// 
+			// currentVersionMenuItem
+			// 
+			this.currentVersionMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.currentVersionMenuItem.Enabled = false;
+			this.currentVersionMenuItem.Name = "currentVersionMenuItem";
+			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 36);
+			this.currentVersionMenuItem.Text = "v4";
+			// 
 			// ConfigForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -9802,6 +9812,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.TabPage LinearMapTab;
 		public System.Windows.Forms.TabPage ConsonantTab;
 		public System.Windows.Forms.TabPage ShupelunkerTab;
+		public System.Windows.Forms.ToolStripMenuItem currentVersionMenuItem;
 	}
 }
 

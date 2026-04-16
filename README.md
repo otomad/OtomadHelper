@@ -5,7 +5,7 @@
 	<h1>VegasScripts</h1>
 	<p>
 		<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="State" />
-		<img src="https://img.shields.io/badge/VERSION-4.47.17.0-orange?style=flat-square" alt="Version" />
+		<img src="https://img.shields.io/badge/VERSION-4.64.17.0-orange?style=flat-square" alt="Version" />
 		<img src="https://img.shields.io/github/downloads/otomad/OtomadHelper/total.svg?style=flat-square&label=DOWNLOADS" alt="Downloads">
 	</p>
 </div>
@@ -66,7 +66,7 @@ You can also read [@Evauation](https://github.com/Evauation)'s [documentation](h
 ### Install
 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the latest version of this script.
 2. Unzip **ALL** the files in the zip file you've just downloaded to the "Script Menu" folder in the Vegas installation directory.
-> (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
+> (ie. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu)
 3. Make sure that the DLL file `(DLL\NAudio.dll)` is not locked. **Specific steps:**
 	1. In the Vegas installation directory, enter folder `Script Menu\DLL`.
 	2. Right-click the NAudio.dll file and select Properties.
@@ -195,9 +195,9 @@ Compilation note for Sony Vegas **(v13 and under)**:
 
 ### Install
 * Scripts belong in the Vegas install directory, in the "Script Menu" folder.
-	* (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
+	* (ie. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu)
 * Some scripts require additional DLLs, put them in a "DLL" folder in the "Script Menu" folder.
-	* (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu\\DLL)
+	* (ie. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu\\DLL)
 * Make sure that the DLL files (such as `DLL\NAudio.dll`) are not blocked.
 
 </div>

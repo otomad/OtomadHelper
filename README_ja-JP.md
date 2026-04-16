@@ -57,7 +57,7 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照してい
 ### インストール
 1. スクリプトの最新バージョンを[ダウンロードします](https://github.com/otomad/OtomadHelper/releases/latest)。
 2. Vegas インストールディレクトリの下の「Script Menu」フォルダにダウンロードした ZIP ファイル内の**すべて**のファイルを解凍します。
-> (例えば：C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
+> (例えば：C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu)
 3. DLL ファイル `(DLL\NAudio.dll)` がロックされていないことを確認してください。**詳しい手順：**
 	1. Vegas のインストールディレクトリで、`Script Menu\DLL` フォルダを開きます。
 	2. ファイル NAudio.dll を右クリックし、［プロパティ］をクリックします。
