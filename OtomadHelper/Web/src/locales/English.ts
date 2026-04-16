@@ -135,11 +135,11 @@ export default {
 			},
 			multisource: "Multisource comb",
 			linearMap: "Linear map output",
-			matchCut: "Beat sync / Match cut",
+			matchCut: "Beat sync match cut",
 			luckyDip: {
 				_: "Lucky dip",
 				limitToSelected: "Limited to selected sources",
-				track: "For each track or channel",
+				track: "Make each track or channel different",
 				marker: "Switch once per marker",
 				barOrBeat: {
 					_: "Switch once per bar or beat",
@@ -507,11 +507,11 @@ export default {
 				},
 				alternativeForExceedTheRange: {
 					_: "If exceeds the range",
-					multiple: "Multiple use of Audio Effect Plugins",
+					multiple: "Use Audio Effect Plugin Multiple Times",
 					plugin: "Switch to Pitch Shift Audio Effect Plugin",
-					octave: "Higher/Lower octaves",
-					octaveExp: "Higher/Lower octaves (Experimental)",
-					dock: "Dock at top/bottom",
+					octave: "Raise/Lower Octaves",
+					octaveExp: "Raise/Lower Octaves (Experimental)",
+					dock: "Dock at Top/Bottom",
 					silent: "Silent",
 				},
 				resample: "Resample",
@@ -1235,7 +1235,7 @@ export default {
 					stretchAttributes_elastic: "Choose the most suitable mode for the current source from the sub-algorithms of the Elastic tuning method. Different modes provide different levels of quality and performance.",
 					stretchAttributes_classic: "Choose a mode from the Classic tuning method to specify how the file is divided and crossfaded to prevent artifacts. Depending on the source, you may need to experiment with different crossfade types.",
 					alternativeForExceedTheRange: {
-						_: "Handles out of range notes with an alternative method",
+						_: "Handles notes that out of range with an alternative method",
 						plugin: "Reaches any pitch by using the Pitch Shift Audio Effect Plugin repeatedly",
 						octave: "At least avoid dissonant intervals by raising or lowering the octave scale to the range of {{formulaFor24}}",
 						octaveExp: "VEGAS actually supports a range of {{formulaFor39}} internally, use with caution as it may cause VEGAS to crash",
