@@ -218,6 +218,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>堆　　叠</summary>*/ private bool IsStack { get { return AConfig && AConfigStack || VConfig && VConfigStack; } }
 		/**<summary>轨道分组</summary>*/ internal GroupTrackBy GroupTrackBy { get { return configForm.GroupTrackBy == GroupTrackBy.OFF ? GroupTrackBy.OFF : YtpConfig || IsStack ? GroupTrackBy.SESSION : configForm.GroupTrackBy; } }
 		/**<summary>折叠分组</summary>*/ private bool CollapseTrackGroups { get { return configForm.CollapseTrackGroupCheck.Checked; } }
+		/**<summary>移动光标</summary>*/ private MoveCursorAfterCompletion MoveCursorAfterCompletion { get { return configForm.MoveCursorAfterCompletion; } }
 		#endregion
 
 		#region 多素材属性
@@ -309,6 +310,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		 * <remarks>若为 null 表示不保障一致性，完全打乱随机。</remarks>
 		 */
 		private int? consistencyTracksSeed = null;
+		private double? resultCursorPosition = null;
 
 		// 媒体 / MIDI 参数变量
 		internal MIDI midi = null;
@@ -1285,6 +1287,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			ResetSourceTrimTime();
 			double generateBeginTime = GenerateAt == GenerateAt.CUSTOM ? GenerateAtCustomTimecode.ToMilliseconds() :
 				GenerateAt == GenerateAt.CURSOR ? vegas.Transport.CursorPosition.ToMilliseconds() : 0;
+			if (MoveCursorAfterCompletion == MoveCursorAfterCompletion.GENERATE_AT && resultCursorPosition == null) resultCursorPosition = generateBeginTime;
 			double songLength = 0; // 指定乐曲总长。
 			double songStart = generateBeginTime + MidiConfigStartTime;
 			#endregion
@@ -1443,6 +1446,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (startTime < MidiConfigStartTime) continue;
 				if (startTime > MidiConfigEndTime && sliceComposition) break;
 				songLength = startTime + duration;
+				if (MoveCursorAfterCompletion == MoveCursorAfterCompletion.BEFORE_FIRST_NOTE || MoveCursorAfterCompletion == MoveCursorAfterCompletion.AFTER_LAST_NOTE) {
+					bool isBeforeFirstNote = MoveCursorAfterCompletion == MoveCursorAfterCompletion.BEFORE_FIRST_NOTE;
+					double newPosition = generateBeginTime + (isBeforeFirstNote ? startTime : songLength);
+					if (resultCursorPosition == null || (isBeforeFirstNote ? newPosition < resultCursorPosition : newPosition > resultCursorPosition))
+						resultCursorPosition = newPosition;
+				}
 				#region 下一页
 				if (SheetConfig) {
 					if (beatIntegrator.GetQuarterPassed(midiEvent) >= barEndQuarters)
@@ -3299,6 +3308,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					trackGroup.CollapseTrackGroup();
 			if (!SelectAllGeneratedEvents)
 				SelectSpecificTracksOnly();
+			if (MoveCursorAfterCompletion != MoveCursorAfterCompletion.ORIGINAL && resultCursorPosition != null) {
+				vegas.Transport.CursorPosition = Timecode.FromMilliseconds(resultCursorPosition.Value);
+				vegas.Transport.ViewCursor(false);
+			}
 		}
 
 		/// <summary>
@@ -3364,8 +3377,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return "v" + version;
 		}
 
-		/// <summary>最低支持 Vegas 版本号。</summary>
-		public static readonly Version MIN_SUPPORTED_VERSION =
+		/// <summary>支持 Vegas 版本号的下限（含端点）。</summary>
+		public static readonly Version LOWER_BOUND_SUPPORTED_VERSION =
 			#if VER_GEQ_16
 				new Version(16, 0);
 			#elif VER_GEQ_14
@@ -3373,15 +3386,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#else
 				new Version(13, 0);
 			#endif
-		/// <summary>最高支持 Vegas 版本号。</summary>
-		public static readonly Version MAX_SUPPORTED_VERSION =
+		/// <summary>支持 Vegas 版本号的上限极限值（不含端点）。</summary>
+		public static readonly Version UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION =
 			#if VER_GEQ_16
 				null;
 			#elif VER_GEQ_14
-				new Version(15, 0);
+				new Version(16, 0);
 			#else
-				new Version(13, 0);
+				new Version(14, 0);
 			#endif
+
+		/// <summary>支持 Vegas 版本号的上限（仅供显示，不准确）。</summary>
+		private static readonly Version UPPER_BOUND_SUPPORTED_VERSION = UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION == null ? null :
+			new Version(
+				UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION.Major - 1,
+				UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION.Minor,
+				UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION.Build,
+				UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION.Revision
+			);
 
 		/// <summary>
 		/// 检查 Vegas 版本是否支持。
@@ -3390,20 +3412,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public SupportVegasVersionState CheckVersionSupport() {
 			Version curVer = CurrentVegasVersion;
 			if (curVer == null) return SupportVegasVersionState.UNDEFINED;
-			else if (curVer >= MIN_SUPPORTED_VERSION &&
-				(MAX_SUPPORTED_VERSION == null || curVer <= MAX_SUPPORTED_VERSION)
+			else if (
+				curVer >= LOWER_BOUND_SUPPORTED_VERSION &&
+				(UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION == null || curVer < UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION)
 			) return SupportVegasVersionState.SUPPORTED;
 			else return SupportVegasVersionState.UNSUPPORTED;
 		}
 
 		public static string GetScriptSupportedVersionRange() {
 			string supportedVersion = "None";
-			if (MAX_SUPPORTED_VERSION != null && MIN_SUPPORTED_VERSION != null)
-				supportedVersion = MIN_SUPPORTED_VERSION.ToString() + " ~ " + MAX_SUPPORTED_VERSION.ToString();
-			else if (MIN_SUPPORTED_VERSION != null)
-				supportedVersion = MIN_SUPPORTED_VERSION.ToString() + " +";
-			else if (MAX_SUPPORTED_VERSION != null)
-				supportedVersion = "0 ~ " + MAX_SUPPORTED_VERSION.ToString();
+			if (UPPER_BOUND_SUPPORTED_VERSION != null && LOWER_BOUND_SUPPORTED_VERSION != null)
+				if (LOWER_BOUND_SUPPORTED_VERSION == UPPER_BOUND_SUPPORTED_VERSION)
+					supportedVersion = LOWER_BOUND_SUPPORTED_VERSION.ToString();
+				else
+					supportedVersion = LOWER_BOUND_SUPPORTED_VERSION.ToString() + " ~ " + UPPER_BOUND_SUPPORTED_VERSION.ToString();
+			else if (LOWER_BOUND_SUPPORTED_VERSION != null)
+				supportedVersion = LOWER_BOUND_SUPPORTED_VERSION.ToString() + " +";
+			else if (UPPER_BOUND_SUPPORTED_VERSION != null)
+				supportedVersion = "0 ~ " + UPPER_BOUND_SUPPORTED_VERSION.ToString();
 			return supportedVersion;
 		}
 
@@ -4503,6 +4529,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		REVERSED,
 		/// <summary>乱序。</summary>
 		SHUFFLED,
+	}
+
+	public enum MoveCursorAfterCompletion {
+		/// <summary>原位置。</summary>
+		ORIGINAL,
+		/// <summary>生成开始位置。</summary>
+		GENERATE_AT,
+		/// <summary>第一个事件之前。</summary>
+		BEFORE_FIRST_NOTE,
+		/// <summary>最后一个事件之后。</summary>
+		AFTER_LAST_NOTE,
 	}
 
 	/// <summary>
@@ -11378,7 +11415,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 	public partial class ReplaceClipsForm : Form, IInterpret, IConfigIniUser {
 		private readonly EntryPoint parent;
-		private readonly IEnumerable<TrackEvent> events;
+		private readonly TrackEvent[] events;
 		private Vegas vegas { get { return parent.vegas; } }
 		private ConfigIni configIni { get { return parent.configIni; } }
 		private List<ValidTrack> validTracks;
@@ -11392,7 +11429,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			((Action)ReadIni).OnErrorBreak();
 			Translate();
-			events = parent.GetSelectedEvents();
+			events = parent.GetSelectedEvents().ToArray();
 			separation = new SeparationSpecifier(this);
 			if (!FindReplacer() || validTracks.Count == 0) {
 				EntryPoint.ShowError(new Exceptions.FailToSelectClipsException());
@@ -12262,7 +12299,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 	public partial class SelectIntervalForm : Form, IInterpret {
 		private readonly EntryPoint parent;
-		private IEnumerable<TrackEvent> events;
+		private TrackEvent[] events;
 		private Vegas vegas { get { return parent.vegas; } }
 		internal const int MARGIN = 60;
 		public SelectIntervalForm(EntryPoint entryPoint) {
@@ -12296,7 +12333,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void SubmitSelectBtn_Click(object sender, EventArgs e) {
-			events = parent.GetSelectedEvents();
+			events = parent.GetSelectedEvents().ToArray();
 			SelectInfo.Text = string.Format(Lang.str.select_events_count_info, events.Count());
 		}
 
@@ -14949,39 +14986,48 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void OkBtn_Click(object sender, EventArgs e) {
 			Close();
 			#if VER_GEQ_16 // 不重要了，低于 16 的版本整个功能都不能用了，加上仅保证不会报错。
-			AudioTuningMethod method = (AudioTuningMethod)MethodCombo.SelectedIndex;
+			TimeStretchPitchShift method = CurrentMethod;
 			bool isLockPitch = PitchLockCheck.Checked;
 			bool isLockFormant = FormantLockCheck.Checked;
-			ElastiqueStretchAttributes elastique = new ElastiqueStretchAttributes();
-			ClassicStretchAttributes classic = new ClassicStretchAttributes();
-			if (method == AudioTuningMethod.ELASTIQUE) elastique = (ElastiqueStretchAttributes)StretchAttrCombo.SelectedIndex;
-			if (method == AudioTuningMethod.CLASSIC) classic = (ClassicStretchAttributes)StretchAttrCombo.SelectedIndex;
+			ElastiqueStretchAttributes elastique = default(ElastiqueStretchAttributes);
+			ClassicStretchAttributes classic = default(ClassicStretchAttributes);
+			if (method == TimeStretchPitchShift.Elastique) elastique = (ElastiqueStretchAttributes)StretchAttrCombo.SelectedIndex;
+			if (method == TimeStretchPitchShift.Classic) classic = (ClassicStretchAttributes)StretchAttrCombo.SelectedIndex;
 			IEnumerable<AudioEvent> audioEvents = parent.GetSelectedAudioEvents();
+			int failedCount = 0;
 			foreach (AudioEvent audioEvent in audioEvents) {
-				if (method == AudioTuningMethod.NO_TUNING) continue;
-				if (method == AudioTuningMethod.ELASTIQUE) audioEvent.ElastiqueAttribute = elastique;
-				if (method == AudioTuningMethod.CLASSIC) audioEvent.ClassicAttribute = classic;
-				if (method == AudioTuningMethod.ELASTIQUE && elastique == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = isLockFormant;
-				if (audioEvent.PitchLock != isLockPitch) {
-					if (LockPitchInsteadOfRateCheck.Checked) {
-						if (isLockPitch) {
-							double originalPitch = audioEvent.PitchSemis;
-							audioEvent.PitchLock = isLockPitch;
-							audioEvent.AdjustPlaybackRate(EntryPoint.Pitch2Stretch(originalPitch, AutoOctaveDisplacementMode.NORMAL), true);
-						} else {
-							double originalRate = audioEvent.PlaybackRate;
-							audioEvent.PitchLock = isLockPitch;
-							audioEvent.PitchSemis = EntryPoint.Stretch2Pitch(originalRate);
-						}
-					} else audioEvent.PitchLock = isLockPitch;
+				try {
+					audioEvent.Method = method;
+					if (method == TimeStretchPitchShift.None) continue;
+					if (method == TimeStretchPitchShift.Elastique) audioEvent.ElastiqueAttribute = elastique;
+					if (method == TimeStretchPitchShift.Classic) audioEvent.ClassicAttribute = classic;
+					if (method == TimeStretchPitchShift.Elastique && elastique == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = isLockFormant;
+					if (audioEvent.PitchLock != isLockPitch) {
+						if (LockPitchInsteadOfRateCheck.Checked) {
+							if (isLockPitch) {
+								double originalPitch = audioEvent.PitchSemis;
+								audioEvent.PitchLock = isLockPitch;
+								audioEvent.AdjustPlaybackRate(EntryPoint.Pitch2Stretch(originalPitch, AutoOctaveDisplacementMode.NORMAL), true);
+							} else {
+								double originalRate = audioEvent.PlaybackRate;
+								audioEvent.PitchLock = isLockPitch;
+								audioEvent.PitchSemis = EntryPoint.Stretch2Pitch(originalRate);
+							}
+						} else audioEvent.PitchLock = isLockPitch;
+					}
+				} catch (Exception) { // 缺失音频流的音频事件可能会报错。
+					failedCount++;
+					continue;
 				}
 			}
+			if (failedCount != 0)
+				MessageBox.Show(string.Format(Lang.str.failed_to_convert_tuning_method_count_warning, failedCount), Lang.str.change_tune_method, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			#endif
 		}
 
 		private void MethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
 			#if VER_GEQ_16
-			TimeStretchPitchShift method = (TimeStretchPitchShift)MethodCombo.SelectedIndex;
+			TimeStretchPitchShift method = CurrentMethod;
 			LockPitchInsteadOfRateCheck.Enabled = StretchAttrCombo.Enabled = PitchLockCheck.Enabled = method != TimeStretchPitchShift.None;
 			FormantLockCheck.Enabled = method == TimeStretchPitchShift.Elastique && StretchAttrCombo.SelectedIndex == 0;
 			if (method != lastMethod) {
@@ -15002,6 +15048,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			if (PitchLockCheck.Checked) StretchAttrCombo.Enabled = FormantLockCheck.Enabled = false;
 			#endif
+		}
+
+		private TimeStretchPitchShift CurrentMethod {
+			get {
+				return
+					MethodCombo.SelectedIndex == 1 ? TimeStretchPitchShift.Elastique :
+					MethodCombo.SelectedIndex == 2 ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.None;
+			}
 		}
 
 		public static string[] ElastiqueAttrArray {
@@ -22460,6 +22514,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.vietnameseToolStripMenuItem = new Otomad.VegasScripts.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
 			this.indonesianToolStripMenuItem = new Otomad.VegasScripts.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
 			this.latestVersionToolStripMenuItemInBar = new System.Windows.Forms.ToolStripMenuItem();
+			this.currentVersionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.Tabs = new System.Windows.Forms.TabControl();
 			this.SourceTab = new System.Windows.Forms.TabPage();
@@ -22931,7 +22986,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.currentVersionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.MoveCursorAfterCompletionLbl = new System.Windows.Forms.Label();
+			this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
+			this.MoveCursorToOriginalRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.MoveCursorToGenerateAtRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.MoveCursorBeforeFirstNoteRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.MoveCursorAfterLastNoteRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -23085,6 +23145,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
+			this.flowLayoutPanel8.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// tableLayoutPanel1
@@ -24030,6 +24091,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.latestVersionToolStripMenuItemInBar.Text = "下载最新版本";
 			this.latestVersionToolStripMenuItemInBar.Visible = false;
 			//
+			// currentVersionMenuItem
+			//
+			this.currentVersionMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.currentVersionMenuItem.Enabled = false;
+			this.currentVersionMenuItem.Name = "currentVersionMenuItem";
+			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 36);
+			this.currentVersionMenuItem.Text = "v4";
+			//
 			// panel1
 			//
 			this.panel1.BackColor = System.Drawing.Color.Transparent;
@@ -24093,7 +24162,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceConfigGroup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.MultiSourceConfigGroup.Controls.Add(this.MultiSourceCombTabs);
 			this.MultiSourceConfigGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.MultiSourceConfigGroup.Location = new System.Drawing.Point(8, 526);
+			this.MultiSourceConfigGroup.Location = new System.Drawing.Point(8, 617);
 			this.MultiSourceConfigGroup.Name = "MultiSourceConfigGroup";
 			this.MultiSourceConfigGroup.Padding = new System.Windows.Forms.Padding(8);
 			this.MultiSourceConfigGroup.Size = new System.Drawing.Size(1002, 455);
@@ -24642,7 +24711,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceConfigGroup.Location = new System.Drawing.Point(8, 8);
 			this.SourceConfigGroup.Name = "SourceConfigGroup";
 			this.SourceConfigGroup.Padding = new System.Windows.Forms.Padding(8);
-			this.SourceConfigGroup.Size = new System.Drawing.Size(1002, 518);
+			this.SourceConfigGroup.Size = new System.Drawing.Size(1002, 609);
 			this.SourceConfigGroup.TabIndex = 1;
 			this.SourceConfigGroup.TabStop = false;
 			this.SourceConfigGroup.Text = "素材属性";
@@ -24655,9 +24724,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel3.AutoSize = true;
 			this.tableLayoutPanel3.ColumnCount = 1;
 			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel3.Controls.Add(this.CollapseTrackGroupCheck, 0, 8);
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel12, 0, 7);
-			this.tableLayoutPanel3.Controls.Add(this.TrackGroupLbl, 0, 6);
+			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel8, 0, 7);
+			this.tableLayoutPanel3.Controls.Add(this.MoveCursorAfterCompletionLbl, 0, 6);
+			this.tableLayoutPanel3.Controls.Add(this.CollapseTrackGroupCheck, 0, 10);
+			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel12, 0, 9);
+			this.tableLayoutPanel3.Controls.Add(this.TrackGroupLbl, 0, 8);
 			this.tableLayoutPanel3.Controls.Add(this.ChooseSourceLbl, 0, 0);
 			this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 0, 1);
 			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel1, 0, 2);
@@ -24667,7 +24738,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel3.Location = new System.Drawing.Point(8, 40);
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-			this.tableLayoutPanel3.RowCount = 9;
+			this.tableLayoutPanel3.RowCount = 11;
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -24677,7 +24748,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(986, 470);
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(986, 561);
 			this.tableLayoutPanel3.TabIndex = 1;
 			//
 			// CollapseTrackGroupCheck
@@ -24685,7 +24758,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.CollapseTrackGroupCheck.AutoSize = true;
 			this.CollapseTrackGroupCheck.Checked = true;
 			this.CollapseTrackGroupCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.CollapseTrackGroupCheck.Location = new System.Drawing.Point(6, 430);
+			this.CollapseTrackGroupCheck.Location = new System.Drawing.Point(6, 521);
 			this.CollapseTrackGroupCheck.Margin = new System.Windows.Forms.Padding(6, 4, 4, 4);
 			this.CollapseTrackGroupCheck.Name = "CollapseTrackGroupCheck";
 			this.CollapseTrackGroupCheck.Size = new System.Drawing.Size(286, 36);
@@ -24700,7 +24773,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel12.Controls.Add(this.TrackGroupByTrackRadio);
 			this.flowLayoutPanel12.Controls.Add(this.TrackGroupBySessionRadio);
 			this.flowLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel12.Location = new System.Drawing.Point(3, 378);
+			this.flowLayoutPanel12.Location = new System.Drawing.Point(3, 469);
 			this.flowLayoutPanel12.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
 			this.flowLayoutPanel12.Name = "flowLayoutPanel12";
 			this.flowLayoutPanel12.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
@@ -24749,7 +24822,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.TrackGroupLbl.AutoSize = true;
 			this.TrackGroupLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TrackGroupLbl.Location = new System.Drawing.Point(4, 343);
+			this.TrackGroupLbl.Location = new System.Drawing.Point(4, 434);
 			this.TrackGroupLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
 			this.TrackGroupLbl.Name = "TrackGroupLbl";
 			this.TrackGroupLbl.Size = new System.Drawing.Size(978, 32);
@@ -31316,13 +31389,82 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			//
-			// currentVersionMenuItem
+			// MoveCursorAfterCompletionLbl
 			//
-			this.currentVersionMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.currentVersionMenuItem.Enabled = false;
-			this.currentVersionMenuItem.Name = "currentVersionMenuItem";
-			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 36);
-			this.currentVersionMenuItem.Text = "v4";
+			this.MoveCursorAfterCompletionLbl.AutoSize = true;
+			this.MoveCursorAfterCompletionLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MoveCursorAfterCompletionLbl.Location = new System.Drawing.Point(4, 343);
+			this.MoveCursorAfterCompletionLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
+			this.MoveCursorAfterCompletionLbl.Name = "MoveCursorAfterCompletionLbl";
+			this.MoveCursorAfterCompletionLbl.Size = new System.Drawing.Size(978, 32);
+			this.MoveCursorAfterCompletionLbl.TabIndex = 17;
+			this.MoveCursorAfterCompletionLbl.Text = "生成完成后将光标移动到";
+			this.MoveCursorAfterCompletionLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			//
+			// flowLayoutPanel8
+			//
+			this.flowLayoutPanel8.AutoSize = true;
+			this.flowLayoutPanel8.Controls.Add(this.MoveCursorToOriginalRadio);
+			this.flowLayoutPanel8.Controls.Add(this.MoveCursorToGenerateAtRadio);
+			this.flowLayoutPanel8.Controls.Add(this.MoveCursorBeforeFirstNoteRadio);
+			this.flowLayoutPanel8.Controls.Add(this.MoveCursorAfterLastNoteRadio);
+			this.flowLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Top;
+			this.flowLayoutPanel8.Location = new System.Drawing.Point(3, 378);
+			this.flowLayoutPanel8.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+			this.flowLayoutPanel8.Name = "flowLayoutPanel8";
+			this.flowLayoutPanel8.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.flowLayoutPanel8.Size = new System.Drawing.Size(980, 48);
+			this.flowLayoutPanel8.TabIndex = 18;
+			//
+			// MoveCursorToOriginalRadio
+			//
+			this.MoveCursorToOriginalRadio.AutoSize = true;
+			this.MoveCursorToOriginalRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MoveCursorToOriginalRadio.Group = "MoveCursorAfterCompletion";
+			this.MoveCursorToOriginalRadio.Location = new System.Drawing.Point(3, 6);
+			this.MoveCursorToOriginalRadio.Name = "MoveCursorToOriginalRadio";
+			this.MoveCursorToOriginalRadio.Size = new System.Drawing.Size(117, 36);
+			this.MoveCursorToOriginalRadio.TabIndex = 0;
+			this.MoveCursorToOriginalRadio.Text = "原位置";
+			this.MoveCursorToOriginalRadio.UseVisualStyleBackColor = true;
+			//
+			// MoveCursorToGenerateAtRadio
+			//
+			this.MoveCursorToGenerateAtRadio.AutoSize = true;
+			this.MoveCursorToGenerateAtRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MoveCursorToGenerateAtRadio.Group = "MoveCursorAfterCompletion";
+			this.MoveCursorToGenerateAtRadio.Location = new System.Drawing.Point(126, 6);
+			this.MoveCursorToGenerateAtRadio.Name = "MoveCursorToGenerateAtRadio";
+			this.MoveCursorToGenerateAtRadio.Size = new System.Drawing.Size(189, 36);
+			this.MoveCursorToGenerateAtRadio.TabIndex = 1;
+			this.MoveCursorToGenerateAtRadio.Text = "生成开始位置";
+			this.MoveCursorToGenerateAtRadio.UseVisualStyleBackColor = true;
+			//
+			// MoveCursorBeforeFirstNoteRadio
+			//
+			this.MoveCursorBeforeFirstNoteRadio.AutoSize = true;
+			this.MoveCursorBeforeFirstNoteRadio.Checked = true;
+			this.MoveCursorBeforeFirstNoteRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MoveCursorBeforeFirstNoteRadio.Group = "MoveCursorAfterCompletion";
+			this.MoveCursorBeforeFirstNoteRadio.Location = new System.Drawing.Point(321, 6);
+			this.MoveCursorBeforeFirstNoteRadio.Name = "MoveCursorBeforeFirstNoteRadio";
+			this.MoveCursorBeforeFirstNoteRadio.Size = new System.Drawing.Size(213, 36);
+			this.MoveCursorBeforeFirstNoteRadio.TabIndex = 2;
+			this.MoveCursorBeforeFirstNoteRadio.TabStop = true;
+			this.MoveCursorBeforeFirstNoteRadio.Text = "第一个事件之前";
+			this.MoveCursorBeforeFirstNoteRadio.UseVisualStyleBackColor = true;
+			//
+			// MoveCursorAfterLastNoteRadio
+			//
+			this.MoveCursorAfterLastNoteRadio.AutoSize = true;
+			this.MoveCursorAfterLastNoteRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MoveCursorAfterLastNoteRadio.Group = "MoveCursorAfterCompletion";
+			this.MoveCursorAfterLastNoteRadio.Location = new System.Drawing.Point(540, 6);
+			this.MoveCursorAfterLastNoteRadio.Name = "MoveCursorAfterLastNoteRadio";
+			this.MoveCursorAfterLastNoteRadio.Size = new System.Drawing.Size(237, 36);
+			this.MoveCursorAfterLastNoteRadio.TabIndex = 3;
+			this.MoveCursorAfterLastNoteRadio.Text = "最后一个事件之后";
+			this.MoveCursorAfterLastNoteRadio.UseVisualStyleBackColor = true;
 			//
 			// ConfigForm
 			//
@@ -31599,6 +31741,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
+			this.flowLayoutPanel8.ResumeLayout(false);
+			this.flowLayoutPanel8.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -32163,6 +32307,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.TabPage ConsonantTab;
 		public System.Windows.Forms.TabPage ShupelunkerTab;
 		public System.Windows.Forms.ToolStripMenuItem currentVersionMenuItem;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel8;
+		public GroupedRadioButton MoveCursorToOriginalRadio;
+		public GroupedRadioButton MoveCursorToGenerateAtRadio;
+		public GroupedRadioButton MoveCursorBeforeFirstNoteRadio;
+		public System.Windows.Forms.Label MoveCursorAfterCompletionLbl;
+		public GroupedRadioButton MoveCursorAfterLastNoteRadio;
 	}
 	#endregion
 
@@ -32407,8 +32557,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 程序图标
 			#if VEGAS_ENVIRONMENT
 			try {
+				int iconSize = (int)(16 * Dpi);
 				//icon = Icon = Icon.ExtractAssociatedIcon(System.IO.Path.ChangeExtension(ScriptPath, "ico"));
-				icon = Icon = new Icon(System.IO.Path.ChangeExtension(ScriptPath, "ico"), new Size(16, 16));
+				icon = Icon = new Icon(System.IO.Path.ChangeExtension(ScriptPath, "ico"), new Size(iconSize, iconSize));
 			} catch (Exception) { } // 如果路径不存在则不受影响
 			#else
 			icon = Icon = Properties.Resources.Otomad_Helper;
@@ -32603,6 +32754,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MidiAutoChangeProjectBeatCheck.Checked = configIni.Read("MidiAutoChangeProjectBeat", false);
 			GroupTrackBy = configIni.Read("GroupTrackBy", GroupTrackBy.TRACK);
 			CollapseTrackGroupCheck.Checked = configIni.Read("CollapseTrackGroup", true);
+			MoveCursorAfterCompletion = configIni.Read("MoveCursorAfterCompletion", MoveCursorAfterCompletion.BEFORE_FIRST_NOTE);
 			CheckMidiAutoLayoutTracksButtonActived();
 			QuickEnableAllMidiAutoLayoutTracks();
 			configIni.EndSection();
@@ -32848,6 +33000,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("MidiAutoChangeProjectBeat", MidiAutoChangeProjectBeatCheck.Checked);
 			configIni.Write("GroupTrackBy", GroupTrackBy);
 			configIni.Write("CollapseTrackGroup", CollapseTrackGroupCheck.Checked);
+			configIni.Write("MoveCursorAfterCompletion", MoveCursorAfterCompletion);
 			configIni.EndSection();
 			#endregion
 
@@ -33552,6 +33705,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			LinearMapTab.ToolTipText = str.orchestra_tooltip;
 			ConsonantTab.ToolTipText = str.consonant_tooltip;
 			ShupelunkerTab.ToolTipText = str.shupelunker_tooltip;
+			MoveCursorAfterCompletionLbl.Text = str.move_cursor_after_completion;
+			MoveCursorToOriginalRadio.Text = str.move_cursor_to_original;
+			MoveCursorToGenerateAtRadio.Text = str.move_cursor_to_where_generate_at;
+			MoveCursorBeforeFirstNoteRadio.Text = str.move_cursor_before_first_note;
+			MoveCursorAfterLastNoteRadio.Text = str.move_cursor_after_last_note;
 			Text = str.otomad_helper_config;
 		}
 
@@ -35616,6 +35774,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void DatamoshInfoLbl_MouseLeave(object sender, EventArgs e) {
 			DatamoshInfoLbl.Text = Lang.str.datamosh_info_glitchy;
 		}
+
+		public MoveCursorAfterCompletion MoveCursorAfterCompletion {
+			get {
+				return
+					MoveCursorToGenerateAtRadio.Checked ? MoveCursorAfterCompletion.GENERATE_AT :
+					MoveCursorBeforeFirstNoteRadio.Checked ? MoveCursorAfterCompletion.BEFORE_FIRST_NOTE :
+					MoveCursorAfterLastNoteRadio.Checked ? MoveCursorAfterCompletion.AFTER_LAST_NOTE :
+					MoveCursorAfterCompletion.ORIGINAL;
+			}
+			set {
+				MoveCursorToOriginalRadio.Related.Selected =
+					value == MoveCursorAfterCompletion.GENERATE_AT ? MoveCursorToGenerateAtRadio :
+					value == MoveCursorAfterCompletion.BEFORE_FIRST_NOTE ? MoveCursorBeforeFirstNoteRadio :
+					value == MoveCursorAfterCompletion.AFTER_LAST_NOTE ? MoveCursorAfterLastNoteRadio :
+					MoveCursorToOriginalRadio;
+			}
+		}
 	}
 
 	#region 翻译
@@ -36549,6 +36724,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			orchestra_tooltip = "点选多项素材，它们将依次映射到可用的乐曲多音轨（多余的素材或音轨会被剔除）。",
 			consonant_tooltip = "为防止辅音被拉伸或延迟，可以将同一音视频素材的辅音与元音部分分割开，以便于为素材的辅音部分应用特殊优化。\n若至少选中两段音频剪辑或视频剪辑，则第一段被视为首辅音部分，第二段被视为元音部分，第三段（如果有）被视为尾辅音部分。",
 			shupelunker_tooltip = "原音系战法：一种不调音的音 MAD 制作手法。它在不改变音高的情况下，通过使用与旋律音高相同的原素材片段来演奏旋律。\n鞑靼战法：同样不改变音高，它通过切分素材而非调音来使素材与原曲节拍同步。",
+			failed_to_convert_tuning_method_count_warning = "警告：{0} 个音频事件转换调音算法失败！\n\n这些音频事件可能不包含有效的音频流，它们已被跳过执行转换。",
+			move_cursor_after_completion = "生成完成后将光标移动到",
+			move_cursor_to_original = "原位置",
+			move_cursor_to_where_generate_at = "生成开始位置",
+			move_cursor_before_first_note = "第一个事件之前",
+			move_cursor_after_last_note = "最后一个事件之后",
 			__eol__ = null;
 
 		static Lang() {
@@ -37441,6 +37622,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				orchestra_tooltip = "Select multiple sources that will be mapped to available score multitracks in order (excess sources or tracks will be omitted).",
 				consonant_tooltip = "To prevent consonants from being stretched or delayed, you can separate the consonant and vowel parts of the same audio or video source so that special optimization can be applied to the consonant part of the source.\nIf at least two audio or video clips are selected, the first clip is considered the initial consonant part, the second clip is considered the vowel part, and the third segment (if any) is considered the final consonant part.",
 				shupelunker_tooltip = "Shupelunker Tactics: a non-tuning YTPMV/otoMAD creation technique. It plays the melody by using the source clips that have the same pitch to the melody, without tuning.\nTartar Tactics: also unpitched. It synchronizes the source with the beat by chopping it rather than tuning it.",
+				failed_to_convert_tuning_method_count_warning = "Warning: Failed to convert tuning algorithm for {0} audio events!\n\nThese audio events may not contain valid audio streams, so they have been skipped for conversion.",
+				move_cursor_after_completion = "After completion, move the cursor to",
+				move_cursor_to_original = "Original position",
+				move_cursor_to_where_generate_at = "Where generate at",
+				move_cursor_before_first_note = "Before the first note",
+				move_cursor_after_last_note = "After the last note",
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -38329,7 +38516,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				orchestra_tooltip = "點選多項素材，它們將依次映射到可用的樂曲多音軌（多餘的素材或音軌會被剔除）。",
 				consonant_tooltip = "為防止輔音被拉伸或延遲，可以將同一音視頻素材的輔音與母音部分分割開，以便於為素材的輔音部分應用特殊優化。\n若至少選中兩段音訊剪輯或視訊短片，則第一段被視為首輔音部分，第二段被視為母音部分，第三段（如果有）被視為尾輔音部分。",
 				shupelunker_tooltip = "原音系戰法：一種不調音的音 MAD 製作手法。它在不改變音高的情況下，通過使用與旋律音高相同的原素材片段來演奏旋律。\n韃靼戰法：同樣不改變音高，它通過切分素材而非調音來使素材與原曲節拍同步。",
-
+				failed_to_convert_tuning_method_count_warning = "警告：{0} 個音訊事件轉換調音演算法失敗！\n\n這些音訊事件可能不包含有效的音訊流，它們已被跳過執行轉換。",
+				move_cursor_after_completion = "生成完成後將游標移動到",
+				move_cursor_to_original = "原位置",
+				move_cursor_to_where_generate_at = "生成開始位置",
+				move_cursor_before_first_note = "第一個事件之前",
+				move_cursor_after_last_note = "最後一個事件之後",
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
@@ -38693,7 +38885,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				generate_below_top_adjustment_tracks = "最上層調整トラックの下に生成",
 				remove_source_track_events = "生成完了後に素材に割り当てられたトラックイベントを削除",
 				select_all_generated_events = "生成完了後に生成されたイベントを全て選択",
-				choose_source_file = "メディアソースを選択",
+				choose_source_file = "素材を選択",
 				selected_media = "選択したメディアファイル",
 				selected_clip = "選択されたトラッククリップ",
 				source_start_time = "時間を開始",
@@ -39220,6 +39412,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				orchestra_tooltip = "利用可能なスコアのマルチトラックにマッピングされる複数のソースを順番に選択してください（余分なソースまたはトラックは省略されます）。",
 				consonant_tooltip = "子音の引き伸ばしや遅延を防ぐため、同一の音声または動画ソースから子音部分と母音部分を分離し、子音部分に特別な最適化を適用することができます。\n少なくとも2つの音声または動画クリップを選択した場合、最初のクリップが最初の子音部分、2番目のクリップが母音部分、そして3番目のクリップ（存在する場合）が最後の子音部分とみなされます。",
 				shupelunker_tooltip = "シュペランカー戦法：チューニングを使わない音MAD制作テクニック。メロディーと同じピッチの音源クリップを使用し、チューニングせずにメロディーを再生します。\n韃靼戦法：こちらもチューニングなし。音源をチューニングするのではなく、切り刻むことでビートに同期させます。",
+				failed_to_convert_tuning_method_count_warning = "警告：アルゴリズム{0}のオーディオイベントのチューニング変換に失敗しました！\n\nこれらのオーディオイベントには有効なオーディオストリームが含まれていない可能性があるため、変換処理はスキップされました。",
+				move_cursor_after_completion = "完了したら、カーソルを移動します",
+				move_cursor_to_original = "元の位置",
+				move_cursor_to_where_generate_at = "生成位置",
+				move_cursor_before_first_note = "最初の音符の前",
+				move_cursor_after_last_note = "最後の音符の後",
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -39583,7 +39781,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				generate_below_top_adjustment_tracks = "Создайте под дорожками регулировки верхнего слоя",
 				remove_source_track_events = "Удалить события трека, назначенные в качестве исходного материала, после завершения генерации",
 				select_all_generated_events = "Выберите все сгенерированные события после завершения генерации",
-				choose_source_file = "Выберите медиафайл",
+				choose_source_file = "Выберите источник из",
 				selected_media = "Выбранный медиафайл",
 				selected_clip = "Выбранное событие трека",
 				source_start_time = "Начало секунд",
@@ -40110,6 +40308,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				orchestra_tooltip = "Выберите несколько источников, которые будут сопоставлены с доступными многодорожечными записями партитуры в указанном порядке (лишние источники или дорожки будут пропущены).",
 				consonant_tooltip = "Чтобы предотвратить растяжение или задержку согласных звуков, можно разделить согласные и гласные части одного и того же аудио- или видеоисточника, чтобы к согласной части источника можно было применить специальную оптимизацию.\nЕсли выбрано как минимум два аудио- или видеоклипа, первый клип считается начальной согласной частью, второй клип — гласной частью, а третий сегмент (если таковой имеется) — конечной согласной частью.",
 				shupelunker_tooltip = "Shupelunker Tactics: техника создания ЮТПМВ/отоМАД без настройки. Она воспроизводит мелодию, используя исходные клипы, имеющие ту же высоту тона, что и мелодия, без настройки.\nTartar Tactics: также без настройки тона. Она синхронизирует исходный звук с ритмом, нарезая его, а не настраивая.",
+				failed_to_convert_tuning_method_count_warning = "Предупреждение: Не удалось преобразовать настройку для аудиособытий алгоритма {0}!\n\nЭти аудиособытия могут не содержать допустимых аудиопотоков, поэтому они были пропущены при преобразовании.",
+				move_cursor_after_completion = "После завершения переместите курсор в:",
+				move_cursor_to_original = "Исходное положение",
+				move_cursor_to_where_generate_at = "Место генерации",
+				move_cursor_before_first_note = "Перед первой нотой",
+				move_cursor_after_last_note = "После последней ноты",
 			};
 			Vietnamese = new Lang {
 				__name__ = "Tiếng Việt",
@@ -40472,7 +40676,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				generate_below_top_adjustment_tracks = "Tạo ra các top track điều chỉnh bên dưới",
 				remove_source_track_events = "Xóa các track event được chỉ định làm nguyên liệu nguồn sau khi quá trình tạo hoàn tất",
 				select_all_generated_events = "Chọn tất cả các event được tạo sau khi quá trình tạo hoàn tất",
-				choose_source_file = "Chọn phương tiện nguồn",
+				choose_source_file = "Chọn nguồn từ",
 				selected_media = "File phương tiện đã chọn",
 				selected_clip = "Track event đã chọn",
 				source_start_time = "Giây bắt đầu",
@@ -40999,6 +41203,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				orchestra_tooltip = "Chọn nhiều nguồn sẽ được ánh xạ tới các rãnh nhạc đa track có sẵn theo thứ tự (các nguồn hoặc track dư thừa sẽ bị loại bỏ).",
 				consonant_tooltip = "Để tránh phụ âm bị kéo dãn hoặc chậm trễ, bạn có thể tách phần phụ âm và nguyên âm của cùng một nguồn âm thanh hoặc video để có thể áp dụng tối ưu hóa đặc biệt cho phần phụ âm của nguồn đó.\nNếu chọn ít nhất hai đoạn âm thanh hoặc video, đoạn đầu tiên được coi là phần phụ âm đầu, đoạn thứ hai được coi là phần nguyên âm và đoạn thứ ba (nếu có) được coi là phần phụ âm cuối.",
 				shupelunker_tooltip = "Kỹ thuật Shupelunker: một kỹ thuật tạo otoMAD/YTPMV không cần chỉnh âm. Nó phát giai điệu bằng cách sử dụng các đoạn âm thanh nguồn có cùng cao độ với giai điệu, mà không cần chỉnh âm.\nKỹ thuật Tartar: cũng không cần chỉnh âm. Nó đồng bộ hóa nguồn với nhịp điệu bằng cách cắt nhỏ chứ không phải chỉnh âm.",
+				failed_to_convert_tuning_method_count_warning = "Cảnh báo: Không thể chuyển đổi thuật toán điều chỉnh cho {0} sự kiện âm thanh!\n\nCác sự kiện âm thanh này có thể không chứa luồng âm thanh hợp lệ, vì vậy chúng đã bị bỏ qua trong quá trình chuyển đổi.",
+				move_cursor_after_completion = "Sau khi hoàn thành, di chuyển con trỏ đến",
+				move_cursor_to_original = "Vị trí ban đầu",
+				move_cursor_to_where_generate_at = "Nơi tạo ra",
+				move_cursor_before_first_note = "Trước nốt nhạc đầu tiên",
+				move_cursor_after_last_note = "Sau nốt nhạc cuối cùng",
 			};
 			Indonesian = new Lang {
 				__name__ = "Bahasa Indonesia",
@@ -41361,7 +41571,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				generate_below_top_adjustment_tracks = "Di bawah trek penyesuaian atas",
 				remove_source_track_events = "Hapus track events yang ditetapkan sebagai materi sumber setelah pembuatan selesai",
 				select_all_generated_events = "Pilih semua event yang dihasilkan setelah pembuatan selesai",
-				choose_source_file = "Pilih sumber media",
+				choose_source_file = "Pilih sumber dari",
 				selected_media = "File media yang dipilih",
 				selected_clip = "Track event yang dipilih",
 				source_start_time = "Mulai detik",
@@ -41888,6 +42098,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				orchestra_tooltip = "Pilih beberapa sumber yang akan dipetakan ke multitrack skor yang tersedia secara berurutan (sumber atau track yang berlebihan akan dihilangkan).",
 				consonant_tooltip = "Untuk mencegah konsonan diregangkan atau tertunda, Anda dapat memisahkan bagian konsonan dan vokal dari sumber audio atau video yang sama sehingga optimasi khusus dapat diterapkan pada bagian konsonan dari sumber tersebut.\nJika setidaknya dua klip audio atau video dipilih, klip pertama dianggap sebagai bagian konsonan awal, klip kedua dianggap sebagai bagian vokal, dan segmen ketiga (jika ada) dianggap sebagai bagian konsonan akhir.",
 				shupelunker_tooltip = "Taktik Shupelunker: teknik pembuatan otoMAD/YTPMV tanpa penyetelan nada. Teknik ini memainkan melodi dengan menggunakan klip sumber yang memiliki nada yang sama dengan melodi, tanpa penyetelan nada.\nTaktik Tartar: juga tanpa penyetelan nada. Teknik ini menyinkronkan sumber dengan ketukan dengan memotongnya, bukan menyetel nadanya.",
+				failed_to_convert_tuning_method_count_warning = "Peringatan: Gagal mengkonversi algoritma penyetelan untuk {0} peristiwa audio!\n\nPeristiwa audio ini mungkin tidak berisi aliran audio yang valid, sehingga telah dilewati untuk konversi.",
+				move_cursor_after_completion = "Setelah selesai, pindahkan kursor ke",
+				move_cursor_to_original = "Posisi awal",
+				move_cursor_to_where_generate_at = "Tempat pembuatan",
+				move_cursor_before_first_note = "Sebelum not pertama",
+				move_cursor_after_last_note = "Setelah not terakhir",
 			};
 		}
 	}

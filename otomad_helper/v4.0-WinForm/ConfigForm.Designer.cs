@@ -110,6 +110,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.vietnameseToolStripMenuItem = new Otomad.VegasScripts.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
 			this.indonesianToolStripMenuItem = new Otomad.VegasScripts.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
 			this.latestVersionToolStripMenuItemInBar = new System.Windows.Forms.ToolStripMenuItem();
+			this.currentVersionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.Tabs = new System.Windows.Forms.TabControl();
 			this.SourceTab = new System.Windows.Forms.TabPage();
@@ -581,7 +582,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.currentVersionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.MoveCursorAfterCompletionLbl = new System.Windows.Forms.Label();
+			this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
+			this.MoveCursorToOriginalRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.MoveCursorToGenerateAtRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.MoveCursorBeforeFirstNoteRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.MoveCursorAfterLastNoteRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -735,6 +741,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
+			this.flowLayoutPanel8.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -1680,6 +1687,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.latestVersionToolStripMenuItemInBar.Text = "下载最新版本";
 			this.latestVersionToolStripMenuItemInBar.Visible = false;
 			// 
+			// currentVersionMenuItem
+			// 
+			this.currentVersionMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.currentVersionMenuItem.Enabled = false;
+			this.currentVersionMenuItem.Name = "currentVersionMenuItem";
+			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 36);
+			this.currentVersionMenuItem.Text = "v4";
+			// 
 			// panel1
 			// 
 			this.panel1.BackColor = System.Drawing.Color.Transparent;
@@ -1743,7 +1758,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceConfigGroup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.MultiSourceConfigGroup.Controls.Add(this.MultiSourceCombTabs);
 			this.MultiSourceConfigGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.MultiSourceConfigGroup.Location = new System.Drawing.Point(8, 526);
+			this.MultiSourceConfigGroup.Location = new System.Drawing.Point(8, 617);
 			this.MultiSourceConfigGroup.Name = "MultiSourceConfigGroup";
 			this.MultiSourceConfigGroup.Padding = new System.Windows.Forms.Padding(8);
 			this.MultiSourceConfigGroup.Size = new System.Drawing.Size(1002, 455);
@@ -2292,7 +2307,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceConfigGroup.Location = new System.Drawing.Point(8, 8);
 			this.SourceConfigGroup.Name = "SourceConfigGroup";
 			this.SourceConfigGroup.Padding = new System.Windows.Forms.Padding(8);
-			this.SourceConfigGroup.Size = new System.Drawing.Size(1002, 518);
+			this.SourceConfigGroup.Size = new System.Drawing.Size(1002, 609);
 			this.SourceConfigGroup.TabIndex = 1;
 			this.SourceConfigGroup.TabStop = false;
 			this.SourceConfigGroup.Text = "素材属性";
@@ -2305,9 +2320,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel3.AutoSize = true;
 			this.tableLayoutPanel3.ColumnCount = 1;
 			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel3.Controls.Add(this.CollapseTrackGroupCheck, 0, 8);
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel12, 0, 7);
-			this.tableLayoutPanel3.Controls.Add(this.TrackGroupLbl, 0, 6);
+			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel8, 0, 7);
+			this.tableLayoutPanel3.Controls.Add(this.MoveCursorAfterCompletionLbl, 0, 6);
+			this.tableLayoutPanel3.Controls.Add(this.CollapseTrackGroupCheck, 0, 10);
+			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel12, 0, 9);
+			this.tableLayoutPanel3.Controls.Add(this.TrackGroupLbl, 0, 8);
 			this.tableLayoutPanel3.Controls.Add(this.ChooseSourceLbl, 0, 0);
 			this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 0, 1);
 			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel1, 0, 2);
@@ -2317,7 +2334,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel3.Location = new System.Drawing.Point(8, 40);
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-			this.tableLayoutPanel3.RowCount = 9;
+			this.tableLayoutPanel3.RowCount = 11;
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -2327,7 +2344,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(986, 470);
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(986, 561);
 			this.tableLayoutPanel3.TabIndex = 1;
 			// 
 			// CollapseTrackGroupCheck
@@ -2335,7 +2354,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.CollapseTrackGroupCheck.AutoSize = true;
 			this.CollapseTrackGroupCheck.Checked = true;
 			this.CollapseTrackGroupCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.CollapseTrackGroupCheck.Location = new System.Drawing.Point(6, 430);
+			this.CollapseTrackGroupCheck.Location = new System.Drawing.Point(6, 521);
 			this.CollapseTrackGroupCheck.Margin = new System.Windows.Forms.Padding(6, 4, 4, 4);
 			this.CollapseTrackGroupCheck.Name = "CollapseTrackGroupCheck";
 			this.CollapseTrackGroupCheck.Size = new System.Drawing.Size(286, 36);
@@ -2350,7 +2369,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel12.Controls.Add(this.TrackGroupByTrackRadio);
 			this.flowLayoutPanel12.Controls.Add(this.TrackGroupBySessionRadio);
 			this.flowLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel12.Location = new System.Drawing.Point(3, 378);
+			this.flowLayoutPanel12.Location = new System.Drawing.Point(3, 469);
 			this.flowLayoutPanel12.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
 			this.flowLayoutPanel12.Name = "flowLayoutPanel12";
 			this.flowLayoutPanel12.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
@@ -2399,7 +2418,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 
 			this.TrackGroupLbl.AutoSize = true;
 			this.TrackGroupLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TrackGroupLbl.Location = new System.Drawing.Point(4, 343);
+			this.TrackGroupLbl.Location = new System.Drawing.Point(4, 434);
 			this.TrackGroupLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
 			this.TrackGroupLbl.Name = "TrackGroupLbl";
 			this.TrackGroupLbl.Size = new System.Drawing.Size(978, 32);
@@ -8966,13 +8985,82 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			// 
-			// currentVersionMenuItem
+			// MoveCursorAfterCompletionLbl
 			// 
-			this.currentVersionMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.currentVersionMenuItem.Enabled = false;
-			this.currentVersionMenuItem.Name = "currentVersionMenuItem";
-			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 36);
-			this.currentVersionMenuItem.Text = "v4";
+			this.MoveCursorAfterCompletionLbl.AutoSize = true;
+			this.MoveCursorAfterCompletionLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MoveCursorAfterCompletionLbl.Location = new System.Drawing.Point(4, 343);
+			this.MoveCursorAfterCompletionLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
+			this.MoveCursorAfterCompletionLbl.Name = "MoveCursorAfterCompletionLbl";
+			this.MoveCursorAfterCompletionLbl.Size = new System.Drawing.Size(978, 32);
+			this.MoveCursorAfterCompletionLbl.TabIndex = 17;
+			this.MoveCursorAfterCompletionLbl.Text = "生成完成后将光标移动到";
+			this.MoveCursorAfterCompletionLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			// 
+			// flowLayoutPanel8
+			// 
+			this.flowLayoutPanel8.AutoSize = true;
+			this.flowLayoutPanel8.Controls.Add(this.MoveCursorToOriginalRadio);
+			this.flowLayoutPanel8.Controls.Add(this.MoveCursorToGenerateAtRadio);
+			this.flowLayoutPanel8.Controls.Add(this.MoveCursorBeforeFirstNoteRadio);
+			this.flowLayoutPanel8.Controls.Add(this.MoveCursorAfterLastNoteRadio);
+			this.flowLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Top;
+			this.flowLayoutPanel8.Location = new System.Drawing.Point(3, 378);
+			this.flowLayoutPanel8.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+			this.flowLayoutPanel8.Name = "flowLayoutPanel8";
+			this.flowLayoutPanel8.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.flowLayoutPanel8.Size = new System.Drawing.Size(980, 48);
+			this.flowLayoutPanel8.TabIndex = 18;
+			// 
+			// MoveCursorToOriginalRadio
+			// 
+			this.MoveCursorToOriginalRadio.AutoSize = true;
+			this.MoveCursorToOriginalRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MoveCursorToOriginalRadio.Group = "MoveCursorAfterCompletion";
+			this.MoveCursorToOriginalRadio.Location = new System.Drawing.Point(3, 6);
+			this.MoveCursorToOriginalRadio.Name = "MoveCursorToOriginalRadio";
+			this.MoveCursorToOriginalRadio.Size = new System.Drawing.Size(117, 36);
+			this.MoveCursorToOriginalRadio.TabIndex = 0;
+			this.MoveCursorToOriginalRadio.Text = "原位置";
+			this.MoveCursorToOriginalRadio.UseVisualStyleBackColor = true;
+			// 
+			// MoveCursorToGenerateAtRadio
+			// 
+			this.MoveCursorToGenerateAtRadio.AutoSize = true;
+			this.MoveCursorToGenerateAtRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MoveCursorToGenerateAtRadio.Group = "MoveCursorAfterCompletion";
+			this.MoveCursorToGenerateAtRadio.Location = new System.Drawing.Point(126, 6);
+			this.MoveCursorToGenerateAtRadio.Name = "MoveCursorToGenerateAtRadio";
+			this.MoveCursorToGenerateAtRadio.Size = new System.Drawing.Size(189, 36);
+			this.MoveCursorToGenerateAtRadio.TabIndex = 1;
+			this.MoveCursorToGenerateAtRadio.Text = "生成开始位置";
+			this.MoveCursorToGenerateAtRadio.UseVisualStyleBackColor = true;
+			// 
+			// MoveCursorBeforeFirstNoteRadio
+			// 
+			this.MoveCursorBeforeFirstNoteRadio.AutoSize = true;
+			this.MoveCursorBeforeFirstNoteRadio.Checked = true;
+			this.MoveCursorBeforeFirstNoteRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MoveCursorBeforeFirstNoteRadio.Group = "MoveCursorAfterCompletion";
+			this.MoveCursorBeforeFirstNoteRadio.Location = new System.Drawing.Point(321, 6);
+			this.MoveCursorBeforeFirstNoteRadio.Name = "MoveCursorBeforeFirstNoteRadio";
+			this.MoveCursorBeforeFirstNoteRadio.Size = new System.Drawing.Size(213, 36);
+			this.MoveCursorBeforeFirstNoteRadio.TabIndex = 2;
+			this.MoveCursorBeforeFirstNoteRadio.TabStop = true;
+			this.MoveCursorBeforeFirstNoteRadio.Text = "第一个事件之前";
+			this.MoveCursorBeforeFirstNoteRadio.UseVisualStyleBackColor = true;
+			// 
+			// MoveCursorAfterLastNoteRadio
+			// 
+			this.MoveCursorAfterLastNoteRadio.AutoSize = true;
+			this.MoveCursorAfterLastNoteRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MoveCursorAfterLastNoteRadio.Group = "MoveCursorAfterCompletion";
+			this.MoveCursorAfterLastNoteRadio.Location = new System.Drawing.Point(540, 6);
+			this.MoveCursorAfterLastNoteRadio.Name = "MoveCursorAfterLastNoteRadio";
+			this.MoveCursorAfterLastNoteRadio.Size = new System.Drawing.Size(237, 36);
+			this.MoveCursorAfterLastNoteRadio.TabIndex = 3;
+			this.MoveCursorAfterLastNoteRadio.Text = "最后一个事件之后";
+			this.MoveCursorAfterLastNoteRadio.UseVisualStyleBackColor = true;
 			// 
 			// ConfigForm
 			// 
@@ -9249,6 +9337,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
+			this.flowLayoutPanel8.ResumeLayout(false);
+			this.flowLayoutPanel8.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -9813,6 +9903,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.TabPage ConsonantTab;
 		public System.Windows.Forms.TabPage ShupelunkerTab;
 		public System.Windows.Forms.ToolStripMenuItem currentVersionMenuItem;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel8;
+		public GroupedRadioButton MoveCursorToOriginalRadio;
+		public GroupedRadioButton MoveCursorToGenerateAtRadio;
+		public GroupedRadioButton MoveCursorBeforeFirstNoteRadio;
+		public System.Windows.Forms.Label MoveCursorAfterCompletionLbl;
+		public GroupedRadioButton MoveCursorAfterLastNoteRadio;
 	}
 }
 
