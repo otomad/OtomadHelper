@@ -60,7 +60,8 @@ function Update-UndefinedSymbols {
 }
 
 $infos = @{
-	VegasVersions    = (16..23 -join "") + 26;
+	# VegasVersions    = (16..23 -join "") + 26;
+	VegasVersions    = @(16, 2026) -join "-";
 	UndefinedSymbols = @();
 }, @{
 	VegasVersions    = 14..15 -join "";
