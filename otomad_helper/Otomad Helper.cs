@@ -1452,6 +1452,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (resultCursorPosition == null || (isBeforeFirstNote ? newPosition < resultCursorPosition : newPosition > resultCursorPosition))
 						resultCursorPosition = newPosition;
 				}
+				Func<NoteOnEvent> NextNoteEvent = () => {
+					for (int j = i + 1; j < currentChannel.Events.Count; j++) {
+						MidiEvent nextEvent = currentChannel.Events[j];
+						if (nextEvent is NoteOnEvent) return (NoteOnEvent)nextEvent;
+					}
+					return null;
+				};
 				#region 下一页
 				if (SheetConfig) {
 					if (beatIntegrator.GetQuarterPassed(midiEvent) >= barEndQuarters)
@@ -1752,7 +1759,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							}
 						}
 						if (!(CombConfigMatchCut && CombConfigMatchCutApplyEffectsByRound) || matchCutRound != prevMatchCutRound) {
-							anim.Next();
+							if (SheetConfig) {
+								NoteOnEvent nextNoteEvent = NextNoteEvent();
+								if (nextNoteEvent != null && nextNoteEvent.AbsoluteTime != noteOnEvent.AbsoluteTime) anim.Next();
+							} else anim.Next();
 							prevMatchCutRound = matchCutRound;
 						}
 					}
