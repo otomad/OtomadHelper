@@ -37623,8 +37623,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				move_cursor_after_completion = "After completion, move the cursor to",
 				move_cursor_to_original = "Original position",
 				move_cursor_to_where_generate_at = "Where generate at",
-				move_cursor_before_first_note = "Before the first note",
-				move_cursor_after_last_note = "After the last note",
+				move_cursor_before_first_note = "Before the first event",
+				move_cursor_after_last_note = "After the last event",
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -39413,8 +39413,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				move_cursor_after_completion = "完了したら、カーソルを移動します",
 				move_cursor_to_original = "元の位置",
 				move_cursor_to_where_generate_at = "生成位置",
-				move_cursor_before_first_note = "最初の音符の前",
-				move_cursor_after_last_note = "最後の音符の後",
+				move_cursor_before_first_note = "最初のイベントの前",
+				move_cursor_after_last_note = "最後のイベントの後",
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -40309,8 +40309,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				move_cursor_after_completion = "После завершения переместите курсор в:",
 				move_cursor_to_original = "Исходное положение",
 				move_cursor_to_where_generate_at = "Место генерации",
-				move_cursor_before_first_note = "Перед первой нотой",
-				move_cursor_after_last_note = "После последней ноты",
+				move_cursor_before_first_note = "Перед первым мероприятием",
+				move_cursor_after_last_note = "После последнего мероприятия",
 			};
 			Vietnamese = new Lang {
 				__name__ = "Tiếng Việt",
@@ -41204,8 +41204,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				move_cursor_after_completion = "Sau khi hoàn thành, di chuyển con trỏ đến",
 				move_cursor_to_original = "Vị trí ban đầu",
 				move_cursor_to_where_generate_at = "Nơi tạo ra",
-				move_cursor_before_first_note = "Trước nốt nhạc đầu tiên",
-				move_cursor_after_last_note = "Sau nốt nhạc cuối cùng",
+				move_cursor_before_first_note = "Trước sự kiện đầu tiên",
+				move_cursor_after_last_note = "Sau sự kiện cuối cùng",
 			};
 			Indonesian = new Lang {
 				__name__ = "Bahasa Indonesia",
@@ -42099,8 +42099,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				move_cursor_after_completion = "Setelah selesai, pindahkan kursor ke",
 				move_cursor_to_original = "Posisi awal",
 				move_cursor_to_where_generate_at = "Tempat pembuatan",
-				move_cursor_before_first_note = "Sebelum not pertama",
-				move_cursor_after_last_note = "Setelah not terakhir",
+				move_cursor_before_first_note = "Sebelum acara pertama",
+				move_cursor_after_last_note = "Setelah acara terakhir",
 			};
 		}
 	}
