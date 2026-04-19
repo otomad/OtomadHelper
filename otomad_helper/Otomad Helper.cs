@@ -89,9 +89,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	/// </summary>
 	public sealed class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 64, 17, 1);
+		public static readonly Version VERSION = new Version(4, 64, 20, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2026, 4, 17);
+		public static readonly DateTime REVISION_DATE = new DateTime(2026, 4, 20);
 
 		// 配置参数变量
 		#region 视频属性
@@ -1319,7 +1319,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (matchCutLooped) matchCutRound++;
 				} else {
 					seeds = seeds ?? baseShuffledSeed;
-					activeSource = Randoms.SourceRandomSelector.GetRandomInPool(eventSets, step - 1, ref matchCutRound, seeds);
+					activeSource = Randoms.SourceRandomSelector.GetRandomInPool(eventSets, step - 2, ref matchCutRound, seeds);
 				}
 			};
 			#endregion
@@ -1412,12 +1412,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				#region 踩点
 				bool matchCutRequireChangeSource = matchCutIndex % CombConfigMatchCutRepeatCount == 0;
 				if (CombConfigMatchCut) {
-					//_testName = matchCutIndex.ToString();
 					if (matchCutIndex > 1 && (CombConfigMatchCutAccumulateHarmonics || !isHarmonicInChords) && matchCutIndex % CombConfigMatchCutRepeatCount == 0) {
 						long step = matchCutIndex / CombConfigMatchCutRepeatCount;
 						if (!CombConfigMatchCutLuckyDip) NextSourceByOrder(CombConfigMatchCutOrder, null, step);
 						else NextLuckyDipSource(step);
 					}
+					//_testName = matchCutRound.ToString();
 					if (matchCutRound >= 1 && !CombConfigMatchCutLoop) {
 						progressForm.Close();
 						MessageBox.Show(Lang.str.match_cut_loop_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1658,7 +1658,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							videoEvent = trackHelper.AddEvent(activeSource.videoEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(videoEventDuration), out _index);
 							if (videoEvent == null) goto endVConfig;
 						}
-						//if (!(_testName == null)) videoEvent.ActiveTake.Name = _testName;
+						//if (!(_testName == null)) videoEvent.ActiveTake.Name = _testName + "-" + videoEvent.ActiveTake.Name;
 						VideoTrack videoTrack = videoEvent.Track as VideoTrack;
 						PvVisualEffect anim;
 						if (SheetConfig) anim = animForStaff;
@@ -3410,9 +3410,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private static readonly Version UPPER_BOUND_SUPPORTED_VERSION = UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION == null ? null :
 			new Version(
 				UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION.Major - 1,
-				UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION.Minor,
-				UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION.Build,
-				UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION.Revision
+				UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION.Minor
 			);
 
 		/// <summary>
@@ -6918,48 +6916,37 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				int offset = (int)(step % pool.Count);
 
 				// 2. 构建这一轮的专属种子 (由 基础种子 + 轮次 组成)
-				object[] roundSeeds = seeds.Append(round).ToArray();
+				//object[] roundSeeds = seeds.Append(round).ToArray();
 
 				// 3. 使用确定性洗牌算法 (Fisher-Yates 变体)
 				// 我们不需要真的洗掉整个列表，只需要模拟洗牌过程直到找到 offset 位置的元素
 				// 获取当前轮次的洗牌序列
-				List<int> currentRoundIndices = GetShuffledIndices(pool.Count, round, roundSeeds);
+				List<int> currentRoundIndices = GetShuffledIndices(pool.Count, round, seeds);
 
 				// 4. 特殊处理：第一轮（Round 0）的第一个元素不能是 0
-				if (round == 0 && offset == 0 && currentRoundIndices[0] == 0) {
-					// 将 0 号元素与后续随机一个元素交换
-					double r = HashRandom.NextDouble(roundSeeds.Append(round).Append(-1).ToArray()); // 特殊步数用于修正第一轮
-					int swapIdx = 1 + (int)(r * (pool.Count - 1));
+				// 5. 跨轮重叠修正：如果当前是新一轮的开头，检查是否与上一轮末尾相同
+				if (round == 0 && currentRoundIndices[0] == 0 || round > 0 && currentRoundIndices[0] == GetLastRoundEnd(pool.Count, round - 1, seeds)) {
+					// 将 0 号元素与后续随机一个元素交换（但最好不要是最后一个元素）
+					int swapIdx = pool.Count <= 2 ? pool.Count - 1 : HashRandom.Next(1, pool.Count - 1, seeds.Append(round).Append(-1).ToArray()); // 特殊步数用于修正第一轮
 					int temp = currentRoundIndices[0];
 					currentRoundIndices[0] = currentRoundIndices[swapIdx];
 					currentRoundIndices[swapIdx] = temp;
 				}
 
-				// 5. 跨轮重叠修正：如果当前是新一轮的开头，检查是否与上一轮末尾相同
-				if (round > 0 && offset == 0) {
-					int lastRoundEnd = GetLastRoundEnd(pool.Count, round - 1, roundSeeds);
-					if (currentRoundIndices[0] == lastRoundEnd) {
-						// 如果重复，将当前轮首位与本轮次位交换
-						// 注意：由于 pool.Count > 1，索引 1 必定存在
-						int temp = currentRoundIndices[0];
-						currentRoundIndices[0] = currentRoundIndices[1];
-						currentRoundIndices[1] = temp;
-					}
-				}
-
 				// 6. 返回 offset 位置对应的元素
-				return pool[currentRoundIndices.ElementWrappedAt(offset)];
+				return pool[currentRoundIndices[offset]];
 			}
 
 			private static List<int> GetShuffledIndices(int count, long round, object[] baseSeeds) {
 				List<int> indices = Enumerable.Range(0, count).ToList();
-				for (int i = 0; i < count - 1; i++) {
+				int n = count;
+				while (n-- > 1) {
 					// 使用 (轮次, 洗牌步骤) 作为复合种子
-					double r = HashRandom.NextDouble(baseSeeds.Append(round).Append(i).ToArray());
-					int j = i + (int)(r * (count - i));
-					int temp = indices[i];
-					indices[i] = indices[j];
-					indices[j] = temp;
+					int k = HashRandom.Next(n + 1, baseSeeds.Append(round).Append(n).ToArray());
+					// 交换元素
+					int temp = indices[k];
+					indices[k] = indices[n];
+					indices[n] = temp;
 				}
 				return indices;
 			}
