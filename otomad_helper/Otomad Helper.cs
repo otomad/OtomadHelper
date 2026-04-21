@@ -4602,6 +4602,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		H_FLIP_SUSTAIN,
 		H_FLIP_RELAY,
 		H_FLIP_INVERT,
+		H_FLIP_INTERRUPT,
+		V_FLIP_INTERRUPT,
 		CCW_ROTATE,
 		CW_ROTATE,
 		TURNED,
@@ -4612,6 +4614,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		CW_MIRROR,
 		NEGATIVE,
 		LUMIN_INVERT,
+		NEGATIVE_INTERRUPT,
 		HUE_INVERT,
 		STEP_3_CHANGE_HUE,
 		STEP_4_CHANGE_HUE,
@@ -4696,11 +4699,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			get {
 				Lang str = Lang.str;
 				return new Dictionary<string, PvVisualEffectType[]> {
-					{ str.flip_class, new PvVisualEffectType[] { PvVisualEffectType.H_FLIP, PvVisualEffectType.V_FLIP, PvVisualEffectType.CCW_FLIP, PvVisualEffectType.CW_FLIP, PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_RELAY, PvVisualEffectType.H_FLIP_INVERT } },
+					{ str.flip_class, new PvVisualEffectType[] { PvVisualEffectType.H_FLIP, PvVisualEffectType.V_FLIP, PvVisualEffectType.CCW_FLIP, PvVisualEffectType.CW_FLIP, PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_RELAY, PvVisualEffectType.H_FLIP_INVERT, PvVisualEffectType.H_FLIP_INTERRUPT, PvVisualEffectType.V_FLIP_INTERRUPT } },
 					{ str.rotation_class, new PvVisualEffectType[] { PvVisualEffectType.CCW_ROTATE, PvVisualEffectType.CW_ROTATE, PvVisualEffectType.TURNED } },
 					{ str.scale_class, new PvVisualEffectType[] { PvVisualEffectType.ZOOM_OUT_IN } },
 					{ str.mirror_class, new PvVisualEffectType[] { PvVisualEffectType.H_MIRROR, PvVisualEffectType.V_MIRROR, PvVisualEffectType.CCW_MIRROR, PvVisualEffectType.CW_MIRROR } },
-					{ str.invert_class, new PvVisualEffectType[] { PvVisualEffectType.NEGATIVE, PvVisualEffectType.LUMIN_INVERT } },
+					{ str.invert_class, new PvVisualEffectType[] { PvVisualEffectType.NEGATIVE, PvVisualEffectType.LUMIN_INVERT, PvVisualEffectType.NEGATIVE_INTERRUPT } },
 					{ str.hue_class, new PvVisualEffectType[] { PvVisualEffectType.HUE_INVERT, PvVisualEffectType.STEP_3_CHANGE_HUE, PvVisualEffectType.STEP_4_CHANGE_HUE, PvVisualEffectType.STEP_5_CHANGE_HUE, PvVisualEffectType.STEP_6_CHANGE_HUE, PvVisualEffectType.STEP_7_CHANGE_HUE, PvVisualEffectType.STEP_8_CHANGE_HUE } },
 					{ str.monochrome_class, new PvVisualEffectType[] { PvVisualEffectType.GREY } },
 					{ str.time_class, new PvVisualEffectType[] { PvVisualEffectType.PINGPONG, PvVisualEffectType.WHIRL } },
@@ -4757,6 +4760,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public bool IsVerticalBounce { get { return fxes.HasEffect(PvVisualEffectType.VERTICAL_BOUNCE); } }
 		public PvVisualEffectType? TimeClass2 { get { return GetFirstEffectInRange(PvVisualEffectType.SHARP_REWIND, PvVisualEffectType.WOBBLE_PERIOD); } }
 		public bool IsPitchHoldEffects { get { return GetFirstEffectInRange(PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_INVERT) != null; } }
+		public bool IsPitchNotHoldEffects { get { return fxes.HasEffect(PvVisualEffectType.H_FLIP_INTERRUPT, PvVisualEffectType.V_FLIP_INTERRUPT, PvVisualEffectType.NEGATIVE_INTERRUPT); } }
 
 		public PvVisualEffect(PvVisualEffectType fx, int initStep = 0) : this(new PrveValue(fx, initStep)) { }
 		public PvVisualEffect(PrveValue fx) : this(new PrveValues { fx }) { }
@@ -4779,12 +4783,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 下一步节奏视觉效果。
 		/// </summary>
 		public void Next() {
-			if (IsPitchHoldEffects) return;
+			if (IsPitchHoldEffects || IsPitchNotHoldEffects) return;
 			NextStep();
 			Update();
 		}
-		private void PitchHoldNext() {
-			if (!isPitchHold && isUsing) NextStep();
+		private void PitchHoldNext(bool pitchHold) {
+			if ((pitchHold ? !isPitchHold : isPitchHold) && isUsing) NextStep();
 			Update();
 		}
 		private void Update() {
@@ -4816,8 +4820,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						} else
 							isNegative = !isNegative;
 						break;
+					case PvVisualEffectType.H_FLIP_INTERRUPT:
+						horizontalFlip = isPitchHold && !horizontalFlip;
+						break;
+					case PvVisualEffectType.V_FLIP_INTERRUPT:
+						verticalFlip = isPitchHold && !verticalFlip;
+						break;
 					case PvVisualEffectType.NEGATIVE:
 						isNegative = step == 1;
+						break;
+					case PvVisualEffectType.NEGATIVE_INTERRUPT:
+						isNegative = isPitchHold && !isNegative;
 						break;
 					case PvVisualEffectType.PINGPONG:
 						isReverse = step == 1;
@@ -4900,7 +4913,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public bool EqualsLastPitch(int pitch) {
 			isPitchHold = lastPitch == pitch;
 			lastPitch = pitch;
-			if (IsPitchHoldEffects) PitchHoldNext();
+			if (IsPitchHoldEffects || IsPitchNotHoldEffects) PitchHoldNext(IsPitchHoldEffects);
 			return isPitchHold;
 		}
 	}
@@ -17821,8 +17834,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return string.Join("; ", names);
 		}
 		public string DisplayValue { get { return ToString(); } }
-		public bool HasEffect(PvVisualEffectType effect) {
-			return this.Select(value => value.Effect).Contains(effect);
+		public bool HasEffect(params PvVisualEffectType[] effects) {
+			return this.Any(value => effects.Contains(value.Effect));
 		}
 		public string ToSerializableString() {
 			return string.Join(";", this.Select(value => value.ToSerializableString()));
@@ -33492,11 +33505,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				str.no_effects, str.h_flip, str.v_flip,
 				str.ccw_flip, str.cw_flip,
 				str.h_flip_sustain, str.h_flip_relay, str.h_flip_invert,
+				str.h_flip_interrupt, str.v_flip_interrupt,
 				str.ccw_rotate, str.cw_rotate, str.turned,
 				str.zoom_out_in,
 				str.h_mirror, str.v_mirror,
 				str.ccw_mirror, str.cw_mirror,
-				str.negative, str.lumin_invert, str.hue_invert,
+				str.negative, str.lumin_invert, str.negative_interrupt, str.hue_invert,
 				string.Format(str.step_change_hue, 3),
 				string.Format(str.step_change_hue, 4),
 				string.Format(str.step_change_hue, 5),
@@ -36760,6 +36774,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			move_cursor_before_first_note = "第一个事件之前",
 			move_cursor_after_last_note = "最后一个事件之后",
 			match_cut_sustain = "相同音高时不换素材",
+			h_flip_interrupt = "水平翻转中断",
+			v_flip_interrupt = "垂直翻转中断",
+			negative_interrupt = "颜色反转中断",
 			__eol__ = null;
 
 		static Lang() {
