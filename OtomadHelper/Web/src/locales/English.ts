@@ -473,7 +473,7 @@ export default {
 					scaleless: "Scaleless",
 					acid: "ACID", // Indicate MAGIX ACID Pro.
 					oscillator: "Oscillator",
-					oscillator_full: "Manual Oscillator",
+					oscillator_full: "Granular Oscillator",
 				},
 				stretchAttributes: {
 					_: "Stretch attributes",
@@ -1224,7 +1224,7 @@ export default {
 						scaleless: "Locks stretch and pitch, and changes the stretch to get the corresponding pitch regardless of the actual note pitch, just for fun",
 						unset: "Preserves the original tuning method of the clip unchanged or the default value, even if it is No Tuning",
 						acid: "Transposes the clip to fit the tempo if you are using ACIDized loops rendered by ACID Pro",
-						oscillator: "Use the Manual Oscillator Audio Effect Technology. It simulates a specific pitch by repeatedly playing a short sample rapidly over a specific period, generates a pulse sequence corresponds to the pitch and forms a continuous pitch by exploiting the perception fusion effect of the human ear on fast pulses.",
+						oscillator: "Use the Granular Oscillator Audio Effect Technology. It simulates a specific pitch by repeatedly playing a short sample rapidly over a specific period, generates a pulse sequence corresponds to the pitch and forms a continuous pitch by exploiting the perception fusion effect of the human ear on fast pulses.",
 						evaluates: {
 							fast: "Fast to generate",
 							changeRate: "Effective on playback rate change",
@@ -1257,7 +1257,7 @@ export default {
 						_: "Applies techniques inspired by audio tuning methods to visual processing",
 						auto: "Setting these properties to Auto means they will only be enabled when the corresponding properties in the Audio configuration are also enabled.",
 						resample: "Mimics the resampling behavior in the Visual, causing the stretch to flex as the pitch increases",
-						oscillator: "Mimics the Manual Oscillator behavior in the Visual to produce rapidly repetitive visuals",
+						oscillator: "Mimics the Granular Oscillator behavior in the Visual to produce rapidly repetitive visuals",
 					},
 				},
 				mapping: {
