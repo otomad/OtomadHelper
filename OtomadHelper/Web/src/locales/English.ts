@@ -44,7 +44,7 @@ export default {
 			gradient: "Mirri-Gradify",
 			gradient_full: "Mirri-Gradify Tracks",
 			internal: "Global Internal",
-			internal_long: "VEGAS Pro Global Internal Preferences",
+			internal_long: "Vegas Pro Global Internal Preferences",
 			license: "License",
 			license_full: "License (GPL-3.0)",
 			wizard: "Wizard",
@@ -982,7 +982,7 @@ export default {
 				palette: {
 					_: "Palette",
 					windows: "Windows Default Color",
-					vegas: "VEGAS Pro Default Color",
+					vegas: "Vegas Pro Default Color",
 					wallpaper: "Background Image Dominant Color",
 					accent: "Accent color",
 					background: "Background color",
@@ -1026,7 +1026,7 @@ export default {
 				},
 			},
 			internal: {
-				language: "VEGAS Pro language",
+				language: "Vegas Pro language",
 				autosaveInterval: "Autosave interval",
 				defaultTextPlugin: "Default text media generator plugin",
 				defaultTuningMethod: "Default tuning method for new audio clips",
@@ -1052,7 +1052,7 @@ export default {
 				crossfade: "Specify the two crossfade curves of the fade type",
 			},
 			versionRequest: {
-				min: "Note: This feature requires VEGAS Pro {{min}} or higher. The current version is {{current}}.",
+				min: "Note: This feature requires Vegas Pro {{min}} or higher. The current version is {{current}}.",
 			},
 			source: {
 				trim: "Adjusts the in or out point time of the specified source",
@@ -1191,7 +1191,7 @@ export default {
 					instant: "Does not perform prerendering, that will copy the existing effects onto every generated clip",
 					media: "Renders as a single media file",
 					media_audio: "Renders as a single media file, and later annotate ACID pitch tag",
-					timeline: "Renders as a nested timeline (single VEGAS Pro project file)",
+					timeline: "Renders as a nested timeline (single Vegas Pro project file)",
 					acidTag: "This will enable the note name of the current pitch to be displayed on clips",
 				},
 				transition: {
@@ -1238,7 +1238,7 @@ export default {
 						_: "Handles notes that out of range with an alternative method",
 						plugin: "Reaches any pitch by using the Pitch Shift Audio Effect Plugin repeatedly",
 						octave: "At least avoid dissonant intervals by raising or lowering the octave scale to the range of {{formulaFor24}}",
-						octaveExp: "VEGAS actually supports a range of {{formulaFor39}} internally, use with caution as it may cause VEGAS to crash",
+						octaveExp: "Vegas actually supports a range of {{formulaFor39}} internally, use with caution as it may cause Vegas to crash",
 						dock: "Docks at the highest or lowest key within the range of {{formulaFor24}}",
 						silent: "Mutes those notes",
 					},
@@ -1424,10 +1424,10 @@ export default {
 			},
 			pixelScaling: {
 				caption: "Scaling using nearest neighbor hard edge amplification and interpolation algorithms",
-				_: "Pixel Scaling feature is a lossless scaling technology designed for pixel art or images that require sharp edges. Its purpose is to solve the pixel blurring problem caused by VEGAS’s built-in bilinear interpolation scaling algorithm, which creates a gradual transition by mixing the colors of adjacent pixels and destroys the clear boundary of pixel art. This feature is scaled by the nearest neighbor interpolation algorithm, which directly copies the color value of the nearest pixel, and ensures that the scaled image edge maintains the “hard cut” effect to avoid blurring.\nThis feature is especially applicable to retro game resources, low-resolution UI or scenes that need to enhance pixel style. For example, when scaling an 8-bit game character animation, it can prevent the character contour from being “softened” by smoothing, and ensure that each pixel block is still clear and legible after scaling. Note that you need to configure the FFmpeg environment or install the Datamosh Extension Pack in advance to enable the core processing function.\nAccording to the project resolution, this feature generates a new file of appropriate size using the nearest neighbor interpolation algorithm, and the filename is identified with the suffix “_Scaled”. This process supports any image/video format as well as image sequence files imported into VEGAS.",
+				_: "Pixel Scaling feature is a lossless scaling technology designed for pixel art or images that require sharp edges. Its purpose is to solve the pixel blurring problem caused by Vegas’s built-in bilinear interpolation scaling algorithm, which creates a gradual transition by mixing the colors of adjacent pixels and destroys the clear boundary of pixel art. This feature is scaled by the nearest neighbor interpolation algorithm, which directly copies the color value of the nearest pixel, and ensures that the scaled image edge maintains the “hard cut” effect to avoid blurring.\nThis feature is especially applicable to retro game resources, low-resolution UI or scenes that need to enhance pixel style. For example, when scaling an 8-bit game character animation, it can prevent the character contour from being “softened” by smoothing, and ensure that each pixel block is still clear and legible after scaling. Note that you need to configure the FFmpeg environment or install the Datamosh Extension Pack in advance to enable the core processing function.\nAccording to the project resolution, this feature generates a new file of appropriate size using the nearest neighbor interpolation algorithm, and the filename is identified with the suffix “_Scaled”. This process supports any image/video format as well as image sequence files imported into Vegas.",
 			},
 			settings: {
-				about: "Otomad Helper is a YTPMV/otoMAD/YTP extension for VEGAS Pro that enables VEGAS to accept scores such as MIDI sequence files as input and automatically generate YTPMV tracks.",
+				about: "Otomad Helper is a YTPMV/otoMAD/YTP extension for Vegas Pro that enables Vegas to accept scores such as MIDI sequence files as input and automatically generate YTPMV tracks.",
 				translation: "If you would like to participate in the translation, you are welcome to join as well.",
 				language: {
 					enableInContextLocalization: "Translation mode is enabled, please switch the target language in the Crowdin dialog.",
@@ -1470,15 +1470,15 @@ export default {
 					},
 				},
 				internal: {
-					caption: "This includes some practical options that cannot easily be set in the VEGAS Pro preferences",
-					info: "This will modify the global preferences of VEGAS Pro, not only for the current project. Incorrect settings may cause VEGAS Pro to fail to start. Please use with caution.",
-					language: "Change VEGAS Pro language. Restart VEGAS Pro for the change to take effect.",
+					caption: "This includes some practical options that cannot easily be set in the Vegas Pro preferences",
+					info: "This will modify the global preferences of Vegas Pro, not only for the current project. Incorrect settings may cause Vegas Pro to fail to start. Please use with caution.",
+					language: "Change Vegas Pro language. Restart Vegas Pro for the change to take effect.",
 					autosaveInterval: "Adjust the autosave time for projects. Defaults to {{default}} minutes.",
 					defaultTextPlugin: "Change the default text media generator plugin for the “Insert Text Media” option in the context menu of the timeline pane. Defaults to “$t(shared:plugins.titlesAndText).”",
 					defaultTuningMethod: "Change the default tuning method for new audio clips. Defaults to “$t(stream.tuning.tuningMethod.elastic).”",
 					defaultElasticMode: "Change the default stretch attribute of the Elastic tuning method for new audio clips. Defaults to “$t(stream.tuning.stretchAttributes.elastic.efficient).”",
 					defaultClassicMode: "Change the default stretch attribute of the Classic tuning method for new audio clips. Defaults to “$t(stream.tuning.stretchAttributes.classic.a03).”",
-					preserveClipboardOnClose: "Allows cross-project copy and paste by successively opening different projects in a same VEGAS Pro instance",
+					preserveClipboardOnClose: "Allows cross-project copy and paste by successively opening different projects in a same Vegas Pro instance",
 					eventGroupSelection: "Allows video clips within the group to automatically follow the movement when dragging audio clips across tracks, instead of staying on the original track, and vice versa",
 					openglInterop: "Resolves the issue where the preview window does not refresh effects on specific versions of NVIDIA Studio graphics cards",
 				},
@@ -1670,7 +1670,7 @@ export default {
 		wrongOpeningMethod: {
 			script: {
 				title: "Hey, you misplaced the extension!",
-				content: "The new version of Otomad Helper is an extension. Unlike the old version, it is not a script.\n\nPlease move the extension to the Application Extensions directory of VEGAS instead of the Script Menu directory.\n\nLocation:",
+				content: "The new version of Otomad Helper is an extension. Unlike the old version, it is not a script.\n\nPlease move the extension to the Application Extensions directory of Vegas instead of the Script Menu directory.\n\nLocation:",
 			},
 		},
 		textBox: {
