@@ -3477,12 +3477,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// UnrestrictLengthRadio
 			// 
 			this.UnrestrictLengthRadio.AutoSize = true;
+			this.UnrestrictLengthRadio.Checked = true;
 			this.UnrestrictLengthRadio.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.UnrestrictLengthRadio.Group = "LimitLength";
 			this.UnrestrictLengthRadio.Location = new System.Drawing.Point(3, 3);
 			this.UnrestrictLengthRadio.Name = "UnrestrictLengthRadio";
 			this.UnrestrictLengthRadio.Size = new System.Drawing.Size(117, 36);
 			this.UnrestrictLengthRadio.TabIndex = 0;
+			this.UnrestrictLengthRadio.TabStop = true;
 			this.UnrestrictLengthRadio.Text = "不限制";
 			this.UnrestrictLengthRadio.UseVisualStyleBackColor = true;
 			// 

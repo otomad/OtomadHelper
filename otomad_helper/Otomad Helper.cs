@@ -144,7 +144,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>堆　　叠</summary>*/ private bool VConfigStack { get { return configForm.VideoStackCheck.Checked && IsMultiMidiChannel; } }
 		/**<summary>不重映射</summary>*/ private bool VConfigTimeUnremapping { get { return configForm.VideoTimeUnremappingCheck.Checked; } }
 		/**<summary>限长模式</summary>*/ private RestrictLengthModeType RestrictKeyframesLengthMode { get { return configForm.RestrictKeyframesLengthMode; } }
-		/**<summary>限长大小</summary>*/ private double RestrictKeyframesLengthValue { get { return configForm.RestrictKeyframesLengthBox.DoubleValue; } }
+		/**<summary>限长大小</summary>*/ private Timecode RestrictKeyframesLengthValue { get { return configForm.RestrictKeyframesLengthBox.Timecode; } }
 		#endregion
 
 		#region 音频属性
@@ -1238,7 +1238,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				!AConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsAPreferredTrack ? AConfigPreferredTrack.Track as object : topIndex as object,
 				!VConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsVPreferredTrack ? VConfigPreferredTrack.Track as object : topIndex as object,
 				!AConfigMultitrack, !(VConfigMultitrack || sonarMode || SheetConfig), name);
-			bool requireTwoKey = VConfigStartSize != VConfigEndSize || // 如果为起始尺寸与终止尺寸大小相等，则没有必要打两个关键帧了。
+			bool requireTwoKeys = VConfigStartSize != VConfigEndSize || // 如果为起始尺寸与终止尺寸大小相等，则没有必要打两个关键帧了。
 				VConfigStartRotation != VConfigEndRotation ||
 				VConfigStartHTrans != VConfigEndHTrans ||
 				VConfigStartVTrans != VConfigEndVTrans;
@@ -1722,16 +1722,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						videoEvent.FadeOut.Curve = VConfigFadeoutCurve;
 						if (VConfigVelocity) videoEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Video), VConfigVelocityMultiplyGain);
 						// 视频平移/裁切调整
+						Timecode originalVideoLength = videoEvent.Length;
+						bool temporarilyExtendLength = RestrictKeyframesLengthMode != RestrictLengthModeType.UNRESTRICTED && requireTwoKeys && originalVideoLength < RestrictKeyframesLengthValue;
+						if (temporarilyExtendLength) videoEvent.Length = RestrictKeyframesLengthValue;
 						VideoMotionKeyframe key0 = videoEvent.VideoMotion.Keyframes[0];
-						VideoMotionKeyframe key1 = new VideoMotionKeyframe(Timecode.FromMilliseconds(duration));
-						if (requireTwoKey) videoEvent.VideoMotion.Keyframes.Add(key1);
+						VideoMotionKeyframe key1 = new VideoMotionKeyframe(RestrictKeyframesLengthMode == RestrictLengthModeType.FIXED_LENGTH ? RestrictKeyframesLengthValue : videoEvent.Length);
+						if (requireTwoKeys) videoEvent.VideoMotion.Keyframes.Add(key1);
 						float width = key0.BottomRight.X;
 						float height = key0.BottomRight.Y;
 						float startRatio = VConfigStartSize / 100;
 						key0.ScaleBy(new VideoMotionVertex(startRatio, startRatio));
 						key0.MoveBy(new VideoMotionVertex(Math.Abs(1 - startRatio) * width / 2 * VConfigStartHTrans / 100, Math.Abs(1 - startRatio) * height / 2 * VConfigStartVTrans / 100));
 						key0.Type = VConfigStartSizeCurve;
-						if (requireTwoKey) {
+						if (requireTwoKeys) {
 							float endRatio = VConfigEndSize / 100;
 							key1.ScaleBy(new VideoMotionVertex(endRatio, endRatio));
 							key1.MoveBy(new VideoMotionVertex(Math.Abs(1 - endRatio) * width / 2 * VConfigEndHTrans / 100, Math.Abs(1 - endRatio) * height / 2 * VConfigEndVTrans / 100));
@@ -1747,7 +1750,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						videoEvent.FlipAllKeyframes(anim.HorizontalFlip, anim.VerticalFlip);
 						// 旋转属性单独调整，因为和上面“翻转所有关键帧”功能冲突了
 						key0.RotateBy(VConfigStartRotation + anim.RotationDeg);
-						if (requireTwoKey) key1.RotateBy(VConfigEndRotation + anim.RotationDeg);
+						if (requireTwoKeys) key1.RotateBy(VConfigEndRotation + anim.RotationDeg);
+						if (temporarilyExtendLength) videoEvent.Length = originalVideoLength;
 						// 发光效果
 						if (VConfigGlow != 0) if (Plugin.contrast != null) Plugin.ForVideoEvents.Glow(videoEvent, VConfigGlow, VConfigGlowCurve, VConfigGlowBright);
 						else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
@@ -32776,6 +32780,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MidiCustomBpmCheck.CheckedChanged += (sender, e) => { MidiCustomBpmBox.Enabled = MidiCustomBpmCheck.Checked; };
 			GenerateAtCustomRadio.CheckedChanged += (sender, e) => { GenerateAtCustomText.Enabled = GenerateAtCustomRadio.Checked; };
 			UnrestrictLengthRadio.CheckedChanged += (sender, e) => { RestrictLengthBox.Enabled = !UnrestrictLengthRadio.Checked; };
+			UnrestrictKeyframesLengthRadio.CheckedChanged += (sender, e) => { RestrictKeyframesLengthBox.Enabled = !UnrestrictKeyframesLengthRadio.Checked; };
+			{
+				MidiCustomBpmBox.Enabled = MidiCustomBpmCheck.Checked;
+				GenerateAtCustomText.Enabled = GenerateAtCustomRadio.Checked;
+				RestrictLengthBox.Enabled = !UnrestrictLengthRadio.Checked;
+				RestrictKeyframesLengthBox.Enabled = !UnrestrictKeyframesLengthRadio.Checked;
+			}
 			MidiProjectBpmCheck.Text = Lang.str.midi_project_bpm + Lang.str.colon + ProcessBpmDouble(parent.ProjectBpm);
 			MidiCustomBpmBox.Value = (decimal)Math.Max(parent.ProjectBpm, (double)MidiCustomBpmBox.Minimum);
 			GenerateAtBeginRadio.Text = Lang.str.generate_at_begin + Lang.str.colon + Timecode.FromMilliseconds(0).ToPositionString();
@@ -34995,7 +35006,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					RestrictLengthModeType.MIN_LENGTH;
 			}
 			set {
-				UnrestrictLengthRadio.Related.Selected = value == RestrictLengthModeType.UNRESTRICTED ? UnrestrictKeyframesLengthRadio :
+				UnrestrictKeyframesLengthRadio.Related.Selected = value == RestrictLengthModeType.UNRESTRICTED ? UnrestrictKeyframesLengthRadio :
 					value == RestrictLengthModeType.FIXED_LENGTH ? RestrictKeyframesFixedLengthRadio : RestrictKeyframesMinLengthRadio;
 			}
 		}
