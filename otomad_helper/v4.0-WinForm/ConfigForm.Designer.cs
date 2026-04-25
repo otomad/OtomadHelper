@@ -151,6 +151,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutLuckyDipCheck = new System.Windows.Forms.CheckBox();
 			this.MatchCutAccumulateHarmonicsCheck = new System.Windows.Forms.CheckBox();
 			this.MatchCutSustainCheck = new System.Windows.Forms.CheckBox();
+			this.MatchCutSustainPanel = new System.Windows.Forms.TableLayoutPanel();
+			this.MatchCutSustainCacheCapacityLbl = new System.Windows.Forms.Label();
+			this.MatchCutSustainCacheCapacityBox = new System.Windows.Forms.NumericUpDown();
 			this.LinearMapTab = new System.Windows.Forms.TabPage();
 			this.LinearMapPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.LinearMapDescendingCheck = new System.Windows.Forms.CheckBox();
@@ -317,6 +320,67 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioAutoPanCurveCombo = new System.Windows.Forms.ComboBox();
 			this.VideoTab = new System.Windows.Forms.TabPage();
 			this.VideoParamsGroup = new System.Windows.Forms.GroupBox();
+			this.VideoParamsTable = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
+			this.VideoFadeSetAsTimecodeRadio = new System.Windows.Forms.RadioButton();
+			this.VideoFadeSetAsPercentRadio = new System.Windows.Forms.RadioButton();
+			this.VideoParamsPresetsBtn = new System.Windows.Forms.Button();
+			this.flowLayoutPanel13 = new System.Windows.Forms.FlowLayoutPanel();
+			this.UnrestrictKeyframesLengthRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.RestrictKeyframesMinLengthRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.RestrictKeyframesFixedLengthRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.RestrictKeyframesLengthBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
+			this.RestrictKeyframesLengthLbl = new System.Windows.Forms.Label();
+			this.VideoFadeInTimeTxt = new System.Windows.Forms.TextBox();
+			this.VideoFadeOutTimeTxt = new System.Windows.Forms.TextBox();
+			this.VideoStartThresholdCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoStartSaturationCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoStartContrastCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoStartHueCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoEndContrastBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoEndSaturationBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoEndHueBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoEndThresholdBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoStartContrastBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoStartSaturationBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoStartThresholdBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoStartHueBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoStartThresholdLbl = new System.Windows.Forms.Label();
+			this.VideoEndThresholdLbl = new System.Windows.Forms.Label();
+			this.VideoEndSaturationLbl = new System.Windows.Forms.Label();
+			this.VideoEndContrastLbl = new System.Windows.Forms.Label();
+			this.VideoStartContrastLbl = new System.Windows.Forms.Label();
+			this.VideoStartHueLbl = new System.Windows.Forms.Label();
+			this.VideoStartSaturationLbl = new System.Windows.Forms.Label();
+			this.VideoEndHueLbl = new System.Windows.Forms.Label();
+			this.VideoFadeInLbl = new System.Windows.Forms.Label();
+			this.VideoFadeInBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoFadeInCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoFadeOutLbl = new System.Windows.Forms.Label();
+			this.VideoFadeOutBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoFadeOutCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoGlowLbl = new System.Windows.Forms.Label();
+			this.VideoGlowBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoGlowCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoGlowBrightLbl = new System.Windows.Forms.Label();
+			this.VideoGlowBrightBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoStartSizeLbl = new System.Windows.Forms.Label();
+			this.VideoStartSizeBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoStartSizeCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoEndSizeLbl = new System.Windows.Forms.Label();
+			this.VideoEndSizeBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoStartRotationLbl = new System.Windows.Forms.Label();
+			this.VideoStartRotationBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoEndRotationLbl = new System.Windows.Forms.Label();
+			this.VideoEndRotationBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoStartHorizontalTransLbl = new System.Windows.Forms.Label();
+			this.VideoStartHorizontalTransBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoEndHorizontalTransLbl = new System.Windows.Forms.Label();
+			this.VideoEndHorizontalTransBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoStartVerticalTransLbl = new System.Windows.Forms.Label();
+			this.VideoStartVerticalTransBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoEndVerticalTransLbl = new System.Windows.Forms.Label();
+			this.VideoEndVerticalTransBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
 			this.VideoEffectsGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
 			this.VideoEffectLbl = new System.Windows.Forms.Label();
@@ -534,70 +598,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.MatchCutSustainPanel = new System.Windows.Forms.TableLayoutPanel();
-			this.MatchCutSustainCacheCapacityLbl = new System.Windows.Forms.Label();
-			this.MatchCutSustainCacheCapacityBox = new System.Windows.Forms.NumericUpDown();
-			this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
-			this.VideoParamsPresetsBtn = new System.Windows.Forms.Button();
-			this.VideoFadeSetAsPercentRadio = new System.Windows.Forms.RadioButton();
-			this.VideoFadeSetAsTimecodeRadio = new System.Windows.Forms.RadioButton();
-			this.VideoEndVerticalTransBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoEndVerticalTransLbl = new System.Windows.Forms.Label();
-			this.VideoStartVerticalTransBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoStartVerticalTransLbl = new System.Windows.Forms.Label();
-			this.VideoEndHorizontalTransBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoEndHorizontalTransLbl = new System.Windows.Forms.Label();
-			this.VideoStartHorizontalTransBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoStartHorizontalTransLbl = new System.Windows.Forms.Label();
-			this.VideoEndRotationBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoEndRotationLbl = new System.Windows.Forms.Label();
-			this.VideoStartRotationBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoStartRotationLbl = new System.Windows.Forms.Label();
-			this.VideoEndSizeBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoEndSizeLbl = new System.Windows.Forms.Label();
-			this.VideoStartSizeCurveCombo = new System.Windows.Forms.ComboBox();
-			this.VideoStartSizeBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoStartSizeLbl = new System.Windows.Forms.Label();
-			this.VideoGlowBrightBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoGlowBrightLbl = new System.Windows.Forms.Label();
-			this.VideoGlowCurveCombo = new System.Windows.Forms.ComboBox();
-			this.VideoGlowBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoGlowLbl = new System.Windows.Forms.Label();
-			this.VideoFadeOutCurveCombo = new System.Windows.Forms.ComboBox();
-			this.VideoFadeOutBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoFadeOutLbl = new System.Windows.Forms.Label();
-			this.VideoFadeInCurveCombo = new System.Windows.Forms.ComboBox();
-			this.VideoFadeInBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoFadeInLbl = new System.Windows.Forms.Label();
-			this.VideoEndHueLbl = new System.Windows.Forms.Label();
-			this.VideoStartSaturationLbl = new System.Windows.Forms.Label();
-			this.VideoStartHueLbl = new System.Windows.Forms.Label();
-			this.VideoStartContrastLbl = new System.Windows.Forms.Label();
-			this.VideoEndContrastLbl = new System.Windows.Forms.Label();
-			this.VideoEndSaturationLbl = new System.Windows.Forms.Label();
-			this.VideoEndThresholdLbl = new System.Windows.Forms.Label();
-			this.VideoStartThresholdLbl = new System.Windows.Forms.Label();
-			this.VideoStartHueBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoStartThresholdBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoStartSaturationBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoStartContrastBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoEndThresholdBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoEndHueBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoEndSaturationBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoEndContrastBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
-			this.VideoStartHueCurveCombo = new System.Windows.Forms.ComboBox();
-			this.VideoStartContrastCurveCombo = new System.Windows.Forms.ComboBox();
-			this.VideoStartSaturationCurveCombo = new System.Windows.Forms.ComboBox();
-			this.VideoStartThresholdCurveCombo = new System.Windows.Forms.ComboBox();
-			this.VideoFadeOutTimeTxt = new System.Windows.Forms.TextBox();
-			this.VideoFadeInTimeTxt = new System.Windows.Forms.TextBox();
-			this.VideoParamsTable = new System.Windows.Forms.TableLayoutPanel();
-			this.RestrictKeyframesLengthLbl = new System.Windows.Forms.Label();
-			this.flowLayoutPanel13 = new System.Windows.Forms.FlowLayoutPanel();
-			this.UnrestrictKeyframesLengthRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
-			this.RestrictKeyframesMinLengthRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
-			this.RestrictKeyframesFixedLengthRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
-			this.RestrictKeyframesLengthBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -631,6 +631,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutOrderPanel.SuspendLayout();
 			this.tableLayoutPanel5.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MatchCutRepeatBox)).BeginInit();
+			this.MatchCutSustainPanel.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.MatchCutSustainCacheCapacityBox)).BeginInit();
 			this.LinearMapTab.SuspendLayout();
 			this.LinearMapPanel.SuspendLayout();
 			this.SourceConfigGroup.SuspendLayout();
@@ -682,6 +684,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioAutoPanFlow.SuspendLayout();
 			this.VideoTab.SuspendLayout();
 			this.VideoParamsGroup.SuspendLayout();
+			this.VideoParamsTable.SuspendLayout();
+			this.tableLayoutPanel9.SuspendLayout();
+			this.flowLayoutPanel13.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.RestrictKeyframesLengthBox)).BeginInit();
 			this.VideoEffectsGroup.SuspendLayout();
 			this.tableLayoutPanel8.SuspendLayout();
 			this.VideoVelocityGroup.SuspendLayout();
@@ -750,12 +756,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
-			this.MatchCutSustainPanel.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.MatchCutSustainCacheCapacityBox)).BeginInit();
-			this.tableLayoutPanel9.SuspendLayout();
-			this.VideoParamsTable.SuspendLayout();
-			this.flowLayoutPanel13.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.RestrictKeyframesLengthBox)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -1258,7 +1258,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
 			this.menu.Padding = new System.Windows.Forms.Padding(10, 4, 0, 6);
-			this.menu.Size = new System.Drawing.Size(1092, 48);
+			this.menu.Size = new System.Drawing.Size(1092, 46);
 			this.menu.TabIndex = 2;
 			this.menu.Text = "menuStrip1";
 			// 
@@ -1279,7 +1279,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
             this.exitDiscardingChangesToolStripMenuItem,
             this.exitToolStripMenuItem});
 			this.fileMenuItem.Name = "fileMenuItem";
-			this.fileMenuItem.Size = new System.Drawing.Size(108, 38);
+			this.fileMenuItem.Size = new System.Drawing.Size(108, 36);
 			this.fileMenuItem.Text = "文件(&F)";
 			// 
 			// saveConfigToolStripMenuItem
@@ -1432,7 +1432,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
             this.englishDocumentationsToolStripMenuItem,
             this.chineseDocumentationsToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(113, 38);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(113, 36);
 			this.helpToolStripMenuItem.Text = "帮助(&H)";
 			// 
 			// versionToolStripMenuItem
@@ -1632,7 +1632,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
             this.vietnameseToolStripMenuItem,
             this.indonesianToolStripMenuItem});
 			this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
-			this.languageToolStripMenuItem.Size = new System.Drawing.Size(195, 38);
+			this.languageToolStripMenuItem.Size = new System.Drawing.Size(195, 36);
 			this.languageToolStripMenuItem.Text = "语言/&Language";
 			// 
 			// chineseToolStripMenuItem
@@ -1706,7 +1706,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.currentVersionMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this.currentVersionMenuItem.Enabled = false;
 			this.currentVersionMenuItem.Name = "currentVersionMenuItem";
-			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 38);
+			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 36);
 			this.currentVersionMenuItem.Text = "v4";
 			// 
 			// panel1
@@ -1714,10 +1714,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.panel1.BackColor = System.Drawing.Color.Transparent;
 			this.panel1.Controls.Add(this.Tabs);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(0, 48);
+			this.panel1.Location = new System.Drawing.Point(0, 46);
 			this.panel1.Name = "panel1";
 			this.panel1.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
-			this.panel1.Size = new System.Drawing.Size(1092, 1054);
+			this.panel1.Size = new System.Drawing.Size(1092, 1056);
 			this.panel1.TabIndex = 3;
 			// 
 			// Tabs
@@ -1737,7 +1737,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Tabs.Multiline = true;
 			this.Tabs.Name = "Tabs";
 			this.Tabs.SelectedIndex = 0;
-			this.Tabs.Size = new System.Drawing.Size(1068, 1054);
+			this.Tabs.Size = new System.Drawing.Size(1068, 1056);
 			this.Tabs.TabIndex = 2;
 			// 
 			// SourceTab
@@ -1748,7 +1748,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTab.Location = new System.Drawing.Point(8, 46);
 			this.SourceTab.Margin = new System.Windows.Forms.Padding(0);
 			this.SourceTab.Name = "SourceTab";
-			this.SourceTab.Size = new System.Drawing.Size(1052, 1000);
+			this.SourceTab.Size = new System.Drawing.Size(1052, 1002);
 			this.SourceTab.TabIndex = 0;
 			this.SourceTab.Text = "素材";
 			this.SourceTab.UseVisualStyleBackColor = true;
@@ -1763,7 +1763,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTabScrollPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.SourceTabScrollPanel.Name = "SourceTabScrollPanel";
 			this.SourceTabScrollPanel.Padding = new System.Windows.Forms.Padding(8);
-			this.SourceTabScrollPanel.Size = new System.Drawing.Size(1052, 944);
+			this.SourceTabScrollPanel.Size = new System.Drawing.Size(1052, 946);
 			this.SourceTabScrollPanel.TabIndex = 5;
 			// 
 			// MultiSourceConfigGroup
@@ -2255,6 +2255,56 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutSustainCheck.TabIndex = 22;
 			this.MatchCutSustainCheck.Text = "相同音高时不换素材";
 			this.MatchCutSustainCheck.UseVisualStyleBackColor = true;
+			// 
+			// MatchCutSustainPanel
+			// 
+			this.MatchCutSustainPanel.AutoSize = true;
+			this.MatchCutSustainPanel.ColumnCount = 2;
+			this.MatchCutSustainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.MatchCutSustainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.MatchCutSustainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.MatchCutSustainPanel.Controls.Add(this.MatchCutSustainCacheCapacityLbl, 0, 0);
+			this.MatchCutSustainPanel.Controls.Add(this.MatchCutSustainCacheCapacityBox, 1, 0);
+			this.MatchCutSustainPanel.Dock = System.Windows.Forms.DockStyle.Left;
+			this.MatchCutSustainPanel.Location = new System.Drawing.Point(3, 263);
+			this.MatchCutSustainPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.MatchCutSustainPanel.Name = "MatchCutSustainPanel";
+			this.MatchCutSustainPanel.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
+			this.MatchCutSustainPanel.RowCount = 1;
+			this.MatchCutSustainPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.MatchCutSustainPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.MatchCutSustainPanel.Size = new System.Drawing.Size(324, 44);
+			this.MatchCutSustainPanel.TabIndex = 23;
+			// 
+			// MatchCutSustainCacheCapacityLbl
+			// 
+			this.MatchCutSustainCacheCapacityLbl.AutoSize = true;
+			this.MatchCutSustainCacheCapacityLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MatchCutSustainCacheCapacityLbl.Location = new System.Drawing.Point(32, 0);
+			this.MatchCutSustainCacheCapacityLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.MatchCutSustainCacheCapacityLbl.MinimumSize = new System.Drawing.Size(100, 0);
+			this.MatchCutSustainCacheCapacityLbl.Name = "MatchCutSustainCacheCapacityLbl";
+			this.MatchCutSustainCacheCapacityLbl.Size = new System.Drawing.Size(158, 44);
+			this.MatchCutSustainCacheCapacityLbl.TabIndex = 14;
+			this.MatchCutSustainCacheCapacityLbl.Text = "音高缓存容量";
+			this.MatchCutSustainCacheCapacityLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// MatchCutSustainCacheCapacityBox
+			// 
+			this.MatchCutSustainCacheCapacityBox.Location = new System.Drawing.Point(201, 3);
+			this.MatchCutSustainCacheCapacityBox.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.MatchCutSustainCacheCapacityBox.Name = "MatchCutSustainCacheCapacityBox";
+			this.MatchCutSustainCacheCapacityBox.Size = new System.Drawing.Size(120, 39);
+			this.MatchCutSustainCacheCapacityBox.TabIndex = 15;
+			this.MatchCutSustainCacheCapacityBox.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
 			// 
 			// LinearMapTab
 			// 
@@ -2771,7 +2821,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.WarningInfoLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.WarningInfoLabel.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
 			this.WarningInfoLabel.ForeColor = System.Drawing.Color.Red;
-			this.WarningInfoLabel.Location = new System.Drawing.Point(0, 944);
+			this.WarningInfoLabel.Location = new System.Drawing.Point(0, 946);
 			this.WarningInfoLabel.MaximumSize = new System.Drawing.Size(864, 0);
 			this.WarningInfoLabel.Name = "WarningInfoLabel";
 			this.WarningInfoLabel.Padding = new System.Windows.Forms.Padding(8);
@@ -2787,7 +2837,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ScoreTab.Location = new System.Drawing.Point(8, 46);
 			this.ScoreTab.Name = "ScoreTab";
 			this.ScoreTab.Padding = new System.Windows.Forms.Padding(8);
-			this.ScoreTab.Size = new System.Drawing.Size(1052, 1000);
+			this.ScoreTab.Size = new System.Drawing.Size(1052, 1002);
 			this.ScoreTab.TabIndex = 8;
 			this.ScoreTab.Text = "乐曲";
 			this.ScoreTab.UseVisualStyleBackColor = true;
@@ -2814,7 +2864,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackListView.MultiSelect = false;
 			this.MidiTrackListView.Name = "MidiTrackListView";
 			this.MidiTrackListView.ShowItemToolTips = true;
-			this.MidiTrackListView.Size = new System.Drawing.Size(1036, 330);
+			this.MidiTrackListView.Size = new System.Drawing.Size(1036, 332);
 			this.MidiTrackListView.TabIndex = 23;
 			this.MidiTrackListView.UseCompatibleStateImageBehavior = false;
 			this.MidiTrackListView.View = System.Windows.Forms.View.Details;
@@ -2956,7 +3006,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiAutoLayoutTracksGroup.Controls.Add(this.tableLayoutPanel22);
 			this.MidiAutoLayoutTracksGroup.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.MidiAutoLayoutTracksGroup.Enabled = false;
-			this.MidiAutoLayoutTracksGroup.Location = new System.Drawing.Point(8, 854);
+			this.MidiAutoLayoutTracksGroup.Location = new System.Drawing.Point(8, 856);
 			this.MidiAutoLayoutTracksGroup.Name = "MidiAutoLayoutTracksGroup";
 			this.MidiAutoLayoutTracksGroup.Size = new System.Drawing.Size(1036, 138);
 			this.MidiAutoLayoutTracksGroup.TabIndex = 20;
@@ -3527,7 +3577,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTab.Location = new System.Drawing.Point(8, 46);
 			this.AudioTab.Name = "AudioTab";
 			this.AudioTab.Padding = new System.Windows.Forms.Padding(8);
-			this.AudioTab.Size = new System.Drawing.Size(1052, 1000);
+			this.AudioTab.Size = new System.Drawing.Size(1052, 1002);
 			this.AudioTab.TabIndex = 1;
 			this.AudioTab.Text = "音频";
 			this.AudioTab.UseVisualStyleBackColor = true;
@@ -4570,7 +4620,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab.Location = new System.Drawing.Point(8, 46);
 			this.VideoTab.Name = "VideoTab";
 			this.VideoTab.Padding = new System.Windows.Forms.Padding(8);
-			this.VideoTab.Size = new System.Drawing.Size(1052, 1000);
+			this.VideoTab.Size = new System.Drawing.Size(1052, 1002);
 			this.VideoTab.TabIndex = 2;
 			this.VideoTab.Text = "画面";
 			this.VideoTab.UseVisualStyleBackColor = true;
@@ -4587,6 +4637,1292 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoParamsGroup.TabIndex = 5;
 			this.VideoParamsGroup.TabStop = false;
 			this.VideoParamsGroup.Text = "参数";
+			// 
+			// VideoParamsTable
+			// 
+			this.VideoParamsTable.AutoSize = true;
+			this.VideoParamsTable.ColumnCount = 3;
+			this.VideoParamsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.VideoParamsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.VideoParamsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.VideoParamsTable.Controls.Add(this.flowLayoutPanel13, 0, 6);
+			this.VideoParamsTable.Controls.Add(this.RestrictKeyframesLengthLbl, 0, 5);
+			this.VideoParamsTable.Controls.Add(this.VideoFadeInTimeTxt, 1, 23);
+			this.VideoParamsTable.Controls.Add(this.VideoFadeOutTimeTxt, 1, 24);
+			this.VideoParamsTable.Controls.Add(this.VideoStartThresholdCurveCombo, 2, 21);
+			this.VideoParamsTable.Controls.Add(this.VideoStartSaturationCurveCombo, 2, 17);
+			this.VideoParamsTable.Controls.Add(this.VideoStartContrastCurveCombo, 2, 19);
+			this.VideoParamsTable.Controls.Add(this.VideoStartHueCurveCombo, 2, 15);
+			this.VideoParamsTable.Controls.Add(this.VideoEndContrastBox, 1, 20);
+			this.VideoParamsTable.Controls.Add(this.VideoEndSaturationBox, 1, 18);
+			this.VideoParamsTable.Controls.Add(this.VideoEndHueBox, 1, 16);
+			this.VideoParamsTable.Controls.Add(this.VideoEndThresholdBox, 1, 22);
+			this.VideoParamsTable.Controls.Add(this.VideoStartContrastBox, 1, 19);
+			this.VideoParamsTable.Controls.Add(this.VideoStartSaturationBox, 1, 17);
+			this.VideoParamsTable.Controls.Add(this.VideoStartThresholdBox, 1, 21);
+			this.VideoParamsTable.Controls.Add(this.VideoStartHueBox, 1, 15);
+			this.VideoParamsTable.Controls.Add(this.VideoStartThresholdLbl, 0, 21);
+			this.VideoParamsTable.Controls.Add(this.VideoEndThresholdLbl, 0, 22);
+			this.VideoParamsTable.Controls.Add(this.VideoEndSaturationLbl, 0, 18);
+			this.VideoParamsTable.Controls.Add(this.VideoEndContrastLbl, 0, 20);
+			this.VideoParamsTable.Controls.Add(this.VideoStartContrastLbl, 0, 19);
+			this.VideoParamsTable.Controls.Add(this.VideoStartHueLbl, 0, 15);
+			this.VideoParamsTable.Controls.Add(this.VideoStartSaturationLbl, 0, 17);
+			this.VideoParamsTable.Controls.Add(this.VideoEndHueLbl, 0, 16);
+			this.VideoParamsTable.Controls.Add(this.VideoFadeInLbl, 0, 1);
+			this.VideoParamsTable.Controls.Add(this.VideoFadeInBox, 1, 1);
+			this.VideoParamsTable.Controls.Add(this.VideoFadeInCurveCombo, 2, 1);
+			this.VideoParamsTable.Controls.Add(this.VideoFadeOutLbl, 0, 2);
+			this.VideoParamsTable.Controls.Add(this.VideoFadeOutBox, 1, 2);
+			this.VideoParamsTable.Controls.Add(this.VideoFadeOutCurveCombo, 2, 2);
+			this.VideoParamsTable.Controls.Add(this.VideoGlowLbl, 0, 3);
+			this.VideoParamsTable.Controls.Add(this.VideoGlowBox, 1, 3);
+			this.VideoParamsTable.Controls.Add(this.VideoGlowCurveCombo, 2, 3);
+			this.VideoParamsTable.Controls.Add(this.VideoGlowBrightLbl, 0, 4);
+			this.VideoParamsTable.Controls.Add(this.VideoGlowBrightBox, 1, 4);
+			this.VideoParamsTable.Controls.Add(this.VideoStartSizeLbl, 0, 7);
+			this.VideoParamsTable.Controls.Add(this.VideoStartSizeBox, 1, 7);
+			this.VideoParamsTable.Controls.Add(this.VideoStartSizeCurveCombo, 2, 7);
+			this.VideoParamsTable.Controls.Add(this.VideoEndSizeLbl, 0, 8);
+			this.VideoParamsTable.Controls.Add(this.VideoEndSizeBox, 1, 8);
+			this.VideoParamsTable.Controls.Add(this.VideoStartRotationLbl, 0, 9);
+			this.VideoParamsTable.Controls.Add(this.VideoStartRotationBox, 1, 9);
+			this.VideoParamsTable.Controls.Add(this.VideoEndRotationLbl, 0, 10);
+			this.VideoParamsTable.Controls.Add(this.VideoEndRotationBox, 1, 10);
+			this.VideoParamsTable.Controls.Add(this.VideoStartHorizontalTransLbl, 0, 11);
+			this.VideoParamsTable.Controls.Add(this.VideoStartHorizontalTransBox, 1, 11);
+			this.VideoParamsTable.Controls.Add(this.VideoEndHorizontalTransLbl, 0, 12);
+			this.VideoParamsTable.Controls.Add(this.VideoEndHorizontalTransBox, 1, 12);
+			this.VideoParamsTable.Controls.Add(this.VideoStartVerticalTransLbl, 0, 13);
+			this.VideoParamsTable.Controls.Add(this.VideoStartVerticalTransBox, 1, 13);
+			this.VideoParamsTable.Controls.Add(this.VideoEndVerticalTransLbl, 0, 14);
+			this.VideoParamsTable.Controls.Add(this.VideoEndVerticalTransBox, 1, 14);
+			this.VideoParamsTable.Controls.Add(this.tableLayoutPanel9, 0, 0);
+			this.VideoParamsTable.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoParamsTable.Location = new System.Drawing.Point(8, 40);
+			this.VideoParamsTable.Name = "VideoParamsTable";
+			this.VideoParamsTable.RowCount = 25;
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 0F));
+			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 0F));
+			this.VideoParamsTable.Size = new System.Drawing.Size(986, 1466);
+			this.VideoParamsTable.TabIndex = 0;
+			// 
+			// tableLayoutPanel9
+			// 
+			this.tableLayoutPanel9.AutoSize = true;
+			this.tableLayoutPanel9.ColumnCount = 4;
+			this.VideoParamsTable.SetColumnSpan(this.tableLayoutPanel9, 3);
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel9.Controls.Add(this.VideoFadeSetAsTimecodeRadio, 3, 0);
+			this.tableLayoutPanel9.Controls.Add(this.VideoFadeSetAsPercentRadio, 2, 0);
+			this.tableLayoutPanel9.Controls.Add(this.VideoParamsPresetsBtn, 0, 0);
+			this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel9.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel9.MaximumSize = new System.Drawing.Size(0, 58);
+			this.tableLayoutPanel9.Name = "tableLayoutPanel9";
+			this.tableLayoutPanel9.RowCount = 1;
+			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel9.Size = new System.Drawing.Size(986, 54);
+			this.tableLayoutPanel9.TabIndex = 0;
+			// 
+			// VideoFadeSetAsTimecodeRadio
+			// 
+			this.VideoFadeSetAsTimecodeRadio.AutoSize = true;
+			this.VideoFadeSetAsTimecodeRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeSetAsTimecodeRadio.Location = new System.Drawing.Point(794, 3);
+			this.VideoFadeSetAsTimecodeRadio.Name = "VideoFadeSetAsTimecodeRadio";
+			this.VideoFadeSetAsTimecodeRadio.Size = new System.Drawing.Size(189, 48);
+			this.VideoFadeSetAsTimecodeRadio.TabIndex = 4;
+			this.VideoFadeSetAsTimecodeRadio.Text = "设定为时间码";
+			this.VideoFadeSetAsTimecodeRadio.UseVisualStyleBackColor = true;
+			this.VideoFadeSetAsTimecodeRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
+			// 
+			// VideoFadeSetAsPercentRadio
+			// 
+			this.VideoFadeSetAsPercentRadio.AutoSize = true;
+			this.VideoFadeSetAsPercentRadio.Checked = true;
+			this.VideoFadeSetAsPercentRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeSetAsPercentRadio.Location = new System.Drawing.Point(599, 3);
+			this.VideoFadeSetAsPercentRadio.Name = "VideoFadeSetAsPercentRadio";
+			this.VideoFadeSetAsPercentRadio.Size = new System.Drawing.Size(189, 48);
+			this.VideoFadeSetAsPercentRadio.TabIndex = 3;
+			this.VideoFadeSetAsPercentRadio.TabStop = true;
+			this.VideoFadeSetAsPercentRadio.Text = "设定为百分比";
+			this.VideoFadeSetAsPercentRadio.UseVisualStyleBackColor = true;
+			this.VideoFadeSetAsPercentRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
+			// 
+			// VideoParamsPresetsBtn
+			// 
+			this.VideoParamsPresetsBtn.AutoSize = true;
+			this.VideoParamsPresetsBtn.Dock = System.Windows.Forms.DockStyle.Left;
+			this.VideoParamsPresetsBtn.Location = new System.Drawing.Point(3, 3);
+			this.VideoParamsPresetsBtn.MaximumSize = new System.Drawing.Size(800, 48);
+			this.VideoParamsPresetsBtn.Name = "VideoParamsPresetsBtn";
+			this.VideoParamsPresetsBtn.Padding = new System.Windows.Forms.Padding(0, 0, 22, 0);
+			this.VideoParamsPresetsBtn.Size = new System.Drawing.Size(158, 48);
+			this.VideoParamsPresetsBtn.TabIndex = 1;
+			this.VideoParamsPresetsBtn.Text = "预设";
+			this.VideoParamsPresetsBtn.UseVisualStyleBackColor = true;
+			this.VideoParamsPresetsBtn.Click += new System.EventHandler(this.VideoParamsPresetsBtn_Click);
+			this.VideoParamsPresetsBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.TrackLegatoBtn_Paint);
+			this.VideoParamsPresetsBtn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseDownMapToClick);
+			this.VideoParamsPresetsBtn.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseUpMapToClick);
+			// 
+			// flowLayoutPanel13
+			// 
+			this.flowLayoutPanel13.AutoSize = true;
+			this.VideoParamsTable.SetColumnSpan(this.flowLayoutPanel13, 3);
+			this.flowLayoutPanel13.Controls.Add(this.UnrestrictKeyframesLengthRadio);
+			this.flowLayoutPanel13.Controls.Add(this.RestrictKeyframesMinLengthRadio);
+			this.flowLayoutPanel13.Controls.Add(this.RestrictKeyframesFixedLengthRadio);
+			this.flowLayoutPanel13.Controls.Add(this.RestrictKeyframesLengthBox);
+			this.flowLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel13.Location = new System.Drawing.Point(3, 361);
+			this.flowLayoutPanel13.Margin = new System.Windows.Forms.Padding(3, 3, 3, 7);
+			this.flowLayoutPanel13.Name = "flowLayoutPanel13";
+			this.flowLayoutPanel13.Size = new System.Drawing.Size(980, 42);
+			this.flowLayoutPanel13.TabIndex = 46;
+			// 
+			// UnrestrictKeyframesLengthRadio
+			// 
+			this.UnrestrictKeyframesLengthRadio.AutoSize = true;
+			this.UnrestrictKeyframesLengthRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.UnrestrictKeyframesLengthRadio.Group = "KeyframesLimitLength";
+			this.UnrestrictKeyframesLengthRadio.Location = new System.Drawing.Point(3, 3);
+			this.UnrestrictKeyframesLengthRadio.Name = "UnrestrictKeyframesLengthRadio";
+			this.UnrestrictKeyframesLengthRadio.Size = new System.Drawing.Size(117, 36);
+			this.UnrestrictKeyframesLengthRadio.TabIndex = 0;
+			this.UnrestrictKeyframesLengthRadio.Text = "不限制";
+			this.UnrestrictKeyframesLengthRadio.UseVisualStyleBackColor = true;
+			// 
+			// RestrictKeyframesMinLengthRadio
+			// 
+			this.RestrictKeyframesMinLengthRadio.AutoSize = true;
+			this.RestrictKeyframesMinLengthRadio.Checked = true;
+			this.RestrictKeyframesMinLengthRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RestrictKeyframesMinLengthRadio.Group = "KeyframesLimitLength";
+			this.RestrictKeyframesMinLengthRadio.Location = new System.Drawing.Point(126, 3);
+			this.RestrictKeyframesMinLengthRadio.Name = "RestrictKeyframesMinLengthRadio";
+			this.RestrictKeyframesMinLengthRadio.Size = new System.Drawing.Size(141, 36);
+			this.RestrictKeyframesMinLengthRadio.TabIndex = 1;
+			this.RestrictKeyframesMinLengthRadio.TabStop = true;
+			this.RestrictKeyframesMinLengthRadio.Text = "最小长度";
+			this.RestrictKeyframesMinLengthRadio.UseVisualStyleBackColor = true;
+			// 
+			// RestrictKeyframesFixedLengthRadio
+			// 
+			this.RestrictKeyframesFixedLengthRadio.AutoSize = true;
+			this.RestrictKeyframesFixedLengthRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RestrictKeyframesFixedLengthRadio.Group = "KeyframesLimitLength";
+			this.RestrictKeyframesFixedLengthRadio.Location = new System.Drawing.Point(273, 3);
+			this.RestrictKeyframesFixedLengthRadio.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+			this.RestrictKeyframesFixedLengthRadio.Name = "RestrictKeyframesFixedLengthRadio";
+			this.RestrictKeyframesFixedLengthRadio.Size = new System.Drawing.Size(141, 36);
+			this.RestrictKeyframesFixedLengthRadio.TabIndex = 2;
+			this.RestrictKeyframesFixedLengthRadio.Text = "固定长度";
+			this.RestrictKeyframesFixedLengthRadio.UseVisualStyleBackColor = true;
+			// 
+			// RestrictKeyframesLengthBox
+			// 
+			this.RestrictKeyframesLengthBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RestrictKeyframesLengthBox.DoubleValue = 1000D;
+			this.RestrictKeyframesLengthBox.Enabled = false;
+			this.RestrictKeyframesLengthBox.Location = new System.Drawing.Point(417, 3);
+			this.RestrictKeyframesLengthBox.Milliseconds = 1000;
+			this.RestrictKeyframesLengthBox.Name = "RestrictKeyframesLengthBox";
+			this.RestrictKeyframesLengthBox.Size = new System.Drawing.Size(260, 39);
+			this.RestrictKeyframesLengthBox.TabIndex = 6;
+			this.RestrictKeyframesLengthBox.Value = 1000;
+			// 
+			// RestrictKeyframesLengthLbl
+			// 
+			this.RestrictKeyframesLengthLbl.AutoSize = true;
+			this.VideoParamsTable.SetColumnSpan(this.RestrictKeyframesLengthLbl, 3);
+			this.RestrictKeyframesLengthLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RestrictKeyframesLengthLbl.Location = new System.Drawing.Point(4, 326);
+			this.RestrictKeyframesLengthLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
+			this.RestrictKeyframesLengthLbl.Name = "RestrictKeyframesLengthLbl";
+			this.RestrictKeyframesLengthLbl.Size = new System.Drawing.Size(978, 32);
+			this.RestrictKeyframesLengthLbl.TabIndex = 45;
+			this.RestrictKeyframesLengthLbl.Text = "限制关键帧长度";
+			this.RestrictKeyframesLengthLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			// 
+			// VideoFadeInTimeTxt
+			// 
+			this.VideoFadeInTimeTxt.Dock = System.Windows.Forms.DockStyle.Left;
+			this.VideoFadeInTimeTxt.Location = new System.Drawing.Point(140, 1470);
+			this.VideoFadeInTimeTxt.Margin = new System.Windows.Forms.Padding(24, 4, 4, 4);
+			this.VideoFadeInTimeTxt.Name = "VideoFadeInTimeTxt";
+			this.VideoFadeInTimeTxt.Size = new System.Drawing.Size(318, 39);
+			this.VideoFadeInTimeTxt.TabIndex = 3;
+			this.VideoFadeInTimeTxt.Visible = false;
+			this.VideoFadeInTimeTxt.TextChanged += new System.EventHandler(this.TimecodeText_Leave);
+			// 
+			// VideoFadeOutTimeTxt
+			// 
+			this.VideoFadeOutTimeTxt.Dock = System.Windows.Forms.DockStyle.Left;
+			this.VideoFadeOutTimeTxt.Location = new System.Drawing.Point(140, 1470);
+			this.VideoFadeOutTimeTxt.Margin = new System.Windows.Forms.Padding(24, 4, 4, 4);
+			this.VideoFadeOutTimeTxt.Name = "VideoFadeOutTimeTxt";
+			this.VideoFadeOutTimeTxt.Size = new System.Drawing.Size(318, 39);
+			this.VideoFadeOutTimeTxt.TabIndex = 6;
+			this.VideoFadeOutTimeTxt.Visible = false;
+			this.VideoFadeOutTimeTxt.TextChanged += new System.EventHandler(this.TimecodeText_Leave);
+			// 
+			// VideoStartThresholdCurveCombo
+			// 
+			this.VideoStartThresholdCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartThresholdCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoStartThresholdCurveCombo.FormattingEnabled = true;
+			this.VideoStartThresholdCurveCombo.Items.AddRange(new object[] {
+            "线性",
+            "快速",
+            "慢速",
+            "平滑",
+            "急剧"});
+			this.VideoStartThresholdCurveCombo.Location = new System.Drawing.Point(880, 1340);
+			this.VideoStartThresholdCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.VideoStartThresholdCurveCombo.Name = "VideoStartThresholdCurveCombo";
+			this.VideoStartThresholdCurveCombo.Size = new System.Drawing.Size(102, 40);
+			this.VideoStartThresholdCurveCombo.TabIndex = 43;
+			// 
+			// VideoStartSaturationCurveCombo
+			// 
+			this.VideoStartSaturationCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartSaturationCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoStartSaturationCurveCombo.FormattingEnabled = true;
+			this.VideoStartSaturationCurveCombo.Items.AddRange(new object[] {
+            "线性",
+            "快速",
+            "慢速",
+            "平滑",
+            "急剧"});
+			this.VideoStartSaturationCurveCombo.Location = new System.Drawing.Point(880, 1076);
+			this.VideoStartSaturationCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.VideoStartSaturationCurveCombo.Name = "VideoStartSaturationCurveCombo";
+			this.VideoStartSaturationCurveCombo.Size = new System.Drawing.Size(102, 40);
+			this.VideoStartSaturationCurveCombo.TabIndex = 37;
+			// 
+			// VideoStartContrastCurveCombo
+			// 
+			this.VideoStartContrastCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartContrastCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoStartContrastCurveCombo.FormattingEnabled = true;
+			this.VideoStartContrastCurveCombo.Items.AddRange(new object[] {
+            "线性",
+            "快速",
+            "慢速",
+            "平滑",
+            "急剧"});
+			this.VideoStartContrastCurveCombo.Location = new System.Drawing.Point(880, 1208);
+			this.VideoStartContrastCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.VideoStartContrastCurveCombo.Name = "VideoStartContrastCurveCombo";
+			this.VideoStartContrastCurveCombo.Size = new System.Drawing.Size(102, 40);
+			this.VideoStartContrastCurveCombo.TabIndex = 40;
+			// 
+			// VideoStartHueCurveCombo
+			// 
+			this.VideoStartHueCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartHueCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoStartHueCurveCombo.FormattingEnabled = true;
+			this.VideoStartHueCurveCombo.Items.AddRange(new object[] {
+            "线性",
+            "快速",
+            "慢速",
+            "平滑",
+            "急剧"});
+			this.VideoStartHueCurveCombo.Location = new System.Drawing.Point(880, 944);
+			this.VideoStartHueCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.VideoStartHueCurveCombo.Name = "VideoStartHueCurveCombo";
+			this.VideoStartHueCurveCombo.Size = new System.Drawing.Size(102, 40);
+			this.VideoStartHueCurveCombo.TabIndex = 34;
+			// 
+			// VideoEndContrastBox
+			// 
+			this.VideoEndContrastBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndContrastBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoEndContrastBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndContrastBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoEndContrastBox.Location = new System.Drawing.Point(124, 1276);
+			this.VideoEndContrastBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoEndContrastBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoEndContrastBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+			this.VideoEndContrastBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoEndContrastBox.Name = "VideoEndContrastBox";
+			this.VideoEndContrastBox.NumericUpDownWidth = 65;
+			this.VideoEndContrastBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoEndContrastBox.TabIndex = 41;
+			this.VideoEndContrastBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndContrastBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoEndSaturationBox
+			// 
+			this.VideoEndSaturationBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndSaturationBox.DefaultValue = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoEndSaturationBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndSaturationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoEndSaturationBox.Location = new System.Drawing.Point(124, 1144);
+			this.VideoEndSaturationBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoEndSaturationBox.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+			this.VideoEndSaturationBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoEndSaturationBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoEndSaturationBox.Name = "VideoEndSaturationBox";
+			this.VideoEndSaturationBox.NumericUpDownWidth = 65;
+			this.VideoEndSaturationBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoEndSaturationBox.TabIndex = 38;
+			this.VideoEndSaturationBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndSaturationBox.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			// 
+			// VideoEndHueBox
+			// 
+			this.VideoEndHueBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndHueBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoEndHueBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndHueBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoEndHueBox.Location = new System.Drawing.Point(124, 1012);
+			this.VideoEndHueBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoEndHueBox.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+			this.VideoEndHueBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoEndHueBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoEndHueBox.Name = "VideoEndHueBox";
+			this.VideoEndHueBox.NumericUpDownWidth = 65;
+			this.VideoEndHueBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoEndHueBox.TabIndex = 35;
+			this.VideoEndHueBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndHueBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoEndThresholdBox
+			// 
+			this.VideoEndThresholdBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndThresholdBox.DefaultValue = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+			this.VideoEndThresholdBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndThresholdBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoEndThresholdBox.Location = new System.Drawing.Point(124, 1408);
+			this.VideoEndThresholdBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoEndThresholdBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoEndThresholdBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoEndThresholdBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoEndThresholdBox.Name = "VideoEndThresholdBox";
+			this.VideoEndThresholdBox.NumericUpDownWidth = 65;
+			this.VideoEndThresholdBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoEndThresholdBox.TabIndex = 44;
+			this.VideoEndThresholdBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndThresholdBox.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+			// 
+			// VideoStartContrastBox
+			// 
+			this.VideoStartContrastBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartContrastBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoStartContrastBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartContrastBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoStartContrastBox.Location = new System.Drawing.Point(124, 1210);
+			this.VideoStartContrastBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoStartContrastBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoStartContrastBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+			this.VideoStartContrastBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoStartContrastBox.Name = "VideoStartContrastBox";
+			this.VideoStartContrastBox.NumericUpDownWidth = 65;
+			this.VideoStartContrastBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoStartContrastBox.TabIndex = 39;
+			this.VideoStartContrastBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoStartSaturationBox
+			// 
+			this.VideoStartSaturationBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartSaturationBox.DefaultValue = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoStartSaturationBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartSaturationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoStartSaturationBox.Location = new System.Drawing.Point(124, 1078);
+			this.VideoStartSaturationBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoStartSaturationBox.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+			this.VideoStartSaturationBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoStartSaturationBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoStartSaturationBox.Name = "VideoStartSaturationBox";
+			this.VideoStartSaturationBox.NumericUpDownWidth = 65;
+			this.VideoStartSaturationBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoStartSaturationBox.TabIndex = 36;
+			this.VideoStartSaturationBox.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			// 
+			// VideoStartThresholdBox
+			// 
+			this.VideoStartThresholdBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartThresholdBox.DefaultValue = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+			this.VideoStartThresholdBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartThresholdBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoStartThresholdBox.Location = new System.Drawing.Point(124, 1342);
+			this.VideoStartThresholdBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoStartThresholdBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoStartThresholdBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoStartThresholdBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoStartThresholdBox.Name = "VideoStartThresholdBox";
+			this.VideoStartThresholdBox.NumericUpDownWidth = 65;
+			this.VideoStartThresholdBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoStartThresholdBox.TabIndex = 42;
+			this.VideoStartThresholdBox.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+			// 
+			// VideoStartHueBox
+			// 
+			this.VideoStartHueBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartHueBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoStartHueBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartHueBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoStartHueBox.Location = new System.Drawing.Point(124, 946);
+			this.VideoStartHueBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoStartHueBox.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+			this.VideoStartHueBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoStartHueBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoStartHueBox.Name = "VideoStartHueBox";
+			this.VideoStartHueBox.NumericUpDownWidth = 65;
+			this.VideoStartHueBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoStartHueBox.TabIndex = 33;
+			this.VideoStartHueBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoStartThresholdLbl
+			// 
+			this.VideoStartThresholdLbl.AutoSize = true;
+			this.VideoStartThresholdLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartThresholdLbl.Location = new System.Drawing.Point(3, 1334);
+			this.VideoStartThresholdLbl.Name = "VideoStartThresholdLbl";
+			this.VideoStartThresholdLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoStartThresholdLbl.TabIndex = 32;
+			this.VideoStartThresholdLbl.Text = "起始阈值";
+			this.VideoStartThresholdLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoEndThresholdLbl
+			// 
+			this.VideoEndThresholdLbl.AutoSize = true;
+			this.VideoEndThresholdLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndThresholdLbl.Location = new System.Drawing.Point(3, 1400);
+			this.VideoEndThresholdLbl.Name = "VideoEndThresholdLbl";
+			this.VideoEndThresholdLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoEndThresholdLbl.TabIndex = 31;
+			this.VideoEndThresholdLbl.Text = "终止阈值";
+			this.VideoEndThresholdLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoEndSaturationLbl
+			// 
+			this.VideoEndSaturationLbl.AutoSize = true;
+			this.VideoEndSaturationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndSaturationLbl.Location = new System.Drawing.Point(3, 1136);
+			this.VideoEndSaturationLbl.Name = "VideoEndSaturationLbl";
+			this.VideoEndSaturationLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoEndSaturationLbl.TabIndex = 30;
+			this.VideoEndSaturationLbl.Text = "终止饱和";
+			this.VideoEndSaturationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoEndContrastLbl
+			// 
+			this.VideoEndContrastLbl.AutoSize = true;
+			this.VideoEndContrastLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndContrastLbl.Location = new System.Drawing.Point(3, 1268);
+			this.VideoEndContrastLbl.Name = "VideoEndContrastLbl";
+			this.VideoEndContrastLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoEndContrastLbl.TabIndex = 29;
+			this.VideoEndContrastLbl.Text = "终止对比";
+			this.VideoEndContrastLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoStartContrastLbl
+			// 
+			this.VideoStartContrastLbl.AutoSize = true;
+			this.VideoStartContrastLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartContrastLbl.Location = new System.Drawing.Point(3, 1202);
+			this.VideoStartContrastLbl.Name = "VideoStartContrastLbl";
+			this.VideoStartContrastLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoStartContrastLbl.TabIndex = 28;
+			this.VideoStartContrastLbl.Text = "起始对比";
+			this.VideoStartContrastLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoStartHueLbl
+			// 
+			this.VideoStartHueLbl.AutoSize = true;
+			this.VideoStartHueLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartHueLbl.Location = new System.Drawing.Point(3, 938);
+			this.VideoStartHueLbl.Name = "VideoStartHueLbl";
+			this.VideoStartHueLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoStartHueLbl.TabIndex = 27;
+			this.VideoStartHueLbl.Text = "起始色相";
+			this.VideoStartHueLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoStartSaturationLbl
+			// 
+			this.VideoStartSaturationLbl.AutoSize = true;
+			this.VideoStartSaturationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartSaturationLbl.Location = new System.Drawing.Point(3, 1070);
+			this.VideoStartSaturationLbl.Name = "VideoStartSaturationLbl";
+			this.VideoStartSaturationLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoStartSaturationLbl.TabIndex = 26;
+			this.VideoStartSaturationLbl.Text = "起始饱和";
+			this.VideoStartSaturationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoEndHueLbl
+			// 
+			this.VideoEndHueLbl.AutoSize = true;
+			this.VideoEndHueLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndHueLbl.Location = new System.Drawing.Point(3, 1004);
+			this.VideoEndHueLbl.Name = "VideoEndHueLbl";
+			this.VideoEndHueLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoEndHueLbl.TabIndex = 25;
+			this.VideoEndHueLbl.Text = "终止色相";
+			this.VideoEndHueLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoFadeInLbl
+			// 
+			this.VideoFadeInLbl.AutoSize = true;
+			this.VideoFadeInLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeInLbl.Location = new System.Drawing.Point(3, 54);
+			this.VideoFadeInLbl.MinimumSize = new System.Drawing.Size(0, 66);
+			this.VideoFadeInLbl.Name = "VideoFadeInLbl";
+			this.VideoFadeInLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoFadeInLbl.TabIndex = 0;
+			this.VideoFadeInLbl.Text = "渐入　　";
+			this.VideoFadeInLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoFadeInBox
+			// 
+			this.VideoFadeInBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoFadeInBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoFadeInBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeInBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoFadeInBox.Location = new System.Drawing.Point(124, 62);
+			this.VideoFadeInBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoFadeInBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoFadeInBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoFadeInBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoFadeInBox.Name = "VideoFadeInBox";
+			this.VideoFadeInBox.NumericUpDownWidth = 65;
+			this.VideoFadeInBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoFadeInBox.TabIndex = 2;
+			this.VideoFadeInBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoFadeInCurveCombo
+			// 
+			this.VideoFadeInCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeInCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoFadeInCurveCombo.FormattingEnabled = true;
+			this.VideoFadeInCurveCombo.Items.AddRange(new object[] {
+            "线性",
+            "快速",
+            "慢速",
+            "平滑",
+            "急剧"});
+			this.VideoFadeInCurveCombo.Location = new System.Drawing.Point(880, 60);
+			this.VideoFadeInCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.VideoFadeInCurveCombo.Name = "VideoFadeInCurveCombo";
+			this.VideoFadeInCurveCombo.Size = new System.Drawing.Size(102, 40);
+			this.VideoFadeInCurveCombo.TabIndex = 4;
+			// 
+			// VideoFadeOutLbl
+			// 
+			this.VideoFadeOutLbl.AutoSize = true;
+			this.VideoFadeOutLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeOutLbl.Location = new System.Drawing.Point(3, 120);
+			this.VideoFadeOutLbl.MinimumSize = new System.Drawing.Size(0, 66);
+			this.VideoFadeOutLbl.Name = "VideoFadeOutLbl";
+			this.VideoFadeOutLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoFadeOutLbl.TabIndex = 1;
+			this.VideoFadeOutLbl.Text = "渐出　　";
+			this.VideoFadeOutLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoFadeOutBox
+			// 
+			this.VideoFadeOutBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoFadeOutBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoFadeOutBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeOutBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoFadeOutBox.Location = new System.Drawing.Point(124, 128);
+			this.VideoFadeOutBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoFadeOutBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoFadeOutBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoFadeOutBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoFadeOutBox.Name = "VideoFadeOutBox";
+			this.VideoFadeOutBox.NumericUpDownWidth = 65;
+			this.VideoFadeOutBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoFadeOutBox.TabIndex = 5;
+			this.VideoFadeOutBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoFadeOutBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoFadeOutCurveCombo
+			// 
+			this.VideoFadeOutCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeOutCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoFadeOutCurveCombo.FormattingEnabled = true;
+			this.VideoFadeOutCurveCombo.Items.AddRange(new object[] {
+            "线性",
+            "快速",
+            "慢速",
+            "平滑",
+            "急剧"});
+			this.VideoFadeOutCurveCombo.Location = new System.Drawing.Point(880, 126);
+			this.VideoFadeOutCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.VideoFadeOutCurveCombo.Name = "VideoFadeOutCurveCombo";
+			this.VideoFadeOutCurveCombo.Size = new System.Drawing.Size(102, 40);
+			this.VideoFadeOutCurveCombo.TabIndex = 7;
+			// 
+			// VideoGlowLbl
+			// 
+			this.VideoGlowLbl.AutoSize = true;
+			this.VideoGlowLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoGlowLbl.Location = new System.Drawing.Point(3, 186);
+			this.VideoGlowLbl.Name = "VideoGlowLbl";
+			this.VideoGlowLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoGlowLbl.TabIndex = 23;
+			this.VideoGlowLbl.Text = "发光";
+			this.VideoGlowLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoGlowBox
+			// 
+			this.VideoGlowBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoGlowBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoGlowBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoGlowBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoGlowBox.Location = new System.Drawing.Point(124, 194);
+			this.VideoGlowBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoGlowBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoGlowBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+			this.VideoGlowBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoGlowBox.Name = "VideoGlowBox";
+			this.VideoGlowBox.NumericUpDownWidth = 65;
+			this.VideoGlowBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoGlowBox.TabIndex = 10;
+			this.VideoGlowBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoGlowCurveCombo
+			// 
+			this.VideoGlowCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoGlowCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoGlowCurveCombo.FormattingEnabled = true;
+			this.VideoGlowCurveCombo.Items.AddRange(new object[] {
+            "线性",
+            "快速",
+            "慢速",
+            "平滑",
+            "急剧"});
+			this.VideoGlowCurveCombo.Location = new System.Drawing.Point(880, 192);
+			this.VideoGlowCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.VideoGlowCurveCombo.Name = "VideoGlowCurveCombo";
+			this.VideoGlowCurveCombo.Size = new System.Drawing.Size(102, 40);
+			this.VideoGlowCurveCombo.TabIndex = 11;
+			// 
+			// VideoGlowBrightLbl
+			// 
+			this.VideoGlowBrightLbl.AutoSize = true;
+			this.VideoGlowBrightLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoGlowBrightLbl.Location = new System.Drawing.Point(3, 252);
+			this.VideoGlowBrightLbl.Name = "VideoGlowBrightLbl";
+			this.VideoGlowBrightLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoGlowBrightLbl.TabIndex = 24;
+			this.VideoGlowBrightLbl.Text = "发光亮度";
+			this.VideoGlowBrightLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoGlowBrightBox
+			// 
+			this.VideoGlowBrightBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoGlowBrightBox.DefaultValue = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoGlowBrightBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoGlowBrightBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoGlowBrightBox.Location = new System.Drawing.Point(124, 260);
+			this.VideoGlowBrightBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoGlowBrightBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoGlowBrightBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+			this.VideoGlowBrightBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoGlowBrightBox.Name = "VideoGlowBrightBox";
+			this.VideoGlowBrightBox.NumericUpDownWidth = 65;
+			this.VideoGlowBrightBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoGlowBrightBox.TabIndex = 12;
+			this.VideoGlowBrightBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoGlowBrightBox.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			// 
+			// VideoStartSizeLbl
+			// 
+			this.VideoStartSizeLbl.AutoSize = true;
+			this.VideoStartSizeLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartSizeLbl.Location = new System.Drawing.Point(3, 410);
+			this.VideoStartSizeLbl.Name = "VideoStartSizeLbl";
+			this.VideoStartSizeLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoStartSizeLbl.TabIndex = 6;
+			this.VideoStartSizeLbl.Text = "起始尺寸";
+			this.VideoStartSizeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoStartSizeBox
+			// 
+			this.VideoStartSizeBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartSizeBox.DefaultValue = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+			this.VideoStartSizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartSizeBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoStartSizeBox.Location = new System.Drawing.Point(124, 418);
+			this.VideoStartSizeBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoStartSizeBox.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+			this.VideoStartSizeBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoStartSizeBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoStartSizeBox.Name = "VideoStartSizeBox";
+			this.VideoStartSizeBox.NumericUpDownWidth = 65;
+			this.VideoStartSizeBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoStartSizeBox.TabIndex = 14;
+			this.VideoStartSizeBox.Value = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+			// 
+			// VideoStartSizeCurveCombo
+			// 
+			this.VideoStartSizeCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartSizeCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoStartSizeCurveCombo.FormattingEnabled = true;
+			this.VideoStartSizeCurveCombo.Items.AddRange(new object[] {
+            "线性",
+            "快速",
+            "慢速",
+            "平滑",
+            "急剧"});
+			this.VideoStartSizeCurveCombo.Location = new System.Drawing.Point(880, 416);
+			this.VideoStartSizeCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.VideoStartSizeCurveCombo.Name = "VideoStartSizeCurveCombo";
+			this.VideoStartSizeCurveCombo.Size = new System.Drawing.Size(102, 40);
+			this.VideoStartSizeCurveCombo.TabIndex = 15;
+			// 
+			// VideoEndSizeLbl
+			// 
+			this.VideoEndSizeLbl.AutoSize = true;
+			this.VideoEndSizeLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndSizeLbl.Location = new System.Drawing.Point(3, 476);
+			this.VideoEndSizeLbl.Name = "VideoEndSizeLbl";
+			this.VideoEndSizeLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoEndSizeLbl.TabIndex = 7;
+			this.VideoEndSizeLbl.Text = "终止尺寸";
+			this.VideoEndSizeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoEndSizeBox
+			// 
+			this.VideoEndSizeBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndSizeBox.DefaultValue = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoEndSizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndSizeBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoEndSizeBox.Location = new System.Drawing.Point(124, 484);
+			this.VideoEndSizeBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoEndSizeBox.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+			this.VideoEndSizeBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoEndSizeBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoEndSizeBox.Name = "VideoEndSizeBox";
+			this.VideoEndSizeBox.NumericUpDownWidth = 65;
+			this.VideoEndSizeBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoEndSizeBox.TabIndex = 16;
+			this.VideoEndSizeBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndSizeBox.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			// 
+			// VideoStartRotationLbl
+			// 
+			this.VideoStartRotationLbl.AutoSize = true;
+			this.VideoStartRotationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartRotationLbl.Location = new System.Drawing.Point(3, 542);
+			this.VideoStartRotationLbl.Name = "VideoStartRotationLbl";
+			this.VideoStartRotationLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoStartRotationLbl.TabIndex = 8;
+			this.VideoStartRotationLbl.Text = "起始旋转";
+			this.VideoStartRotationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoStartRotationBox
+			// 
+			this.VideoStartRotationBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartRotationBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoStartRotationBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartRotationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoStartRotationBox.Location = new System.Drawing.Point(124, 550);
+			this.VideoStartRotationBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoStartRotationBox.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+			this.VideoStartRotationBox.Minimum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            -2147483648});
+			this.VideoStartRotationBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoStartRotationBox.Name = "VideoStartRotationBox";
+			this.VideoStartRotationBox.NumericUpDownWidth = 65;
+			this.VideoStartRotationBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoStartRotationBox.TabIndex = 17;
+			this.VideoStartRotationBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoEndRotationLbl
+			// 
+			this.VideoEndRotationLbl.AutoSize = true;
+			this.VideoEndRotationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndRotationLbl.Location = new System.Drawing.Point(3, 608);
+			this.VideoEndRotationLbl.Name = "VideoEndRotationLbl";
+			this.VideoEndRotationLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoEndRotationLbl.TabIndex = 9;
+			this.VideoEndRotationLbl.Text = "终止旋转";
+			this.VideoEndRotationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoEndRotationBox
+			// 
+			this.VideoEndRotationBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndRotationBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoEndRotationBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndRotationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoEndRotationBox.Location = new System.Drawing.Point(124, 616);
+			this.VideoEndRotationBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoEndRotationBox.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+			this.VideoEndRotationBox.Minimum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            -2147483648});
+			this.VideoEndRotationBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoEndRotationBox.Name = "VideoEndRotationBox";
+			this.VideoEndRotationBox.NumericUpDownWidth = 65;
+			this.VideoEndRotationBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoEndRotationBox.TabIndex = 18;
+			this.VideoEndRotationBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndRotationBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoStartHorizontalTransLbl
+			// 
+			this.VideoStartHorizontalTransLbl.AutoSize = true;
+			this.VideoStartHorizontalTransLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartHorizontalTransLbl.Location = new System.Drawing.Point(3, 674);
+			this.VideoStartHorizontalTransLbl.Name = "VideoStartHorizontalTransLbl";
+			this.VideoStartHorizontalTransLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoStartHorizontalTransLbl.TabIndex = 12;
+			this.VideoStartHorizontalTransLbl.Text = "起始平移";
+			this.VideoStartHorizontalTransLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoStartHorizontalTransBox
+			// 
+			this.VideoStartHorizontalTransBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartHorizontalTransBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoStartHorizontalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartHorizontalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoStartHorizontalTransBox.Location = new System.Drawing.Point(124, 682);
+			this.VideoStartHorizontalTransBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoStartHorizontalTransBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoStartHorizontalTransBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+			this.VideoStartHorizontalTransBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoStartHorizontalTransBox.Name = "VideoStartHorizontalTransBox";
+			this.VideoStartHorizontalTransBox.NumericUpDownWidth = 65;
+			this.VideoStartHorizontalTransBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoStartHorizontalTransBox.TabIndex = 19;
+			this.VideoStartHorizontalTransBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoEndHorizontalTransLbl
+			// 
+			this.VideoEndHorizontalTransLbl.AutoSize = true;
+			this.VideoEndHorizontalTransLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndHorizontalTransLbl.Location = new System.Drawing.Point(3, 740);
+			this.VideoEndHorizontalTransLbl.Name = "VideoEndHorizontalTransLbl";
+			this.VideoEndHorizontalTransLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoEndHorizontalTransLbl.TabIndex = 10;
+			this.VideoEndHorizontalTransLbl.Text = "终止平移";
+			this.VideoEndHorizontalTransLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoEndHorizontalTransBox
+			// 
+			this.VideoEndHorizontalTransBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndHorizontalTransBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoEndHorizontalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndHorizontalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoEndHorizontalTransBox.Location = new System.Drawing.Point(124, 748);
+			this.VideoEndHorizontalTransBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoEndHorizontalTransBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoEndHorizontalTransBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+			this.VideoEndHorizontalTransBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoEndHorizontalTransBox.Name = "VideoEndHorizontalTransBox";
+			this.VideoEndHorizontalTransBox.NumericUpDownWidth = 65;
+			this.VideoEndHorizontalTransBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoEndHorizontalTransBox.TabIndex = 20;
+			this.VideoEndHorizontalTransBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndHorizontalTransBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoStartVerticalTransLbl
+			// 
+			this.VideoStartVerticalTransLbl.AutoSize = true;
+			this.VideoStartVerticalTransLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartVerticalTransLbl.Location = new System.Drawing.Point(3, 806);
+			this.VideoStartVerticalTransLbl.Name = "VideoStartVerticalTransLbl";
+			this.VideoStartVerticalTransLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoStartVerticalTransLbl.TabIndex = 11;
+			this.VideoStartVerticalTransLbl.Text = "起始直移";
+			this.VideoStartVerticalTransLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoStartVerticalTransBox
+			// 
+			this.VideoStartVerticalTransBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartVerticalTransBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoStartVerticalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartVerticalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoStartVerticalTransBox.Location = new System.Drawing.Point(124, 814);
+			this.VideoStartVerticalTransBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoStartVerticalTransBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoStartVerticalTransBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+			this.VideoStartVerticalTransBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoStartVerticalTransBox.Name = "VideoStartVerticalTransBox";
+			this.VideoStartVerticalTransBox.NumericUpDownWidth = 65;
+			this.VideoStartVerticalTransBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoStartVerticalTransBox.TabIndex = 21;
+			this.VideoStartVerticalTransBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoEndVerticalTransLbl
+			// 
+			this.VideoEndVerticalTransLbl.AutoSize = true;
+			this.VideoEndVerticalTransLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndVerticalTransLbl.Location = new System.Drawing.Point(3, 872);
+			this.VideoEndVerticalTransLbl.Name = "VideoEndVerticalTransLbl";
+			this.VideoEndVerticalTransLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoEndVerticalTransLbl.TabIndex = 13;
+			this.VideoEndVerticalTransLbl.Text = "终止直移";
+			this.VideoEndVerticalTransLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoEndVerticalTransBox
+			// 
+			this.VideoEndVerticalTransBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndVerticalTransBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoEndVerticalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndVerticalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoEndVerticalTransBox.Location = new System.Drawing.Point(124, 880);
+			this.VideoEndVerticalTransBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoEndVerticalTransBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoEndVerticalTransBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+			this.VideoEndVerticalTransBox.MinimumSize = new System.Drawing.Size(0, 50);
+			this.VideoEndVerticalTransBox.Name = "VideoEndVerticalTransBox";
+			this.VideoEndVerticalTransBox.NumericUpDownWidth = 65;
+			this.VideoEndVerticalTransBox.Size = new System.Drawing.Size(744, 50);
+			this.VideoEndVerticalTransBox.TabIndex = 22;
+			this.VideoEndVerticalTransBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndVerticalTransBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoEffectsGroup
 			// 
@@ -5220,7 +6556,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SheetTab.Location = new System.Drawing.Point(8, 46);
 			this.SheetTab.Name = "SheetTab";
 			this.SheetTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SheetTab.Size = new System.Drawing.Size(1052, 1000);
+			this.SheetTab.Size = new System.Drawing.Size(1052, 1002);
 			this.SheetTab.TabIndex = 3;
 			this.SheetTab.Text = "五线谱";
 			this.SheetTab.UseVisualStyleBackColor = true;
@@ -5641,7 +6977,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarTab.Location = new System.Drawing.Point(8, 46);
 			this.SonarTab.Name = "SonarTab";
 			this.SonarTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SonarTab.Size = new System.Drawing.Size(1052, 1000);
+			this.SonarTab.Size = new System.Drawing.Size(1052, 1002);
 			this.SonarTab.TabIndex = 6;
 			this.SonarTab.Text = "声呐";
 			this.SonarTab.UseVisualStyleBackColor = true;
@@ -5663,7 +6999,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 984);
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 986);
 			this.tableLayoutPanel11.TabIndex = 0;
 			// 
 			// SonarSwitchesFlow
@@ -5766,7 +7102,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarList.Location = new System.Drawing.Point(3, 58);
 			this.SonarList.Name = "SonarList";
 			this.SonarList.ShowItemToolTips = true;
-			this.SonarList.Size = new System.Drawing.Size(1030, 325);
+			this.SonarList.Size = new System.Drawing.Size(1030, 327);
 			this.SonarList.TabIndex = 1;
 			this.SonarList.UseCompatibleStateImageBehavior = false;
 			this.SonarList.View = System.Windows.Forms.View.Details;
@@ -5802,7 +7138,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarButtonsTable.Controls.Add(this.SonarDeleteBtn, 1, 0);
 			this.SonarButtonsTable.Controls.Add(this.SonarResetBtn, 0, 0);
 			this.SonarButtonsTable.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 389);
+			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 391);
 			this.SonarButtonsTable.Name = "SonarButtonsTable";
 			this.SonarButtonsTable.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.SonarButtonsTable.RowCount = 1;
@@ -5881,7 +7217,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarParamsGroup.AutoSize = true;
 			this.SonarParamsGroup.Controls.Add(this.SonarParamsPanel);
 			this.SonarParamsGroup.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 463);
+			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 465);
 			this.SonarParamsGroup.Name = "SonarParamsGroup";
 			this.SonarParamsGroup.Size = new System.Drawing.Size(1030, 518);
 			this.SonarParamsGroup.TabIndex = 3;
@@ -6864,7 +8200,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.YtpTab.Location = new System.Drawing.Point(8, 46);
 			this.YtpTab.Name = "YtpTab";
 			this.YtpTab.Padding = new System.Windows.Forms.Padding(8);
-			this.YtpTab.Size = new System.Drawing.Size(1052, 1000);
+			this.YtpTab.Size = new System.Drawing.Size(1052, 1002);
 			this.YtpTab.TabIndex = 5;
 			this.YtpTab.Text = "YTP";
 			this.YtpTab.UseVisualStyleBackColor = true;
@@ -7067,7 +8403,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MoshTab.Location = new System.Drawing.Point(8, 46);
 			this.MoshTab.Name = "MoshTab";
 			this.MoshTab.Padding = new System.Windows.Forms.Padding(3);
-			this.MoshTab.Size = new System.Drawing.Size(1052, 1000);
+			this.MoshTab.Size = new System.Drawing.Size(1052, 1002);
 			this.MoshTab.TabIndex = 7;
 			this.MoshTab.Text = "抹失";
 			this.MoshTab.UseVisualStyleBackColor = true;
@@ -7364,7 +8700,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.HelperTab.Location = new System.Drawing.Point(8, 46);
 			this.HelperTab.Name = "HelperTab";
 			this.HelperTab.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.HelperTab.Size = new System.Drawing.Size(1052, 1000);
+			this.HelperTab.Size = new System.Drawing.Size(1052, 1002);
 			this.HelperTab.TabIndex = 4;
 			this.HelperTab.Text = "工具";
 			this.HelperTab.UseVisualStyleBackColor = true;
@@ -7884,1343 +9220,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			// 
-			// MatchCutSustainPanel
-			// 
-			this.MatchCutSustainPanel.AutoSize = true;
-			this.MatchCutSustainPanel.ColumnCount = 2;
-			this.MatchCutSustainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.MatchCutSustainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.MatchCutSustainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.MatchCutSustainPanel.Controls.Add(this.MatchCutSustainCacheCapacityLbl, 0, 0);
-			this.MatchCutSustainPanel.Controls.Add(this.MatchCutSustainCacheCapacityBox, 1, 0);
-			this.MatchCutSustainPanel.Dock = System.Windows.Forms.DockStyle.Left;
-			this.MatchCutSustainPanel.Location = new System.Drawing.Point(3, 263);
-			this.MatchCutSustainPanel.Margin = new System.Windows.Forms.Padding(0);
-			this.MatchCutSustainPanel.Name = "MatchCutSustainPanel";
-			this.MatchCutSustainPanel.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-			this.MatchCutSustainPanel.RowCount = 1;
-			this.MatchCutSustainPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.MatchCutSustainPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.MatchCutSustainPanel.Size = new System.Drawing.Size(324, 44);
-			this.MatchCutSustainPanel.TabIndex = 23;
-			// 
-			// MatchCutSustainCacheCapacityLbl
-			// 
-			this.MatchCutSustainCacheCapacityLbl.AutoSize = true;
-			this.MatchCutSustainCacheCapacityLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutSustainCacheCapacityLbl.Location = new System.Drawing.Point(32, 0);
-			this.MatchCutSustainCacheCapacityLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-			this.MatchCutSustainCacheCapacityLbl.MinimumSize = new System.Drawing.Size(100, 0);
-			this.MatchCutSustainCacheCapacityLbl.Name = "MatchCutSustainCacheCapacityLbl";
-			this.MatchCutSustainCacheCapacityLbl.Size = new System.Drawing.Size(158, 44);
-			this.MatchCutSustainCacheCapacityLbl.TabIndex = 14;
-			this.MatchCutSustainCacheCapacityLbl.Text = "音高缓存容量";
-			this.MatchCutSustainCacheCapacityLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// MatchCutSustainCacheCapacityBox
-			// 
-			this.MatchCutSustainCacheCapacityBox.Location = new System.Drawing.Point(201, 3);
-			this.MatchCutSustainCacheCapacityBox.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.MatchCutSustainCacheCapacityBox.Name = "MatchCutSustainCacheCapacityBox";
-			this.MatchCutSustainCacheCapacityBox.Size = new System.Drawing.Size(120, 39);
-			this.MatchCutSustainCacheCapacityBox.TabIndex = 15;
-			this.MatchCutSustainCacheCapacityBox.Value = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-			// 
-			// tableLayoutPanel9
-			// 
-			this.tableLayoutPanel9.AutoSize = true;
-			this.tableLayoutPanel9.ColumnCount = 4;
-			this.VideoParamsTable.SetColumnSpan(this.tableLayoutPanel9, 3);
-			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel9.Controls.Add(this.VideoFadeSetAsTimecodeRadio, 3, 0);
-			this.tableLayoutPanel9.Controls.Add(this.VideoFadeSetAsPercentRadio, 2, 0);
-			this.tableLayoutPanel9.Controls.Add(this.VideoParamsPresetsBtn, 0, 0);
-			this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel9.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
-			this.tableLayoutPanel9.MaximumSize = new System.Drawing.Size(0, 58);
-			this.tableLayoutPanel9.Name = "tableLayoutPanel9";
-			this.tableLayoutPanel9.RowCount = 1;
-			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel9.Size = new System.Drawing.Size(986, 54);
-			this.tableLayoutPanel9.TabIndex = 0;
-			// 
-			// VideoParamsPresetsBtn
-			// 
-			this.VideoParamsPresetsBtn.AutoSize = true;
-			this.VideoParamsPresetsBtn.Dock = System.Windows.Forms.DockStyle.Left;
-			this.VideoParamsPresetsBtn.Location = new System.Drawing.Point(3, 3);
-			this.VideoParamsPresetsBtn.MaximumSize = new System.Drawing.Size(800, 48);
-			this.VideoParamsPresetsBtn.Name = "VideoParamsPresetsBtn";
-			this.VideoParamsPresetsBtn.Padding = new System.Windows.Forms.Padding(0, 0, 22, 0);
-			this.VideoParamsPresetsBtn.Size = new System.Drawing.Size(158, 48);
-			this.VideoParamsPresetsBtn.TabIndex = 1;
-			this.VideoParamsPresetsBtn.Text = "预设";
-			this.VideoParamsPresetsBtn.UseVisualStyleBackColor = true;
-			this.VideoParamsPresetsBtn.Click += new System.EventHandler(this.VideoParamsPresetsBtn_Click);
-			this.VideoParamsPresetsBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.TrackLegatoBtn_Paint);
-			this.VideoParamsPresetsBtn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseDownMapToClick);
-			this.VideoParamsPresetsBtn.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseUpMapToClick);
-			// 
-			// VideoFadeSetAsPercentRadio
-			// 
-			this.VideoFadeSetAsPercentRadio.AutoSize = true;
-			this.VideoFadeSetAsPercentRadio.Checked = true;
-			this.VideoFadeSetAsPercentRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeSetAsPercentRadio.Location = new System.Drawing.Point(599, 3);
-			this.VideoFadeSetAsPercentRadio.Name = "VideoFadeSetAsPercentRadio";
-			this.VideoFadeSetAsPercentRadio.Size = new System.Drawing.Size(189, 48);
-			this.VideoFadeSetAsPercentRadio.TabIndex = 3;
-			this.VideoFadeSetAsPercentRadio.TabStop = true;
-			this.VideoFadeSetAsPercentRadio.Text = "设定为百分比";
-			this.VideoFadeSetAsPercentRadio.UseVisualStyleBackColor = true;
-			this.VideoFadeSetAsPercentRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
-			// 
-			// VideoFadeSetAsTimecodeRadio
-			// 
-			this.VideoFadeSetAsTimecodeRadio.AutoSize = true;
-			this.VideoFadeSetAsTimecodeRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeSetAsTimecodeRadio.Location = new System.Drawing.Point(794, 3);
-			this.VideoFadeSetAsTimecodeRadio.Name = "VideoFadeSetAsTimecodeRadio";
-			this.VideoFadeSetAsTimecodeRadio.Size = new System.Drawing.Size(189, 48);
-			this.VideoFadeSetAsTimecodeRadio.TabIndex = 4;
-			this.VideoFadeSetAsTimecodeRadio.Text = "设定为时间码";
-			this.VideoFadeSetAsTimecodeRadio.UseVisualStyleBackColor = true;
-			this.VideoFadeSetAsTimecodeRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
-			// 
-			// VideoEndVerticalTransBox
-			// 
-			this.VideoEndVerticalTransBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoEndVerticalTransBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoEndVerticalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndVerticalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoEndVerticalTransBox.Location = new System.Drawing.Point(124, 880);
-			this.VideoEndVerticalTransBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoEndVerticalTransBox.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoEndVerticalTransBox.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-			this.VideoEndVerticalTransBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoEndVerticalTransBox.Name = "VideoEndVerticalTransBox";
-			this.VideoEndVerticalTransBox.NumericUpDownWidth = 65;
-			this.VideoEndVerticalTransBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoEndVerticalTransBox.TabIndex = 22;
-			this.VideoEndVerticalTransBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoEndVerticalTransBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoEndVerticalTransLbl
-			// 
-			this.VideoEndVerticalTransLbl.AutoSize = true;
-			this.VideoEndVerticalTransLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndVerticalTransLbl.Location = new System.Drawing.Point(3, 872);
-			this.VideoEndVerticalTransLbl.Name = "VideoEndVerticalTransLbl";
-			this.VideoEndVerticalTransLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoEndVerticalTransLbl.TabIndex = 13;
-			this.VideoEndVerticalTransLbl.Text = "终止直移";
-			this.VideoEndVerticalTransLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoStartVerticalTransBox
-			// 
-			this.VideoStartVerticalTransBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoStartVerticalTransBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoStartVerticalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartVerticalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoStartVerticalTransBox.Location = new System.Drawing.Point(124, 814);
-			this.VideoStartVerticalTransBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoStartVerticalTransBox.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoStartVerticalTransBox.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-			this.VideoStartVerticalTransBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoStartVerticalTransBox.Name = "VideoStartVerticalTransBox";
-			this.VideoStartVerticalTransBox.NumericUpDownWidth = 65;
-			this.VideoStartVerticalTransBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoStartVerticalTransBox.TabIndex = 21;
-			this.VideoStartVerticalTransBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoStartVerticalTransLbl
-			// 
-			this.VideoStartVerticalTransLbl.AutoSize = true;
-			this.VideoStartVerticalTransLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartVerticalTransLbl.Location = new System.Drawing.Point(3, 806);
-			this.VideoStartVerticalTransLbl.Name = "VideoStartVerticalTransLbl";
-			this.VideoStartVerticalTransLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoStartVerticalTransLbl.TabIndex = 11;
-			this.VideoStartVerticalTransLbl.Text = "起始直移";
-			this.VideoStartVerticalTransLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoEndHorizontalTransBox
-			// 
-			this.VideoEndHorizontalTransBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoEndHorizontalTransBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoEndHorizontalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndHorizontalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoEndHorizontalTransBox.Location = new System.Drawing.Point(124, 748);
-			this.VideoEndHorizontalTransBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoEndHorizontalTransBox.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoEndHorizontalTransBox.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-			this.VideoEndHorizontalTransBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoEndHorizontalTransBox.Name = "VideoEndHorizontalTransBox";
-			this.VideoEndHorizontalTransBox.NumericUpDownWidth = 65;
-			this.VideoEndHorizontalTransBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoEndHorizontalTransBox.TabIndex = 20;
-			this.VideoEndHorizontalTransBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoEndHorizontalTransBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoEndHorizontalTransLbl
-			// 
-			this.VideoEndHorizontalTransLbl.AutoSize = true;
-			this.VideoEndHorizontalTransLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndHorizontalTransLbl.Location = new System.Drawing.Point(3, 740);
-			this.VideoEndHorizontalTransLbl.Name = "VideoEndHorizontalTransLbl";
-			this.VideoEndHorizontalTransLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoEndHorizontalTransLbl.TabIndex = 10;
-			this.VideoEndHorizontalTransLbl.Text = "终止平移";
-			this.VideoEndHorizontalTransLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoStartHorizontalTransBox
-			// 
-			this.VideoStartHorizontalTransBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoStartHorizontalTransBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoStartHorizontalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartHorizontalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoStartHorizontalTransBox.Location = new System.Drawing.Point(124, 682);
-			this.VideoStartHorizontalTransBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoStartHorizontalTransBox.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoStartHorizontalTransBox.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-			this.VideoStartHorizontalTransBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoStartHorizontalTransBox.Name = "VideoStartHorizontalTransBox";
-			this.VideoStartHorizontalTransBox.NumericUpDownWidth = 65;
-			this.VideoStartHorizontalTransBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoStartHorizontalTransBox.TabIndex = 19;
-			this.VideoStartHorizontalTransBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoStartHorizontalTransLbl
-			// 
-			this.VideoStartHorizontalTransLbl.AutoSize = true;
-			this.VideoStartHorizontalTransLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartHorizontalTransLbl.Location = new System.Drawing.Point(3, 674);
-			this.VideoStartHorizontalTransLbl.Name = "VideoStartHorizontalTransLbl";
-			this.VideoStartHorizontalTransLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoStartHorizontalTransLbl.TabIndex = 12;
-			this.VideoStartHorizontalTransLbl.Text = "起始平移";
-			this.VideoStartHorizontalTransLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoEndRotationBox
-			// 
-			this.VideoEndRotationBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoEndRotationBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoEndRotationBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndRotationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoEndRotationBox.Location = new System.Drawing.Point(124, 616);
-			this.VideoEndRotationBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoEndRotationBox.Maximum = new decimal(new int[] {
-            360,
-            0,
-            0,
-            0});
-			this.VideoEndRotationBox.Minimum = new decimal(new int[] {
-            360,
-            0,
-            0,
-            -2147483648});
-			this.VideoEndRotationBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoEndRotationBox.Name = "VideoEndRotationBox";
-			this.VideoEndRotationBox.NumericUpDownWidth = 65;
-			this.VideoEndRotationBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoEndRotationBox.TabIndex = 18;
-			this.VideoEndRotationBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoEndRotationBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoEndRotationLbl
-			// 
-			this.VideoEndRotationLbl.AutoSize = true;
-			this.VideoEndRotationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndRotationLbl.Location = new System.Drawing.Point(3, 608);
-			this.VideoEndRotationLbl.Name = "VideoEndRotationLbl";
-			this.VideoEndRotationLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoEndRotationLbl.TabIndex = 9;
-			this.VideoEndRotationLbl.Text = "终止旋转";
-			this.VideoEndRotationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoStartRotationBox
-			// 
-			this.VideoStartRotationBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoStartRotationBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoStartRotationBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartRotationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoStartRotationBox.Location = new System.Drawing.Point(124, 550);
-			this.VideoStartRotationBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoStartRotationBox.Maximum = new decimal(new int[] {
-            360,
-            0,
-            0,
-            0});
-			this.VideoStartRotationBox.Minimum = new decimal(new int[] {
-            360,
-            0,
-            0,
-            -2147483648});
-			this.VideoStartRotationBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoStartRotationBox.Name = "VideoStartRotationBox";
-			this.VideoStartRotationBox.NumericUpDownWidth = 65;
-			this.VideoStartRotationBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoStartRotationBox.TabIndex = 17;
-			this.VideoStartRotationBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoStartRotationLbl
-			// 
-			this.VideoStartRotationLbl.AutoSize = true;
-			this.VideoStartRotationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartRotationLbl.Location = new System.Drawing.Point(3, 542);
-			this.VideoStartRotationLbl.Name = "VideoStartRotationLbl";
-			this.VideoStartRotationLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoStartRotationLbl.TabIndex = 8;
-			this.VideoStartRotationLbl.Text = "起始旋转";
-			this.VideoStartRotationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoEndSizeBox
-			// 
-			this.VideoEndSizeBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoEndSizeBox.DefaultValue = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoEndSizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndSizeBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoEndSizeBox.Location = new System.Drawing.Point(124, 484);
-			this.VideoEndSizeBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoEndSizeBox.Maximum = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-			this.VideoEndSizeBox.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoEndSizeBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoEndSizeBox.Name = "VideoEndSizeBox";
-			this.VideoEndSizeBox.NumericUpDownWidth = 65;
-			this.VideoEndSizeBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoEndSizeBox.TabIndex = 16;
-			this.VideoEndSizeBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoEndSizeBox.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			// 
-			// VideoEndSizeLbl
-			// 
-			this.VideoEndSizeLbl.AutoSize = true;
-			this.VideoEndSizeLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndSizeLbl.Location = new System.Drawing.Point(3, 476);
-			this.VideoEndSizeLbl.Name = "VideoEndSizeLbl";
-			this.VideoEndSizeLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoEndSizeLbl.TabIndex = 7;
-			this.VideoEndSizeLbl.Text = "终止尺寸";
-			this.VideoEndSizeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoStartSizeCurveCombo
-			// 
-			this.VideoStartSizeCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartSizeCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.VideoStartSizeCurveCombo.FormattingEnabled = true;
-			this.VideoStartSizeCurveCombo.Items.AddRange(new object[] {
-            "线性",
-            "快速",
-            "慢速",
-            "平滑",
-            "急剧"});
-			this.VideoStartSizeCurveCombo.Location = new System.Drawing.Point(880, 416);
-			this.VideoStartSizeCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.VideoStartSizeCurveCombo.Name = "VideoStartSizeCurveCombo";
-			this.VideoStartSizeCurveCombo.Size = new System.Drawing.Size(102, 40);
-			this.VideoStartSizeCurveCombo.TabIndex = 15;
-			// 
-			// VideoStartSizeBox
-			// 
-			this.VideoStartSizeBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoStartSizeBox.DefaultValue = new decimal(new int[] {
-            90,
-            0,
-            0,
-            0});
-			this.VideoStartSizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartSizeBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoStartSizeBox.Location = new System.Drawing.Point(124, 418);
-			this.VideoStartSizeBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoStartSizeBox.Maximum = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-			this.VideoStartSizeBox.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoStartSizeBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoStartSizeBox.Name = "VideoStartSizeBox";
-			this.VideoStartSizeBox.NumericUpDownWidth = 65;
-			this.VideoStartSizeBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoStartSizeBox.TabIndex = 14;
-			this.VideoStartSizeBox.Value = new decimal(new int[] {
-            90,
-            0,
-            0,
-            0});
-			// 
-			// VideoStartSizeLbl
-			// 
-			this.VideoStartSizeLbl.AutoSize = true;
-			this.VideoStartSizeLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartSizeLbl.Location = new System.Drawing.Point(3, 410);
-			this.VideoStartSizeLbl.Name = "VideoStartSizeLbl";
-			this.VideoStartSizeLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoStartSizeLbl.TabIndex = 6;
-			this.VideoStartSizeLbl.Text = "起始尺寸";
-			this.VideoStartSizeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoGlowBrightBox
-			// 
-			this.VideoGlowBrightBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoGlowBrightBox.DefaultValue = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoGlowBrightBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoGlowBrightBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoGlowBrightBox.Location = new System.Drawing.Point(124, 260);
-			this.VideoGlowBrightBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoGlowBrightBox.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoGlowBrightBox.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-			this.VideoGlowBrightBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoGlowBrightBox.Name = "VideoGlowBrightBox";
-			this.VideoGlowBrightBox.NumericUpDownWidth = 65;
-			this.VideoGlowBrightBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoGlowBrightBox.TabIndex = 12;
-			this.VideoGlowBrightBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoGlowBrightBox.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			// 
-			// VideoGlowBrightLbl
-			// 
-			this.VideoGlowBrightLbl.AutoSize = true;
-			this.VideoGlowBrightLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoGlowBrightLbl.Location = new System.Drawing.Point(3, 252);
-			this.VideoGlowBrightLbl.Name = "VideoGlowBrightLbl";
-			this.VideoGlowBrightLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoGlowBrightLbl.TabIndex = 24;
-			this.VideoGlowBrightLbl.Text = "发光亮度";
-			this.VideoGlowBrightLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoGlowCurveCombo
-			// 
-			this.VideoGlowCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoGlowCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.VideoGlowCurveCombo.FormattingEnabled = true;
-			this.VideoGlowCurveCombo.Items.AddRange(new object[] {
-            "线性",
-            "快速",
-            "慢速",
-            "平滑",
-            "急剧"});
-			this.VideoGlowCurveCombo.Location = new System.Drawing.Point(880, 192);
-			this.VideoGlowCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.VideoGlowCurveCombo.Name = "VideoGlowCurveCombo";
-			this.VideoGlowCurveCombo.Size = new System.Drawing.Size(102, 40);
-			this.VideoGlowCurveCombo.TabIndex = 11;
-			// 
-			// VideoGlowBox
-			// 
-			this.VideoGlowBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoGlowBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoGlowBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoGlowBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoGlowBox.Location = new System.Drawing.Point(124, 194);
-			this.VideoGlowBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoGlowBox.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoGlowBox.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-			this.VideoGlowBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoGlowBox.Name = "VideoGlowBox";
-			this.VideoGlowBox.NumericUpDownWidth = 65;
-			this.VideoGlowBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoGlowBox.TabIndex = 10;
-			this.VideoGlowBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoGlowLbl
-			// 
-			this.VideoGlowLbl.AutoSize = true;
-			this.VideoGlowLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoGlowLbl.Location = new System.Drawing.Point(3, 186);
-			this.VideoGlowLbl.Name = "VideoGlowLbl";
-			this.VideoGlowLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoGlowLbl.TabIndex = 23;
-			this.VideoGlowLbl.Text = "发光";
-			this.VideoGlowLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoFadeOutCurveCombo
-			// 
-			this.VideoFadeOutCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeOutCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.VideoFadeOutCurveCombo.FormattingEnabled = true;
-			this.VideoFadeOutCurveCombo.Items.AddRange(new object[] {
-            "线性",
-            "快速",
-            "慢速",
-            "平滑",
-            "急剧"});
-			this.VideoFadeOutCurveCombo.Location = new System.Drawing.Point(880, 126);
-			this.VideoFadeOutCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.VideoFadeOutCurveCombo.Name = "VideoFadeOutCurveCombo";
-			this.VideoFadeOutCurveCombo.Size = new System.Drawing.Size(102, 40);
-			this.VideoFadeOutCurveCombo.TabIndex = 7;
-			// 
-			// VideoFadeOutBox
-			// 
-			this.VideoFadeOutBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoFadeOutBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoFadeOutBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeOutBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoFadeOutBox.Location = new System.Drawing.Point(124, 128);
-			this.VideoFadeOutBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoFadeOutBox.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoFadeOutBox.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoFadeOutBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoFadeOutBox.Name = "VideoFadeOutBox";
-			this.VideoFadeOutBox.NumericUpDownWidth = 65;
-			this.VideoFadeOutBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoFadeOutBox.TabIndex = 5;
-			this.VideoFadeOutBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoFadeOutBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoFadeOutLbl
-			// 
-			this.VideoFadeOutLbl.AutoSize = true;
-			this.VideoFadeOutLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeOutLbl.Location = new System.Drawing.Point(3, 120);
-			this.VideoFadeOutLbl.MinimumSize = new System.Drawing.Size(0, 66);
-			this.VideoFadeOutLbl.Name = "VideoFadeOutLbl";
-			this.VideoFadeOutLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoFadeOutLbl.TabIndex = 1;
-			this.VideoFadeOutLbl.Text = "渐出　　";
-			this.VideoFadeOutLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoFadeInCurveCombo
-			// 
-			this.VideoFadeInCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeInCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.VideoFadeInCurveCombo.FormattingEnabled = true;
-			this.VideoFadeInCurveCombo.Items.AddRange(new object[] {
-            "线性",
-            "快速",
-            "慢速",
-            "平滑",
-            "急剧"});
-			this.VideoFadeInCurveCombo.Location = new System.Drawing.Point(880, 60);
-			this.VideoFadeInCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.VideoFadeInCurveCombo.Name = "VideoFadeInCurveCombo";
-			this.VideoFadeInCurveCombo.Size = new System.Drawing.Size(102, 40);
-			this.VideoFadeInCurveCombo.TabIndex = 4;
-			// 
-			// VideoFadeInBox
-			// 
-			this.VideoFadeInBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoFadeInBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoFadeInBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeInBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoFadeInBox.Location = new System.Drawing.Point(124, 62);
-			this.VideoFadeInBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoFadeInBox.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoFadeInBox.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoFadeInBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoFadeInBox.Name = "VideoFadeInBox";
-			this.VideoFadeInBox.NumericUpDownWidth = 65;
-			this.VideoFadeInBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoFadeInBox.TabIndex = 2;
-			this.VideoFadeInBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoFadeInLbl
-			// 
-			this.VideoFadeInLbl.AutoSize = true;
-			this.VideoFadeInLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeInLbl.Location = new System.Drawing.Point(3, 54);
-			this.VideoFadeInLbl.MinimumSize = new System.Drawing.Size(0, 66);
-			this.VideoFadeInLbl.Name = "VideoFadeInLbl";
-			this.VideoFadeInLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoFadeInLbl.TabIndex = 0;
-			this.VideoFadeInLbl.Text = "渐入　　";
-			this.VideoFadeInLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoEndHueLbl
-			// 
-			this.VideoEndHueLbl.AutoSize = true;
-			this.VideoEndHueLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndHueLbl.Location = new System.Drawing.Point(3, 1004);
-			this.VideoEndHueLbl.Name = "VideoEndHueLbl";
-			this.VideoEndHueLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoEndHueLbl.TabIndex = 25;
-			this.VideoEndHueLbl.Text = "终止色相";
-			this.VideoEndHueLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoStartSaturationLbl
-			// 
-			this.VideoStartSaturationLbl.AutoSize = true;
-			this.VideoStartSaturationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartSaturationLbl.Location = new System.Drawing.Point(3, 1070);
-			this.VideoStartSaturationLbl.Name = "VideoStartSaturationLbl";
-			this.VideoStartSaturationLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoStartSaturationLbl.TabIndex = 26;
-			this.VideoStartSaturationLbl.Text = "起始饱和";
-			this.VideoStartSaturationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoStartHueLbl
-			// 
-			this.VideoStartHueLbl.AutoSize = true;
-			this.VideoStartHueLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartHueLbl.Location = new System.Drawing.Point(3, 938);
-			this.VideoStartHueLbl.Name = "VideoStartHueLbl";
-			this.VideoStartHueLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoStartHueLbl.TabIndex = 27;
-			this.VideoStartHueLbl.Text = "起始色相";
-			this.VideoStartHueLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoStartContrastLbl
-			// 
-			this.VideoStartContrastLbl.AutoSize = true;
-			this.VideoStartContrastLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartContrastLbl.Location = new System.Drawing.Point(3, 1202);
-			this.VideoStartContrastLbl.Name = "VideoStartContrastLbl";
-			this.VideoStartContrastLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoStartContrastLbl.TabIndex = 28;
-			this.VideoStartContrastLbl.Text = "起始对比";
-			this.VideoStartContrastLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoEndContrastLbl
-			// 
-			this.VideoEndContrastLbl.AutoSize = true;
-			this.VideoEndContrastLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndContrastLbl.Location = new System.Drawing.Point(3, 1268);
-			this.VideoEndContrastLbl.Name = "VideoEndContrastLbl";
-			this.VideoEndContrastLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoEndContrastLbl.TabIndex = 29;
-			this.VideoEndContrastLbl.Text = "终止对比";
-			this.VideoEndContrastLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoEndSaturationLbl
-			// 
-			this.VideoEndSaturationLbl.AutoSize = true;
-			this.VideoEndSaturationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndSaturationLbl.Location = new System.Drawing.Point(3, 1136);
-			this.VideoEndSaturationLbl.Name = "VideoEndSaturationLbl";
-			this.VideoEndSaturationLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoEndSaturationLbl.TabIndex = 30;
-			this.VideoEndSaturationLbl.Text = "终止饱和";
-			this.VideoEndSaturationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoEndThresholdLbl
-			// 
-			this.VideoEndThresholdLbl.AutoSize = true;
-			this.VideoEndThresholdLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndThresholdLbl.Location = new System.Drawing.Point(3, 1400);
-			this.VideoEndThresholdLbl.Name = "VideoEndThresholdLbl";
-			this.VideoEndThresholdLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoEndThresholdLbl.TabIndex = 31;
-			this.VideoEndThresholdLbl.Text = "终止阈值";
-			this.VideoEndThresholdLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoStartThresholdLbl
-			// 
-			this.VideoStartThresholdLbl.AutoSize = true;
-			this.VideoStartThresholdLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartThresholdLbl.Location = new System.Drawing.Point(3, 1334);
-			this.VideoStartThresholdLbl.Name = "VideoStartThresholdLbl";
-			this.VideoStartThresholdLbl.Size = new System.Drawing.Size(110, 66);
-			this.VideoStartThresholdLbl.TabIndex = 32;
-			this.VideoStartThresholdLbl.Text = "起始阈值";
-			this.VideoStartThresholdLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoStartHueBox
-			// 
-			this.VideoStartHueBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoStartHueBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoStartHueBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartHueBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoStartHueBox.Location = new System.Drawing.Point(124, 946);
-			this.VideoStartHueBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoStartHueBox.Maximum = new decimal(new int[] {
-            360,
-            0,
-            0,
-            0});
-			this.VideoStartHueBox.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoStartHueBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoStartHueBox.Name = "VideoStartHueBox";
-			this.VideoStartHueBox.NumericUpDownWidth = 65;
-			this.VideoStartHueBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoStartHueBox.TabIndex = 33;
-			this.VideoStartHueBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoStartThresholdBox
-			// 
-			this.VideoStartThresholdBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoStartThresholdBox.DefaultValue = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-			this.VideoStartThresholdBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartThresholdBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoStartThresholdBox.Location = new System.Drawing.Point(124, 1342);
-			this.VideoStartThresholdBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoStartThresholdBox.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoStartThresholdBox.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoStartThresholdBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoStartThresholdBox.Name = "VideoStartThresholdBox";
-			this.VideoStartThresholdBox.NumericUpDownWidth = 65;
-			this.VideoStartThresholdBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoStartThresholdBox.TabIndex = 42;
-			this.VideoStartThresholdBox.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-			// 
-			// VideoStartSaturationBox
-			// 
-			this.VideoStartSaturationBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoStartSaturationBox.DefaultValue = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoStartSaturationBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartSaturationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoStartSaturationBox.Location = new System.Drawing.Point(124, 1078);
-			this.VideoStartSaturationBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoStartSaturationBox.Maximum = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-			this.VideoStartSaturationBox.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoStartSaturationBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoStartSaturationBox.Name = "VideoStartSaturationBox";
-			this.VideoStartSaturationBox.NumericUpDownWidth = 65;
-			this.VideoStartSaturationBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoStartSaturationBox.TabIndex = 36;
-			this.VideoStartSaturationBox.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			// 
-			// VideoStartContrastBox
-			// 
-			this.VideoStartContrastBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoStartContrastBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoStartContrastBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartContrastBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoStartContrastBox.Location = new System.Drawing.Point(124, 1210);
-			this.VideoStartContrastBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoStartContrastBox.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoStartContrastBox.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-			this.VideoStartContrastBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoStartContrastBox.Name = "VideoStartContrastBox";
-			this.VideoStartContrastBox.NumericUpDownWidth = 65;
-			this.VideoStartContrastBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoStartContrastBox.TabIndex = 39;
-			this.VideoStartContrastBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoEndThresholdBox
-			// 
-			this.VideoEndThresholdBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoEndThresholdBox.DefaultValue = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-			this.VideoEndThresholdBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndThresholdBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoEndThresholdBox.Location = new System.Drawing.Point(124, 1408);
-			this.VideoEndThresholdBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoEndThresholdBox.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoEndThresholdBox.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoEndThresholdBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoEndThresholdBox.Name = "VideoEndThresholdBox";
-			this.VideoEndThresholdBox.NumericUpDownWidth = 65;
-			this.VideoEndThresholdBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoEndThresholdBox.TabIndex = 44;
-			this.VideoEndThresholdBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoEndThresholdBox.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-			// 
-			// VideoEndHueBox
-			// 
-			this.VideoEndHueBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoEndHueBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoEndHueBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndHueBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoEndHueBox.Location = new System.Drawing.Point(124, 1012);
-			this.VideoEndHueBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoEndHueBox.Maximum = new decimal(new int[] {
-            360,
-            0,
-            0,
-            0});
-			this.VideoEndHueBox.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoEndHueBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoEndHueBox.Name = "VideoEndHueBox";
-			this.VideoEndHueBox.NumericUpDownWidth = 65;
-			this.VideoEndHueBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoEndHueBox.TabIndex = 35;
-			this.VideoEndHueBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoEndHueBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoEndSaturationBox
-			// 
-			this.VideoEndSaturationBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoEndSaturationBox.DefaultValue = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoEndSaturationBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndSaturationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoEndSaturationBox.Location = new System.Drawing.Point(124, 1144);
-			this.VideoEndSaturationBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoEndSaturationBox.Maximum = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-			this.VideoEndSaturationBox.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoEndSaturationBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoEndSaturationBox.Name = "VideoEndSaturationBox";
-			this.VideoEndSaturationBox.NumericUpDownWidth = 65;
-			this.VideoEndSaturationBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoEndSaturationBox.TabIndex = 38;
-			this.VideoEndSaturationBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoEndSaturationBox.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			// 
-			// VideoEndContrastBox
-			// 
-			this.VideoEndContrastBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoEndContrastBox.DefaultValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.VideoEndContrastBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndContrastBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoEndContrastBox.Location = new System.Drawing.Point(124, 1276);
-			this.VideoEndContrastBox.Margin = new System.Windows.Forms.Padding(8);
-			this.VideoEndContrastBox.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.VideoEndContrastBox.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-			this.VideoEndContrastBox.MinimumSize = new System.Drawing.Size(0, 50);
-			this.VideoEndContrastBox.Name = "VideoEndContrastBox";
-			this.VideoEndContrastBox.NumericUpDownWidth = 65;
-			this.VideoEndContrastBox.Size = new System.Drawing.Size(744, 50);
-			this.VideoEndContrastBox.TabIndex = 41;
-			this.VideoEndContrastBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoEndContrastBox.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			// 
-			// VideoStartHueCurveCombo
-			// 
-			this.VideoStartHueCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartHueCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.VideoStartHueCurveCombo.FormattingEnabled = true;
-			this.VideoStartHueCurveCombo.Items.AddRange(new object[] {
-            "线性",
-            "快速",
-            "慢速",
-            "平滑",
-            "急剧"});
-			this.VideoStartHueCurveCombo.Location = new System.Drawing.Point(880, 944);
-			this.VideoStartHueCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.VideoStartHueCurveCombo.Name = "VideoStartHueCurveCombo";
-			this.VideoStartHueCurveCombo.Size = new System.Drawing.Size(102, 40);
-			this.VideoStartHueCurveCombo.TabIndex = 34;
-			// 
-			// VideoStartContrastCurveCombo
-			// 
-			this.VideoStartContrastCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartContrastCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.VideoStartContrastCurveCombo.FormattingEnabled = true;
-			this.VideoStartContrastCurveCombo.Items.AddRange(new object[] {
-            "线性",
-            "快速",
-            "慢速",
-            "平滑",
-            "急剧"});
-			this.VideoStartContrastCurveCombo.Location = new System.Drawing.Point(880, 1208);
-			this.VideoStartContrastCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.VideoStartContrastCurveCombo.Name = "VideoStartContrastCurveCombo";
-			this.VideoStartContrastCurveCombo.Size = new System.Drawing.Size(102, 40);
-			this.VideoStartContrastCurveCombo.TabIndex = 40;
-			// 
-			// VideoStartSaturationCurveCombo
-			// 
-			this.VideoStartSaturationCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartSaturationCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.VideoStartSaturationCurveCombo.FormattingEnabled = true;
-			this.VideoStartSaturationCurveCombo.Items.AddRange(new object[] {
-            "线性",
-            "快速",
-            "慢速",
-            "平滑",
-            "急剧"});
-			this.VideoStartSaturationCurveCombo.Location = new System.Drawing.Point(880, 1076);
-			this.VideoStartSaturationCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.VideoStartSaturationCurveCombo.Name = "VideoStartSaturationCurveCombo";
-			this.VideoStartSaturationCurveCombo.Size = new System.Drawing.Size(102, 40);
-			this.VideoStartSaturationCurveCombo.TabIndex = 37;
-			// 
-			// VideoStartThresholdCurveCombo
-			// 
-			this.VideoStartThresholdCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartThresholdCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.VideoStartThresholdCurveCombo.FormattingEnabled = true;
-			this.VideoStartThresholdCurveCombo.Items.AddRange(new object[] {
-            "线性",
-            "快速",
-            "慢速",
-            "平滑",
-            "急剧"});
-			this.VideoStartThresholdCurveCombo.Location = new System.Drawing.Point(880, 1340);
-			this.VideoStartThresholdCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.VideoStartThresholdCurveCombo.Name = "VideoStartThresholdCurveCombo";
-			this.VideoStartThresholdCurveCombo.Size = new System.Drawing.Size(102, 40);
-			this.VideoStartThresholdCurveCombo.TabIndex = 43;
-			// 
-			// VideoFadeOutTimeTxt
-			// 
-			this.VideoFadeOutTimeTxt.Dock = System.Windows.Forms.DockStyle.Left;
-			this.VideoFadeOutTimeTxt.Location = new System.Drawing.Point(140, 1470);
-			this.VideoFadeOutTimeTxt.Margin = new System.Windows.Forms.Padding(24, 4, 4, 4);
-			this.VideoFadeOutTimeTxt.Name = "VideoFadeOutTimeTxt";
-			this.VideoFadeOutTimeTxt.Size = new System.Drawing.Size(318, 39);
-			this.VideoFadeOutTimeTxt.TabIndex = 6;
-			this.VideoFadeOutTimeTxt.Visible = false;
-			this.VideoFadeOutTimeTxt.TextChanged += new System.EventHandler(this.TimecodeText_Leave);
-			// 
-			// VideoFadeInTimeTxt
-			// 
-			this.VideoFadeInTimeTxt.Dock = System.Windows.Forms.DockStyle.Left;
-			this.VideoFadeInTimeTxt.Location = new System.Drawing.Point(140, 1470);
-			this.VideoFadeInTimeTxt.Margin = new System.Windows.Forms.Padding(24, 4, 4, 4);
-			this.VideoFadeInTimeTxt.Name = "VideoFadeInTimeTxt";
-			this.VideoFadeInTimeTxt.Size = new System.Drawing.Size(318, 39);
-			this.VideoFadeInTimeTxt.TabIndex = 3;
-			this.VideoFadeInTimeTxt.Visible = false;
-			this.VideoFadeInTimeTxt.TextChanged += new System.EventHandler(this.TimecodeText_Leave);
-			// 
-			// VideoParamsTable
-			// 
-			this.VideoParamsTable.AutoSize = true;
-			this.VideoParamsTable.ColumnCount = 3;
-			this.VideoParamsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.VideoParamsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.VideoParamsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.VideoParamsTable.Controls.Add(this.flowLayoutPanel13, 0, 6);
-			this.VideoParamsTable.Controls.Add(this.RestrictKeyframesLengthLbl, 0, 5);
-			this.VideoParamsTable.Controls.Add(this.VideoFadeInTimeTxt, 1, 23);
-			this.VideoParamsTable.Controls.Add(this.VideoFadeOutTimeTxt, 1, 24);
-			this.VideoParamsTable.Controls.Add(this.VideoStartThresholdCurveCombo, 2, 21);
-			this.VideoParamsTable.Controls.Add(this.VideoStartSaturationCurveCombo, 2, 17);
-			this.VideoParamsTable.Controls.Add(this.VideoStartContrastCurveCombo, 2, 19);
-			this.VideoParamsTable.Controls.Add(this.VideoStartHueCurveCombo, 2, 15);
-			this.VideoParamsTable.Controls.Add(this.VideoEndContrastBox, 1, 20);
-			this.VideoParamsTable.Controls.Add(this.VideoEndSaturationBox, 1, 18);
-			this.VideoParamsTable.Controls.Add(this.VideoEndHueBox, 1, 16);
-			this.VideoParamsTable.Controls.Add(this.VideoEndThresholdBox, 1, 22);
-			this.VideoParamsTable.Controls.Add(this.VideoStartContrastBox, 1, 19);
-			this.VideoParamsTable.Controls.Add(this.VideoStartSaturationBox, 1, 17);
-			this.VideoParamsTable.Controls.Add(this.VideoStartThresholdBox, 1, 21);
-			this.VideoParamsTable.Controls.Add(this.VideoStartHueBox, 1, 15);
-			this.VideoParamsTable.Controls.Add(this.VideoStartThresholdLbl, 0, 21);
-			this.VideoParamsTable.Controls.Add(this.VideoEndThresholdLbl, 0, 22);
-			this.VideoParamsTable.Controls.Add(this.VideoEndSaturationLbl, 0, 18);
-			this.VideoParamsTable.Controls.Add(this.VideoEndContrastLbl, 0, 20);
-			this.VideoParamsTable.Controls.Add(this.VideoStartContrastLbl, 0, 19);
-			this.VideoParamsTable.Controls.Add(this.VideoStartHueLbl, 0, 15);
-			this.VideoParamsTable.Controls.Add(this.VideoStartSaturationLbl, 0, 17);
-			this.VideoParamsTable.Controls.Add(this.VideoEndHueLbl, 0, 16);
-			this.VideoParamsTable.Controls.Add(this.VideoFadeInLbl, 0, 1);
-			this.VideoParamsTable.Controls.Add(this.VideoFadeInBox, 1, 1);
-			this.VideoParamsTable.Controls.Add(this.VideoFadeInCurveCombo, 2, 1);
-			this.VideoParamsTable.Controls.Add(this.VideoFadeOutLbl, 0, 2);
-			this.VideoParamsTable.Controls.Add(this.VideoFadeOutBox, 1, 2);
-			this.VideoParamsTable.Controls.Add(this.VideoFadeOutCurveCombo, 2, 2);
-			this.VideoParamsTable.Controls.Add(this.VideoGlowLbl, 0, 3);
-			this.VideoParamsTable.Controls.Add(this.VideoGlowBox, 1, 3);
-			this.VideoParamsTable.Controls.Add(this.VideoGlowCurveCombo, 2, 3);
-			this.VideoParamsTable.Controls.Add(this.VideoGlowBrightLbl, 0, 4);
-			this.VideoParamsTable.Controls.Add(this.VideoGlowBrightBox, 1, 4);
-			this.VideoParamsTable.Controls.Add(this.VideoStartSizeLbl, 0, 7);
-			this.VideoParamsTable.Controls.Add(this.VideoStartSizeBox, 1, 7);
-			this.VideoParamsTable.Controls.Add(this.VideoStartSizeCurveCombo, 2, 7);
-			this.VideoParamsTable.Controls.Add(this.VideoEndSizeLbl, 0, 8);
-			this.VideoParamsTable.Controls.Add(this.VideoEndSizeBox, 1, 8);
-			this.VideoParamsTable.Controls.Add(this.VideoStartRotationLbl, 0, 9);
-			this.VideoParamsTable.Controls.Add(this.VideoStartRotationBox, 1, 9);
-			this.VideoParamsTable.Controls.Add(this.VideoEndRotationLbl, 0, 10);
-			this.VideoParamsTable.Controls.Add(this.VideoEndRotationBox, 1, 10);
-			this.VideoParamsTable.Controls.Add(this.VideoStartHorizontalTransLbl, 0, 11);
-			this.VideoParamsTable.Controls.Add(this.VideoStartHorizontalTransBox, 1, 11);
-			this.VideoParamsTable.Controls.Add(this.VideoEndHorizontalTransLbl, 0, 12);
-			this.VideoParamsTable.Controls.Add(this.VideoEndHorizontalTransBox, 1, 12);
-			this.VideoParamsTable.Controls.Add(this.VideoStartVerticalTransLbl, 0, 13);
-			this.VideoParamsTable.Controls.Add(this.VideoStartVerticalTransBox, 1, 13);
-			this.VideoParamsTable.Controls.Add(this.VideoEndVerticalTransLbl, 0, 14);
-			this.VideoParamsTable.Controls.Add(this.VideoEndVerticalTransBox, 1, 14);
-			this.VideoParamsTable.Controls.Add(this.tableLayoutPanel9, 0, 0);
-			this.VideoParamsTable.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoParamsTable.Location = new System.Drawing.Point(8, 40);
-			this.VideoParamsTable.Name = "VideoParamsTable";
-			this.VideoParamsTable.RowCount = 25;
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 0F));
-			this.VideoParamsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 0F));
-			this.VideoParamsTable.Size = new System.Drawing.Size(986, 1466);
-			this.VideoParamsTable.TabIndex = 0;
-			// 
-			// RestrictKeyframesLengthLbl
-			// 
-			this.RestrictKeyframesLengthLbl.AutoSize = true;
-			this.VideoParamsTable.SetColumnSpan(this.RestrictKeyframesLengthLbl, 3);
-			this.RestrictKeyframesLengthLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RestrictKeyframesLengthLbl.Location = new System.Drawing.Point(4, 326);
-			this.RestrictKeyframesLengthLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
-			this.RestrictKeyframesLengthLbl.Name = "RestrictKeyframesLengthLbl";
-			this.RestrictKeyframesLengthLbl.Size = new System.Drawing.Size(978, 32);
-			this.RestrictKeyframesLengthLbl.TabIndex = 45;
-			this.RestrictKeyframesLengthLbl.Text = "限制关键帧长度";
-			this.RestrictKeyframesLengthLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// flowLayoutPanel13
-			// 
-			this.flowLayoutPanel13.AutoSize = true;
-			this.VideoParamsTable.SetColumnSpan(this.flowLayoutPanel13, 3);
-			this.flowLayoutPanel13.Controls.Add(this.UnrestrictKeyframesLengthRadio);
-			this.flowLayoutPanel13.Controls.Add(this.RestrictKeyframesMinLengthRadio);
-			this.flowLayoutPanel13.Controls.Add(this.RestrictKeyframesFixedLengthRadio);
-			this.flowLayoutPanel13.Controls.Add(this.RestrictKeyframesLengthBox);
-			this.flowLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel13.Enabled = false;
-			this.flowLayoutPanel13.Location = new System.Drawing.Point(3, 361);
-			this.flowLayoutPanel13.Margin = new System.Windows.Forms.Padding(3, 3, 3, 7);
-			this.flowLayoutPanel13.Name = "flowLayoutPanel13";
-			this.flowLayoutPanel13.Size = new System.Drawing.Size(980, 42);
-			this.flowLayoutPanel13.TabIndex = 46;
-			// 
-			// UnrestrictKeyframesLengthRadio
-			// 
-			this.UnrestrictKeyframesLengthRadio.AutoSize = true;
-			this.UnrestrictKeyframesLengthRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.UnrestrictKeyframesLengthRadio.Group = "KeyframesLimitLength";
-			this.UnrestrictKeyframesLengthRadio.Location = new System.Drawing.Point(3, 3);
-			this.UnrestrictKeyframesLengthRadio.Name = "UnrestrictKeyframesLengthRadio";
-			this.UnrestrictKeyframesLengthRadio.Size = new System.Drawing.Size(117, 36);
-			this.UnrestrictKeyframesLengthRadio.TabIndex = 0;
-			this.UnrestrictKeyframesLengthRadio.Text = "不限制";
-			this.UnrestrictKeyframesLengthRadio.UseVisualStyleBackColor = true;
-			// 
-			// RestrictKeyframesMinLengthRadio
-			// 
-			this.RestrictKeyframesMinLengthRadio.AutoSize = true;
-			this.RestrictKeyframesMinLengthRadio.Checked = true;
-			this.RestrictKeyframesMinLengthRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RestrictKeyframesMinLengthRadio.Group = "KeyframesLimitLength";
-			this.RestrictKeyframesMinLengthRadio.Location = new System.Drawing.Point(126, 3);
-			this.RestrictKeyframesMinLengthRadio.Name = "RestrictKeyframesMinLengthRadio";
-			this.RestrictKeyframesMinLengthRadio.Size = new System.Drawing.Size(141, 36);
-			this.RestrictKeyframesMinLengthRadio.TabIndex = 1;
-			this.RestrictKeyframesMinLengthRadio.TabStop = true;
-			this.RestrictKeyframesMinLengthRadio.Text = "最小长度";
-			this.RestrictKeyframesMinLengthRadio.UseVisualStyleBackColor = true;
-			// 
-			// RestrictKeyframesFixedLengthRadio
-			// 
-			this.RestrictKeyframesFixedLengthRadio.AutoSize = true;
-			this.RestrictKeyframesFixedLengthRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RestrictKeyframesFixedLengthRadio.Group = "KeyframesLimitLength";
-			this.RestrictKeyframesFixedLengthRadio.Location = new System.Drawing.Point(273, 3);
-			this.RestrictKeyframesFixedLengthRadio.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
-			this.RestrictKeyframesFixedLengthRadio.Name = "RestrictKeyframesFixedLengthRadio";
-			this.RestrictKeyframesFixedLengthRadio.Size = new System.Drawing.Size(141, 36);
-			this.RestrictKeyframesFixedLengthRadio.TabIndex = 2;
-			this.RestrictKeyframesFixedLengthRadio.Text = "固定长度";
-			this.RestrictKeyframesFixedLengthRadio.UseVisualStyleBackColor = true;
-			// 
-			// RestrictKeyframesLengthBox
-			// 
-			this.RestrictKeyframesLengthBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RestrictKeyframesLengthBox.DoubleValue = 1000D;
-			this.RestrictKeyframesLengthBox.Enabled = false;
-			this.RestrictKeyframesLengthBox.Location = new System.Drawing.Point(417, 3);
-			this.RestrictKeyframesLengthBox.Milliseconds = 1000;
-			this.RestrictKeyframesLengthBox.Name = "RestrictKeyframesLengthBox";
-			this.RestrictKeyframesLengthBox.Size = new System.Drawing.Size(260, 39);
-			this.RestrictKeyframesLengthBox.TabIndex = 6;
-			this.RestrictKeyframesLengthBox.Value = 1000;
-			// 
 			// ConfigForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -9291,6 +9290,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel5.ResumeLayout(false);
 			this.tableLayoutPanel5.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MatchCutRepeatBox)).EndInit();
+			this.MatchCutSustainPanel.ResumeLayout(false);
+			this.MatchCutSustainPanel.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.MatchCutSustainCacheCapacityBox)).EndInit();
 			this.LinearMapTab.ResumeLayout(false);
 			this.LinearMapTab.PerformLayout();
 			this.LinearMapPanel.ResumeLayout(false);
@@ -9387,6 +9389,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab.PerformLayout();
 			this.VideoParamsGroup.ResumeLayout(false);
 			this.VideoParamsGroup.PerformLayout();
+			this.VideoParamsTable.ResumeLayout(false);
+			this.VideoParamsTable.PerformLayout();
+			this.tableLayoutPanel9.ResumeLayout(false);
+			this.tableLayoutPanel9.PerformLayout();
+			this.flowLayoutPanel13.ResumeLayout(false);
+			this.flowLayoutPanel13.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.RestrictKeyframesLengthBox)).EndInit();
 			this.VideoEffectsGroup.ResumeLayout(false);
 			this.VideoEffectsGroup.PerformLayout();
 			this.tableLayoutPanel8.ResumeLayout(false);
@@ -9494,16 +9503,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
-			this.MatchCutSustainPanel.ResumeLayout(false);
-			this.MatchCutSustainPanel.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.MatchCutSustainCacheCapacityBox)).EndInit();
-			this.tableLayoutPanel9.ResumeLayout(false);
-			this.tableLayoutPanel9.PerformLayout();
-			this.VideoParamsTable.ResumeLayout(false);
-			this.VideoParamsTable.PerformLayout();
-			this.flowLayoutPanel13.ResumeLayout(false);
-			this.flowLayoutPanel13.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.RestrictKeyframesLengthBox)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

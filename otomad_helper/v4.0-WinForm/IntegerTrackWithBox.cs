@@ -26,7 +26,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				isWaitingDoubleClick = false;
 				doubleClickTimer.Stop();
 			});
-			//Layout += (sender, e) => Track.BackColor = Parent.BackColor; // 设计视图中用了会引发异常。
+			Layout += IntegerTrackWithBox_Layout;
+		}
+
+		private void IntegerTrackWithBox_Layout(object sender, LayoutEventArgs e) {
+			if (Parent != null)
+				Track.BackColor = Parent.BackColor; // 设计视图中用了会引发异常。
 		}
 
 		private void Track_Scroll(object sender, EventArgs e) {
