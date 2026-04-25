@@ -143,6 +143,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>首选轨道</summary>*/ private PreferredTrackWrapper<VideoTrack> VConfigPreferredTrack { get { return configForm.VideoPreferredTrackCombo.SelectedItem as PreferredTrackWrapper<VideoTrack>; } }
 		/**<summary>堆　　叠</summary>*/ private bool VConfigStack { get { return configForm.VideoStackCheck.Checked && IsMultiMidiChannel; } }
 		/**<summary>不重映射</summary>*/ private bool VConfigTimeUnremapping { get { return configForm.VideoTimeUnremappingCheck.Checked; } }
+		/**<summary>限长模式</summary>*/ private RestrictLengthModeType RestrictKeyframesLengthMode { get { return configForm.RestrictKeyframesLengthMode; } }
+		/**<summary>限长大小</summary>*/ private double RestrictKeyframesLengthValue { get { return configForm.RestrictKeyframesLengthBox.DoubleValue; } }
 		#endregion
 
 		#region 音频属性
@@ -242,6 +244,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>轮次效果</summary>*/ private bool CombConfigMatchCutApplyEffectsByRound { get { return configForm.MatchCutApplyEffectsByRoundCheck.Checked; } }
 		/**<summary>累加泛音</summary>*/ private bool CombConfigMatchCutAccumulateHarmonics { get { return configForm.MatchCutAccumulateHarmonicsCheck.Checked; } }
 		/**<summary>相同音高</summary>*/ private bool CombConfigMatchCutSustain { get { return configForm.MatchCutSustainCheck.Checked; } }
+		/**<summary>缓存容量</summary>*/ private int CombConfigMatchCutSustainCacheCapacity { get { return (int)configForm.MatchCutSustainCacheCapacityBox.Value; } }
 		#endregion
 		#region 素材乐团
 		/**<summary>启　　用</summary>*/ private bool CombConfigLinearMap { get { return configForm.LinearMapTab.Selected(); } }
@@ -1216,6 +1219,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			string name = currentChannel.Name; // 所选 MIDI 轨道名称。如果没有则为空串。
 			currentChannel.Resort(); // 重新排序。
 			NoteOnEvent prevNoteOnEvent = null; AudioEvent prevAudioEvent = null; VideoEvent prevVideoEvent = null;
+			// 冠音
+			int currentUpperNoteNumber = -1;
 			bool requireGlissandoSwirl = VConfig && VConfigGlissando && !SheetConfig && currentChannel.HasPitchWheelEvents; // 五线谱效果开启时最好不要做滑音漩涡动画。
 			const double NOTE_ON_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL = 0.8;
 			const double PITCH_WHEEL_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL = 1 - NOTE_ON_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL;
@@ -1304,6 +1309,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 踩点
 			object[] baseShuffledSeed = { consistencyTracksSeed ?? NewSeed() };
 			long matchCutRound = 0, prevMatchCutRound = 0, matchCutIndex = 0;
+			DictionaryQueue<int, EventSet> matchCutPitchQueue = CombConfigMatchCut && CombConfigMatchCutSustain ? new DictionaryQueue<int, EventSet>(CombConfigMatchCutSustainCacheCapacity) : null;
 			Action<object[]> NextSourceByDuration = seeds => {
 				if (!ShouldMultisource) return;
 				seeds = seeds ?? baseShuffledSeed;
@@ -1334,7 +1340,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if ((CombConfigLuckyDip && CombConfigLuckyDipLimitToSelected) && !(CombConfigMatchCut && CombConfigMatchCutLuckyDip))
 					if (CombConfigLuckyDip && CombConfigLuckyDipLotionBath) NextSourceByOrder(MatchCutOrder.SEQUENTIAL, baseShuffledSeed, !CombConfigLuckyDipTrack ? step : step + MidiConfigTracks.CurrentChannel, true);
 					else NextSourceByOrder(MatchCutOrder.SHUFFLED, baseShuffledSeed, step, true);
-				else if (CombConfigLuckyDipLotionBath) {
+				else if (CombConfigLuckyDip && CombConfigLuckyDipLotionBath) {
 					int _;
 					NextSequentialSourceByStep(CombConfigLuckyDipLotionBathInterval.Value, !CombConfigLuckyDipTrack ? step : step + MidiConfigTracks.CurrentChannel, out activeSource, out _, out sourceStartTime);
 					double maxLength = Math.Max(activeSource.audioLength, activeSource.videoLength);
@@ -1387,21 +1393,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				NoteEvent noteEvent = midiEvent as NoteEvent;
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
 				bool isHarmonicInChords = prevNoteOnEvent != null && noteOnEvent.AbsoluteTime == prevNoteOnEvent.AbsoluteTime;
-				Func<bool> GetIsPitchHold = () => {
-					long? prevEventAbsoluteTime = null;
-					for (int j = i - 1; j >= 0; j--) {
-						if (!(currentChannel.Events[j] is NoteOnEvent)) continue;
-						NoteOnEvent prevEvent = (NoteOnEvent)currentChannel.Events[j];
-						if (prevEvent.AbsoluteTime == noteOnEvent.AbsoluteTime) continue;
-						if (prevEventAbsoluteTime != null && prevEventAbsoluteTime != prevEvent.AbsoluteTime) break;
-						prevEventAbsoluteTime = prevEvent.AbsoluteTime;
-						if (prevEvent.NoteNumber == noteOnEvent.NoteNumber) return true;
-					}
-					return false;
-				};
-				bool matchCutDoNotChange = false;
-				if ((CombConfigMatchCutAccumulateHarmonics || !isHarmonicInChords) && (!CombConfigMatchCutSustain || !GetIsPitchHold())) matchCutIndex++;
-				else matchCutDoNotChange = true;
+				if (!isHarmonicInChords) currentUpperNoteNumber = noteOnEvent.NoteNumber;
 
 				#region 素材盲盒
 				if (CombConfigLuckyDip) {
@@ -1427,18 +1419,43 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				#endregion
 
 				#region 踩点
-				bool matchCutRequireChangeSource = matchCutIndex % CombConfigMatchCutRepeatCount == 0;
-				if (CombConfigMatchCut && !matchCutDoNotChange) {
-					if (matchCutIndex > 1 && (CombConfigMatchCutAccumulateHarmonics || !isHarmonicInChords) && matchCutIndex % CombConfigMatchCutRepeatCount == 0) {
-						long step = matchCutIndex / CombConfigMatchCutRepeatCount;
-						if (!CombConfigMatchCutLuckyDip) NextSourceByOrder(CombConfigMatchCutOrder, null, step, false);
-						else NextLuckyDipSource(step);
+				if (CombConfigMatchCut) {
+					EventSet pitchCachedSource = null, prevActiveSource = activeSource;
+					// 冠音
+					bool isUpperNote = CombConfigMatchCutAccumulateHarmonics || !isHarmonicInChords;
+					if (isUpperNote) {
+						if (CombConfigMatchCutSustain) {
+							var previousPair = matchCutPitchQueue.LastPair;
+							matchCutPitchQueue.TryGetAndRefreshValue(noteOnEvent.NoteNumber, out pitchCachedSource);
+							var currentPair = pitchCachedSource == null ? null : matchCutPitchQueue.LastPair;
+							// 如果上一项刚好与本次缓存音高的素材相同，但音高却不相同，则放弃缓存的素材而改用新素材。
+							if (pitchCachedSource != null && previousPair != null && currentPair != null &&
+								previousPair.Value.Value == currentPair.Value.Value && previousPair.Value.Key != currentPair.Value.Key) pitchCachedSource = null;
+						}
+						if (pitchCachedSource == null) matchCutIndex++;
 					}
-					//_testName = matchCutRound.ToString();
-					if (matchCutRound >= 1 && !CombConfigMatchCutLoop) {
-						progressForm.Close();
-						MessageBox.Show(Lang.str.match_cut_loop_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-						return false;
+					if (pitchCachedSource != null)
+						activeSource = pitchCachedSource;
+					else {
+						if (matchCutIndex > 1 && isUpperNote && matchCutIndex % CombConfigMatchCutRepeatCount == 0) {
+						ReSelectASourceBecauseSameAsPreviousPitchCachedSource:
+							long step = matchCutIndex / CombConfigMatchCutRepeatCount;
+							if (!CombConfigMatchCutLuckyDip) NextSourceByOrder(CombConfigMatchCutOrder, null, step, false);
+							else NextLuckyDipSource(step);
+							// 如果下一项刚好与前一缓存音高的素材相同，则立即再换一个素材。
+							if (CombConfigMatchCutSustain && activeSource == prevActiveSource && eventSets.Count > 1) {
+								matchCutIndex++;
+								goto ReSelectASourceBecauseSameAsPreviousPitchCachedSource;
+							}
+						}
+						if (CombConfigMatchCutSustain && isUpperNote)
+							matchCutPitchQueue.Add(noteOnEvent.NoteNumber, activeSource);
+						//_testName = matchCutRound.ToString();
+						if (matchCutRound >= 1 && !CombConfigMatchCutLoop) {
+							progressForm.Close();
+							MessageBox.Show(Lang.str.match_cut_loop_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+							return false;
+						}
 					}
 				}
 				prevNoteOnEvent = noteOnEvent;
@@ -1681,7 +1698,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (SheetConfig) anim = animForStaff;
 						else if (!anims.TryGetValue(videoTrack, out anim))
 							anims.Add(videoTrack, anim = NewAnim());
-						bool pitchHold = anim.EqualsLastPitch(pitch);
+						bool pitchHold = anim.EqualsLastPitch(CombConfigMatchCut && CombConfigMatchCutAccumulateHarmonics ? pitch : currentUpperNoteNumber);
 						if (adjustTime) AdjustDeviation(videoEvent, sourceStartTime, sourceEndTime);
 						if (VConfigScratch == StretchType.FLEXING_AND_EXTENDING ||
 							VConfigScratch == StretchType.EXTENDING_ONLY && duration > videoLength ||
@@ -3303,7 +3320,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			try {
 				if (YtpConfig || !IsMultiMidiChannel) {
 					succeed = succeed && GenerateOtomad();
-					goto StartToRemoveSourceTrackEvents;
+					if (VConfigMultitrack) goto StartToAutoLayoutTracks;
+					else goto StartToRemoveSourceTrackEvents;
 				}
 				while (MidiConfigTracks.IsNonEmpty) {
 					if (!(succeed = succeed && GenerateOtomad())) goto StartToRemoveSourceTrackEvents;
@@ -3314,6 +3332,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			if (IsStack)
 				StackTracks(AConfigStack, VConfigStack);
+		StartToAutoLayoutTracks:
 			if (!SheetConfig && generatedVideoTracks.Count > 1) {
 				VideoTrack[] videoTracks = generatedVideoTracks.ToArray();
 				AutoLayoutTracksGridForm.Arrange(videoTracks, LayoutInfos.Grid, this);
@@ -7764,6 +7783,78 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </remarks>
 		/// <exception cref="Exceptions.ReadConfigFailException">如果读取的配置文件被人为修改导致读取失败，则会抛出异常。</exception>
 		void ReadIni();
+	}
+
+	/// <summary>
+	/// 字典队列。
+	/// </summary>
+	public class DictionaryQueue<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>, IReadOnlyCollection<KeyValuePair<TKey, TValue>>, ICollection {
+		public int Capacity { get; private set; }
+		private readonly Dictionary<TKey, LinkedListNode<KeyValuePair<TKey, TValue>>> cache;
+		private readonly LinkedList<KeyValuePair<TKey, TValue>> list;
+
+		public DictionaryQueue(int capacity) {
+			Capacity = capacity;
+			cache = new Dictionary<TKey, LinkedListNode<KeyValuePair<TKey, TValue>>>(capacity);
+			list = new LinkedList<KeyValuePair<TKey, TValue>>();
+		}
+
+		public bool ContainsKey(TKey key) {
+			return cache.ContainsKey(key);
+		}
+
+		/// <remarks>
+		/// 注意：当函数返回 <see langword="false" />（即未找到键）时，<paramref name="value" /> 会返回 <see langword="null" /> 或者说 <see langword="default" />。
+		/// </remarks>
+		public bool TryGetAndRefreshValue(TKey key, out TValue value) {
+			LinkedListNode<KeyValuePair<TKey, TValue>> node;
+			bool contains = cache.TryGetValue(key, out node);
+			value = default(TValue);
+			if (contains) {
+				// 键已存在：返回旧值，并刷新顺序（移动到末尾）
+				list.Remove(node);
+				list.AddLast(node);
+				value = node.Value.Value;
+			}
+			return contains;
+		}
+
+		public void Add(TKey key, TValue value) {
+			// 键不存在：检查容量
+			if (cache.Count >= Capacity) {
+				// 移除最旧的（链表头）
+				LinkedListNode<KeyValuePair<TKey, TValue>> first = list.First;
+				list.RemoveFirst();
+				cache.Remove(first.Value.Key);
+			}
+
+			// 添加新值到末尾
+			LinkedListNode<KeyValuePair<TKey, TValue>> newNode = new LinkedListNode<KeyValuePair<TKey, TValue>>(new KeyValuePair<TKey, TValue>(key, value));
+			list.AddLast(newNode);
+			cache[key] = newNode;
+		}
+
+		public TValue GetOrAdd(TKey key, TValue value) {
+			TValue result;
+			if (TryGetAndRefreshValue(key, out result))
+				return result;
+			Add(key, value);
+			return value;
+		}
+
+		internal TValue InternalGet(TKey key) {
+			LinkedListNode<KeyValuePair<TKey, TValue>> node;
+			return cache.TryGetValue(key, out node) ? node.Value.Value : default(TValue);
+		}
+
+		public KeyValuePair<TKey, TValue>? LastPair { get { return list.Last != null ? list.Last.Value : (KeyValuePair<TKey, TValue>?)null; } }
+
+		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() { return ((IEnumerable<KeyValuePair<TKey, TValue>>)list).GetEnumerator(); }
+		IEnumerator IEnumerable.GetEnumerator() { return ((IEnumerable)list).GetEnumerator(); }
+		public int Count { get { return ((IReadOnlyCollection<KeyValuePair<TKey, TValue>>)list).Count; } }
+		void ICollection.CopyTo(Array array, int index) { ((ICollection)list).CopyTo(array, index); }
+		object ICollection.SyncRoot { get { return ((ICollection)list).SyncRoot; } }
+		bool ICollection.IsSynchronized { get { return ((ICollection)list).IsSynchronized; } }
 	}
 	#endregion
 
@@ -22591,7 +22682,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutOrderReversedRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MatchCutOrderShuffleRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MatchCutLoopCheck = new System.Windows.Forms.CheckBox();
-			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+			this.MatchCutRepeatPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.MatchCutRepeatLbl = new System.Windows.Forms.Label();
 			this.MatchCutRepeatBox = new System.Windows.Forms.NumericUpDown();
 			this.MatchCutApplyEffectsByRoundCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
@@ -22768,10 +22859,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab = new System.Windows.Forms.TabPage();
 			this.VideoParamsGroup = new System.Windows.Forms.GroupBox();
 			this.VideoParamsTable = new System.Windows.Forms.TableLayoutPanel();
-			this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
-			this.VideoFadeSetAsTimecodeRadio = new System.Windows.Forms.RadioButton();
-			this.VideoFadeSetAsPercentRadio = new System.Windows.Forms.RadioButton();
-			this.VideoParamsPresetsBtn = new System.Windows.Forms.Button();
 			this.flowLayoutPanel13 = new System.Windows.Forms.FlowLayoutPanel();
 			this.UnrestrictKeyframesLengthRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.RestrictKeyframesMinLengthRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
@@ -22828,6 +22915,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoStartVerticalTransBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
 			this.VideoEndVerticalTransLbl = new System.Windows.Forms.Label();
 			this.VideoEndVerticalTransBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
+			this.VideoFadeSetAsTimecodeRadio = new System.Windows.Forms.RadioButton();
+			this.VideoFadeSetAsPercentRadio = new System.Windows.Forms.RadioButton();
+			this.VideoParamsPresetsBtn = new System.Windows.Forms.Button();
 			this.VideoEffectsGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
 			this.VideoEffectLbl = new System.Windows.Forms.Label();
@@ -23076,7 +23167,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutTab.SuspendLayout();
 			this.MatchCutPanel.SuspendLayout();
 			this.MatchCutOrderPanel.SuspendLayout();
-			this.tableLayoutPanel5.SuspendLayout();
+			this.MatchCutRepeatPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MatchCutRepeatBox)).BeginInit();
 			this.MatchCutSustainPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MatchCutSustainCacheCapacityBox)).BeginInit();
@@ -23132,9 +23223,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab.SuspendLayout();
 			this.VideoParamsGroup.SuspendLayout();
 			this.VideoParamsTable.SuspendLayout();
-			this.tableLayoutPanel9.SuspendLayout();
 			this.flowLayoutPanel13.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.RestrictKeyframesLengthBox)).BeginInit();
+			this.tableLayoutPanel9.SuspendLayout();
 			this.VideoEffectsGroup.SuspendLayout();
 			this.tableLayoutPanel8.SuspendLayout();
 			this.VideoVelocityGroup.SuspendLayout();
@@ -24518,7 +24609,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutPanel.AutoSize = true;
 			this.MatchCutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.MatchCutPanel.Controls.Add(this.MatchCutOrderPanel);
-			this.MatchCutPanel.Controls.Add(this.tableLayoutPanel5);
+			this.MatchCutPanel.Controls.Add(this.MatchCutRepeatPanel);
 			this.MatchCutPanel.Controls.Add(this.MatchCutApplyEffectsByRoundCheck);
 			this.MatchCutPanel.Controls.Add(this.MatchCutLuckyDipCheck);
 			this.MatchCutPanel.Controls.Add(this.MatchCutAccumulateHarmonicsCheck);
@@ -24611,23 +24702,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutLoopCheck.Text = "循环";
 			this.MatchCutLoopCheck.UseVisualStyleBackColor = true;
 			//
-			// tableLayoutPanel5
+			// MatchCutRepeatPanel
 			//
-			this.tableLayoutPanel5.AutoSize = true;
-			this.tableLayoutPanel5.ColumnCount = 2;
-			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel5.Controls.Add(this.MatchCutRepeatLbl, 0, 0);
-			this.tableLayoutPanel5.Controls.Add(this.MatchCutRepeatBox, 1, 0);
-			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Left;
-			this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 48);
-			this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-			this.tableLayoutPanel5.RowCount = 1;
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.tableLayoutPanel5.Size = new System.Drawing.Size(292, 44);
-			this.tableLayoutPanel5.TabIndex = 20;
+			this.MatchCutRepeatPanel.AutoSize = true;
+			this.MatchCutRepeatPanel.ColumnCount = 2;
+			this.MatchCutRepeatPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.MatchCutRepeatPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.MatchCutRepeatPanel.Controls.Add(this.MatchCutRepeatLbl, 0, 0);
+			this.MatchCutRepeatPanel.Controls.Add(this.MatchCutRepeatBox, 1, 0);
+			this.MatchCutRepeatPanel.Dock = System.Windows.Forms.DockStyle.Left;
+			this.MatchCutRepeatPanel.Location = new System.Drawing.Point(3, 48);
+			this.MatchCutRepeatPanel.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.MatchCutRepeatPanel.Name = "MatchCutRepeatPanel";
+			this.MatchCutRepeatPanel.RowCount = 1;
+			this.MatchCutRepeatPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.MatchCutRepeatPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.MatchCutRepeatPanel.Size = new System.Drawing.Size(292, 44);
+			this.MatchCutRepeatPanel.TabIndex = 20;
 			//
 			// MatchCutRepeatLbl
 			//
@@ -24739,6 +24830,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// MatchCutSustainCacheCapacityBox
 			//
 			this.MatchCutSustainCacheCapacityBox.Location = new System.Drawing.Point(201, 3);
+			this.MatchCutSustainCacheCapacityBox.Maximum = new decimal(new int[] {
+			200,
+			0,
+			0,
+			0});
 			this.MatchCutSustainCacheCapacityBox.Minimum = new decimal(new int[] {
 			1,
 			0,
@@ -27177,71 +27273,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoParamsTable.Size = new System.Drawing.Size(986, 1466);
 			this.VideoParamsTable.TabIndex = 0;
 			//
-			// tableLayoutPanel9
-			//
-			this.tableLayoutPanel9.AutoSize = true;
-			this.tableLayoutPanel9.ColumnCount = 4;
-			this.VideoParamsTable.SetColumnSpan(this.tableLayoutPanel9, 3);
-			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel9.Controls.Add(this.VideoFadeSetAsTimecodeRadio, 3, 0);
-			this.tableLayoutPanel9.Controls.Add(this.VideoFadeSetAsPercentRadio, 2, 0);
-			this.tableLayoutPanel9.Controls.Add(this.VideoParamsPresetsBtn, 0, 0);
-			this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel9.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
-			this.tableLayoutPanel9.MaximumSize = new System.Drawing.Size(0, 58);
-			this.tableLayoutPanel9.Name = "tableLayoutPanel9";
-			this.tableLayoutPanel9.RowCount = 1;
-			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel9.Size = new System.Drawing.Size(986, 54);
-			this.tableLayoutPanel9.TabIndex = 0;
-			//
-			// VideoFadeSetAsTimecodeRadio
-			//
-			this.VideoFadeSetAsTimecodeRadio.AutoSize = true;
-			this.VideoFadeSetAsTimecodeRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeSetAsTimecodeRadio.Location = new System.Drawing.Point(794, 3);
-			this.VideoFadeSetAsTimecodeRadio.Name = "VideoFadeSetAsTimecodeRadio";
-			this.VideoFadeSetAsTimecodeRadio.Size = new System.Drawing.Size(189, 48);
-			this.VideoFadeSetAsTimecodeRadio.TabIndex = 4;
-			this.VideoFadeSetAsTimecodeRadio.Text = "设定为时间码";
-			this.VideoFadeSetAsTimecodeRadio.UseVisualStyleBackColor = true;
-			this.VideoFadeSetAsTimecodeRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
-			//
-			// VideoFadeSetAsPercentRadio
-			//
-			this.VideoFadeSetAsPercentRadio.AutoSize = true;
-			this.VideoFadeSetAsPercentRadio.Checked = true;
-			this.VideoFadeSetAsPercentRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeSetAsPercentRadio.Location = new System.Drawing.Point(599, 3);
-			this.VideoFadeSetAsPercentRadio.Name = "VideoFadeSetAsPercentRadio";
-			this.VideoFadeSetAsPercentRadio.Size = new System.Drawing.Size(189, 48);
-			this.VideoFadeSetAsPercentRadio.TabIndex = 3;
-			this.VideoFadeSetAsPercentRadio.TabStop = true;
-			this.VideoFadeSetAsPercentRadio.Text = "设定为百分比";
-			this.VideoFadeSetAsPercentRadio.UseVisualStyleBackColor = true;
-			this.VideoFadeSetAsPercentRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
-			//
-			// VideoParamsPresetsBtn
-			//
-			this.VideoParamsPresetsBtn.AutoSize = true;
-			this.VideoParamsPresetsBtn.Dock = System.Windows.Forms.DockStyle.Left;
-			this.VideoParamsPresetsBtn.Location = new System.Drawing.Point(3, 3);
-			this.VideoParamsPresetsBtn.MaximumSize = new System.Drawing.Size(800, 48);
-			this.VideoParamsPresetsBtn.Name = "VideoParamsPresetsBtn";
-			this.VideoParamsPresetsBtn.Padding = new System.Windows.Forms.Padding(0, 0, 22, 0);
-			this.VideoParamsPresetsBtn.Size = new System.Drawing.Size(158, 48);
-			this.VideoParamsPresetsBtn.TabIndex = 1;
-			this.VideoParamsPresetsBtn.Text = "预设";
-			this.VideoParamsPresetsBtn.UseVisualStyleBackColor = true;
-			this.VideoParamsPresetsBtn.Click += new System.EventHandler(this.VideoParamsPresetsBtn_Click);
-			this.VideoParamsPresetsBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.TrackLegatoBtn_Paint);
-			this.VideoParamsPresetsBtn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseDownMapToClick);
-			this.VideoParamsPresetsBtn.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseUpMapToClick);
-			//
 			// flowLayoutPanel13
 			//
 			this.flowLayoutPanel13.AutoSize = true;
@@ -28370,6 +28401,71 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			0,
 			0,
 			0});
+			//
+			// tableLayoutPanel9
+			//
+			this.tableLayoutPanel9.AutoSize = true;
+			this.tableLayoutPanel9.ColumnCount = 4;
+			this.VideoParamsTable.SetColumnSpan(this.tableLayoutPanel9, 3);
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel9.Controls.Add(this.VideoFadeSetAsTimecodeRadio, 3, 0);
+			this.tableLayoutPanel9.Controls.Add(this.VideoFadeSetAsPercentRadio, 2, 0);
+			this.tableLayoutPanel9.Controls.Add(this.VideoParamsPresetsBtn, 0, 0);
+			this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel9.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel9.MaximumSize = new System.Drawing.Size(0, 58);
+			this.tableLayoutPanel9.Name = "tableLayoutPanel9";
+			this.tableLayoutPanel9.RowCount = 1;
+			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel9.Size = new System.Drawing.Size(986, 54);
+			this.tableLayoutPanel9.TabIndex = 0;
+			//
+			// VideoFadeSetAsTimecodeRadio
+			//
+			this.VideoFadeSetAsTimecodeRadio.AutoSize = true;
+			this.VideoFadeSetAsTimecodeRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeSetAsTimecodeRadio.Location = new System.Drawing.Point(794, 3);
+			this.VideoFadeSetAsTimecodeRadio.Name = "VideoFadeSetAsTimecodeRadio";
+			this.VideoFadeSetAsTimecodeRadio.Size = new System.Drawing.Size(189, 48);
+			this.VideoFadeSetAsTimecodeRadio.TabIndex = 4;
+			this.VideoFadeSetAsTimecodeRadio.Text = "设定为时间码";
+			this.VideoFadeSetAsTimecodeRadio.UseVisualStyleBackColor = true;
+			this.VideoFadeSetAsTimecodeRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
+			//
+			// VideoFadeSetAsPercentRadio
+			//
+			this.VideoFadeSetAsPercentRadio.AutoSize = true;
+			this.VideoFadeSetAsPercentRadio.Checked = true;
+			this.VideoFadeSetAsPercentRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeSetAsPercentRadio.Location = new System.Drawing.Point(599, 3);
+			this.VideoFadeSetAsPercentRadio.Name = "VideoFadeSetAsPercentRadio";
+			this.VideoFadeSetAsPercentRadio.Size = new System.Drawing.Size(189, 48);
+			this.VideoFadeSetAsPercentRadio.TabIndex = 3;
+			this.VideoFadeSetAsPercentRadio.TabStop = true;
+			this.VideoFadeSetAsPercentRadio.Text = "设定为百分比";
+			this.VideoFadeSetAsPercentRadio.UseVisualStyleBackColor = true;
+			this.VideoFadeSetAsPercentRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
+			//
+			// VideoParamsPresetsBtn
+			//
+			this.VideoParamsPresetsBtn.AutoSize = true;
+			this.VideoParamsPresetsBtn.Dock = System.Windows.Forms.DockStyle.Left;
+			this.VideoParamsPresetsBtn.Location = new System.Drawing.Point(3, 3);
+			this.VideoParamsPresetsBtn.MaximumSize = new System.Drawing.Size(800, 48);
+			this.VideoParamsPresetsBtn.Name = "VideoParamsPresetsBtn";
+			this.VideoParamsPresetsBtn.Padding = new System.Windows.Forms.Padding(0, 0, 22, 0);
+			this.VideoParamsPresetsBtn.Size = new System.Drawing.Size(158, 48);
+			this.VideoParamsPresetsBtn.TabIndex = 1;
+			this.VideoParamsPresetsBtn.Text = "预设";
+			this.VideoParamsPresetsBtn.UseVisualStyleBackColor = true;
+			this.VideoParamsPresetsBtn.Click += new System.EventHandler(this.VideoParamsPresetsBtn_Click);
+			this.VideoParamsPresetsBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.TrackLegatoBtn_Paint);
+			this.VideoParamsPresetsBtn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseDownMapToClick);
+			this.VideoParamsPresetsBtn.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseUpMapToClick);
 			//
 			// VideoEffectsGroup
 			//
@@ -31734,8 +31830,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutPanel.PerformLayout();
 			this.MatchCutOrderPanel.ResumeLayout(false);
 			this.MatchCutOrderPanel.PerformLayout();
-			this.tableLayoutPanel5.ResumeLayout(false);
-			this.tableLayoutPanel5.PerformLayout();
+			this.MatchCutRepeatPanel.ResumeLayout(false);
+			this.MatchCutRepeatPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MatchCutRepeatBox)).EndInit();
 			this.MatchCutSustainPanel.ResumeLayout(false);
 			this.MatchCutSustainPanel.PerformLayout();
@@ -31838,11 +31934,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoParamsGroup.PerformLayout();
 			this.VideoParamsTable.ResumeLayout(false);
 			this.VideoParamsTable.PerformLayout();
-			this.tableLayoutPanel9.ResumeLayout(false);
-			this.tableLayoutPanel9.PerformLayout();
 			this.flowLayoutPanel13.ResumeLayout(false);
 			this.flowLayoutPanel13.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.RestrictKeyframesLengthBox)).EndInit();
+			this.tableLayoutPanel9.ResumeLayout(false);
+			this.tableLayoutPanel9.PerformLayout();
 			this.VideoEffectsGroup.ResumeLayout(false);
 			this.VideoEffectsGroup.PerformLayout();
 			this.tableLayoutPanel8.ResumeLayout(false);
@@ -32417,7 +32513,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.CheckBox MatchCutLoopCheck;
 		public System.Windows.Forms.CheckBox MatchCutLuckyDipCheck;
 		public RememberedCheckBox MatchCutApplyEffectsByRoundCheck;
-		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+		public System.Windows.Forms.TableLayoutPanel MatchCutRepeatPanel;
 		public System.Windows.Forms.Label MatchCutRepeatLbl;
 		public System.Windows.Forms.NumericUpDown MatchCutRepeatBox;
 		public System.Windows.Forms.FlowLayoutPanel LuckyDipPanel;
@@ -34154,6 +34250,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MatchCutOrderPanel.Enabled = !MatchCutLuckyDipCheck.Checked;
 			LuckyDipLotionBathIntervalPanel.Enabled = LuckyDipLotionBathCheck.Checked && !LuckyDipLimitToSelectedCheck.Checked;
 			MatchCutSustainPanel.Enabled = MatchCutSustainCheck.Checked;
+			MatchCutRepeatPanel.Enabled = !MatchCutSustainCheck.Checked;
+			if (MatchCutSustainCheck.Checked) MatchCutRepeatBox.Value = 1;
+			if (MatchCutSustainCheck.Checked && MatchCutLuckyDipCheck.Checked)
+				(sender != MatchCutLuckyDipCheck ? MatchCutLuckyDipCheck : MatchCutSustainCheck).Checked = false;
 
 			PreviewBeepWaveFormCombo.Enabled = PreviewBeepEngineCombo.SelectedIndex == 2;
 			SetStackAndTimeUnremappingEnabled();
@@ -34890,13 +34990,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public RestrictLengthModeType RestrictKeyframesLengthMode {
 			get {
-				return RestrictKeyframesMinLengthRadio.Checked ? RestrictLengthModeType.MIN_LENGTH :
+				return UnrestrictKeyframesLengthRadio.Checked ? RestrictLengthModeType.UNRESTRICTED :
 					RestrictKeyframesFixedLengthRadio.Checked ? RestrictLengthModeType.FIXED_LENGTH :
-					RestrictLengthModeType.UNRESTRICTED;
+					RestrictLengthModeType.MIN_LENGTH;
 			}
 			set {
-				UnrestrictLengthRadio.Related.Selected = value == RestrictLengthModeType.MIN_LENGTH ? RestrictKeyframesMinLengthRadio :
-					value == RestrictLengthModeType.FIXED_LENGTH ? RestrictKeyframesFixedLengthRadio : UnrestrictKeyframesLengthRadio;
+				UnrestrictLengthRadio.Related.Selected = value == RestrictLengthModeType.UNRESTRICTED ? UnrestrictKeyframesLengthRadio :
+					value == RestrictLengthModeType.FIXED_LENGTH ? RestrictKeyframesFixedLengthRadio : RestrictKeyframesMinLengthRadio;
 			}
 		}
 
@@ -35836,7 +35936,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void SetCheckedEnabled_MidiTrackListView() {
 			int checkedMidiTrackCount = MidiTrackListView.CheckedItems.Count;
-			MidiAutoLayoutTracksGroup.Enabled = AudioStackCheck.Enabled = VideoStackCheck.Enabled = checkedMidiTrackCount >= 2;
 			SetStackAndTimeUnremappingEnabled();
 			MidiTrackSelectInfo.Text = MidiTrackSingleSelectRadio.Checked ? Lang.str.midi_channel_setting :
 				string.Format(checkedMidiTrackCount == 1 ? Lang.str.select_midi_track_count_info : Lang.str.select_midi_tracks_count_info, checkedMidiTrackCount);
@@ -35994,7 +36093,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void SetStackAndTimeUnremappingEnabled() {
-			MidiAutoLayoutTracksGroup.Enabled = AudioStackCheck.Enabled = VideoStackCheck.Enabled = MidiTrackListView.CheckedItems.Count >= 2;
+			bool isMultiMidiTracksSelected = MidiTrackListView.CheckedItems.Count >= 2;
+			AudioStackCheck.Enabled = VideoStackCheck.Enabled = isMultiMidiTracksSelected;
+			MidiAutoLayoutTracksGroup.Enabled = isMultiMidiTracksSelected || VideoMultitrackForChordsCheck.Checked;
 
 			AudioTimeUnremappingCheck.Status = VideoTimeUnremappingCheck.Status = MultiSourceCombTabs.SelectedIndex == 0 ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
 

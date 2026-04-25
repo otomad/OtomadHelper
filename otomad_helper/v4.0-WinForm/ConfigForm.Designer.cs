@@ -144,7 +144,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutOrderReversedRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MatchCutOrderShuffleRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MatchCutLoopCheck = new System.Windows.Forms.CheckBox();
-			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+			this.MatchCutRepeatPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.MatchCutRepeatLbl = new System.Windows.Forms.Label();
 			this.MatchCutRepeatBox = new System.Windows.Forms.NumericUpDown();
 			this.MatchCutApplyEffectsByRoundCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
@@ -321,10 +321,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab = new System.Windows.Forms.TabPage();
 			this.VideoParamsGroup = new System.Windows.Forms.GroupBox();
 			this.VideoParamsTable = new System.Windows.Forms.TableLayoutPanel();
-			this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
-			this.VideoFadeSetAsTimecodeRadio = new System.Windows.Forms.RadioButton();
-			this.VideoFadeSetAsPercentRadio = new System.Windows.Forms.RadioButton();
-			this.VideoParamsPresetsBtn = new System.Windows.Forms.Button();
 			this.flowLayoutPanel13 = new System.Windows.Forms.FlowLayoutPanel();
 			this.UnrestrictKeyframesLengthRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.RestrictKeyframesMinLengthRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
@@ -381,6 +377,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoStartVerticalTransBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
 			this.VideoEndVerticalTransLbl = new System.Windows.Forms.Label();
 			this.VideoEndVerticalTransBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
+			this.VideoFadeSetAsTimecodeRadio = new System.Windows.Forms.RadioButton();
+			this.VideoFadeSetAsPercentRadio = new System.Windows.Forms.RadioButton();
+			this.VideoParamsPresetsBtn = new System.Windows.Forms.Button();
 			this.VideoEffectsGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
 			this.VideoEffectLbl = new System.Windows.Forms.Label();
@@ -629,7 +629,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutTab.SuspendLayout();
 			this.MatchCutPanel.SuspendLayout();
 			this.MatchCutOrderPanel.SuspendLayout();
-			this.tableLayoutPanel5.SuspendLayout();
+			this.MatchCutRepeatPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MatchCutRepeatBox)).BeginInit();
 			this.MatchCutSustainPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MatchCutSustainCacheCapacityBox)).BeginInit();
@@ -685,9 +685,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab.SuspendLayout();
 			this.VideoParamsGroup.SuspendLayout();
 			this.VideoParamsTable.SuspendLayout();
-			this.tableLayoutPanel9.SuspendLayout();
 			this.flowLayoutPanel13.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.RestrictKeyframesLengthBox)).BeginInit();
+			this.tableLayoutPanel9.SuspendLayout();
 			this.VideoEffectsGroup.SuspendLayout();
 			this.tableLayoutPanel8.SuspendLayout();
 			this.VideoVelocityGroup.SuspendLayout();
@@ -2071,7 +2071,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutPanel.AutoSize = true;
 			this.MatchCutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.MatchCutPanel.Controls.Add(this.MatchCutOrderPanel);
-			this.MatchCutPanel.Controls.Add(this.tableLayoutPanel5);
+			this.MatchCutPanel.Controls.Add(this.MatchCutRepeatPanel);
 			this.MatchCutPanel.Controls.Add(this.MatchCutApplyEffectsByRoundCheck);
 			this.MatchCutPanel.Controls.Add(this.MatchCutLuckyDipCheck);
 			this.MatchCutPanel.Controls.Add(this.MatchCutAccumulateHarmonicsCheck);
@@ -2164,23 +2164,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutLoopCheck.Text = "循环";
 			this.MatchCutLoopCheck.UseVisualStyleBackColor = true;
 			// 
-			// tableLayoutPanel5
+			// MatchCutRepeatPanel
 			// 
-			this.tableLayoutPanel5.AutoSize = true;
-			this.tableLayoutPanel5.ColumnCount = 2;
-			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel5.Controls.Add(this.MatchCutRepeatLbl, 0, 0);
-			this.tableLayoutPanel5.Controls.Add(this.MatchCutRepeatBox, 1, 0);
-			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Left;
-			this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 48);
-			this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-			this.tableLayoutPanel5.RowCount = 1;
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.tableLayoutPanel5.Size = new System.Drawing.Size(292, 44);
-			this.tableLayoutPanel5.TabIndex = 20;
+			this.MatchCutRepeatPanel.AutoSize = true;
+			this.MatchCutRepeatPanel.ColumnCount = 2;
+			this.MatchCutRepeatPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.MatchCutRepeatPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.MatchCutRepeatPanel.Controls.Add(this.MatchCutRepeatLbl, 0, 0);
+			this.MatchCutRepeatPanel.Controls.Add(this.MatchCutRepeatBox, 1, 0);
+			this.MatchCutRepeatPanel.Dock = System.Windows.Forms.DockStyle.Left;
+			this.MatchCutRepeatPanel.Location = new System.Drawing.Point(3, 48);
+			this.MatchCutRepeatPanel.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.MatchCutRepeatPanel.Name = "MatchCutRepeatPanel";
+			this.MatchCutRepeatPanel.RowCount = 1;
+			this.MatchCutRepeatPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.MatchCutRepeatPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.MatchCutRepeatPanel.Size = new System.Drawing.Size(292, 44);
+			this.MatchCutRepeatPanel.TabIndex = 20;
 			// 
 			// MatchCutRepeatLbl
 			// 
@@ -2292,6 +2292,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// MatchCutSustainCacheCapacityBox
 			// 
 			this.MatchCutSustainCacheCapacityBox.Location = new System.Drawing.Point(201, 3);
+			this.MatchCutSustainCacheCapacityBox.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
 			this.MatchCutSustainCacheCapacityBox.Minimum = new decimal(new int[] {
             1,
             0,
@@ -4730,71 +4735,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoParamsTable.Size = new System.Drawing.Size(986, 1466);
 			this.VideoParamsTable.TabIndex = 0;
 			// 
-			// tableLayoutPanel9
-			// 
-			this.tableLayoutPanel9.AutoSize = true;
-			this.tableLayoutPanel9.ColumnCount = 4;
-			this.VideoParamsTable.SetColumnSpan(this.tableLayoutPanel9, 3);
-			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel9.Controls.Add(this.VideoFadeSetAsTimecodeRadio, 3, 0);
-			this.tableLayoutPanel9.Controls.Add(this.VideoFadeSetAsPercentRadio, 2, 0);
-			this.tableLayoutPanel9.Controls.Add(this.VideoParamsPresetsBtn, 0, 0);
-			this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel9.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
-			this.tableLayoutPanel9.MaximumSize = new System.Drawing.Size(0, 58);
-			this.tableLayoutPanel9.Name = "tableLayoutPanel9";
-			this.tableLayoutPanel9.RowCount = 1;
-			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel9.Size = new System.Drawing.Size(986, 54);
-			this.tableLayoutPanel9.TabIndex = 0;
-			// 
-			// VideoFadeSetAsTimecodeRadio
-			// 
-			this.VideoFadeSetAsTimecodeRadio.AutoSize = true;
-			this.VideoFadeSetAsTimecodeRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeSetAsTimecodeRadio.Location = new System.Drawing.Point(794, 3);
-			this.VideoFadeSetAsTimecodeRadio.Name = "VideoFadeSetAsTimecodeRadio";
-			this.VideoFadeSetAsTimecodeRadio.Size = new System.Drawing.Size(189, 48);
-			this.VideoFadeSetAsTimecodeRadio.TabIndex = 4;
-			this.VideoFadeSetAsTimecodeRadio.Text = "设定为时间码";
-			this.VideoFadeSetAsTimecodeRadio.UseVisualStyleBackColor = true;
-			this.VideoFadeSetAsTimecodeRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
-			// 
-			// VideoFadeSetAsPercentRadio
-			// 
-			this.VideoFadeSetAsPercentRadio.AutoSize = true;
-			this.VideoFadeSetAsPercentRadio.Checked = true;
-			this.VideoFadeSetAsPercentRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeSetAsPercentRadio.Location = new System.Drawing.Point(599, 3);
-			this.VideoFadeSetAsPercentRadio.Name = "VideoFadeSetAsPercentRadio";
-			this.VideoFadeSetAsPercentRadio.Size = new System.Drawing.Size(189, 48);
-			this.VideoFadeSetAsPercentRadio.TabIndex = 3;
-			this.VideoFadeSetAsPercentRadio.TabStop = true;
-			this.VideoFadeSetAsPercentRadio.Text = "设定为百分比";
-			this.VideoFadeSetAsPercentRadio.UseVisualStyleBackColor = true;
-			this.VideoFadeSetAsPercentRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
-			// 
-			// VideoParamsPresetsBtn
-			// 
-			this.VideoParamsPresetsBtn.AutoSize = true;
-			this.VideoParamsPresetsBtn.Dock = System.Windows.Forms.DockStyle.Left;
-			this.VideoParamsPresetsBtn.Location = new System.Drawing.Point(3, 3);
-			this.VideoParamsPresetsBtn.MaximumSize = new System.Drawing.Size(800, 48);
-			this.VideoParamsPresetsBtn.Name = "VideoParamsPresetsBtn";
-			this.VideoParamsPresetsBtn.Padding = new System.Windows.Forms.Padding(0, 0, 22, 0);
-			this.VideoParamsPresetsBtn.Size = new System.Drawing.Size(158, 48);
-			this.VideoParamsPresetsBtn.TabIndex = 1;
-			this.VideoParamsPresetsBtn.Text = "预设";
-			this.VideoParamsPresetsBtn.UseVisualStyleBackColor = true;
-			this.VideoParamsPresetsBtn.Click += new System.EventHandler(this.VideoParamsPresetsBtn_Click);
-			this.VideoParamsPresetsBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.TrackLegatoBtn_Paint);
-			this.VideoParamsPresetsBtn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseDownMapToClick);
-			this.VideoParamsPresetsBtn.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseUpMapToClick);
-			// 
 			// flowLayoutPanel13
 			// 
 			this.flowLayoutPanel13.AutoSize = true;
@@ -5923,6 +5863,71 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
             0,
             0,
             0});
+			// 
+			// tableLayoutPanel9
+			// 
+			this.tableLayoutPanel9.AutoSize = true;
+			this.tableLayoutPanel9.ColumnCount = 4;
+			this.VideoParamsTable.SetColumnSpan(this.tableLayoutPanel9, 3);
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel9.Controls.Add(this.VideoFadeSetAsTimecodeRadio, 3, 0);
+			this.tableLayoutPanel9.Controls.Add(this.VideoFadeSetAsPercentRadio, 2, 0);
+			this.tableLayoutPanel9.Controls.Add(this.VideoParamsPresetsBtn, 0, 0);
+			this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel9.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel9.MaximumSize = new System.Drawing.Size(0, 58);
+			this.tableLayoutPanel9.Name = "tableLayoutPanel9";
+			this.tableLayoutPanel9.RowCount = 1;
+			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel9.Size = new System.Drawing.Size(986, 54);
+			this.tableLayoutPanel9.TabIndex = 0;
+			// 
+			// VideoFadeSetAsTimecodeRadio
+			// 
+			this.VideoFadeSetAsTimecodeRadio.AutoSize = true;
+			this.VideoFadeSetAsTimecodeRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeSetAsTimecodeRadio.Location = new System.Drawing.Point(794, 3);
+			this.VideoFadeSetAsTimecodeRadio.Name = "VideoFadeSetAsTimecodeRadio";
+			this.VideoFadeSetAsTimecodeRadio.Size = new System.Drawing.Size(189, 48);
+			this.VideoFadeSetAsTimecodeRadio.TabIndex = 4;
+			this.VideoFadeSetAsTimecodeRadio.Text = "设定为时间码";
+			this.VideoFadeSetAsTimecodeRadio.UseVisualStyleBackColor = true;
+			this.VideoFadeSetAsTimecodeRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
+			// 
+			// VideoFadeSetAsPercentRadio
+			// 
+			this.VideoFadeSetAsPercentRadio.AutoSize = true;
+			this.VideoFadeSetAsPercentRadio.Checked = true;
+			this.VideoFadeSetAsPercentRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeSetAsPercentRadio.Location = new System.Drawing.Point(599, 3);
+			this.VideoFadeSetAsPercentRadio.Name = "VideoFadeSetAsPercentRadio";
+			this.VideoFadeSetAsPercentRadio.Size = new System.Drawing.Size(189, 48);
+			this.VideoFadeSetAsPercentRadio.TabIndex = 3;
+			this.VideoFadeSetAsPercentRadio.TabStop = true;
+			this.VideoFadeSetAsPercentRadio.Text = "设定为百分比";
+			this.VideoFadeSetAsPercentRadio.UseVisualStyleBackColor = true;
+			this.VideoFadeSetAsPercentRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
+			// 
+			// VideoParamsPresetsBtn
+			// 
+			this.VideoParamsPresetsBtn.AutoSize = true;
+			this.VideoParamsPresetsBtn.Dock = System.Windows.Forms.DockStyle.Left;
+			this.VideoParamsPresetsBtn.Location = new System.Drawing.Point(3, 3);
+			this.VideoParamsPresetsBtn.MaximumSize = new System.Drawing.Size(800, 48);
+			this.VideoParamsPresetsBtn.Name = "VideoParamsPresetsBtn";
+			this.VideoParamsPresetsBtn.Padding = new System.Windows.Forms.Padding(0, 0, 22, 0);
+			this.VideoParamsPresetsBtn.Size = new System.Drawing.Size(158, 48);
+			this.VideoParamsPresetsBtn.TabIndex = 1;
+			this.VideoParamsPresetsBtn.Text = "预设";
+			this.VideoParamsPresetsBtn.UseVisualStyleBackColor = true;
+			this.VideoParamsPresetsBtn.Click += new System.EventHandler(this.VideoParamsPresetsBtn_Click);
+			this.VideoParamsPresetsBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.TrackLegatoBtn_Paint);
+			this.VideoParamsPresetsBtn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseDownMapToClick);
+			this.VideoParamsPresetsBtn.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseUpMapToClick);
 			// 
 			// VideoEffectsGroup
 			// 
@@ -9287,8 +9292,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutPanel.PerformLayout();
 			this.MatchCutOrderPanel.ResumeLayout(false);
 			this.MatchCutOrderPanel.PerformLayout();
-			this.tableLayoutPanel5.ResumeLayout(false);
-			this.tableLayoutPanel5.PerformLayout();
+			this.MatchCutRepeatPanel.ResumeLayout(false);
+			this.MatchCutRepeatPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MatchCutRepeatBox)).EndInit();
 			this.MatchCutSustainPanel.ResumeLayout(false);
 			this.MatchCutSustainPanel.PerformLayout();
@@ -9391,11 +9396,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoParamsGroup.PerformLayout();
 			this.VideoParamsTable.ResumeLayout(false);
 			this.VideoParamsTable.PerformLayout();
-			this.tableLayoutPanel9.ResumeLayout(false);
-			this.tableLayoutPanel9.PerformLayout();
 			this.flowLayoutPanel13.ResumeLayout(false);
 			this.flowLayoutPanel13.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.RestrictKeyframesLengthBox)).EndInit();
+			this.tableLayoutPanel9.ResumeLayout(false);
+			this.tableLayoutPanel9.PerformLayout();
 			this.VideoEffectsGroup.ResumeLayout(false);
 			this.VideoEffectsGroup.PerformLayout();
 			this.tableLayoutPanel8.ResumeLayout(false);
@@ -9970,7 +9975,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.CheckBox MatchCutLoopCheck;
 		public System.Windows.Forms.CheckBox MatchCutLuckyDipCheck;
 		public RememberedCheckBox MatchCutApplyEffectsByRoundCheck;
-		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+		public System.Windows.Forms.TableLayoutPanel MatchCutRepeatPanel;
 		public System.Windows.Forms.Label MatchCutRepeatLbl;
 		public System.Windows.Forms.NumericUpDown MatchCutRepeatBox;
 		public System.Windows.Forms.FlowLayoutPanel LuckyDipPanel;
