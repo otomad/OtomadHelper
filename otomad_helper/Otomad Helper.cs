@@ -217,9 +217,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			set { configIni.Write("LastMidiDirectory", value, "Source"); }
 		}
 		/**<summary>堆　　叠</summary>*/ private bool IsStack { get { return AConfig && AConfigStack || VConfig && VConfigStack; } }
+		/**<summary>移动光标</summary>*/ private MoveCursorAfterCompletion MoveCursorAfterCompletion { get { return configForm.MoveCursorAfterCompletion; } }
 		/**<summary>轨道分组</summary>*/ internal GroupTrackBy GroupTrackBy { get { return configForm.GroupTrackBy == GroupTrackBy.OFF ? GroupTrackBy.OFF : YtpConfig || IsStack ? GroupTrackBy.SESSION : configForm.GroupTrackBy; } }
 		/**<summary>折叠分组</summary>*/ private bool CollapseTrackGroups { get { return configForm.CollapseTrackGroupCheck.Checked; } }
-		/**<summary>移动光标</summary>*/ private MoveCursorAfterCompletion MoveCursorAfterCompletion { get { return configForm.MoveCursorAfterCompletion; } }
+		/**<summary>重用分组</summary>*/ private bool TrackGroupReuse { get { return configForm.TrackGroupReuseCheck.Checked; } }
+		/**<summary>总线轨道</summary>*/ internal GroupTrackBy DispatchAudioBusTrackBy { get { return configForm.DispatchAudioBusTrackBy == GroupTrackBy.OFF ? GroupTrackBy.OFF : YtpConfig ? GroupTrackBy.SESSION : configForm.DispatchAudioBusTrackBy; } }
+		/**<summary>重用总线</summary>*/ private bool AudioBusTrackReuse { get { return configForm.AudioBusTrackReuseCheck.Checked; } }
 		#endregion
 
 		#region 多素材属性
@@ -1234,10 +1237,28 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 准备轨道
 			bool sonarMode = currentChannel.IsDrumKit && SonarConfig;
 			int topIndex = GenerateBelowTopAdjustmentTrack ? GetFirstNotAdjustmentTrackIndex() : 0;
-			TrackHelper<object, object> trackHelper = TrackHelper.New(this,
-				!AConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsAPreferredTrack ? AConfigPreferredTrack.Track as object : topIndex as object,
-				!VConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsVPreferredTrack ? VConfigPreferredTrack.Track as object : topIndex as object,
-				!AConfigMultitrack, !(VConfigMultitrack || sonarMode || SheetConfig), name);
+			string reusedTrackGroupName = !TrackGroupReuse ? null : GroupTrackBy == GroupTrackBy.TRACK ? name : GroupTrackBy == GroupTrackBy.SESSION ? midi.Title : null;
+			Func<object, TrackGroup> GetGroupOfRefTrack = refTrack => GetTrackGroupByTrack(refTrack is Track ? (Track)refTrack : refTrack is int ? vegas.Project.Tracks.ElementClamppedAtOrDefault((int)refTrack) : null);;
+			object refAudioTrack = !AConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsAPreferredTrack ? AConfigPreferredTrack.Track as object : topIndex as object;
+			object refVideoTrack = !VConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsVPreferredTrack ? VConfigPreferredTrack.Track as object : topIndex as object;
+			if (TrackGroupReuse && !string.IsNullOrEmpty(reusedTrackGroupName)) {
+				TrackGroup refTrackGroup = GetTrackGroupByName(reusedTrackGroupName);
+				if (refTrackGroup != null && refTrackGroup.Count != 0) {
+					if (refAudioTrack != null) {
+						TrackGroup mayUsedTrackGroup = GetGroupOfRefTrack(refAudioTrack);
+						if (mayUsedTrackGroup == null || mayUsedTrackGroup.Name != reusedTrackGroupName)
+							refAudioTrack = refTrackGroup.First().Index;
+					}
+					if (refVideoTrack != null) {
+						TrackGroup mayUsedTrackGroup = GetGroupOfRefTrack(refVideoTrack);
+						if (mayUsedTrackGroup == null || mayUsedTrackGroup.Name != reusedTrackGroupName)
+							refVideoTrack = refTrackGroup.First().Index;
+					}
+				}
+			}
+			TrackHelper trackHelper = new TrackHelper(this,
+				refAudioTrack, refVideoTrack,
+				!AConfigMultitrack, !(VConfigMultitrack || sonarMode || SheetConfig), name, name);
 			bool requireTwoKeys = VConfigStartSize != VConfigEndSize || // 如果为起始尺寸与终止尺寸大小相等，则没有必要打两个关键帧了。
 				VConfigStartRotation != VConfigEndRotation ||
 				VConfigStartHTrans != VConfigEndHTrans ||
@@ -1919,10 +1940,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			#region 生成五线谱
 			if (MidiConfigTracks.CurrentChannel == 0) {
+				bool useTrackGroupReference = GroupTrackBy == GroupTrackBy.TRACK && TrackGroupReuse;
 				if (SheetConfigGenerateStaffClef) {
 					if (Plugin.picInPic == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); goto endGenerateClef; }
 					if (Plugin.bzMasking == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.bz_masking)); goto endGenerateClef; }
-					VideoTrack sheetTrack = trackHelper.AddVideoTrackAfter();
+					VideoTrack sheetTrack = trackHelper.AddVideoTrackAfter(useTrackGroupReference);
 					VideoEvent clef = AddClef(SheetConfigCelf, sheetTrack, songStart, songLength, SheetConfigClefColor);
 					Effect effect2 = clef.Effects.AddEffect(Plugin.picInPic);
 					double paddingLeft = (double)SheetConfigPaddingLeft / virtualWidth;
@@ -1938,7 +1960,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (SheetConfigGenerateStaffLines) {
 					if (Plugin.crop == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.crop)); return false; }
 					if (Plugin.mirror == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.mirror)); return false; }
-					VideoTrack sheetTrack = trackHelper.AddVideoTrackAfter();
+					VideoTrack sheetTrack = trackHelper.AddVideoTrackAfter(useTrackGroupReference);
 					VideoEvent videoEvent = sheetTrack.AddVideoEvent(Timecode.FromMilliseconds(songStart), Timecode.FromMilliseconds(songLength));
 					Media solidColor = new Media(Plugin.solidColor);
 					videoEvent.AddTake(solidColor.GetVideoStreamByIndex(0));
@@ -3103,6 +3125,34 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		/// <summary>
+		/// 根据轨道组名获取该轨道组。
+		/// </summary>
+		/// <remarks>
+		/// 如果未找到该轨道组或轨道组名为空，则返回 null。
+		/// </remarks>
+		public TrackGroup GetTrackGroupByName(string name) {
+			if (string.IsNullOrEmpty(name)) return null;
+			return vegas.Project.TrackGroups.FirstOrDefault(group => group.Name == name);
+		}
+
+		public TrackGroup GetTrackGroupByTrack(Track track) {
+			if (track == null) return null;
+			return vegas.Project.TrackGroups.FirstOrDefault(group => group.Contains(track));
+		}
+
+		public TrackGroup GroupTracksIfRequire(IEnumerable<Track> tracks, string name) {
+			if (tracks.IsEmpty()) return null;
+			if (string.IsNullOrEmpty(name) || !TrackGroupReuse) return GroupTracks(tracks, name);
+			TrackGroup aPossibleResultTrackGroup = null;
+			if (tracks.All(track => {
+				TrackGroup trackGroup = GetTrackGroupByTrack(track);
+				if (aPossibleResultTrackGroup == null) aPossibleResultTrackGroup = trackGroup;
+				return trackGroup != null && trackGroup.Name == name;
+			})) return aPossibleResultTrackGroup;
+			return GroupTracks(tracks, name);
+		}
+
+		/// <summary>
 		/// 转换音乐节拍。
 		/// </summary>
 		/// <param name="audioEvent">单个音乐音频事件。</param>
@@ -3349,7 +3399,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						originalClip.Remove();
 			if (GroupTrackBy == GroupTrackBy.SESSION || GroupTrackBy != GroupTrackBy.OFF && (YtpConfig || IsStack)) {
 				string trackGroupName = midi == null || YtpConfig ? null : midi.Title;
-				GroupTracks(generatedTracks, trackGroupName);
+				GroupTracksIfRequire(generatedTracks, trackGroupName);
 			}
 			if (!SelectAllGeneratedEvents && GroupTrackBy != GroupTrackBy.OFF) // 必须严格按照顺序执行才不会出错，所以看起来逻辑很绕。
 				UnselectAllTrackGroups();
@@ -4229,6 +4279,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return collection.ElementAtOrDefault(EntryPoint.FloorMod(index, collection.Count(), out looped));
 		}
 
+		public static T ElementClamppedAtOrDefault<T>(this IEnumerable<T> collection, int index) {
+			if (collection.IsEmpty()) return default(T);
+			return collection.ElementAtOrDefault(EntryPoint.Clamp(index, 0, collection.Count() - 1));
+		}
+
 		public static bool Selected(this TabPage tabPage) {
 			TabControl tabControl = tabPage.Parent as TabControl;
 			if (tabControl == null) return false;
@@ -4256,6 +4311,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 
 			return resultIndex != -1 ? list[resultIndex] : default(T);
+		}
+
+		public static bool IsDisposed(this Track track) {
+			return track == null || !EntryPoint.instance.vegas.Project.Tracks.Contains(track);
+		}
+
+		public static bool IsDisposed(this TrackGroup trackGroup) {
+			return trackGroup == null || !EntryPoint.instance.vegas.Project.TrackGroups.Contains(trackGroup);
 		}
 	}
 
@@ -12554,35 +12617,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		//void ReadFromInfo(AutoLayoutTracksInfos.BaseAutoLayoutTracksInfo info = null);
 	}
 
-	public static class TrackHelper {
-		/// <summary>
-		/// 一个简单的生成轨道辅助类。直接放弃泛型成弱类型语言了。
-		/// </summary>
-		/// <param name="entryPoint">Vegas 入口类。</param>
-		/// <param name="audio">音频轨道参照。可以是现有轨道、表示序号的整型数字、空。</param>
-		/// <param name="video">视频轨道参照。可以是现有轨道、表示序号的整型数字、空。</param>
-		/// <param name="audioSingleTrack">音频是否仅生成单轨？</param>
-		/// <param name="videoSingleTrack">视频是否仅生成单轨？</param>
-		/// <param name="name">轨道名称。</param>
-		/// <returns></returns>
-		public static TrackHelper<A, V> New<A, V>(EntryPoint entryPoint, A audio, V video, bool audioSingleTrack, bool videoSingleTrack, string name = "") {
-			return new TrackHelper<A, V>(entryPoint, audio, video, audioSingleTrack, videoSingleTrack, name, name);
-		}
-	}
-
 	/// <summary>
 	/// 生成轨道辅助类。
 	/// 用于自动处理新增轨道、剪辑重叠、轨道位置等麻烦问题。
 	/// </summary>
 	/// <typeparam name="A">音频轨道参照类型。可以是现有轨道或表示序号的整型数字。</typeparam>
 	/// <typeparam name="V">视频轨道参照类型。可以是现有轨道或表示序号的整型数字。</typeparam>
-	public class TrackHelper<A, V> : IDisposable {
+	public class TrackHelper : IDisposable {
 		private readonly EntryPoint entryPoint;
 		private Vegas vegas { get { return entryPoint.vegas; } }
 		private Tracks Tracks { get { return vegas.Project.Tracks; } }
 		private GroupTrackBy GroupTrackBy { get { return entryPoint.GroupTrackBy; } }
-		private A audio;
-		private V video;
+		private object audio;
+		private object video;
+		//private readonly string reusedTrackGroupName;
+		//private bool reusedTrackGroupNameValid { get { return !string.IsNullOrEmpty(reusedTrackGroupName); } }
 		public List<AudioTrack> audioTracks = new List<AudioTrack>();
 		public List<VideoTrack> videoTracks = new List<VideoTrack>();
 		private bool NoAudio { get { return audio == null; } }
@@ -12606,12 +12655,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <param name="entryPoint">Vegas 入口类。</param>
 		/// <param name="audio">音频轨道参照。可以是现有轨道、表示序号的整型数字、空。</param>
 		/// <param name="video">视频轨道参照。可以是现有轨道、表示序号的整型数字、空。</param>
+		/// <param name="reusedTrackGroupName">拟重用的轨道组名称参照。</param>
 		/// <param name="audioSingleTrack">音频是否仅生成单轨？</param>
 		/// <param name="videoSingleTrack">视频是否仅生成单轨？</param>
 		/// <param name="audioName">音频轨道名称。</param>
 		/// <param name="videoName">视频轨道名称。</param>
 		/// <exception cref="NullReferenceException">传入的 audio 或 video 类型不合法。</exception>
-		public TrackHelper(EntryPoint entryPoint, A audio, V video, bool audioSingleTrack, bool videoSingleTrack, string audioName = "", string videoName = "") {
+		public TrackHelper(EntryPoint entryPoint, object audio, object video, bool audioSingleTrack, bool videoSingleTrack, string audioName = "", string videoName = "") {
 			this.entryPoint = entryPoint;
 			this.audio = audio;
 			this.video = video;
@@ -12675,44 +12725,44 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 音频参照索引值加一。
 		/// </summary>
 		private void AudioIndexAddOne() {
-			if (!isAudioAboveVideo && audio is int) audio = (A)(object)((int)(object)audio + 1);
+			if (!isAudioAboveVideo && audio is int) audio = (int)audio + 1;
 		}
 
 		/// <summary>
 		/// 视频参照索引值加一。
 		/// </summary>
 		private void VideoIndexAddOne() {
-			if (isAudioAboveVideo && video is int) video = (V)(object)((int)(object)video + 1);
+			if (isAudioAboveVideo && video is int) video = (int)video + 1;
 		}
 
 		/// <summary>
 		/// 在之后新增一条音频轨道。
 		/// </summary>
 		/// <returns>新增的音频轨道。</returns>
-		public AudioTrack AddAudioTrackAfter() {
+		public AudioTrack AddAudioTrackAfter(bool useTrackGroupReference = true) {
 			VideoIndexAddOne();
-			return audioTracks.Count == 0 ? _AddTrack<AudioTrack>(audio as int?, true) : _AddTrack<AudioTrack>(audioTracks.LastOrDefault().Index + 1, true);
+			return audioTracks.Count == 0 ? _AddTrack<AudioTrack>(audio as int?, true, useTrackGroupReference) : _AddTrack<AudioTrack>(audioTracks.LastOrDefault().Index + 1, true, useTrackGroupReference);
 		}
 
 		/// <summary>
 		/// 在之前新增一条视频轨道。
 		/// </summary>
 		/// <returns>新增的视频轨道。</returns>
-		public VideoTrack AddVideoTrackBefore() {
+		public VideoTrack AddVideoTrackBefore(bool useTrackGroupReference = true) {
 			AudioIndexAddOne();
-			return videoTracks.Count == 0 ? _AddTrack<VideoTrack>(video as int?, false) : _AddTrack<VideoTrack>(videoTracks.LastOrDefault().Index, false);
+			return videoTracks.Count == 0 ? _AddTrack<VideoTrack>(video as int?, false, useTrackGroupReference) : _AddTrack<VideoTrack>(videoTracks.LastOrDefault().Index, false, useTrackGroupReference);
 		}
 
 		/// <summary>
 		/// 在之后新增一条视频轨道。
 		/// </summary>
 		/// <returns>新增的视频轨道。</returns>
-		public VideoTrack AddVideoTrackAfter() {
+		public VideoTrack AddVideoTrackAfter(bool useTrackGroupReference = true) {
 			AudioIndexAddOne();
-			return videoTracks.Count == 0 ? _AddTrack<VideoTrack>(video as int?, true) : _AddTrack<VideoTrack>(videoTracks[0].Index + 1, true);
+			return videoTracks.Count == 0 ? _AddTrack<VideoTrack>(video as int?, true, useTrackGroupReference) : _AddTrack<VideoTrack>(videoTracks[0].Index + 1, true, useTrackGroupReference);
 		}
 
-		protected TTrack _AddTrack<TTrack>(int? index, bool after) where TTrack : Track {
+		protected TTrack _AddTrack<TTrack>(int? index, bool after, bool useTrackGroupReference) where TTrack : Track {
 			bool isAudio = typeof(TTrack) == typeof(AudioTrack);
 			Track track = null;
 			try {
@@ -12730,7 +12780,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			} finally {
 				if (track != null) {
 					Tracks.Add(track);
-					if (GroupTrackBy == GroupTrackBy.OFF)
+					if (GroupTrackBy == GroupTrackBy.OFF || !useTrackGroupReference)
 						entryPoint.UngroupTracks(track);
 				}
 			}
@@ -12808,36 +12858,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			SetTopmostTrackIndex(track.Index);
 			return trackEvent;
 		}
-
-		/*/// <summary>
-		/// 添加示例轨道事件。
-		/// </summary>
-		/// <typeparam name="T">轨道事件类型。</typeparam>
-		/// <param name="start">开始时间。</param>
-		/// <param name="length">长度。</param>
-		/// <param name="name">示例事件名称。</param>
-		/// <returns>示例轨道事件。</returns>
-		public T AddSampleEvent<T>(Timecode start, Timecode length, string name = EXAMPLE_EVENT_NAME) where T : TrackEvent {
-			T sampleEvent = AddEvent<T>(start, length, null, true);
-			if (sampleEvent == null) return null;
-			sampleEvent.Name = name;
-			return sampleEvent;
-		}
-
-		/// <summary>
-		/// 添加示例轨道事件。
-		/// </summary>
-		/// <typeparam name="T">轨道事件类型。</typeparam>
-		/// <param name="start">开始时间。</param>
-		/// <param name="name">示例事件名称。</param>
-		/// <returns>示例轨道事件。</returns>
-		public T AddSampleEvent<T>(T trackEvent, Timecode start, string name = EXAMPLE_EVENT_NAME) where T : TrackEvent {
-			int _index;
-			T sampleEvent = AddEvent(trackEvent, start, trackEvent.Length, out _index, null, true);
-			if (sampleEvent == null) return null;
-			sampleEvent.Name = name;
-			return sampleEvent;
-		}*/
 
 		/// <summary>
 		/// 查找一个可以容下剪辑的轨道。
@@ -13002,7 +13022,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			int? topIndex = topmostTrackIndex == int.MaxValue ? null : topmostTrackIndex as int?;
 			if (topIndex.HasValue && GroupTrackBy == GroupTrackBy.TRACK) {
 				string trackGroupName = !string.IsNullOrWhiteSpace(videoName) ? videoName : audioName;
-				entryPoint.GroupTracks(videoTracks.Cast<Track>().Concat(audioTracks.Cast<Track>()), trackGroupName);
+				entryPoint.GroupTracksIfRequire(videoTracks.Cast<Track>().Concat(audioTracks.Cast<Track>()), trackGroupName);
 			}
 			return topIndex;
 		}
@@ -13010,15 +13030,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		void IDisposable.Dispose() {
 			Dispose();
 		}
-
-		/*/// <summary>
-		/// 快速验证指定轨道事件是否是范例样本。
-		/// </summary>
-		/// <param name="trackEvent">要检测的轨道事件。</param>
-		/// <returns>该轨道事件是否是范例样本。</returns>
-		public static bool IsExampleEvent(TrackEvent trackEvent) {
-			return trackEvent.Name == EXAMPLE_EVENT_NAME;
-		}*/
 	}
 
 	partial class AutoLayoutTracksGridForm {
@@ -20254,7 +20265,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private EventState GetEventState(Timecode timecode, bool isNoteOff = false) {
 			if (!loopMode) return EventState.PASS;
-			Func<Timecode, int> Round = value => TrackHelper<object, object>.Round(value);
+			Func<Timecode, int> Round = value => TrackHelper.Round(value);
 			int current = Round(timecode),
 				loopRegionStart = Round(vegas.Transport.LoopRegionStart),
 				loopRegionEnd = Round(vegas.Transport.LoopRegionStart + vegas.Transport.LoopRegionLength);
@@ -22703,14 +22714,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ConsonantTab = new System.Windows.Forms.TabPage();
 			this.ShupelunkerTab = new System.Windows.Forms.TabPage();
 			this.SourceConfigGroup = new System.Windows.Forms.GroupBox();
-			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+			this.SourceConfigTablePanel = new System.Windows.Forms.TableLayoutPanel();
+			this.AudioBusTrackReuseCheck = new System.Windows.Forms.CheckBox();
+			this.flowLayoutPanel18 = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioBusTrackOffRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioBusTrackByTrackRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioBusTrackBySessionRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioBusTrackLbl = new System.Windows.Forms.Label();
+			this.flowLayoutPanel16 = new System.Windows.Forms.FlowLayoutPanel();
+			this.CollapseTrackGroupCheck = new System.Windows.Forms.CheckBox();
+			this.TrackGroupReuseCheck = new System.Windows.Forms.CheckBox();
 			this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
 			this.MoveCursorToOriginalRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MoveCursorToGenerateAtRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MoveCursorBeforeFirstNoteRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MoveCursorAfterLastNoteRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MoveCursorAfterCompletionLbl = new System.Windows.Forms.Label();
-			this.CollapseTrackGroupCheck = new System.Windows.Forms.CheckBox();
 			this.flowLayoutPanel12 = new System.Windows.Forms.FlowLayoutPanel();
 			this.TrackGroupOffRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.TrackGroupByTrackRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
@@ -23178,7 +23197,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LinearMapTab.SuspendLayout();
 			this.LinearMapPanel.SuspendLayout();
 			this.SourceConfigGroup.SuspendLayout();
-			this.tableLayoutPanel3.SuspendLayout();
+			this.SourceConfigTablePanel.SuspendLayout();
+			this.flowLayoutPanel18.SuspendLayout();
+			this.flowLayoutPanel16.SuspendLayout();
 			this.flowLayoutPanel8.SuspendLayout();
 			this.flowLayoutPanel12.SuspendLayout();
 			this.tableLayoutPanel4.SuspendLayout();
@@ -24314,7 +24335,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceConfigGroup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.MultiSourceConfigGroup.Controls.Add(this.MultiSourceCombTabs);
 			this.MultiSourceConfigGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.MultiSourceConfigGroup.Location = new System.Drawing.Point(8, 617);
+			this.MultiSourceConfigGroup.Location = new System.Drawing.Point(8, 754);
 			this.MultiSourceConfigGroup.Name = "MultiSourceConfigGroup";
 			this.MultiSourceConfigGroup.Padding = new System.Windows.Forms.Padding(8);
 			this.MultiSourceConfigGroup.Size = new System.Drawing.Size(1002, 455);
@@ -24926,12 +24947,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// SourceConfigGroup
 			//
 			this.SourceConfigGroup.AutoSize = true;
-			this.SourceConfigGroup.Controls.Add(this.tableLayoutPanel3);
+			this.SourceConfigGroup.Controls.Add(this.SourceConfigTablePanel);
 			this.SourceConfigGroup.Dock = System.Windows.Forms.DockStyle.Top;
 			this.SourceConfigGroup.Location = new System.Drawing.Point(8, 8);
 			this.SourceConfigGroup.Name = "SourceConfigGroup";
 			this.SourceConfigGroup.Padding = new System.Windows.Forms.Padding(8);
-			this.SourceConfigGroup.Size = new System.Drawing.Size(1002, 609);
+			this.SourceConfigGroup.Size = new System.Drawing.Size(1002, 746);
 			this.SourceConfigGroup.TabIndex = 1;
 			this.SourceConfigGroup.TabStop = false;
 			this.SourceConfigGroup.Text = "素材属性";
@@ -24939,39 +24960,162 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceConfigGroup.DragEnter += new System.Windows.Forms.DragEventHandler(this.OnDragEnter);
 			this.SourceConfigGroup.DragLeave += new System.EventHandler(this.OnDragLeave);
 			//
-			// tableLayoutPanel3
+			// SourceConfigTablePanel
 			//
-			this.tableLayoutPanel3.AutoSize = true;
-			this.tableLayoutPanel3.ColumnCount = 1;
-			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel8, 0, 7);
-			this.tableLayoutPanel3.Controls.Add(this.MoveCursorAfterCompletionLbl, 0, 6);
-			this.tableLayoutPanel3.Controls.Add(this.CollapseTrackGroupCheck, 0, 10);
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel12, 0, 9);
-			this.tableLayoutPanel3.Controls.Add(this.TrackGroupLbl, 0, 8);
-			this.tableLayoutPanel3.Controls.Add(this.ChooseSourceLbl, 0, 0);
-			this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 0, 1);
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel1, 0, 2);
-			this.tableLayoutPanel3.Controls.Add(this.GenerateAtLbl, 0, 3);
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel9, 0, 4);
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel5, 0, 5);
-			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel3.Location = new System.Drawing.Point(8, 40);
-			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-			this.tableLayoutPanel3.RowCount = 11;
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(986, 561);
-			this.tableLayoutPanel3.TabIndex = 1;
+			this.SourceConfigTablePanel.AutoSize = true;
+			this.SourceConfigTablePanel.ColumnCount = 1;
+			this.SourceConfigTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.SourceConfigTablePanel.Controls.Add(this.AudioBusTrackReuseCheck, 0, 13);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel18, 0, 12);
+			this.SourceConfigTablePanel.Controls.Add(this.AudioBusTrackLbl, 0, 11);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel16, 0, 10);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel8, 0, 7);
+			this.SourceConfigTablePanel.Controls.Add(this.MoveCursorAfterCompletionLbl, 0, 6);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel12, 0, 9);
+			this.SourceConfigTablePanel.Controls.Add(this.TrackGroupLbl, 0, 8);
+			this.SourceConfigTablePanel.Controls.Add(this.ChooseSourceLbl, 0, 0);
+			this.SourceConfigTablePanel.Controls.Add(this.tableLayoutPanel4, 0, 1);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel1, 0, 2);
+			this.SourceConfigTablePanel.Controls.Add(this.GenerateAtLbl, 0, 3);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel9, 0, 4);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel5, 0, 5);
+			this.SourceConfigTablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SourceConfigTablePanel.Location = new System.Drawing.Point(8, 40);
+			this.SourceConfigTablePanel.Name = "SourceConfigTablePanel";
+			this.SourceConfigTablePanel.RowCount = 14;
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.Size = new System.Drawing.Size(986, 698);
+			this.SourceConfigTablePanel.TabIndex = 1;
+			//
+			// AudioBusTrackReuseCheck
+			//
+			this.AudioBusTrackReuseCheck.AutoSize = true;
+			this.AudioBusTrackReuseCheck.Checked = true;
+			this.AudioBusTrackReuseCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.AudioBusTrackReuseCheck.Dock = System.Windows.Forms.DockStyle.Left;
+			this.AudioBusTrackReuseCheck.Location = new System.Drawing.Point(6, 659);
+			this.AudioBusTrackReuseCheck.Margin = new System.Windows.Forms.Padding(6, 3, 3, 3);
+			this.AudioBusTrackReuseCheck.Name = "AudioBusTrackReuseCheck";
+			this.AudioBusTrackReuseCheck.Size = new System.Drawing.Size(334, 36);
+			this.AudioBusTrackReuseCheck.TabIndex = 22;
+			this.AudioBusTrackReuseCheck.Text = "重用非空同名音频总线轨道";
+			this.AudioBusTrackReuseCheck.UseVisualStyleBackColor = true;
+			//
+			// flowLayoutPanel18
+			//
+			this.flowLayoutPanel18.AutoSize = true;
+			this.flowLayoutPanel18.Controls.Add(this.AudioBusTrackOffRadio);
+			this.flowLayoutPanel18.Controls.Add(this.AudioBusTrackByTrackRadio);
+			this.flowLayoutPanel18.Controls.Add(this.AudioBusTrackBySessionRadio);
+			this.flowLayoutPanel18.Dock = System.Windows.Forms.DockStyle.Top;
+			this.flowLayoutPanel18.Location = new System.Drawing.Point(3, 608);
+			this.flowLayoutPanel18.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+			this.flowLayoutPanel18.Name = "flowLayoutPanel18";
+			this.flowLayoutPanel18.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.flowLayoutPanel18.Size = new System.Drawing.Size(980, 48);
+			this.flowLayoutPanel18.TabIndex = 21;
+			//
+			// AudioBusTrackOffRadio
+			//
+			this.AudioBusTrackOffRadio.AutoSize = true;
+			this.AudioBusTrackOffRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioBusTrackOffRadio.Group = "AudioBusTrack";
+			this.AudioBusTrackOffRadio.Location = new System.Drawing.Point(3, 6);
+			this.AudioBusTrackOffRadio.Name = "AudioBusTrackOffRadio";
+			this.AudioBusTrackOffRadio.Size = new System.Drawing.Size(117, 36);
+			this.AudioBusTrackOffRadio.TabIndex = 0;
+			this.AudioBusTrackOffRadio.Text = "不分配";
+			this.AudioBusTrackOffRadio.UseVisualStyleBackColor = true;
+			//
+			// AudioBusTrackByTrackRadio
+			//
+			this.AudioBusTrackByTrackRadio.AutoSize = true;
+			this.AudioBusTrackByTrackRadio.Checked = true;
+			this.AudioBusTrackByTrackRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioBusTrackByTrackRadio.Group = "AudioBusTrack";
+			this.AudioBusTrackByTrackRadio.Location = new System.Drawing.Point(126, 6);
+			this.AudioBusTrackByTrackRadio.Name = "AudioBusTrackByTrackRadio";
+			this.AudioBusTrackByTrackRadio.Size = new System.Drawing.Size(230, 36);
+			this.AudioBusTrackByTrackRadio.TabIndex = 1;
+			this.AudioBusTrackByTrackRadio.TabStop = true;
+			this.AudioBusTrackByTrackRadio.Text = "按 MIDI 音轨分配";
+			this.AudioBusTrackByTrackRadio.UseVisualStyleBackColor = true;
+			//
+			// AudioBusTrackBySessionRadio
+			//
+			this.AudioBusTrackBySessionRadio.AutoSize = true;
+			this.AudioBusTrackBySessionRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioBusTrackBySessionRadio.Group = "AudioBusTrack";
+			this.AudioBusTrackBySessionRadio.Location = new System.Drawing.Point(362, 6);
+			this.AudioBusTrackBySessionRadio.Name = "AudioBusTrackBySessionRadio";
+			this.AudioBusTrackBySessionRadio.Size = new System.Drawing.Size(213, 36);
+			this.AudioBusTrackBySessionRadio.TabIndex = 2;
+			this.AudioBusTrackBySessionRadio.Text = "按任务会话分配";
+			this.AudioBusTrackBySessionRadio.UseVisualStyleBackColor = true;
+			//
+			// AudioBusTrackLbl
+			//
+			this.AudioBusTrackLbl.AutoSize = true;
+			this.AudioBusTrackLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioBusTrackLbl.Location = new System.Drawing.Point(4, 573);
+			this.AudioBusTrackLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
+			this.AudioBusTrackLbl.Name = "AudioBusTrackLbl";
+			this.AudioBusTrackLbl.Size = new System.Drawing.Size(978, 32);
+			this.AudioBusTrackLbl.TabIndex = 20;
+			this.AudioBusTrackLbl.Text = "音频总线轨道";
+			this.AudioBusTrackLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			//
+			// flowLayoutPanel16
+			//
+			this.flowLayoutPanel16.AutoSize = true;
+			this.flowLayoutPanel16.Controls.Add(this.CollapseTrackGroupCheck);
+			this.flowLayoutPanel16.Controls.Add(this.TrackGroupReuseCheck);
+			this.flowLayoutPanel16.Dock = System.Windows.Forms.DockStyle.Top;
+			this.flowLayoutPanel16.Location = new System.Drawing.Point(0, 517);
+			this.flowLayoutPanel16.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel16.Name = "flowLayoutPanel16";
+			this.flowLayoutPanel16.Padding = new System.Windows.Forms.Padding(3);
+			this.flowLayoutPanel16.Size = new System.Drawing.Size(986, 48);
+			this.flowLayoutPanel16.TabIndex = 19;
+			//
+			// CollapseTrackGroupCheck
+			//
+			this.CollapseTrackGroupCheck.AutoSize = true;
+			this.CollapseTrackGroupCheck.Checked = true;
+			this.CollapseTrackGroupCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.CollapseTrackGroupCheck.Dock = System.Windows.Forms.DockStyle.Left;
+			this.CollapseTrackGroupCheck.Location = new System.Drawing.Point(6, 6);
+			this.CollapseTrackGroupCheck.Name = "CollapseTrackGroupCheck";
+			this.CollapseTrackGroupCheck.Size = new System.Drawing.Size(286, 36);
+			this.CollapseTrackGroupCheck.TabIndex = 17;
+			this.CollapseTrackGroupCheck.Text = "默认情况下折叠轨道组";
+			this.CollapseTrackGroupCheck.UseVisualStyleBackColor = true;
+			//
+			// TrackGroupReuseCheck
+			//
+			this.TrackGroupReuseCheck.AutoSize = true;
+			this.TrackGroupReuseCheck.Checked = true;
+			this.TrackGroupReuseCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.TrackGroupReuseCheck.Dock = System.Windows.Forms.DockStyle.Left;
+			this.TrackGroupReuseCheck.Location = new System.Drawing.Point(298, 6);
+			this.TrackGroupReuseCheck.Name = "TrackGroupReuseCheck";
+			this.TrackGroupReuseCheck.Size = new System.Drawing.Size(262, 36);
+			this.TrackGroupReuseCheck.TabIndex = 18;
+			this.TrackGroupReuseCheck.Text = "重用非空同名轨道组";
+			this.TrackGroupReuseCheck.UseVisualStyleBackColor = true;
 			//
 			// flowLayoutPanel8
 			//
@@ -25049,19 +25193,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MoveCursorAfterCompletionLbl.TabIndex = 17;
 			this.MoveCursorAfterCompletionLbl.Text = "生成完成后将光标移动到";
 			this.MoveCursorAfterCompletionLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			//
-			// CollapseTrackGroupCheck
-			//
-			this.CollapseTrackGroupCheck.AutoSize = true;
-			this.CollapseTrackGroupCheck.Checked = true;
-			this.CollapseTrackGroupCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.CollapseTrackGroupCheck.Location = new System.Drawing.Point(6, 521);
-			this.CollapseTrackGroupCheck.Margin = new System.Windows.Forms.Padding(6, 4, 4, 4);
-			this.CollapseTrackGroupCheck.Name = "CollapseTrackGroupCheck";
-			this.CollapseTrackGroupCheck.Size = new System.Drawing.Size(286, 36);
-			this.CollapseTrackGroupCheck.TabIndex = 16;
-			this.CollapseTrackGroupCheck.Text = "默认情况下折叠轨道组";
-			this.CollapseTrackGroupCheck.UseVisualStyleBackColor = true;
 			//
 			// flowLayoutPanel12
 			//
@@ -25384,7 +25515,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ScoreTab.Location = new System.Drawing.Point(8, 46);
 			this.ScoreTab.Name = "ScoreTab";
 			this.ScoreTab.Padding = new System.Windows.Forms.Padding(8);
-			this.ScoreTab.Size = new System.Drawing.Size(1052, 1002);
+			this.ScoreTab.Size = new System.Drawing.Size(1052, 1000);
 			this.ScoreTab.TabIndex = 8;
 			this.ScoreTab.Text = "乐曲";
 			this.ScoreTab.UseVisualStyleBackColor = true;
@@ -25411,7 +25542,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackListView.MultiSelect = false;
 			this.MidiTrackListView.Name = "MidiTrackListView";
 			this.MidiTrackListView.ShowItemToolTips = true;
-			this.MidiTrackListView.Size = new System.Drawing.Size(1036, 332);
+			this.MidiTrackListView.Size = new System.Drawing.Size(1036, 330);
 			this.MidiTrackListView.TabIndex = 23;
 			this.MidiTrackListView.UseCompatibleStateImageBehavior = false;
 			this.MidiTrackListView.View = System.Windows.Forms.View.Details;
@@ -25553,7 +25684,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiAutoLayoutTracksGroup.Controls.Add(this.tableLayoutPanel22);
 			this.MidiAutoLayoutTracksGroup.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.MidiAutoLayoutTracksGroup.Enabled = false;
-			this.MidiAutoLayoutTracksGroup.Location = new System.Drawing.Point(8, 856);
+			this.MidiAutoLayoutTracksGroup.Location = new System.Drawing.Point(8, 854);
 			this.MidiAutoLayoutTracksGroup.Name = "MidiAutoLayoutTracksGroup";
 			this.MidiAutoLayoutTracksGroup.Size = new System.Drawing.Size(1036, 138);
 			this.MidiAutoLayoutTracksGroup.TabIndex = 20;
@@ -26019,12 +26150,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// UnrestrictLengthRadio
 			//
 			this.UnrestrictLengthRadio.AutoSize = true;
+			this.UnrestrictLengthRadio.Checked = true;
 			this.UnrestrictLengthRadio.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.UnrestrictLengthRadio.Group = "LimitLength";
 			this.UnrestrictLengthRadio.Location = new System.Drawing.Point(3, 3);
 			this.UnrestrictLengthRadio.Name = "UnrestrictLengthRadio";
 			this.UnrestrictLengthRadio.Size = new System.Drawing.Size(117, 36);
 			this.UnrestrictLengthRadio.TabIndex = 0;
+			this.UnrestrictLengthRadio.TabStop = true;
 			this.UnrestrictLengthRadio.Text = "不限制";
 			this.UnrestrictLengthRadio.UseVisualStyleBackColor = true;
 			//
@@ -26124,7 +26257,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTab.Location = new System.Drawing.Point(8, 46);
 			this.AudioTab.Name = "AudioTab";
 			this.AudioTab.Padding = new System.Windows.Forms.Padding(8);
-			this.AudioTab.Size = new System.Drawing.Size(1052, 1002);
+			this.AudioTab.Size = new System.Drawing.Size(1052, 1000);
 			this.AudioTab.TabIndex = 1;
 			this.AudioTab.Text = "音频";
 			this.AudioTab.UseVisualStyleBackColor = true;
@@ -27167,7 +27300,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab.Location = new System.Drawing.Point(8, 46);
 			this.VideoTab.Name = "VideoTab";
 			this.VideoTab.Padding = new System.Windows.Forms.Padding(8);
-			this.VideoTab.Size = new System.Drawing.Size(1052, 1002);
+			this.VideoTab.Size = new System.Drawing.Size(1052, 1000);
 			this.VideoTab.TabIndex = 2;
 			this.VideoTab.Text = "画面";
 			this.VideoTab.UseVisualStyleBackColor = true;
@@ -29103,7 +29236,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SheetTab.Location = new System.Drawing.Point(8, 46);
 			this.SheetTab.Name = "SheetTab";
 			this.SheetTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SheetTab.Size = new System.Drawing.Size(1052, 1002);
+			this.SheetTab.Size = new System.Drawing.Size(1052, 1000);
 			this.SheetTab.TabIndex = 3;
 			this.SheetTab.Text = "五线谱";
 			this.SheetTab.UseVisualStyleBackColor = true;
@@ -29524,7 +29657,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarTab.Location = new System.Drawing.Point(8, 46);
 			this.SonarTab.Name = "SonarTab";
 			this.SonarTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SonarTab.Size = new System.Drawing.Size(1052, 1002);
+			this.SonarTab.Size = new System.Drawing.Size(1052, 1000);
 			this.SonarTab.TabIndex = 6;
 			this.SonarTab.Text = "声呐";
 			this.SonarTab.UseVisualStyleBackColor = true;
@@ -29546,7 +29679,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 986);
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 984);
 			this.tableLayoutPanel11.TabIndex = 0;
 			//
 			// SonarSwitchesFlow
@@ -29649,7 +29782,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarList.Location = new System.Drawing.Point(3, 58);
 			this.SonarList.Name = "SonarList";
 			this.SonarList.ShowItemToolTips = true;
-			this.SonarList.Size = new System.Drawing.Size(1030, 327);
+			this.SonarList.Size = new System.Drawing.Size(1030, 325);
 			this.SonarList.TabIndex = 1;
 			this.SonarList.UseCompatibleStateImageBehavior = false;
 			this.SonarList.View = System.Windows.Forms.View.Details;
@@ -29685,7 +29818,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarButtonsTable.Controls.Add(this.SonarDeleteBtn, 1, 0);
 			this.SonarButtonsTable.Controls.Add(this.SonarResetBtn, 0, 0);
 			this.SonarButtonsTable.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 391);
+			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 389);
 			this.SonarButtonsTable.Name = "SonarButtonsTable";
 			this.SonarButtonsTable.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.SonarButtonsTable.RowCount = 1;
@@ -29764,7 +29897,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarParamsGroup.AutoSize = true;
 			this.SonarParamsGroup.Controls.Add(this.SonarParamsPanel);
 			this.SonarParamsGroup.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 465);
+			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 463);
 			this.SonarParamsGroup.Name = "SonarParamsGroup";
 			this.SonarParamsGroup.Size = new System.Drawing.Size(1030, 518);
 			this.SonarParamsGroup.TabIndex = 3;
@@ -30747,7 +30880,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.YtpTab.Location = new System.Drawing.Point(8, 46);
 			this.YtpTab.Name = "YtpTab";
 			this.YtpTab.Padding = new System.Windows.Forms.Padding(8);
-			this.YtpTab.Size = new System.Drawing.Size(1052, 1002);
+			this.YtpTab.Size = new System.Drawing.Size(1052, 1000);
 			this.YtpTab.TabIndex = 5;
 			this.YtpTab.Text = "YTP";
 			this.YtpTab.UseVisualStyleBackColor = true;
@@ -30950,7 +31083,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MoshTab.Location = new System.Drawing.Point(8, 46);
 			this.MoshTab.Name = "MoshTab";
 			this.MoshTab.Padding = new System.Windows.Forms.Padding(3);
-			this.MoshTab.Size = new System.Drawing.Size(1052, 1002);
+			this.MoshTab.Size = new System.Drawing.Size(1052, 1000);
 			this.MoshTab.TabIndex = 7;
 			this.MoshTab.Text = "抹失";
 			this.MoshTab.UseVisualStyleBackColor = true;
@@ -31247,7 +31380,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.HelperTab.Location = new System.Drawing.Point(8, 46);
 			this.HelperTab.Name = "HelperTab";
 			this.HelperTab.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.HelperTab.Size = new System.Drawing.Size(1052, 1002);
+			this.HelperTab.Size = new System.Drawing.Size(1052, 1000);
 			this.HelperTab.TabIndex = 4;
 			this.HelperTab.Text = "工具";
 			this.HelperTab.UseVisualStyleBackColor = true;
@@ -31846,8 +31979,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LinearMapPanel.PerformLayout();
 			this.SourceConfigGroup.ResumeLayout(false);
 			this.SourceConfigGroup.PerformLayout();
-			this.tableLayoutPanel3.ResumeLayout(false);
-			this.tableLayoutPanel3.PerformLayout();
+			this.SourceConfigTablePanel.ResumeLayout(false);
+			this.SourceConfigTablePanel.PerformLayout();
+			this.flowLayoutPanel18.ResumeLayout(false);
+			this.flowLayoutPanel18.PerformLayout();
+			this.flowLayoutPanel16.ResumeLayout(false);
+			this.flowLayoutPanel16.PerformLayout();
 			this.flowLayoutPanel8.ResumeLayout(false);
 			this.flowLayoutPanel8.PerformLayout();
 			this.flowLayoutPanel12.ResumeLayout(false);
@@ -32093,7 +32230,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton MidiMidiBpmCheck;
 		public Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton MidiProjectBpmCheck;
 		public System.Windows.Forms.GroupBox SourceConfigGroup;
-		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+		public System.Windows.Forms.TableLayoutPanel SourceConfigTablePanel;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel9;
 		public Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton GenerateAtBeginRadio;
 		public Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton GenerateAtCursorRadio;
@@ -32498,7 +32635,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public GroupedRadioButton TrackGroupBySessionRadio;
 		public System.Windows.Forms.Label TrackGroupLbl;
 		public System.Windows.Forms.CheckBox MidiTrackSelectAllCheck;
-		public System.Windows.Forms.CheckBox CollapseTrackGroupCheck;
 		public System.Windows.Forms.CheckBox AudioStackCheck;
 		public RememberedCheckBox AudioTimeUnremappingCheck;
 		public System.Windows.Forms.CheckBox VideoStackCheck;
@@ -32630,6 +32766,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.RadioButton VideoFadeSetAsTimecodeRadio;
 		public System.Windows.Forms.RadioButton VideoFadeSetAsPercentRadio;
 		public System.Windows.Forms.Button VideoParamsPresetsBtn;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel16;
+		public System.Windows.Forms.CheckBox CollapseTrackGroupCheck;
+		public System.Windows.Forms.CheckBox TrackGroupReuseCheck;
+		public System.Windows.Forms.CheckBox AudioBusTrackReuseCheck;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel18;
+		public GroupedRadioButton AudioBusTrackOffRadio;
+		public GroupedRadioButton AudioBusTrackByTrackRadio;
+		public GroupedRadioButton AudioBusTrackBySessionRadio;
+		public System.Windows.Forms.Label AudioBusTrackLbl;
 	}
 	#endregion
 
@@ -33079,9 +33224,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MidiEndSecondBox.DoubleValue = configIni.Read("MidiEndTime", 0d);
 			MidiAutoChangeProjectBpmCheck.Checked = configIni.Read("MidiAutoChangeProjectBpm", false);
 			MidiAutoChangeProjectBeatCheck.Checked = configIni.Read("MidiAutoChangeProjectBeat", false);
+			MoveCursorAfterCompletion = configIni.Read("MoveCursorAfterCompletion", MoveCursorAfterCompletion.BEFORE_FIRST_NOTE);
 			GroupTrackBy = configIni.Read("GroupTrackBy", GroupTrackBy.TRACK);
 			CollapseTrackGroupCheck.Checked = configIni.Read("CollapseTrackGroup", true);
-			MoveCursorAfterCompletion = configIni.Read("MoveCursorAfterCompletion", MoveCursorAfterCompletion.BEFORE_FIRST_NOTE);
+			TrackGroupReuseCheck.Checked = configIni.Read("TrackGroupReuse", true);
+			DispatchAudioBusTrackBy = configIni.Read("AudioBusTrackBy", GroupTrackBy.TRACK);
+			AudioBusTrackReuseCheck.Checked = configIni.Read("AudioBusTrackByReuse", true);
 			CheckMidiAutoLayoutTracksButtonActived();
 			QuickEnableAllMidiAutoLayoutTracks();
 			configIni.EndSection();
@@ -33329,9 +33477,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("MidiAutoChangeProjectBpm", MidiAutoChangeProjectBpmCheck.Checked);
 			configIni.Write("MidiAutoChangeProjectBeat", MidiAutoChangeProjectBeatCheck.Checked);
 			configIni.Write("MidiAutoChangeProjectBeat", MidiAutoChangeProjectBeatCheck.Checked);
+			configIni.Write("MoveCursorAfterCompletion", MoveCursorAfterCompletion);
 			configIni.Write("GroupTrackBy", GroupTrackBy);
 			configIni.Write("CollapseTrackGroup", CollapseTrackGroupCheck.Checked);
-			configIni.Write("MoveCursorAfterCompletion", MoveCursorAfterCompletion);
+			configIni.Write("TrackGroupReuse", TrackGroupReuseCheck.Checked);
+			configIni.Write("AudioBusTrackBy", DispatchAudioBusTrackBy);
+			configIni.Write("AudioBusTrackByReuse", AudioBusTrackReuseCheck.Checked);
 			configIni.EndSection();
 			#endregion
 
@@ -33686,6 +33837,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			TrackGroupByTrackRadio.Text = str.track_group_by_track;
 			TrackGroupBySessionRadio.Text = str.track_group_by_session;
 			CollapseTrackGroupCheck.Text = str.collapse_track_groups;
+			TrackGroupReuseCheck.Text = str.track_group_reuse;
+			AudioBusTrackLbl.Text = str.audio_bus_track;
+			AudioBusTrackOffRadio.Text = str.audio_bus_track_off;
+			AudioBusTrackByTrackRadio.Text = str.audio_bus_track_by_track;
+			AudioBusTrackBySessionRadio.Text = str.audio_bus_track_by_session;
+			AudioBusTrackReuseCheck.Text = str.audio_bus_track_reuse;
 			ChooseSourceLbl.Text = str.choose_source_file;
 			ChooseSourceCombo.Items[0] = str.selected_media;
 			ChooseSourceCombo.Items[1] = str.selected_clip;
@@ -35014,6 +35171,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public GroupTrackBy GroupTrackBy {
 			get { return TrackGroupByTrackRadio.Checked ? GroupTrackBy.TRACK : TrackGroupBySessionRadio.Checked ? GroupTrackBy.SESSION : GroupTrackBy.OFF; }
 			set { TrackGroupOffRadio.Related.Selected = value == GroupTrackBy.TRACK ? TrackGroupByTrackRadio : value == GroupTrackBy.SESSION ? TrackGroupBySessionRadio : TrackGroupOffRadio; }
+		}
+
+		public GroupTrackBy DispatchAudioBusTrackBy {
+			get { return AudioBusTrackByTrackRadio.Checked ? GroupTrackBy.TRACK : AudioBusTrackBySessionRadio.Checked ? GroupTrackBy.SESSION : GroupTrackBy.OFF; }
+			set { AudioBusTrackOffRadio.Related.Selected = value == GroupTrackBy.TRACK ? AudioBusTrackByTrackRadio : value == GroupTrackBy.SESSION ? AudioBusTrackBySessionRadio : TrackGroupOffRadio; }
 		}
 
 		public Timecode GenerateAtCustomTimecode = Timecode.FromMilliseconds(0);
@@ -37088,6 +37250,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			pitch_cache_capacity = "音高缓存容量",
 			restrict_keyframes_length = "限制关键帧长度",
 			restrict_min_length = "最小长度",
+			audio_bus_track = "音频总线轨道",
+			audio_bus_track_off = "不分配",
+			audio_bus_track_by_track = "按 MIDI 音轨分配",
+			audio_bus_track_by_session = "按任务会话分配",
+			audio_bus_track_reuse = "重用非空同名音频总线轨道",
+			track_group_reuse = "重用非空同名轨道组",
 			__eol__ = null;
 
 		static Lang() {

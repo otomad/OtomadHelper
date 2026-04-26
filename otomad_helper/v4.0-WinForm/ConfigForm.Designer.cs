@@ -161,14 +161,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ConsonantTab = new System.Windows.Forms.TabPage();
 			this.ShupelunkerTab = new System.Windows.Forms.TabPage();
 			this.SourceConfigGroup = new System.Windows.Forms.GroupBox();
-			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+			this.SourceConfigTablePanel = new System.Windows.Forms.TableLayoutPanel();
+			this.AudioBusTrackReuseCheck = new System.Windows.Forms.CheckBox();
+			this.flowLayoutPanel18 = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioBusTrackOffRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioBusTrackByTrackRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioBusTrackBySessionRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioBusTrackLbl = new System.Windows.Forms.Label();
+			this.flowLayoutPanel16 = new System.Windows.Forms.FlowLayoutPanel();
+			this.CollapseTrackGroupCheck = new System.Windows.Forms.CheckBox();
+			this.TrackGroupReuseCheck = new System.Windows.Forms.CheckBox();
 			this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
 			this.MoveCursorToOriginalRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MoveCursorToGenerateAtRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MoveCursorBeforeFirstNoteRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MoveCursorAfterLastNoteRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MoveCursorAfterCompletionLbl = new System.Windows.Forms.Label();
-			this.CollapseTrackGroupCheck = new System.Windows.Forms.CheckBox();
 			this.flowLayoutPanel12 = new System.Windows.Forms.FlowLayoutPanel();
 			this.TrackGroupOffRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.TrackGroupByTrackRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
@@ -636,7 +644,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LinearMapTab.SuspendLayout();
 			this.LinearMapPanel.SuspendLayout();
 			this.SourceConfigGroup.SuspendLayout();
-			this.tableLayoutPanel3.SuspendLayout();
+			this.SourceConfigTablePanel.SuspendLayout();
+			this.flowLayoutPanel18.SuspendLayout();
+			this.flowLayoutPanel16.SuspendLayout();
 			this.flowLayoutPanel8.SuspendLayout();
 			this.flowLayoutPanel12.SuspendLayout();
 			this.tableLayoutPanel4.SuspendLayout();
@@ -1772,7 +1782,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceConfigGroup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.MultiSourceConfigGroup.Controls.Add(this.MultiSourceCombTabs);
 			this.MultiSourceConfigGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.MultiSourceConfigGroup.Location = new System.Drawing.Point(8, 617);
+			this.MultiSourceConfigGroup.Location = new System.Drawing.Point(8, 754);
 			this.MultiSourceConfigGroup.Name = "MultiSourceConfigGroup";
 			this.MultiSourceConfigGroup.Padding = new System.Windows.Forms.Padding(8);
 			this.MultiSourceConfigGroup.Size = new System.Drawing.Size(1002, 455);
@@ -2384,12 +2394,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// SourceConfigGroup
 			// 
 			this.SourceConfigGroup.AutoSize = true;
-			this.SourceConfigGroup.Controls.Add(this.tableLayoutPanel3);
+			this.SourceConfigGroup.Controls.Add(this.SourceConfigTablePanel);
 			this.SourceConfigGroup.Dock = System.Windows.Forms.DockStyle.Top;
 			this.SourceConfigGroup.Location = new System.Drawing.Point(8, 8);
 			this.SourceConfigGroup.Name = "SourceConfigGroup";
 			this.SourceConfigGroup.Padding = new System.Windows.Forms.Padding(8);
-			this.SourceConfigGroup.Size = new System.Drawing.Size(1002, 609);
+			this.SourceConfigGroup.Size = new System.Drawing.Size(1002, 746);
 			this.SourceConfigGroup.TabIndex = 1;
 			this.SourceConfigGroup.TabStop = false;
 			this.SourceConfigGroup.Text = "素材属性";
@@ -2397,39 +2407,162 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceConfigGroup.DragEnter += new System.Windows.Forms.DragEventHandler(this.OnDragEnter);
 			this.SourceConfigGroup.DragLeave += new System.EventHandler(this.OnDragLeave);
 			// 
-			// tableLayoutPanel3
+			// SourceConfigTablePanel
 			// 
-			this.tableLayoutPanel3.AutoSize = true;
-			this.tableLayoutPanel3.ColumnCount = 1;
-			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel8, 0, 7);
-			this.tableLayoutPanel3.Controls.Add(this.MoveCursorAfterCompletionLbl, 0, 6);
-			this.tableLayoutPanel3.Controls.Add(this.CollapseTrackGroupCheck, 0, 10);
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel12, 0, 9);
-			this.tableLayoutPanel3.Controls.Add(this.TrackGroupLbl, 0, 8);
-			this.tableLayoutPanel3.Controls.Add(this.ChooseSourceLbl, 0, 0);
-			this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 0, 1);
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel1, 0, 2);
-			this.tableLayoutPanel3.Controls.Add(this.GenerateAtLbl, 0, 3);
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel9, 0, 4);
-			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel5, 0, 5);
-			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel3.Location = new System.Drawing.Point(8, 40);
-			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-			this.tableLayoutPanel3.RowCount = 11;
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(986, 561);
-			this.tableLayoutPanel3.TabIndex = 1;
+			this.SourceConfigTablePanel.AutoSize = true;
+			this.SourceConfigTablePanel.ColumnCount = 1;
+			this.SourceConfigTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.SourceConfigTablePanel.Controls.Add(this.AudioBusTrackReuseCheck, 0, 13);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel18, 0, 12);
+			this.SourceConfigTablePanel.Controls.Add(this.AudioBusTrackLbl, 0, 11);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel16, 0, 10);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel8, 0, 7);
+			this.SourceConfigTablePanel.Controls.Add(this.MoveCursorAfterCompletionLbl, 0, 6);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel12, 0, 9);
+			this.SourceConfigTablePanel.Controls.Add(this.TrackGroupLbl, 0, 8);
+			this.SourceConfigTablePanel.Controls.Add(this.ChooseSourceLbl, 0, 0);
+			this.SourceConfigTablePanel.Controls.Add(this.tableLayoutPanel4, 0, 1);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel1, 0, 2);
+			this.SourceConfigTablePanel.Controls.Add(this.GenerateAtLbl, 0, 3);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel9, 0, 4);
+			this.SourceConfigTablePanel.Controls.Add(this.flowLayoutPanel5, 0, 5);
+			this.SourceConfigTablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SourceConfigTablePanel.Location = new System.Drawing.Point(8, 40);
+			this.SourceConfigTablePanel.Name = "SourceConfigTablePanel";
+			this.SourceConfigTablePanel.RowCount = 14;
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.SourceConfigTablePanel.Size = new System.Drawing.Size(986, 698);
+			this.SourceConfigTablePanel.TabIndex = 1;
+			// 
+			// AudioBusTrackReuseCheck
+			// 
+			this.AudioBusTrackReuseCheck.AutoSize = true;
+			this.AudioBusTrackReuseCheck.Checked = true;
+			this.AudioBusTrackReuseCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.AudioBusTrackReuseCheck.Dock = System.Windows.Forms.DockStyle.Left;
+			this.AudioBusTrackReuseCheck.Location = new System.Drawing.Point(6, 659);
+			this.AudioBusTrackReuseCheck.Margin = new System.Windows.Forms.Padding(6, 3, 3, 3);
+			this.AudioBusTrackReuseCheck.Name = "AudioBusTrackReuseCheck";
+			this.AudioBusTrackReuseCheck.Size = new System.Drawing.Size(334, 36);
+			this.AudioBusTrackReuseCheck.TabIndex = 22;
+			this.AudioBusTrackReuseCheck.Text = "重用非空同名音频总线轨道";
+			this.AudioBusTrackReuseCheck.UseVisualStyleBackColor = true;
+			// 
+			// flowLayoutPanel18
+			// 
+			this.flowLayoutPanel18.AutoSize = true;
+			this.flowLayoutPanel18.Controls.Add(this.AudioBusTrackOffRadio);
+			this.flowLayoutPanel18.Controls.Add(this.AudioBusTrackByTrackRadio);
+			this.flowLayoutPanel18.Controls.Add(this.AudioBusTrackBySessionRadio);
+			this.flowLayoutPanel18.Dock = System.Windows.Forms.DockStyle.Top;
+			this.flowLayoutPanel18.Location = new System.Drawing.Point(3, 608);
+			this.flowLayoutPanel18.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+			this.flowLayoutPanel18.Name = "flowLayoutPanel18";
+			this.flowLayoutPanel18.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.flowLayoutPanel18.Size = new System.Drawing.Size(980, 48);
+			this.flowLayoutPanel18.TabIndex = 21;
+			// 
+			// AudioBusTrackOffRadio
+			// 
+			this.AudioBusTrackOffRadio.AutoSize = true;
+			this.AudioBusTrackOffRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioBusTrackOffRadio.Group = "AudioBusTrack";
+			this.AudioBusTrackOffRadio.Location = new System.Drawing.Point(3, 6);
+			this.AudioBusTrackOffRadio.Name = "AudioBusTrackOffRadio";
+			this.AudioBusTrackOffRadio.Size = new System.Drawing.Size(117, 36);
+			this.AudioBusTrackOffRadio.TabIndex = 0;
+			this.AudioBusTrackOffRadio.Text = "不分配";
+			this.AudioBusTrackOffRadio.UseVisualStyleBackColor = true;
+			// 
+			// AudioBusTrackByTrackRadio
+			// 
+			this.AudioBusTrackByTrackRadio.AutoSize = true;
+			this.AudioBusTrackByTrackRadio.Checked = true;
+			this.AudioBusTrackByTrackRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioBusTrackByTrackRadio.Group = "AudioBusTrack";
+			this.AudioBusTrackByTrackRadio.Location = new System.Drawing.Point(126, 6);
+			this.AudioBusTrackByTrackRadio.Name = "AudioBusTrackByTrackRadio";
+			this.AudioBusTrackByTrackRadio.Size = new System.Drawing.Size(230, 36);
+			this.AudioBusTrackByTrackRadio.TabIndex = 1;
+			this.AudioBusTrackByTrackRadio.TabStop = true;
+			this.AudioBusTrackByTrackRadio.Text = "按 MIDI 音轨分配";
+			this.AudioBusTrackByTrackRadio.UseVisualStyleBackColor = true;
+			// 
+			// AudioBusTrackBySessionRadio
+			// 
+			this.AudioBusTrackBySessionRadio.AutoSize = true;
+			this.AudioBusTrackBySessionRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioBusTrackBySessionRadio.Group = "AudioBusTrack";
+			this.AudioBusTrackBySessionRadio.Location = new System.Drawing.Point(362, 6);
+			this.AudioBusTrackBySessionRadio.Name = "AudioBusTrackBySessionRadio";
+			this.AudioBusTrackBySessionRadio.Size = new System.Drawing.Size(213, 36);
+			this.AudioBusTrackBySessionRadio.TabIndex = 2;
+			this.AudioBusTrackBySessionRadio.Text = "按任务会话分配";
+			this.AudioBusTrackBySessionRadio.UseVisualStyleBackColor = true;
+			// 
+			// AudioBusTrackLbl
+			// 
+			this.AudioBusTrackLbl.AutoSize = true;
+			this.AudioBusTrackLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioBusTrackLbl.Location = new System.Drawing.Point(4, 573);
+			this.AudioBusTrackLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
+			this.AudioBusTrackLbl.Name = "AudioBusTrackLbl";
+			this.AudioBusTrackLbl.Size = new System.Drawing.Size(978, 32);
+			this.AudioBusTrackLbl.TabIndex = 20;
+			this.AudioBusTrackLbl.Text = "音频总线轨道";
+			this.AudioBusTrackLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			// 
+			// flowLayoutPanel16
+			// 
+			this.flowLayoutPanel16.AutoSize = true;
+			this.flowLayoutPanel16.Controls.Add(this.CollapseTrackGroupCheck);
+			this.flowLayoutPanel16.Controls.Add(this.TrackGroupReuseCheck);
+			this.flowLayoutPanel16.Dock = System.Windows.Forms.DockStyle.Top;
+			this.flowLayoutPanel16.Location = new System.Drawing.Point(0, 517);
+			this.flowLayoutPanel16.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel16.Name = "flowLayoutPanel16";
+			this.flowLayoutPanel16.Padding = new System.Windows.Forms.Padding(3);
+			this.flowLayoutPanel16.Size = new System.Drawing.Size(986, 48);
+			this.flowLayoutPanel16.TabIndex = 19;
+			// 
+			// CollapseTrackGroupCheck
+			// 
+			this.CollapseTrackGroupCheck.AutoSize = true;
+			this.CollapseTrackGroupCheck.Checked = true;
+			this.CollapseTrackGroupCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.CollapseTrackGroupCheck.Dock = System.Windows.Forms.DockStyle.Left;
+			this.CollapseTrackGroupCheck.Location = new System.Drawing.Point(6, 6);
+			this.CollapseTrackGroupCheck.Name = "CollapseTrackGroupCheck";
+			this.CollapseTrackGroupCheck.Size = new System.Drawing.Size(286, 36);
+			this.CollapseTrackGroupCheck.TabIndex = 17;
+			this.CollapseTrackGroupCheck.Text = "默认情况下折叠轨道组";
+			this.CollapseTrackGroupCheck.UseVisualStyleBackColor = true;
+			// 
+			// TrackGroupReuseCheck
+			// 
+			this.TrackGroupReuseCheck.AutoSize = true;
+			this.TrackGroupReuseCheck.Checked = true;
+			this.TrackGroupReuseCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.TrackGroupReuseCheck.Dock = System.Windows.Forms.DockStyle.Left;
+			this.TrackGroupReuseCheck.Location = new System.Drawing.Point(298, 6);
+			this.TrackGroupReuseCheck.Name = "TrackGroupReuseCheck";
+			this.TrackGroupReuseCheck.Size = new System.Drawing.Size(262, 36);
+			this.TrackGroupReuseCheck.TabIndex = 18;
+			this.TrackGroupReuseCheck.Text = "重用非空同名轨道组";
+			this.TrackGroupReuseCheck.UseVisualStyleBackColor = true;
 			// 
 			// flowLayoutPanel8
 			// 
@@ -2507,19 +2640,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MoveCursorAfterCompletionLbl.TabIndex = 17;
 			this.MoveCursorAfterCompletionLbl.Text = "生成完成后将光标移动到";
 			this.MoveCursorAfterCompletionLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			// 
-			// CollapseTrackGroupCheck
-			// 
-			this.CollapseTrackGroupCheck.AutoSize = true;
-			this.CollapseTrackGroupCheck.Checked = true;
-			this.CollapseTrackGroupCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.CollapseTrackGroupCheck.Location = new System.Drawing.Point(6, 521);
-			this.CollapseTrackGroupCheck.Margin = new System.Windows.Forms.Padding(6, 4, 4, 4);
-			this.CollapseTrackGroupCheck.Name = "CollapseTrackGroupCheck";
-			this.CollapseTrackGroupCheck.Size = new System.Drawing.Size(286, 36);
-			this.CollapseTrackGroupCheck.TabIndex = 16;
-			this.CollapseTrackGroupCheck.Text = "默认情况下折叠轨道组";
-			this.CollapseTrackGroupCheck.UseVisualStyleBackColor = true;
 			// 
 			// flowLayoutPanel12
 			// 
@@ -2842,7 +2962,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ScoreTab.Location = new System.Drawing.Point(8, 46);
 			this.ScoreTab.Name = "ScoreTab";
 			this.ScoreTab.Padding = new System.Windows.Forms.Padding(8);
-			this.ScoreTab.Size = new System.Drawing.Size(1052, 1002);
+			this.ScoreTab.Size = new System.Drawing.Size(1052, 1000);
 			this.ScoreTab.TabIndex = 8;
 			this.ScoreTab.Text = "乐曲";
 			this.ScoreTab.UseVisualStyleBackColor = true;
@@ -2869,7 +2989,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackListView.MultiSelect = false;
 			this.MidiTrackListView.Name = "MidiTrackListView";
 			this.MidiTrackListView.ShowItemToolTips = true;
-			this.MidiTrackListView.Size = new System.Drawing.Size(1036, 332);
+			this.MidiTrackListView.Size = new System.Drawing.Size(1036, 330);
 			this.MidiTrackListView.TabIndex = 23;
 			this.MidiTrackListView.UseCompatibleStateImageBehavior = false;
 			this.MidiTrackListView.View = System.Windows.Forms.View.Details;
@@ -3011,7 +3131,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiAutoLayoutTracksGroup.Controls.Add(this.tableLayoutPanel22);
 			this.MidiAutoLayoutTracksGroup.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.MidiAutoLayoutTracksGroup.Enabled = false;
-			this.MidiAutoLayoutTracksGroup.Location = new System.Drawing.Point(8, 856);
+			this.MidiAutoLayoutTracksGroup.Location = new System.Drawing.Point(8, 854);
 			this.MidiAutoLayoutTracksGroup.Name = "MidiAutoLayoutTracksGroup";
 			this.MidiAutoLayoutTracksGroup.Size = new System.Drawing.Size(1036, 138);
 			this.MidiAutoLayoutTracksGroup.TabIndex = 20;
@@ -3584,7 +3704,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTab.Location = new System.Drawing.Point(8, 46);
 			this.AudioTab.Name = "AudioTab";
 			this.AudioTab.Padding = new System.Windows.Forms.Padding(8);
-			this.AudioTab.Size = new System.Drawing.Size(1052, 1002);
+			this.AudioTab.Size = new System.Drawing.Size(1052, 1000);
 			this.AudioTab.TabIndex = 1;
 			this.AudioTab.Text = "音频";
 			this.AudioTab.UseVisualStyleBackColor = true;
@@ -4627,7 +4747,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab.Location = new System.Drawing.Point(8, 46);
 			this.VideoTab.Name = "VideoTab";
 			this.VideoTab.Padding = new System.Windows.Forms.Padding(8);
-			this.VideoTab.Size = new System.Drawing.Size(1052, 1002);
+			this.VideoTab.Size = new System.Drawing.Size(1052, 1000);
 			this.VideoTab.TabIndex = 2;
 			this.VideoTab.Text = "画面";
 			this.VideoTab.UseVisualStyleBackColor = true;
@@ -6563,7 +6683,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SheetTab.Location = new System.Drawing.Point(8, 46);
 			this.SheetTab.Name = "SheetTab";
 			this.SheetTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SheetTab.Size = new System.Drawing.Size(1052, 1002);
+			this.SheetTab.Size = new System.Drawing.Size(1052, 1000);
 			this.SheetTab.TabIndex = 3;
 			this.SheetTab.Text = "五线谱";
 			this.SheetTab.UseVisualStyleBackColor = true;
@@ -6984,7 +7104,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarTab.Location = new System.Drawing.Point(8, 46);
 			this.SonarTab.Name = "SonarTab";
 			this.SonarTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SonarTab.Size = new System.Drawing.Size(1052, 1002);
+			this.SonarTab.Size = new System.Drawing.Size(1052, 1000);
 			this.SonarTab.TabIndex = 6;
 			this.SonarTab.Text = "声呐";
 			this.SonarTab.UseVisualStyleBackColor = true;
@@ -7006,7 +7126,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 986);
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 984);
 			this.tableLayoutPanel11.TabIndex = 0;
 			// 
 			// SonarSwitchesFlow
@@ -7109,7 +7229,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarList.Location = new System.Drawing.Point(3, 58);
 			this.SonarList.Name = "SonarList";
 			this.SonarList.ShowItemToolTips = true;
-			this.SonarList.Size = new System.Drawing.Size(1030, 327);
+			this.SonarList.Size = new System.Drawing.Size(1030, 325);
 			this.SonarList.TabIndex = 1;
 			this.SonarList.UseCompatibleStateImageBehavior = false;
 			this.SonarList.View = System.Windows.Forms.View.Details;
@@ -7145,7 +7265,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarButtonsTable.Controls.Add(this.SonarDeleteBtn, 1, 0);
 			this.SonarButtonsTable.Controls.Add(this.SonarResetBtn, 0, 0);
 			this.SonarButtonsTable.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 391);
+			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 389);
 			this.SonarButtonsTable.Name = "SonarButtonsTable";
 			this.SonarButtonsTable.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.SonarButtonsTable.RowCount = 1;
@@ -7224,7 +7344,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarParamsGroup.AutoSize = true;
 			this.SonarParamsGroup.Controls.Add(this.SonarParamsPanel);
 			this.SonarParamsGroup.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 465);
+			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 463);
 			this.SonarParamsGroup.Name = "SonarParamsGroup";
 			this.SonarParamsGroup.Size = new System.Drawing.Size(1030, 518);
 			this.SonarParamsGroup.TabIndex = 3;
@@ -8207,7 +8327,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.YtpTab.Location = new System.Drawing.Point(8, 46);
 			this.YtpTab.Name = "YtpTab";
 			this.YtpTab.Padding = new System.Windows.Forms.Padding(8);
-			this.YtpTab.Size = new System.Drawing.Size(1052, 1002);
+			this.YtpTab.Size = new System.Drawing.Size(1052, 1000);
 			this.YtpTab.TabIndex = 5;
 			this.YtpTab.Text = "YTP";
 			this.YtpTab.UseVisualStyleBackColor = true;
@@ -8410,7 +8530,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MoshTab.Location = new System.Drawing.Point(8, 46);
 			this.MoshTab.Name = "MoshTab";
 			this.MoshTab.Padding = new System.Windows.Forms.Padding(3);
-			this.MoshTab.Size = new System.Drawing.Size(1052, 1002);
+			this.MoshTab.Size = new System.Drawing.Size(1052, 1000);
 			this.MoshTab.TabIndex = 7;
 			this.MoshTab.Text = "抹失";
 			this.MoshTab.UseVisualStyleBackColor = true;
@@ -8707,7 +8827,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.HelperTab.Location = new System.Drawing.Point(8, 46);
 			this.HelperTab.Name = "HelperTab";
 			this.HelperTab.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
-			this.HelperTab.Size = new System.Drawing.Size(1052, 1002);
+			this.HelperTab.Size = new System.Drawing.Size(1052, 1000);
 			this.HelperTab.TabIndex = 4;
 			this.HelperTab.Text = "工具";
 			this.HelperTab.UseVisualStyleBackColor = true;
@@ -9306,8 +9426,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LinearMapPanel.PerformLayout();
 			this.SourceConfigGroup.ResumeLayout(false);
 			this.SourceConfigGroup.PerformLayout();
-			this.tableLayoutPanel3.ResumeLayout(false);
-			this.tableLayoutPanel3.PerformLayout();
+			this.SourceConfigTablePanel.ResumeLayout(false);
+			this.SourceConfigTablePanel.PerformLayout();
+			this.flowLayoutPanel18.ResumeLayout(false);
+			this.flowLayoutPanel18.PerformLayout();
+			this.flowLayoutPanel16.ResumeLayout(false);
+			this.flowLayoutPanel16.PerformLayout();
 			this.flowLayoutPanel8.ResumeLayout(false);
 			this.flowLayoutPanel8.PerformLayout();
 			this.flowLayoutPanel12.ResumeLayout(false);
@@ -9553,7 +9677,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton MidiMidiBpmCheck;
 		public Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton MidiProjectBpmCheck;
 		public System.Windows.Forms.GroupBox SourceConfigGroup;
-		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+		public System.Windows.Forms.TableLayoutPanel SourceConfigTablePanel;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel9;
 		public Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton GenerateAtBeginRadio;
 		public Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton GenerateAtCursorRadio;
@@ -9958,7 +10082,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public GroupedRadioButton TrackGroupBySessionRadio;
 		public System.Windows.Forms.Label TrackGroupLbl;
 		public System.Windows.Forms.CheckBox MidiTrackSelectAllCheck;
-		public System.Windows.Forms.CheckBox CollapseTrackGroupCheck;
 		public System.Windows.Forms.CheckBox AudioStackCheck;
 		public RememberedCheckBox AudioTimeUnremappingCheck;
 		public System.Windows.Forms.CheckBox VideoStackCheck;
@@ -10090,6 +10213,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.RadioButton VideoFadeSetAsTimecodeRadio;
 		public System.Windows.Forms.RadioButton VideoFadeSetAsPercentRadio;
 		public System.Windows.Forms.Button VideoParamsPresetsBtn;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel16;
+		public System.Windows.Forms.CheckBox CollapseTrackGroupCheck;
+		public System.Windows.Forms.CheckBox TrackGroupReuseCheck;
+		public System.Windows.Forms.CheckBox AudioBusTrackReuseCheck;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel18;
+		public GroupedRadioButton AudioBusTrackOffRadio;
+		public GroupedRadioButton AudioBusTrackByTrackRadio;
+		public GroupedRadioButton AudioBusTrackBySessionRadio;
+		public System.Windows.Forms.Label AudioBusTrackLbl;
 	}
 }
 
