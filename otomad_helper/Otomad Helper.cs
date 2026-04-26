@@ -3135,11 +3135,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return vegas.Project.TrackGroups.FirstOrDefault(group => group.Name == name);
 		}
 
+		/// <summary>
+		/// 根据轨道查询其所属轨道组。
+		/// </summary>
+		/// <remarks>
+		/// 如果其未属于任何轨道组，则返回 null。
+		/// </remarks>
 		public TrackGroup GetTrackGroupByTrack(Track track) {
 			if (track == null) return null;
 			return vegas.Project.TrackGroups.FirstOrDefault(group => group.Contains(track));
 		}
 
+		///<inheritdoc cref="GroupTracks(IEnumerable{Track}, string)" />
+		/// <remarks>
+		/// <para>仅在需要时创建，如果查阅到这些轨道均已归纳于符合名称的轨道，则不会特意再次创建分组（特意创建分组会将其与分组内其它轨道拆分开来）。</para>
+		/// <para>若轨道组名为空则被视为无效，此时无论如何都会创建新的分组。</para>
+		/// </remarks>
 		public TrackGroup GroupTracksIfRequire(IEnumerable<Track> tracks, string name) {
 			if (tracks.IsEmpty()) return null;
 			if (string.IsNullOrEmpty(name) || !TrackGroupReuse) return GroupTracks(tracks, name);
@@ -3152,6 +3163,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return GroupTracks(tracks, name);
 		}
 
+		/// <summary>
+		/// 将音频轨道路由至（新建或现有的）音频总线轨道。
+		/// </summary>
+		/// <param name="tracks">轨道们。</param>
+		/// <param name="name">音频总线轨道名称。</param>
+		/// <param name="reuseBusTrack">是否重用现有非空同名音频总线轨道？如果为 <see langword="null" /> 则会通过读取 <see cref="AudioBusTrackReuse" /> 属性来决定。</param>
+		/// <returns>音频总线轨道。</returns>
 		public AudioBusTrack RouteToAudioBusTrack(IEnumerable<AudioTrack> tracks, string name, bool? reuseBusTrack = null) {
 			if (tracks.IsEmpty()) return null;
 			bool reuse = reuseBusTrack == null ? AudioBusTrackReuse : reuseBusTrack.Value;
@@ -3164,7 +3182,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			foreach (AudioTrack track in tracks)
 				track.BusTrack = busTrack;
-			return busTrack;
+			return busTrack; // TODO: 后置增益调节插入FX。
 		}
 
 		/// <summary>
@@ -37263,7 +37281,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			move_cursor_to_where_generate_at = "生成开始位置",
 			move_cursor_before_first_note = "第一个事件之前",
 			move_cursor_after_last_note = "最后一个事件之后",
-			match_cut_sustain = "相同音高时不换素材",
+			match_cut_sustain = "相同音高时保持素材",
 			h_flip_interrupt = "水平翻转中断",
 			v_flip_interrupt = "垂直翻转中断",
 			negative_interrupt = "颜色反转中断",
@@ -38035,8 +38053,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				shake_x_to_y_tooltip = "Multiply horizontal distance. Values above 1 will produce a greater zoom-in.",
 				shake_should_reset_pan_tooltip = "Leave unchecked to shake within the current video zoom.",
 				shake_should_clear_frames_tooltip = "Leave unchecked to multiply the new shake effect with a previous shake effect.",
-				restrict_note_length = "Restrict note length",
-				unrestricted = "Unrestricted",
+				restrict_note_length = "Constrain note length",
+				unrestricted = "Unconstrained",
 				restrict_max_length = "Max length",
 				restrict_fixed_length = "Fixed length",
 				preferred_track = "Preferred track",
@@ -38174,6 +38192,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				move_cursor_to_where_generate_at = "Where generate at",
 				move_cursor_before_first_note = "Before the first event",
 				move_cursor_after_last_note = "After the last event",
+				match_cut_sustain = "Sustain source at same pitch",
+				h_flip_interrupt = "Horizontal Flip Interrupt",
+				v_flip_interrupt = "Vertical Flip Interrupt",
+				negative_interrupt = "Negative Interrupt",
+				pitch_cache_capacity = "Pitch cache capacity",
+				restrict_keyframes_length = "Constrain keyframes length",
+				restrict_min_length = "Min length",
+				audio_bus_track = "Audio Bus Track",
+				audio_bus_track_off = "Unrouted",
+				audio_bus_track_by_track = "Route by MIDI track",
+				audio_bus_track_by_session = "Route by task session",
+				audio_bus_track_reuse = "Reuse audio bus tracks that have same nonempty name",
+				track_group_reuse = "Reuse groups that have same nonempty name",
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -39068,6 +39099,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				move_cursor_to_where_generate_at = "生成開始位置",
 				move_cursor_before_first_note = "第一個事件之前",
 				move_cursor_after_last_note = "最後一個事件之後",
+				match_cut_sustain = "相同音高時保持素材",
+				h_flip_interrupt = "水平翻轉中斷",
+				v_flip_interrupt = "垂直翻轉中斷",
+				negative_interrupt = "顏色反轉中斷",
+				pitch_cache_capacity = "音高緩存容量",
+				restrict_keyframes_length = "限制關鍵幀長度",
+				restrict_min_length = "最小長度",
+				audio_bus_track = "音訊匯流排軌道",
+				audio_bus_track_off = "不路由",
+				audio_bus_track_by_track = "按 MIDI 音軌路由",
+				audio_bus_track_by_session = "按任務會話路由",
+				audio_bus_track_reuse = "重用非空同名音訊匯流排軌道",
+				track_group_reuse = "重用非空同名軌道組",
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
@@ -39964,6 +40008,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				move_cursor_to_where_generate_at = "生成位置",
 				move_cursor_before_first_note = "最初のイベントの前",
 				move_cursor_after_last_note = "最後のイベントの後",
+				match_cut_sustain = "同じピッチで音源を維持",
+				h_flip_interrupt = "水平反転割り込み",
+				v_flip_interrupt = "垂直反転割り込み",
+				negative_interrupt = "負の割り込み",
+				pitch_cache_capacity = "ピッチキャッシュ容量",
+				restrict_keyframes_length = "キーフレームの長さを制限",
+				restrict_min_length = "最小長さ",
+				audio_bus_track = "オーディオバストラック",
+				audio_bus_track_off = "未ルーティング",
+				audio_bus_track_by_track = "MIDIトラックでルーティング",
+				audio_bus_track_by_session = "タスクセッションでルーティング",
+				audio_bus_track_reuse = "同じ名前を持つオーディオバストラックを再利用",
+				track_group_reuse = "同じ名前を持つグループを再利用",
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -40860,6 +40917,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				move_cursor_to_where_generate_at = "Место генерации",
 				move_cursor_before_first_note = "Перед первым мероприятием",
 				move_cursor_after_last_note = "После последнего мероприятия",
+				match_cut_sustain = "Поддержание источника на той же высоте тона",
+				h_flip_interrupt = "Прерывание с горизонтальным переворотом",
+				v_flip_interrupt = "Прерывание с вертикальным переворотом",
+				negative_interrupt = "Отрицательное прерывание",
+				pitch_cache_capacity = "Емкость кэша высоты тона",
+				restrict_keyframes_length = "Ограничение длины ключевых кадров",
+				restrict_min_length = "Минимальная длина",
+				audio_bus_track = "Аудиошинная дорожка",
+				audio_bus_track_off = "Немаршрутизированная",
+				audio_bus_track_by_track = "Маршрутизация по MIDI-дорожке",
+				audio_bus_track_by_session = "Маршрутизация по сеансу задачи",
+				audio_bus_track_reuse = "Повторное использование аудиошинных дорожек с одинаковым непустым именем",
+				track_group_reuse = "Повторное использование групп с одинаковым непустым именем",
 			};
 			Vietnamese = new Lang {
 				__name__ = "Tiếng Việt",
@@ -41755,6 +41825,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				move_cursor_to_where_generate_at = "Nơi tạo ra",
 				move_cursor_before_first_note = "Trước sự kiện đầu tiên",
 				move_cursor_after_last_note = "Sau sự kiện cuối cùng",
+				match_cut_sustain = "Duy trì nguồn âm thanh ở cùng cao độ",
+				h_flip_interrupt = "Ngắt lật ngang",
+				v_flip_interrupt = "Ngắt lật dọc",
+				negative_interrupt = "Ngắt âm",
+				pitch_cache_capacity = "Dung lượng bộ nhớ đệm cao độ",
+				restrict_keyframes_length = "Giới hạn độ dài khung hình chính",
+				restrict_min_length = "Độ dài tối thiểu",
+				audio_bus_track = "Đường dẫn bus âm thanh",
+				audio_bus_track_off = "Chưa được định tuyến",
+				audio_bus_track_by_track = "Định tuyến theo đường dẫn MIDI",
+				audio_bus_track_by_session = "Định tuyến theo phiên tác vụ",
+				audio_bus_track_reuse = "Sử dụng lại các đường dẫn bus âm thanh có cùng tên không rỗng",
+				track_group_reuse = "Sử dụng lại các nhóm có cùng tên không rỗng",
 			};
 			Indonesian = new Lang {
 				__name__ = "Bahasa Indonesia",
@@ -42650,6 +42733,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				move_cursor_to_where_generate_at = "Tempat pembuatan",
 				move_cursor_before_first_note = "Sebelum acara pertama",
 				move_cursor_after_last_note = "Setelah acara terakhir",
+				match_cut_sustain = "Pertahankan sumber pada nada yang sama",
+				h_flip_interrupt = "Interupsi Balik Horizontal",
+				v_flip_interrupt = "Interupsi Balik Vertikal",
+				negative_interrupt = "Interupsi Negatif",
+				pitch_cache_capacity = "Kapasitas cache nada",
+				restrict_keyframes_length = "Batasi panjang keyframe",
+				restrict_min_length = "Panjang minimum",
+				audio_bus_track = "Trek Bus Audio",
+				audio_bus_track_off = "Tidak dirutekan",
+				audio_bus_track_by_track = "Rute berdasarkan trek MIDI",
+				audio_bus_track_by_session = "Rute berdasarkan sesi tugas",
+				audio_bus_track_reuse = "Gunakan kembali trek bus audio yang memiliki nama yang sama dan tidak kosong",
+				track_group_reuse = "Gunakan kembali grup yang memiliki nama yang sama dan tidak kosong",
 			};
 		}
 	}
