@@ -221,7 +221,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>轨道分组</summary>*/ internal GroupTrackBy GroupTrackBy { get { return configForm.GroupTrackBy == GroupTrackBy.OFF ? GroupTrackBy.OFF : YtpConfig || IsStack ? GroupTrackBy.SESSION : configForm.GroupTrackBy; } }
 		/**<summary>折叠分组</summary>*/ private bool CollapseTrackGroups { get { return configForm.CollapseTrackGroupCheck.Checked; } }
 		/**<summary>重用分组</summary>*/ private bool TrackGroupReuse { get { return configForm.TrackGroupReuseCheck.Checked; } }
-		/**<summary>总线轨道</summary>*/ internal GroupTrackBy DispatchAudioBusTrackBy { get { return configForm.DispatchAudioBusTrackBy == GroupTrackBy.OFF ? GroupTrackBy.OFF : YtpConfig ? GroupTrackBy.SESSION : configForm.DispatchAudioBusTrackBy; } }
+		/**<summary>总线轨道</summary>*/ internal GroupTrackBy RouteAudioBusTrackBy { get { return configForm.RouteAudioBusTrackBy == GroupTrackBy.OFF ? GroupTrackBy.OFF : YtpConfig ? GroupTrackBy.SESSION : configForm.RouteAudioBusTrackBy; } }
 		/**<summary>重用总线</summary>*/ private bool AudioBusTrackReuse { get { return configForm.AudioBusTrackReuseCheck.Checked; } }
 		#endregion
 
@@ -3152,6 +3152,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return GroupTracks(tracks, name);
 		}
 
+		public AudioBusTrack RouteToAudioBusTrack(IEnumerable<AudioTrack> tracks, string name, bool? reuseBusTrack = null) {
+			if (tracks.IsEmpty()) return null;
+			bool reuse = reuseBusTrack == null ? AudioBusTrackReuse : reuseBusTrack.Value;
+			AudioBusTrack busTrack = null;
+			if (reuse && !string.IsNullOrEmpty(name))
+				busTrack = vegas.Project.BusTracks.OfType<AudioBusTrack>().FirstOrDefault(bus => bus.Description == name && bus != vegas.Project.MasterBus);
+			if (busTrack == null) {
+				busTrack = vegas.Project.AddAudioBusTrack();
+				busTrack.Description = name;
+			}
+			foreach (AudioTrack track in tracks)
+				track.BusTrack = busTrack;
+			return busTrack;
+		}
+
 		/// <summary>
 		/// 转换音乐节拍。
 		/// </summary>
@@ -3397,15 +3412,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				foreach (TrackEvent originalClip in eventSets.OriginalClips)
 					if (AConfig && originalClip is AudioEvent || VConfig && originalClip is VideoEvent)
 						originalClip.Remove();
-			if (GroupTrackBy == GroupTrackBy.SESSION || GroupTrackBy != GroupTrackBy.OFF && (YtpConfig || IsStack)) {
-				string trackGroupName = midi == null || YtpConfig ? null : midi.Title;
+			string trackGroupName = midi == null || YtpConfig ? null : midi.Title;
+			if (GroupTrackBy == GroupTrackBy.SESSION || GroupTrackBy != GroupTrackBy.OFF && (YtpConfig || IsStack))
 				GroupTracksIfRequire(generatedTracks, trackGroupName);
-			}
 			if (!SelectAllGeneratedEvents && GroupTrackBy != GroupTrackBy.OFF) // 必须严格按照顺序执行才不会出错，所以看起来逻辑很绕。
 				UnselectAllTrackGroups();
 			if (CollapseTrackGroups)
 				foreach (TrackGroup trackGroup in vegas.Project.TrackGroups)
 					trackGroup.CollapseTrackGroup();
+			if (RouteAudioBusTrackBy == GroupTrackBy.SESSION || RouteAudioBusTrackBy != GroupTrackBy.OFF && (YtpConfig || AConfigStack))
+				RouteToAudioBusTrack(generatedTracks.OfType<AudioTrack>(), trackGroupName);
 			if (!SelectAllGeneratedEvents)
 				SelectSpecificTracksOnly();
 			if (MoveCursorAfterCompletion != MoveCursorAfterCompletion.ORIGINAL && resultCursorPosition != null) {
@@ -12628,6 +12644,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private Vegas vegas { get { return entryPoint.vegas; } }
 		private Tracks Tracks { get { return vegas.Project.Tracks; } }
 		private GroupTrackBy GroupTrackBy { get { return entryPoint.GroupTrackBy; } }
+		private GroupTrackBy RouteAudioBusTrackBy { get { return entryPoint.RouteAudioBusTrackBy; } }
 		private object audio;
 		private object video;
 		//private readonly string reusedTrackGroupName;
@@ -13020,9 +13037,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </returns>
 		public int? Dispose() {
 			int? topIndex = topmostTrackIndex == int.MaxValue ? null : topmostTrackIndex as int?;
-			if (topIndex.HasValue && GroupTrackBy == GroupTrackBy.TRACK) {
-				string trackGroupName = !string.IsNullOrWhiteSpace(videoName) ? videoName : audioName;
-				entryPoint.GroupTracksIfRequire(videoTracks.Cast<Track>().Concat(audioTracks.Cast<Track>()), trackGroupName);
+			string trackGroupName = !string.IsNullOrWhiteSpace(videoName) ? videoName : audioName;
+			if (topIndex.HasValue) {
+				if (GroupTrackBy == GroupTrackBy.TRACK)
+					entryPoint.GroupTracksIfRequire(videoTracks.Cast<Track>().Concat(audioTracks.Cast<Track>()), trackGroupName);
+				if (RouteAudioBusTrackBy == GroupTrackBy.TRACK)
+					entryPoint.RouteToAudioBusTrack(audioTracks, trackGroupName);
 			}
 			return topIndex;
 		}
@@ -33228,7 +33248,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			GroupTrackBy = configIni.Read("GroupTrackBy", GroupTrackBy.TRACK);
 			CollapseTrackGroupCheck.Checked = configIni.Read("CollapseTrackGroup", true);
 			TrackGroupReuseCheck.Checked = configIni.Read("TrackGroupReuse", true);
-			DispatchAudioBusTrackBy = configIni.Read("AudioBusTrackBy", GroupTrackBy.TRACK);
+			RouteAudioBusTrackBy = configIni.Read("AudioBusTrackBy", GroupTrackBy.TRACK);
 			AudioBusTrackReuseCheck.Checked = configIni.Read("AudioBusTrackByReuse", true);
 			CheckMidiAutoLayoutTracksButtonActived();
 			QuickEnableAllMidiAutoLayoutTracks();
@@ -33481,7 +33501,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("GroupTrackBy", GroupTrackBy);
 			configIni.Write("CollapseTrackGroup", CollapseTrackGroupCheck.Checked);
 			configIni.Write("TrackGroupReuse", TrackGroupReuseCheck.Checked);
-			configIni.Write("AudioBusTrackBy", DispatchAudioBusTrackBy);
+			configIni.Write("AudioBusTrackBy", RouteAudioBusTrackBy);
 			configIni.Write("AudioBusTrackByReuse", AudioBusTrackReuseCheck.Checked);
 			configIni.EndSection();
 			#endregion
@@ -35173,7 +35193,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			set { TrackGroupOffRadio.Related.Selected = value == GroupTrackBy.TRACK ? TrackGroupByTrackRadio : value == GroupTrackBy.SESSION ? TrackGroupBySessionRadio : TrackGroupOffRadio; }
 		}
 
-		public GroupTrackBy DispatchAudioBusTrackBy {
+		public GroupTrackBy RouteAudioBusTrackBy {
 			get { return AudioBusTrackByTrackRadio.Checked ? GroupTrackBy.TRACK : AudioBusTrackBySessionRadio.Checked ? GroupTrackBy.SESSION : GroupTrackBy.OFF; }
 			set { AudioBusTrackOffRadio.Related.Selected = value == GroupTrackBy.TRACK ? AudioBusTrackByTrackRadio : value == GroupTrackBy.SESSION ? AudioBusTrackBySessionRadio : TrackGroupOffRadio; }
 		}
@@ -37251,9 +37271,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			restrict_keyframes_length = "限制关键帧长度",
 			restrict_min_length = "最小长度",
 			audio_bus_track = "音频总线轨道",
-			audio_bus_track_off = "不分配",
-			audio_bus_track_by_track = "按 MIDI 音轨分配",
-			audio_bus_track_by_session = "按任务会话分配",
+			audio_bus_track_off = "不路由",
+			audio_bus_track_by_track = "按 MIDI 音轨路由",
+			audio_bus_track_by_session = "按任务会话路由",
 			audio_bus_track_reuse = "重用非空同名音频总线轨道",
 			track_group_reuse = "重用非空同名轨道组",
 			__eol__ = null;
