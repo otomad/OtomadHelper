@@ -110,7 +110,8 @@
       <HintPath>packages\NAudio.WinMM.2.3.0\lib\netstandard2.0\NAudio.WinMM.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
-    <Reference Include="ScriptPortal.Vegas">
+    <Reference Include="ScriptPortal.Vegas, Version=2026.0.0.66, Culture=neutral, PublicKeyToken=3cda94b1926e6fbc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files\BorisFX\Vegas Pro 2026\ScriptPortal.Vegas.dll</HintPath>
     </Reference>
     <Reference Include="System">

@@ -88,9 +88,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	/// </summary>
 	public sealed class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 64, 20, 0);
+		public static readonly Version VERSION = new Version(4, 64, 27, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2026, 4, 20);
+		public static readonly DateTime REVISION_DATE = new DateTime(2026, 4, 27);
 
 		// 配置参数变量
 		#region 视频属性
@@ -1238,11 +1238,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			bool sonarMode = currentChannel.IsDrumKit && SonarConfig;
 			int topIndex = GenerateBelowTopAdjustmentTrack ? GetFirstNotAdjustmentTrackIndex() : 0;
 			string reusedTrackGroupName = !TrackGroupReuse ? null : GroupTrackBy == GroupTrackBy.TRACK ? name : GroupTrackBy == GroupTrackBy.SESSION ? midi.Title : null;
-			Func<object, TrackGroup> GetGroupOfRefTrack = refTrack => GetTrackGroupByTrack(refTrack is Track ? (Track)refTrack : refTrack is int ? vegas.Project.Tracks.ElementClamppedAtOrDefault((int)refTrack) : null);;
+			Func<object, TrackGroup> GetGroupOfRefTrack = refTrack => GetTrackGroupOfTrack(refTrack is Track ? (Track)refTrack : refTrack is int ? vegas.Project.Tracks.ElementClamppedAtOrDefault((int)refTrack) : null);;
 			object refAudioTrack = !AConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsAPreferredTrack ? AConfigPreferredTrack.Track as object : topIndex as object;
 			object refVideoTrack = !VConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsVPreferredTrack ? VConfigPreferredTrack.Track as object : topIndex as object;
 			if (TrackGroupReuse && !string.IsNullOrEmpty(reusedTrackGroupName)) {
-				TrackGroup refTrackGroup = GetTrackGroupByName(reusedTrackGroupName);
+				TrackGroup refTrackGroup = GetTrackGroupOfName(reusedTrackGroupName);
 				if (refTrackGroup != null && refTrackGroup.Count != 0) {
 					if (refAudioTrack != null) {
 						TrackGroup mayUsedTrackGroup = GetGroupOfRefTrack(refAudioTrack);
@@ -3130,9 +3130,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <remarks>
 		/// 如果未找到该轨道组或轨道组名为空，则返回 null。
 		/// </remarks>
-		public TrackGroup GetTrackGroupByName(string name) {
+		public TrackGroup GetTrackGroupOfName(string name) {
 			if (string.IsNullOrEmpty(name)) return null;
 			return vegas.Project.TrackGroups.FirstOrDefault(group => group.Name == name);
+		}
+
+		/// <summary>
+		/// 根据轨道序号查询其所属轨道组。
+		/// </summary>
+		/// <remarks>
+		/// 如果其未属于任何轨道组，则返回 null。
+		/// </remarks>
+		public TrackGroup GetTrackGroupOfTrack(int indexOfTrack) {
+			return vegas.Project.GetTrackGroupOfTrack(indexOfTrack);
 		}
 
 		/// <summary>
@@ -3141,9 +3151,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <remarks>
 		/// 如果其未属于任何轨道组，则返回 null。
 		/// </remarks>
-		public TrackGroup GetTrackGroupByTrack(Track track) {
+		public TrackGroup GetTrackGroupOfTrack(Track track) {
 			if (track == null) return null;
-			return vegas.Project.TrackGroups.FirstOrDefault(group => group.Contains(track));
+			return GetTrackGroupOfTrack(track.Index);
 		}
 
 		///<inheritdoc cref="GroupTracks(IEnumerable{Track}, string)" />
@@ -3156,7 +3166,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (string.IsNullOrEmpty(name) || !TrackGroupReuse) return GroupTracks(tracks, name);
 			TrackGroup aPossibleResultTrackGroup = null;
 			if (tracks.All(track => {
-				TrackGroup trackGroup = GetTrackGroupByTrack(track);
+				TrackGroup trackGroup = GetTrackGroupOfTrack(track);
 				if (aPossibleResultTrackGroup == null) aPossibleResultTrackGroup = trackGroup;
 				return trackGroup != null && trackGroup.Name == name;
 			})) return aPossibleResultTrackGroup;
@@ -3175,14 +3185,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			bool reuse = reuseBusTrack == null ? AudioBusTrackReuse : reuseBusTrack.Value;
 			AudioBusTrack busTrack = null;
 			if (reuse && !string.IsNullOrEmpty(name))
-				busTrack = vegas.Project.BusTracks.OfType<AudioBusTrack>().FirstOrDefault(bus => bus.Description == name && bus != vegas.Project.MasterBus);
+				busTrack = vegas.Project.BusTracks.OfType<AudioBusTrack>().FirstOrDefault(bus => bus.Description == name && !bus.IsMaster());
 			if (busTrack == null) {
 				busTrack = vegas.Project.AddAudioBusTrack();
 				busTrack.Description = name;
 			}
 			foreach (AudioTrack track in tracks)
 				track.BusTrack = busTrack;
-			return busTrack; // TODO: 后置增益调节插入FX。
+			return busTrack; // “后置增益调节插入FX”貌似没法由脚本API控制。
 		}
 
 		/// <summary>
@@ -7064,7 +7074,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// <param name="step">当前获取的步数。</param>
 			/// <param name="round">当前轮次。</param>
 			/// <param name="seeds">种子们。必须是固定的，否则不保证保底性。</param>
-			public static T GetRandomInPool<T>(IReadOnlyList<T> pool, long step, ref long round, object[] seeds = null) { // TODO: 代码逻辑非常复杂，由 Gemini 生成，感觉可以有优化空间？
+			public static T GetRandomInPool<T>(IReadOnlyList<T> pool, long step, ref long round, object[] seeds = null) { // 代码逻辑非常复杂，由 Gemini 生成，感觉可以有优化空间？
 				if (pool.IsEmpty()) return default(T);
 
 				// 1. 计算当前属于第几轮，以及在轮内的位置
@@ -33266,7 +33276,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			GroupTrackBy = configIni.Read("GroupTrackBy", GroupTrackBy.TRACK);
 			CollapseTrackGroupCheck.Checked = configIni.Read("CollapseTrackGroup", true);
 			TrackGroupReuseCheck.Checked = configIni.Read("TrackGroupReuse", true);
-			RouteAudioBusTrackBy = configIni.Read("AudioBusTrackBy", GroupTrackBy.TRACK);
+			RouteAudioBusTrackBy = configIni.Read("AudioBusTrackBy", GroupTrackBy.OFF);
 			AudioBusTrackReuseCheck.Checked = configIni.Read("AudioBusTrackByReuse", true);
 			CheckMidiAutoLayoutTracksButtonActived();
 			QuickEnableAllMidiAutoLayoutTracks();
