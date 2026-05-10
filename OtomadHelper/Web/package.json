@@ -45,7 +45,7 @@
 		"@dnd-kit/modifiers": "^9.0.0",
 		"@dnd-kit/sortable": "^10.0.0",
 		"@formatjs/intl-localematcher": "^0.6.1",
-		"@number-flow/react": "^0.5.10",
+		"@number-flow/react": "^0.6.0",
 		"ani-cursor": "^0.0.5",
 		"clsx": "^2.1.1",
 		"colorjs.io": "^0.5.2",

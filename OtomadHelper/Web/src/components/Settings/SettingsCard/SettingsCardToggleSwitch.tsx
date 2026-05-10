@@ -1,6 +1,6 @@
-export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, children, actionIcon, resetTransitionOnChanging, className, color, actions, lock, actuallyOn, title, onClick, onChange, ...settingsCardProps }: FCP<Override<PropsOf<typeof SettingsCard>, {
+export default function SettingsCardToggleSwitch({ on: _on, disabled, children, actionIcon, resetTransitionOnChanging, className, color, actions, lock, actuallyOn, title, onClick, onChange, ...settingsCardProps }: FCP<Override<PropsOf<typeof SettingsCard>, {
 	/** Is on? */
-	on: StateProperty<boolean>;
+	on: VariousState<boolean>;
 	/** Disabled? */
 	disabled?: boolean;
 	/**
@@ -35,7 +35,8 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 }>>) {
 	const [isToggleSwitchPressing, setIsToggleSwitchPressing] = useState(false);
 	actionIcon ||= "";
-	onClick ??= () => !isToggleSwitchPressing && (setOn as SetStateNarrow<boolean>)?.(on => { onChange?.(!on); return !on; });
+	const [on, setOn] = useVariousState(_on);
+	onClick ??= () => !isToggleSwitchPressing && setOn(on => { onChange?.(!on); return !on; });
 	const isExpander = shouldBeExpander(children);
 
 	return (

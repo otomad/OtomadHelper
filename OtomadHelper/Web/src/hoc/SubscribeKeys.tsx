@@ -3,12 +3,12 @@ export function SubscribeKeys<TValue>({ children, keys }: {
 	keys: StoreSubscribedProperty<TValue>;
 }): ReactNode;
 export function SubscribeKeys<TValue>({ children, keys }: {
-	children(stateProperties: [value: TValue, setValue: SetStateNarrow<TValue>][]): ReactNode;
+	children(...stateProperties: [value: TValue, setValue: SetStateNarrow<TValue>][]): ReactNode;
 	keys: StoreSubscribedProperty<TValue>[];
 }): ReactNode;
-export function SubscribeKeys<TTuple extends Any[]>({ children, keys }: {
-	children(stateProperties: { [Index in keyof TTuple]: [value: TTuple[Index], setValue: SetStateNarrow<TTuple[Index]>] } & { length: TTuple["length"] }): ReactNode;
-	keys: { [Index in keyof TTuple]: StoreSubscribedProperty<TTuple[Index]> } & { length: TTuple["length"] };
+export function SubscribeKeys<TTuple extends readonly Any[]>({ children, keys }: {
+	children(...stateProperties: { [Index in keyof TTuple]: [value: TTuple[Index], setValue: SetStateNarrow<TTuple[Index]>] }): ReactNode;
+	keys: { [Index in keyof TTuple]: StoreSubscribedProperty<TTuple[Index]> };
 }): ReactNode;
 export function SubscribeKeys<TValue>({ children, keys }: {
 	children: (...args: Any[]) => ReactNode;
@@ -21,5 +21,5 @@ export function SubscribeKeys<TValue>({ children, keys }: {
 		const [value, setValue] = values[0];
 		return children(value, setValue);
 	} else
-		return children(values);
+		return children(...values);
 }

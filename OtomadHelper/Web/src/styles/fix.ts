@@ -6,7 +6,6 @@
  */
 
 export default css`
-	/* stylelint-disable selector-id-pattern */
 	/* stylelint-disable selector-class-pattern */
 
 	// #region Crowdin JIPT
@@ -38,5 +37,14 @@ export default css`
 
 	main.page.exit [data-focus-ring] {
 		display: none;
+	}
+
+	// Hide NaN in Number Flow.
+	number-flow-react::part(symbol nan) {
+		display: none;
+	}
+
+	number-flow-react {
+		font-variant-numeric: tabular-nums;
 	}
 `;

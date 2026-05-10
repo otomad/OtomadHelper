@@ -136,9 +136,9 @@ const StyledSliderWrapper = styled.div`
 	}
 `;
 
-export default function Slider({ value: [value, _setValue], min = 0, max = 100, autoClampValue, defaultValue, step, keyStep = 1, keyBigStepMultiplier = 10, displayValueStep, smoothlyDisplayValue = true, disabled = false, displayValue: _displayValue = false, _disableSmooth: disableSmooth, onChanging, onChange, onDisplayValueChanged }: FCP<{
+export default function Slider({ value: _value, min = 0, max = 100, autoClampValue, defaultValue, step, keyStep = 1, keyBigStepMultiplier = 10, displayValueStep, smoothlyDisplayValue = true, disabled = false, displayValue: _displayValue = false, _disableSmooth: disableSmooth, onChanging, onChange/* , onDisplayValueChanged */ }: FCP<{
 	/** Current value. */
-	value: StateProperty<number>;
+	value: VariousState<number>;
 	/** Slider minimum value. @default 0 */
 	min?: number;
 	/** Slider maximum value. @default 100 */
@@ -172,8 +172,9 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 	/** Occurs when the slider is lifted after being dragged. */
 	onChange?(value: number): void;
 	/** Occurs when you want to get the display value. */
-	onDisplayValueChanged?(value: Readable | undefined): void;
+	// onDisplayValueChanged?(value: Readable | undefined): void;
 }>) {
+	const [value, _setValue] = useVariousState(_value);
 	const errorInfo = `The value range should be between [${min} ~ ${max}], with the current value being ${value}.`;
 	if (value === undefined || Number.isNaN(value))
 		throw new ReferenceError("value undefined");
@@ -196,7 +197,7 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 	const setValue = useCallback((value: number) => {
 		value = clamp(value, min, max);
 		if (step) value = value.toFixedNumber(step.countDecimals());
-		_setValue?.(value);
+		_setValue(value);
 	}, [_setValue, min, max, step]);
 
 	function resetToDefault(e: MouseEvent) {
@@ -235,7 +236,7 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 		thumb.addEventListener("pointerup", () => {
 			aborter.abort();
 			thumb.releasePointerCapture(e.pointerId);
-			onChange?.(value!);
+			onChange?.(value);
 			nextAnimationTick().then(() => {
 				setPressed(false);
 			});
@@ -281,11 +282,11 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 		else return _displayValue;
 	}, [_displayValue, steppedSmoothValue]);
 
-	useEffect(() => { onDisplayValueChanged?.(displayValue); }, [displayValue, onDisplayValueChanged]);
+	// useEffect(() => { onDisplayValueChanged?.(displayValue); }, [displayValue, onDisplayValueChanged]);
 
 	return (
 		<StyledSliderWrapper onAuxClick={resetToDefault}>
-			{hasValue(displayValue) && !onDisplayValueChanged && <output htmlFor={id} aria-hidden>{displayValue}</output>}
+			{hasValue(displayValue) /* && !onDisplayValueChanged */ && <output htmlFor={id} aria-hidden>{displayValue}</output>}
 			<StyledSlider
 				tabIndex={disabled ? -1 : 0}
 				style={{

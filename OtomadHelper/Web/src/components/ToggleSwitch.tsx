@@ -247,9 +247,9 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 	}
 `);
 
-export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, anchor, actions, actuallyOn, noIndentation, ariaIdRef, className, children, onChange, ...htmlAttrs }: FCP<{
+export default function ToggleSwitch({ on: _on, disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, anchor, actions, actuallyOn, noIndentation, ariaIdRef, className, children, onChange, ...htmlAttrs }: FCP<{
 	/** Is on? */
-	on: StateProperty<boolean>;
+	on: VariousState<boolean>;
 	/** Disabled */
 	disabled?: boolean;
 	/** Communicates to the parent component whether the current toggle switch is pressed. */
@@ -314,7 +314,8 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	/** Occurs while toggling. */
 	onChange?(on: boolean): void;
 }, "button">) {
-	const on = typeof lock === "boolean" ? lock : _on!;
+	const [__on, setOn] = useVariousState(_on);
+	const on = typeof lock === "boolean" ? lock : __on;
 	const disabled = typeof lock === "boolean" || _disabled;
 	const [isDragging, setIsDragging] = useState(false);
 	const [thumbLeft, setThumbLeft] = useState<number>();

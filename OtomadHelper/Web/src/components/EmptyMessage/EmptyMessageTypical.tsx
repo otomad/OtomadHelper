@@ -1,6 +1,6 @@
 import type { LocaleIdentifiers } from "locales/types";
 
-export /* @internal */ default function EmptyMessageTypical({ name: staticName, title, icon, enabled: [enabled, setEnabled], children }: FCP<{
+export /* @internal */ default function EmptyMessageTypical({ name: staticName, title, icon, enabled: _enabled, children }: FCP<{
 	/** Feature name. */
 	name?: string;
 	/** Feature name, but automatically get from the i18n strings. */
@@ -8,8 +8,9 @@ export /* @internal */ default function EmptyMessageTypical({ name: staticName, 
 	/** Feature icon. */
 	icon: DeclaredIcons;
 	/** Is enabled? */
-	enabled: StatePropertyNonNull<boolean>;
+	enabled: VariousState<boolean>;
 }>) {
+	const [enabled, setEnabled] = useVariousState(_enabled);
 	if (enabled) return children;
 	const name = staticName || title && t.titles[title];
 	return (
