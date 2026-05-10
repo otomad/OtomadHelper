@@ -33,7 +33,6 @@ export default function BackgroundImage() {
 			<BackgroundImageImg
 				key={currentImage}
 				src={currentImage}
-				autoAlt={false}
 				fit={fit}
 				position={position}
 				style={{ filter: `blur(${blur}px)` }}
@@ -68,11 +67,9 @@ const StyledBackgroundImageImg = styled.img`
 	}
 `;
 
-export function BackgroundImageImg({ src, autoAlt = false, fit = "cover", position: [x, y] = [50, 50], children: _children, style, alt, ...htmlAttrs }: FCP<{
+export function BackgroundImageImg({ src, fit = "cover", position: [x, y] = [50, 50], children: _children, style, ...htmlAttrs }: FCP<{
 	/** Image source href. */
 	src: string;
-	/** Allow screen reader to auto fetch image a11y description online? @default false */
-	autoAlt?: boolean;
 	/** Fit type. */
 	fit?: Config.ImageFitType;
 	/** Image position (percent of x and y). */
@@ -83,11 +80,10 @@ export function BackgroundImageImg({ src, autoAlt = false, fit = "cover", positi
 	const cssFit = ImageFitTypes[fit] as CSSProperties["objectFit"];
 	return (
 		<StyledBackgroundImageImg
-			alt={alt || (autoAlt ? undefined : "")}
-			src={src}
 			className={cssFit}
 			style={{
 				...style as AnyObject,
+				content: !isTile ? `url("${src}")` : undefined,
 				backgroundImage: isTile ? `url("${src}")` : undefined,
 				objectFit: !isTile ? cssFit : undefined,
 				"--position": `${x}% ${y}%`,

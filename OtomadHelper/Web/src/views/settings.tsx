@@ -47,6 +47,17 @@ const SampleTextFontSize = styled.div`
 	}
 `;
 
+const SampleTextFontFamily = styled.p`
+	${styles.text.body};
+	font-variant-numeric: tabular-nums;
+	text-align: center;
+	user-select: text;
+
+	&.bold {
+		${styles.text.bodyStrong};
+	}
+`;
+
 /* const BackgroundImageItemStyle = createGlobalStyle`
 	.background-image-item:not(.sortable-overlay *, .dragging, .dropping) {
 		@starting-style {
@@ -327,7 +338,7 @@ export default function Settings() {
 							className="background-image-item"
 							id={id}
 							key={id}
-							image={id === -1 ? <IconTile name="prohibited" size={48} /> : <BackgroundImageImg src={url} autoAlt fit={fit} position={position} />}
+							image={id === -1 ? <IconTile name="prohibited" size={48} /> : <BackgroundImageImg src={url} fit={fit} position={position} />}
 							selected={[backgroundImages.currentImageKey[0] === id, (v: boolean) => v && backgroundImages.currentImageKey[1](id)]}
 							selectionColor={color}
 							withBorder
@@ -410,10 +421,14 @@ export default function Settings() {
 					<FontPicker font={fontFamily} />
 				</Expander.ChildWrapper>
 				<Expander.ChildWrapper $noDivider>
-					<Button icon="arrow_reset" onClick={() => fontFamily[1]("")}>{t.resetToDefault}</Button>
+					<Button icon="arrow_reset" onClick={() => fontFamily[1]("")} disabled={fontFamily[0] === ""}>{t.resetToDefault}</Button>
 				</Expander.ChildWrapper>
 				<Expander.ChildWrapper $single>
-					<center>{t.descriptions.settings.appearance.fontSize.sampleText}</center>
+					{languages.toSorted((a, b) => currentLanguage === a ? -1 : currentLanguage === b ? 1 : 0).map(language => (
+						<SampleTextFontFamily key={language} lang={language} className={{ bold: currentLanguage === language }}>
+							{t({ lng: language }).descriptions.settings.appearance.fontSize.sampleText}
+						</SampleTextFontFamily>
+					))}
 				</Expander.ChildWrapper>
 			</Setting>
 
