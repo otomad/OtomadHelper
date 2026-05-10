@@ -437,6 +437,8 @@ namespace Config {
 export const configStore = Config.configStore;
 export const useSelectConfig = <T extends object>(path: (state: typeof configStore) => T) => useStoreState(path(configStore));
 export const useSelectConfigArray = <T extends object>(path: (state: typeof configStore) => T[]) => useStoreStateArray(path(configStore));
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+export const useSubConfig = <T extends object>(path: (state: typeof configStore) => T) => currySubscribeStore(path(configStore));
 if (import.meta.env.DEV) globals.config = configStore;
 
 import ConfigNS = Config;

@@ -123,6 +123,7 @@ declare global {
 	/**
 	 * Add more functions to the StateProperty.
 	 * @template T - State property type.
+	 * @deprecated
 	 */
 	export type StatePropertyPremium<T> = StateProperty<T> & {
 		/**

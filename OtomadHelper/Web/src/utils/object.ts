@@ -249,6 +249,27 @@ export function useStateSelector<TOld, TNew>(
 }
 
 /**
+ * Creates a narrow state setter that avoids checking if the input is an updater function and unnecessary updates.
+ *
+ * The returned setter accepts either a direct value or an updater function.\
+ * If the new value equals the current value, the original setter is not invoked.
+ *
+ * @template T - The type of the state value.
+ * @param setter - The original state setter function.
+ * @param getter - A function that returns the current state value.
+ * @returns A setter that only applies changes when the value differs.
+ */
+export function setStateNarrow<T>(setter: (newValue: T) => void, getter: () => T) {
+	return ((value: unknown) => {
+		const currentValue = getter();
+		const newValue = typeof value === "function" ? value(currentValue) : value;
+		if (currentValue !== newValue) // If the value is same as the previous value, do not set it again.
+			setter(newValue);
+		return newValue;
+	}) as SetStateNarrow<T>;
+}
+
+/**
  * Checks whether the given value is a `RefObject`.
  *
  * This function, `isRefObject`, checks whether the given value is a `RefObject`. It returns `true` if the value is a `RefObject`,
@@ -643,16 +664,6 @@ export function mutexSwitches(...switches: (StateProperty<boolean> | StateProper
  */
 export function withObject<TObject, TReturn>(object: TObject, getter: (object: TObject) => TReturn) {
 	return getter(object);
-}
-
-/**
- * Check if a object is a state property.
- * @template T - The type of the value that to be checked.
- * @param object - The value to be checked.
- * @returns Is the object a state property?
- */
-export function isStateProperty<T>(object: unknown): object is StateProperty<T> {
-	return Array.isArray(object) && object.length === 2 && typeof object[1] === "function";
 }
 
 /**

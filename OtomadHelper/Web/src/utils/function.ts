@@ -46,3 +46,27 @@ export function isAsyncFunction(test: unknown): test is (...args: Any[]) => Prom
 export function isArguments(test: unknown): test is IArguments {
 	return Object.prototype.toString.call(test) === "[object Arguments]";
 }
+
+/**
+ * Determines if an instance is an instance of the given constructor using the default instanceof behavior.
+ *
+ * Useful if you want to override the default instanceof behavior in your own class.
+ *
+ * @param constructor - The constructor function to test against.
+ * @param instance - The instance to test.
+ * @returns Is the instance an instance of the constructor?
+ *
+ * @example
+ * ```typescript
+ * const IS_FOO = Symbol.for("foo.is_foo");
+ * class Foo {
+ *     [IS_FOO] = true;
+ *     [Symbol.hasInstance](value: any) {
+ *         return defaultInstanceOf(Foo, value) || !!value?.[IS_FOO];
+ *     }
+ * }
+ * ```
+ */
+export function defaultInstanceOf(constructor: Function, instance: Any) {
+	return Function.prototype[Symbol.hasInstance].call(constructor, instance);
+}

@@ -40,12 +40,10 @@ export function useBackgroundImages() {
 	const store = useRef<Store>(undefined);
 	const [items, setItems] = useAtom(itemsAtom);
 	const { backgroundImage: currentImageKey } = useSnapshot(configStore.settings);
-	const setCurrentImageKey: SetStateNarrow<typeof currentImageKey> = value => {
-		const previous = configStore.settings.backgroundImage;
-		const current = typeof value === "function" ? value(previous) : value;
-		if (current !== previous)
-			startCircleViewTransition(current !== -1, () => configStore.settings.backgroundImage = current);
-	};
+	const setCurrentImageKey = setStateNarrow(
+		current => startCircleViewTransition(current !== -1, () => configStore.settings.backgroundImage = current),
+		() => configStore.settings.backgroundImage,
+	);
 	const currentItem = useMemo(() => items.find(item => item.key === currentImageKey), [items, currentImageKey]);
 	const currentImage = useMemo(() => currentItem?.url ?? "", [currentItem]);
 	const currentDominantColor = useMemo(() => currentItem?.color || undefined, [currentItem]);

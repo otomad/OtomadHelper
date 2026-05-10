@@ -6,7 +6,7 @@ const HIDE_DELAY = 500, HOVER_SHOW_DELAY = 100;
 const $p = (test?: boolean) => test ? "true" : undefined;
 const toStringOrNaN = (test: unknown) => Object.prototype.toString.call(test) === "[object String]" || isI18nItem(test) ? (test as string).toString() : NaN;
 
-export /* @internal */ function CommandBarItem({ icon, caption, altCaption, details, iconOnly, children, canBeDisabled, disabled, hovering, on, dirBasedIcon, "aria-haspopup": ariaHasPopup, onClick, ...buttonAndTransitionAttrs }: FCP<{
+export /* @internal */ function CommandBarItem({ icon, caption, altCaption, details, iconOnly, children, canBeDisabled, disabled, hovering, on: _on, dirBasedIcon, "aria-haspopup": ariaHasPopup, onClick, ...buttonAndTransitionAttrs }: FCP<{
 	/** Button icon. */
 	icon?: DeclaredIcons;
 	/** Caption. */
@@ -22,7 +22,7 @@ export /* @internal */ function CommandBarItem({ icon, caption, altCaption, deta
 	/** Open flyout by hovering instead of clicking. */
 	hovering?: boolean;
 	/** Use as a toggle button. */
-	on?: boolean | StatePropertyNonNull<boolean>;
+	on?: VariousStateWithSelf<boolean>;
 	/** Is the orientation of the icon changed based on the writing direction? */
 	dirBasedIcon?: DirBasedIcon;
 }, "section"> & TransitionProps) {
@@ -39,8 +39,7 @@ export /* @internal */ function CommandBarItem({ icon, caption, altCaption, deta
 	useListen("app:hideOtherFlyouts", exceptId => { if (exceptId !== anchorName) { clearTimeout(hideTimeout.current); setFlyoutShown(false); } });
 	const [isMouse, _setIsMouse] = useState(true);
 	const checkIsMouse = (e: PointerEvent) => { const result = e.pointerType === "mouse"; _setIsMouse(result); return result; };
-	let setOn: SetStateNarrow<boolean> | undefined;
-	if (isReadonlyArray(on)) { setOn = on[1]; on = on[0]; }
+	const [on, setOn] = useVariousState(_on);
 	const buttonEl = useDomRef<"button">();
 
 	if (toStringOrNaN(caption) === toStringOrNaN(altCaption)) altCaption = undefined;
@@ -51,7 +50,7 @@ export /* @internal */ function CommandBarItem({ icon, caption, altCaption, deta
 		iconOnly || altCaption || !children && tooNarrow ? !details ? caption : <Tooltip.Content title={caption}>{details}</Tooltip.Content> : details;
 	const button = (
 		<ClickOnSameElement
-			onClick={e => { if (hovering && checkIsMouse(e) || !children) { onClick?.(e); setOn?.(on => !on); } showFlyout(); }}
+			onClick={e => { if (hovering && checkIsMouse(e) || !children) { onClick?.(e); setOn(on => !on); } showFlyout(); }}
 		>
 			<ToggleButton
 				ref={buttonEl}

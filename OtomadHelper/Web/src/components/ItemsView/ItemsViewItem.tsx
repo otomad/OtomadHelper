@@ -339,7 +339,7 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 	/** Identifier. */
 	id: T;
 	/** Selected? */
-	selected?: CheckState | StateProperty<boolean>;
+	selected?: CheckState | VariousState<boolean>;
 	/** Detailed description. */
 	details?: ReactNode;
 	/** The other action control area on the right side of the component. */
@@ -384,12 +384,8 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 	/** Occurs when user click it. */
 	onClick?: OnItemsViewItemClickEventHandler<T>;
 }, "button">) {
-	let selected: CheckState, setSelected: SetStateNarrow<boolean> | undefined;
-	if (isReadonlyArray(_selected)) {
-		setSelected = _selected[1] as never;
-		selected = _selected[0] ? "checked" : "unchecked";
-	} else
-		selected = _selected;
+	const [__selected, setSelected] = useVariousState(_selected as VariousState<boolean>, true);
+	const selected: CheckState = typeof __selected === "string" ? __selected : __selected ? "checked" : "unchecked";
 	if (typeof tooltip === "string" || isI18nItem(tooltip))
 		tooltip = { title: String(tooltip), placement: "block" };
 	if (badge !== undefined && !Array.isArray(badge))

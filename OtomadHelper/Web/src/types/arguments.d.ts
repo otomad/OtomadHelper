@@ -27,7 +27,7 @@ declare global {
 		|  "start start"  |  "start center" |  "start end"
 		| "center start"  | "center center" | "center end"
 		|    "end start"  |    "end center" |    "end end";
-		/* eslint-enable  @stylistic/no-multi-spaces */
+	/* eslint-enable  @stylistic/no-multi-spaces */
 
 	type AnimatedIconState = AnimatedIconStateNS.Tuple | AnimatedIconStateNS.Object;
 
