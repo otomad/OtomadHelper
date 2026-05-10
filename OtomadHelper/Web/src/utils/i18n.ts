@@ -297,20 +297,21 @@ export function getLocaleName(targetLocale: string | Intl.Locale, displayLocale:
  * @param context - Provide the context if required.
  * @param enableFallbackLang - When set it to `false`, if the specific key exists but haven't translated in current language,
  * the function will also return `false`.
+ * @param lng - Specify the language used. Defaults to current language.
  * @returns The key and the context exist.
  * @example
  * ```javascript
  * i18nExists(t.my.key, "context"); // -> true if exists, false if not.
  * ```
  */
-export function i18nExists(i18nItem: string, context?: string, enableFallbackLang = true) {
+export function i18nExists(i18nItem: string, context?: string, enableFallbackLang = true, lng?: string) {
 	let path = getI18nKey(i18nItem);
 	if (context) path += `_${context}`;
 	const fallbackLng = enableFallbackLang ? undefined : false;
-	const notCategoryExists = i18n.exists(path, { fallbackLng, returnObjects: false });
+	const notCategoryExists = i18n.exists(path, { lng, fallbackLng, returnObjects: false });
 	if (notCategoryExists) return true;
-	if (notCategoryExists === i18n.exists(path, { fallbackLng, returnObjects: true })) return false;
-	return i18n.exists(path + "._", { fallbackLng, returnObjects: false });
+	if (notCategoryExists === i18n.exists(path, { lng, fallbackLng, returnObjects: true })) return false;
+	return i18n.exists(path + "._", { lng, fallbackLng, returnObjects: false });
 }
 
 /**

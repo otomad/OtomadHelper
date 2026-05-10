@@ -424,11 +424,14 @@ export default function Settings() {
 					<Button icon="arrow_reset" onClick={() => fontFamily[1]("")} disabled={fontFamily[0] === ""}>{t.resetToDefault}</Button>
 				</Expander.ChildWrapper>
 				<Expander.ChildWrapper $single>
-					{languages.toSorted((a, b) => currentLanguage === a ? -1 : currentLanguage === b ? 1 : 0).map(language => (
-						<SampleTextFontFamily key={language} lang={language} className={{ bold: currentLanguage === language }}>
-							{t({ lng: language }).descriptions.settings.appearance.fontSize.sampleText}
-						</SampleTextFontFamily>
-					))}
+					{languages.toSorted((a, b) => currentLanguage === a ? -1 : currentLanguage === b ? 1 : 0).map(language => {
+						const i18nKey = tAlias({ lng: language, fallbackLng: false }).descriptions.settings.appearance.fontSize.sampleText;
+						return i18nExists(i18nKey, undefined, false, language) && (
+							<SampleTextFontFamily key={language} lang={language} className={{ bold: currentLanguage === language }}>
+								{t({ lng: language, fallbackLng: false }).descriptions.settings.appearance.fontSize.sampleText}
+							</SampleTextFontFamily>
+						);
+					})}
 				</Expander.ChildWrapper>
 			</Setting>
 
