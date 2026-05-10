@@ -124,6 +124,55 @@ const StyledPreviewYtp = styled.div<{
 					filter: sepia(1);
 				}
 			`,
+			kinescope: css`
+				div {
+					position: absolute;
+					aspect-ratio: 16 / 9;
+					box-shadow: 0 0 8px 2px black;
+
+					&::before {
+						${styles.mixins.square("100%")};
+						content: "";
+						position: absolute;
+						display: block;
+						mix-blend-mode: color;
+					}
+
+					&:nth-of-type(2) {
+						scale: -80% 80%;
+
+						&::before {
+							background-color: lime;
+						}
+					}
+
+					&:nth-of-type(3) {
+						scale: 60%;
+
+						&::before {
+							background-color: blue;
+						}
+					}
+
+					&:nth-of-type(4) {
+						scale: -40% 40%;
+					}
+
+					&:nth-of-type(1)::before,
+					&:nth-of-type(4)::before {
+						background-color: red;
+					}
+				}
+
+				img {
+					position: static;
+				}
+			`,
+			trippyColoring: css`
+				img {
+					filter: invert(1) hue-rotate(45deg) saturate(2);
+				}
+			`,
 		}[$name];
 	}}
 `;
@@ -244,6 +293,7 @@ export default function PreviewYtp({ thumbnail, name }: FCP<{
 		spherize: webglFilters?.spherize,
 		twist: webglFilters?.twist,
 		pixelate: webglFilters?.pixelate,
+		trippyColoring: webglFilters?.twist,
 		// spectrum: webglFilters?.spectrum,
 		// emboss: webglFilters?.emboss,
 		// bump: webglFilters?.bump,
@@ -252,8 +302,21 @@ export default function PreviewYtp({ thumbnail, name }: FCP<{
 
 	return (
 		<StyledPreviewYtp $name={name}>
-			<img alt="" data-name={name} src={alterImage || thumbnail} />
+			{name === "kinescope" ? <Kinescope thumbnail={thumbnail} /> :
+			<img alt="" data-name={name} src={alterImage || thumbnail} />}
 			<SvgFilters />
 		</StyledPreviewYtp>
+	);
+}
+
+function Kinescope({ thumbnail }: { thumbnail: string }) {
+	return (
+		<>
+			{forMap(4, i => (
+				<div key={i}>
+					<img alt="" src={thumbnail} />
+				</div>
+			), 1)}
+		</>
 	);
 }

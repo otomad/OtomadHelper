@@ -1,4 +1,4 @@
-export default function SettingsCardToggleSwitch({ on: _on, disabled, children, actionIcon, resetTransitionOnChanging, className, color, actions, lock, actuallyOn, title, onClick, onChange, ...settingsCardProps }: FCP<Override<PropsOf<typeof SettingsCard>, {
+export default function SettingsCardToggleSwitch({ on: _on, disabled, children, actionIcon, resetTransitionOnChanging, className, color, actions, lock, actuallyOn, title, expanded, onClick, onChange, ...settingsCardProps }: FCP<Override<PropsOf<typeof SettingsCard>, {
 	/** Is on? */
 	on: VariousState<boolean>;
 	/** Disabled? */
@@ -30,6 +30,8 @@ export default function SettingsCardToggleSwitch({ on: _on, disabled, children, 
 	 * @default undefined
 	 */
 	actuallyOn?: boolean;
+	/** Expanded initially if it has children and it is on? */
+	expanded?: boolean;
 	/** Occurs while toggling. */
 	onChange?(on: boolean): void;
 }>>) {
@@ -70,6 +72,7 @@ export default function SettingsCardToggleSwitch({ on: _on, disabled, children, 
 			role={isExpander && on ? undefined : "switch"}
 			aria-checked={on}
 			wrapActionsWhenNarrow={!actions ? false : undefined} // For better performance if there is no other custom actions.
+			expanded={expanded}
 			onClick={onClick}
 			onClickWhenChildrenDisabled={isExpander && setOn ? () => { setOn(true); onChange?.(true); } : undefined}
 			{...settingsCardProps}

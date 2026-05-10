@@ -1,5 +1,3 @@
-import exampleThumbnail from "assets/images/ヨハネの氷.avif";
-
 const StyledDeactivateButton = styled(Button).attrs({
 	icon: "arrow_reset",
 	accent: true,
@@ -29,10 +27,11 @@ export default function Track() {
 	const { pushPage } = useSnapshot(pageStore);
 	const [layoutEnabled, layoutEnabledCount, deactivateAll] = useLayoutEnabled();
 	const meta = metas.track;
+	const { thumbnail } = useThumbnail();
 
 	return (
 		<div className="container">
-			<SettingsPageControl image={(<PreviewLayout thumbnail={exampleThumbnail} />)} learnMoreLink="">{t.descriptions.track}</SettingsPageControl>
+			<SettingsPageControl image={(<PreviewLayout thumbnail={thumbnail} />)} learnMoreLink="">{t.descriptions.track}</SettingsPageControl>
 
 			<Subheader meta={meta.layout} />
 			<SettingsCard

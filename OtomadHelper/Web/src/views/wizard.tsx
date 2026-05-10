@@ -1,4 +1,3 @@
-import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 import Score from "./score";
 
 export default function Wizard() {
@@ -18,16 +17,17 @@ export default function Wizard() {
 		enabled => enabled ? [{ fx: "hFlip", initial: [1, 2] }] : [{ fx: "normal", initial: [0] }],
 		{ processPrevStateInSetterWithGetter: true },
 	);
+	const { thumbnail } = useThumbnail();
 	const { changePage } = useSnapshot(pageStore);
 
-	const previewModeVocaloid = <div><img src={exampleThumbnail} style={{ width: "100%" }} /><PreviewKaraoke demoMode /></div>;
+	const previewModeVocaloid = <div><img src={thumbnail} style={{ width: "100%" }} /><PreviewKaraoke demoMode /></div>;
 	return (
 		<div className="container">
 			<Subheader>{t.mode}</Subheader>
 			<ItemsView view="grid" current={mode} inlineAlignment="start">
-				<ItemsView.Item id="otomad" image={<PreviewLayout thumbnail={exampleThumbnail} />}>{t.mode.otomad}</ItemsView.Item>
+				<ItemsView.Item id="otomad" image={<PreviewLayout thumbnail={thumbnail} />}>{t.mode.otomad}</ItemsView.Item>
 				<ItemsView.Item id="vocaloid" image={previewModeVocaloid}>{t.mode.vocaloid}</ItemsView.Item>
-				<ItemsView.Item id="ytp" image={<PreviewModeYtp thumbnail={exampleThumbnail} />}>{t.mode.ytp}</ItemsView.Item>
+				<ItemsView.Item id="ytp" image={<PreviewModeYtp thumbnail={thumbnail} />}>{t.mode.ytp}</ItemsView.Item>
 			</ItemsView>
 
 			<Subheader>{t.source.from}</Subheader>

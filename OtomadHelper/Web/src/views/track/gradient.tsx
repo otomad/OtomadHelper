@@ -1,4 +1,3 @@
-import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 import { directionTypes, getParityIcon } from "./grid";
 
 // const gradients = [
@@ -115,7 +114,7 @@ export default function Gradient() {
 // 								id={id}
 // 								image={(
 // 									<PreviewGradient
-// 										thumbnail={exampleThumbnail}
+// 										thumbnail={thumbnail}
 // 										square={viewSquare[0]}
 // 										mirrorEdges={viewMirrorEdges[0]}
 // 										overlay={viewOverlay[0]}

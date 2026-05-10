@@ -1,4 +1,3 @@
-import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 import ConicGradientIcon from "assets/svg/icons/conic_gradient.svg?react";
 import DiamondGradientIcon from "assets/svg/icons/diamond_gradient.svg?react";
 
@@ -201,10 +200,6 @@ const StyledGradientFlyoutEditor = styled.div`
 	.custom-parity-btn .base::before {
 		content: none;
 	}
-
-	.${TRIPPY_COLORING_ID} img {
-		filter: invert(1) hue-rotate(45deg) saturate(2);
-	}
 `;
 
 const MARQUEE_SPEED = 40;
@@ -221,6 +216,7 @@ export default function GradientFlyoutEditor() {
 	const prevTitles = usePrevious(titles);
 	const transitionName = useMemo(() => titles.toCompacted().length < (prevTitles?.toCompacted().length ?? NaN) ? "forward" : "backward", [titles, prevTitles]);
 	const stylesEl = useDomRef<"div">(), currentStylesScrollLeft = useRef(0);
+	const { thumbnail } = useThumbnail();
 
 	function clickOnStyle(pattern: typeof currentPattern, style: StyleType) {
 		if (stylesEl.current) currentStylesScrollLeft.current = stylesEl.current.scrollLeft;
@@ -245,15 +241,15 @@ export default function GradientFlyoutEditor() {
 									<ItemsView.Item
 										id={TRIPPY_COLORING_ID}
 										key={TRIPPY_COLORING_ID}
-										image={<PreviewTwistEffect thumbnail={exampleThumbnail} direction="cw" className={TRIPPY_COLORING_ID} />}
+										image={<PreviewYtp thumbnail={thumbnail} name="trippyColoring" />}
 										imageOverlay={<AsteriskHelp>{t.descriptions.track.gradient.trippyColoring}</AsteriskHelp>}
 										role="button"
 										_multiple
-										aria-label={t.track.gradient.trippyColoring}
+										aria-label={t.ytp.effects.trippyColoring}
 										checkmarkPosition="top left"
 										// onClick={() => clickAStyle("parity", key)}
 									>
-										<MarqueeIfOverflow speed={MARQUEE_SPEED}>{t.track.gradient.trippyColoring}</MarqueeIfOverflow>
+										<MarqueeIfOverflow speed={MARQUEE_SPEED}>{t.ytp.effects.trippyColoring}</MarqueeIfOverflow>
 									</ItemsView.Item>
 									<Subheader vertical>{tc.groups.parity}</Subheader>
 									{ParityStyles.map(({ key, label, ...raw }) => (
@@ -261,10 +257,10 @@ export default function GradientFlyoutEditor() {
 											id={key}
 											key={key}
 											image={(key.startsWith("twist") ?
-												<PreviewTwistEffect thumbnail={exampleThumbnail} direction={key === "twistCcw" ? "ccw" : "cw"} /> :
+												<PreviewTwistEffect thumbnail={thumbnail} direction={key === "twistCcw" ? "ccw" : "cw"} /> :
 												(
 													<PreviewPrve
-														thumbnail={exampleThumbnail}
+														thumbnail={thumbnail}
 														effect={"effect" in raw ? raw.effect : key}
 														step={"step" in raw ? raw.step : 1}
 														frames={"step" in raw ? 2 : undefined}
@@ -287,7 +283,7 @@ export default function GradientFlyoutEditor() {
 										<ItemsView.Item
 											id={key}
 											key={key}
-											image={<PreviewGraduallyGradient thumbnail={exampleThumbnail} effect={key} />}
+											image={<PreviewGraduallyGradient thumbnail={thumbnail} effect={key} />}
 											role="button"
 											aria-label={label}
 											onClick={() => clickOnStyle("gradient", key)}

@@ -671,7 +671,6 @@ export default {
 					edge: "Edge", // Edge point of radial gradient and conic gradient.
 					corner: "Corner", // Corner point of diamond gradient.
 				},
-				trippyColoring: "Trippy Coloring",
 			},
 			applyToSelectedTracks: "Apply to selected tracks",
 			deactivate: "Deactivate",
@@ -780,6 +779,8 @@ export default {
 				bump: "Bump",
 				edge: "Find Edges",
 				sepia: "Sepia",
+				kinescope: "Kinescope",
+				trippyColoring: "Trippy Coloring",
 			},
 			sideEffects: {
 				wave: "Wave",
@@ -789,6 +790,7 @@ export default {
 				hFlipWithRhythm: "Horizontal Flip with Rhythm",
 				loud: "Loud",
 				sporadicUpsizeFocusMotion: "Sporadic Upsize Focus Motion",
+				countAndColor: "Count and Color Order of Layers",
 			},
 			legend: {
 				_: "Legend",
@@ -1457,7 +1459,7 @@ export default {
 				preference: {
 					autoSwitchSourceFrom: "Changes the source from automatically based on the last selected content",
 					autoCollapsePrveClasses: "Collapses other expanded $t(titles.prve) classes automatically when expanding a class",
-					previewWithSource: "Uses the selected source to preview the effects. If you often encounter monotonous sources that affect the preview, try disabling it to preview with the default sample image.",
+					previewWithSource: "Uses the selected source to preview the effects. If you often encounter monotonous sources that affect the preview, try disabling it to preview with a static sample image.",
 				},
 				config: {
 					userConfig: {

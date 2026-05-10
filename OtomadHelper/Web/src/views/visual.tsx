@@ -1,4 +1,3 @@
-import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 import { usePrveInfo } from "./visual/prve";
 
 export /* @internal */ const stretches = [
@@ -57,6 +56,7 @@ export default function Visual() {
 	const truncateIdleEffectDisabled = !truncates.find(({ id }) => id === truncate[0])?.idleEffectApplicable,
 		truncateLoopRegionDisabled = !truncates.find(({ id }) => id === truncate[0])?.loopRegionApplicable;
 	const arpeggioIdleEffectActualOn = Object.values(arpeggioIdleEffect[0]).some(({ enabled }) => enabled);
+	const { thumbnail } = useThumbnail();
 
 	const { pushPage } = useSnapshot(pageStore);
 
@@ -71,7 +71,7 @@ export default function Visual() {
 
 	return (
 		<div className="container">
-			<SettingsPageControlMedia stream="visual" fileName="ヨハネの氷.mp4" enabled={enabled} thumbnail={exampleThumbnail} />
+			<SettingsPageControlMedia stream="visual" fileName="ヨハネの氷.mp4" enabled={enabled} thumbnail={thumbnail} />
 
 			<EmptyMessage.Typical icon="image" title="visual" enabled={enabled}>
 				<Setting
@@ -231,7 +231,7 @@ export default function Visual() {
 								<ItemsView.Item
 									id={name}
 									key={name}
-									image={<PreviewParameterPreset key={name} thumbnail={exampleThumbnail} name={name} previewIdeality={presetPreviewIdeality[0]} />}
+									image={<PreviewParameterPreset key={name} thumbnail={thumbnail} name={name} previewIdeality={presetPreviewIdeality[0]} />}
 									badge={asteriskBuiltInPresets.includes(name) && [undefined, "asterisk"]}
 								>
 									{t.stream.preset.builtInPresets[name]}

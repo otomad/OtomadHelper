@@ -1,4 +1,3 @@
-import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 import { stretches, truncates } from "./visual";
 const truncatesInAudio = truncates.filter(item => item.availableInAudio);
 
@@ -100,6 +99,7 @@ export default function Audio() {
 	const [stopPrelistening, setStopPrelistening] = useState<() => void>();
 	const tuningMethodScalelessUnlocked = tuningMethod[0].in("unset", "elastic", "classic"), tuningMethodScalelessEnabled = tuningMethodScaleless[0] && tuningMethodScalelessUnlocked;
 	const alternativeForExceedTheRangeDisabled = !tuningMethod[0].in("elastic", "classic", "unset");
+	const { thumbnail } = useThumbnail();
 
 	const { pushPage } = useSnapshot(pageStore);
 
@@ -118,7 +118,7 @@ export default function Audio() {
 
 	return (
 		<div className="container">
-			<SettingsPageControlMedia stream="audio" fileName="ヨハネの氷.mp4" enabled={enabled} thumbnail={exampleThumbnail} />
+			<SettingsPageControlMedia stream="audio" fileName="ヨハネの氷.mp4" enabled={enabled} thumbnail={thumbnail} />
 
 			<EmptyMessage.Typical icon="volume" title="audio" enabled={enabled}>
 				<Setting

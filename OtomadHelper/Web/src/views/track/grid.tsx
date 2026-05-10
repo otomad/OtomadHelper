@@ -1,5 +1,4 @@
 import contextMenuCur from "assets/cursors/context_menu.svg?cursor";
-import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 import ApprovalsAppIcon from "assets/svg/approvals_app.svg?react";
 
 export /* @internal */ const arrayTypes = ["square", "fixed"] as const;
@@ -126,7 +125,6 @@ const PreviewGrid = styled.div`
 		contain: strict;
 		object-fit: var(--fit);
 		overflow: hidden;
-		background-image: url("${exampleThumbnail}");
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: var(--fit);
@@ -565,6 +563,7 @@ export default function Grid() {
 	useSetLayoutEnabledOnSave("grid", true);
 	const setPageCommandBarDisabled = pageStore.useSetCommandBarDisabled();
 	useEffect(() => { setPageCommandBarDisabled(!!flyoutEditor); }, [flyoutEditor]);
+	const { thumbnail } = useThumbnail();
 
 	const setFlyoutEditor: typeof _setFlyoutEditor = value => { updateConfigSnapshot(); _setFlyoutEditor(value); };
 	const closeFlyoutEditor = (save = true) => {
@@ -809,10 +808,10 @@ export default function Grid() {
 							let { colStart, colEnd, colSpan, rowStart, rowEnd, rowSpan, blankCol, blankRow, corners } = findSpan(i);
 							if (verticalDirection)
 								[colStart, colEnd, colSpan, blankCol, rowStart, rowEnd, rowSpan, blankRow, corners.topRight, corners.bottomLeft] =
-								[rowStart, rowEnd, rowSpan, blankRow, colStart, colEnd, colSpan, blankCol, corners.bottomLeft, corners.topRight];
+									[rowStart, rowEnd, rowSpan, blankRow, colStart, colEnd, colSpan, blankCol, corners.bottomLeft, corners.topRight];
 							if (rtlDirection)
 								[corners.topLeft, corners.topRight, corners.bottomLeft, corners.bottomRight] =
-								[corners.topRight, corners.topLeft, corners.bottomRight, corners.bottomLeft];
+									[corners.topRight, corners.topLeft, corners.bottomRight, corners.bottomLeft];
 							const isSpanned = colSpan > 1 || rowSpan > 1;
 							const thisCell = [colStart - 1, rowStart - 1].shouldReversed(verticalDirection) as TwoD;
 							const blankCell = [blankCol, blankRow].shouldReversed(verticalDirection) as TwoD;
@@ -836,6 +835,7 @@ export default function Grid() {
 												flyoutEditor === "width" && flyoutEditorColumnRow?.[1] === "column" && flyoutEditorColumnRow[0] === colEnd - 1 ||
 												flyoutEditor === "height" && flyoutEditorColumnRow?.[1] === "row" && flyoutEditorColumnRow[0] === rowEnd - 1,
 										}]}
+										style={{ backgroundImage: `url("${thumbnail}")` }}
 										role="img"
 										aria-label={t.descriptions.track.grid.previewAria({
 											context: isSpanned ? "span" : undefined,

@@ -173,7 +173,7 @@ export const hasKey = <T extends object>(obj: T, key: keyof Any): key is keyof T
  * @param immer - Use immer?
  * @returns The generated new `setter` method.
  */
-export function setStateInterceptor<TOld, TNew>(
+export function setStateInterceptor<TOld, TNew = TOld>(
 	setter: SetState<TOld>,
 	interceptor?: (userInput: TNew, prevState: TOld) => TOld,
 	subscribe?: (curState: TOld, prevState: TOld, userInput: TNew) => void,

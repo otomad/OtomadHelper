@@ -11,6 +11,7 @@ const prveWhirlStaticImage = freezeframes["effects/prve_whirl.webp"];
 const prveSharpRewindStaticImage = freezeframes["effects/prve_sharp_rewind.webp"];
 
 export /* @internal */ const MILLISECONDS_PER_FRAME = 375;
+const RANDOM_QUESTION_MARK_FONT_SIZE = "100cqh";
 
 export /* @internal */ const styledMirror = {
 	h: css`
@@ -513,6 +514,30 @@ const StyledPreviewPrve = styled.div<{
 							to { clip-path: inset(0 0 0 0); }
 						`};
 						animation-timing-function: ${eases.easeOutMax} !important;
+					}
+				`,
+				random1: css`
+					&::before,
+					&::after {
+						content: "?";
+						position: absolute;
+						z-index: 1;
+						align-content: center;
+						block-size: ${RANDOM_QUESTION_MARK_FONT_SIZE};
+						color: white;
+						font-size: ${RANDOM_QUESTION_MARK_FONT_SIZE};
+						font-weight: 800;
+						line-height: ${RANDOM_QUESTION_MARK_FONT_SIZE};
+						text-box: trim-both cap alphabetic;
+					}
+
+					&::before {
+						mix-blend-mode: difference;
+					}
+
+					&::after {
+						filter: drop-shadow(0 2px 3px #000d);
+						mix-blend-mode: multiply;
 					}
 				`,
 			}[$effect];

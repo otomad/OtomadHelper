@@ -1,9 +1,8 @@
-import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 import { defaultPrveAmounts } from "helpers/default-configs";
 import type { LocaleIdentifiers } from "locales/types";
 
 type PrveClassType = Exclude<keyof LocaleIdentifiers["javascript"]["prve"]["classes"], "_">;
-type PrveEffectType = Exclude<keyof LocaleIdentifiers["javascript"]["prve"]["effects"], "_"> | (string & {});
+type PrveEffectType = Exclude<keyof LocaleIdentifiers["javascript"]["prve"]["effects"], "_"> | string & {};
 type CustomEffectRotationMode = "normal" | "rotate" | "rotateCustomSequence";
 
 const controlModes = ["general", "samePitch", "differentSyllables"] as const;
@@ -51,10 +50,10 @@ class PrveClass {
 		this.findEffectFrames = this.findEffectFrames.bind(this);
 	}
 
-	public static findClass(klass: PrveClassType | (string & {})) { return PrveClass.all.find(prveClass => prveClass.class === klass); }
+	public static findClass(klass: PrveClassType | string & {}) { return PrveClass.all.find(prveClass => prveClass.class === klass); }
 	public get effectIds() { return this.effects.map(effect => effect.effect) ?? []; }
 	public static findClassEffects(klass: PrveClassType) { return PrveClass.findClass(klass)?.effectIds ?? []; }
-	public findEffectFrames(effect: PrveClassType | (string & {})) { return this.effects.find(_effect => _effect.effect === effect)?.frames ?? 1; }
+	public findEffectFrames(effect: PrveClassType | string & {}) { return this.effects.find(_effect => _effect.effect === effect)?.frames ?? 1; }
 }
 
 /**
@@ -84,6 +83,7 @@ export default function Prve() {
 	const effectLength = effects[0].length;
 	const shouldHideSelectionBadge = effectLength <= 0 || effectLength === 1 && (effects[0][0].fx === DEFAULT_EFFECT || !isMultiple[0]);
 	const rotationStep = useStateSelector(rotation, angle => angle === 0 ? 0 : 360 / angle, step => step === 0 ? 0 : Math.round(360 / step));
+	const { thumbnail } = useThumbnail();
 
 	function setCurrentEffectRotation(mode: CustomEffectRotationMode) {
 		selectPrve("rotation")[1]!(mode === "normal" ? "normal" : "rotate");
@@ -200,7 +200,7 @@ export default function Prve() {
 							view="grid"
 							idField
 							nameField={getEffectName}
-							imageField={effect => <PreviewPrve key={effect} thumbnail={exampleThumbnail} effect={effect} frames={effect === "turned" ? 2 : 4} />}
+							imageField={effect => <PreviewPrve key={effect} thumbnail={thumbnail} effect={effect} frames={effect === "turned" ? 2 : 4} />}
 							checkInfoCondition={effect =>
 								effect === undefined || effect === DEFAULT_EFFECT ? "" :
 								effect === null ? `${t.prve.effects.rotateCustomAngle}${t.colon}${rotation[0]}${t.units.degree}` :
@@ -261,7 +261,7 @@ export default function Prve() {
 							view="grid"
 							idField
 							nameField={getEffectName}
-							imageField={effect => <PreviewPrve key={effect} thumbnail={exampleThumbnail} effect={effect} frames={findEffectFrames(effect)} />}
+							imageField={effect => <PreviewPrve key={effect} thumbnail={thumbnail} effect={effect} frames={findEffectFrames(effect)} />}
 							checkInfoCondition={effect => !effect || effect === DEFAULT_EFFECT ? "" : getEffectName(effect)}
 							alwaysShowCheckInfo
 							onItemClick={effect => effect === "whirl" && criticallyHighlightWhirl()}
@@ -410,6 +410,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 	const stepSequenceInputEl = useDomRef<"input">();
 	const isDefault = effect === DEFAULT_EFFECT, isRandomClass = klass === RANDOM_CLASS_EFFECTS;
 	const tc = tAlias({ context: isCustomInitialStepClass ? "angle" : undefined });
+	const { thumbnail } = useThumbnail();
 
 	const [customStepSequence, setCustomStepSequence] = useState(initialStep.join(","));
 	const isEditingStepSequence = useCallback(() => document.activeElement === stepSequenceInputEl.current, [stepSequenceInputEl]);
@@ -434,7 +435,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 							const value = isDefault ? [0] : getStepSequence(frames, j);
 							return (
 								<ItemsView.Item
-									image={<PreviewPrve thumbnail={exampleThumbnail} effect={effect} frames={frames} step={j + 1} />}
+									image={<PreviewPrve thumbnail={thumbnail} effect={effect} frames={frames} step={j + 1} />}
 									key={value.join()}
 									data-value={value}
 									data-index={j}
@@ -479,7 +480,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 						{initialStep.map((frame, i) => (
 							<div key={i} className="step-sequence-item" data-frame={frame}>
 								<PreviewPrve
-									thumbnail={exampleThumbnail}
+									thumbnail={thumbnail}
 									effect={effect}
 									frames={frames}
 									step={frame}

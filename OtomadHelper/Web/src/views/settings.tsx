@@ -58,6 +58,28 @@ const SampleTextFontFamily = styled.p`
 	}
 `;
 
+const PreviewThumbnailImgWrapper = styled.div`
+	position: relative;
+	width: 200px;
+	aspect-ratio: 16 / 9;
+	border-radius: 4px;
+
+	img {
+		${styles.mixins.square("100%")};
+		object-fit: cover;
+		border-radius: inherit;
+	}
+
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		display: block;
+		border-radius: inherit;
+		box-shadow: 0 0 0 1px ${c("stroke-color-surface-stroke-default")} inset;
+	}
+`;
+
 /* const BackgroundImageItemStyle = createGlobalStyle`
 	.background-image-item:not(.sortable-overlay *, .dragging, .dropping) {
 		@starting-style {
@@ -90,6 +112,7 @@ export default function Settings() {
 	const contrastPaletteEvaluation = useContrastPaletteEvaluation();
 	const accentColorButtonSelectedOutlineColor = contrastPaletteEvaluation === "high" ? "colored" : undefined;
 	const fontDisplayName = useFontDisplayName(fontFamily[0]);
+	const { thumbnail, changeThumbnail, resetThumbnail, isDefaultThumbnail } = useThumbnail();
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
@@ -439,7 +462,19 @@ export default function Settings() {
 			<Setting meta={meta.internal} onClick={() => pushPage("internal")} />
 			<Setting meta={meta.preference.autoSwitchSourceFrom} on={autoSwitchSourceFrom} />
 			<Setting meta={meta.preference.autoCollapsePrveClasses} on={autoCollapsePrveClasses} />
-			<Setting meta={meta.preference.previewWithSource} on={previewWithSource} />
+			<Setting meta={meta.preference.previewWithSource} on={previewWithSource} expanded={DEV_EXPANDED}>
+				<Expander.ChildWrapper>
+					<StackPanel>
+						<Button icon="open_file" onClick={changeThumbnail}>{t.browse}</Button>
+						<Button icon="arrow_reset" accent="critical" disabled={isDefaultThumbnail} onClick={resetThumbnail}>{t.resetToDefault}</Button>
+					</StackPanel>
+				</Expander.ChildWrapper>
+				<Expander.ChildWrapper $noDivider>
+					<PreviewThumbnailImgWrapper>
+						<img src={thumbnail} />
+					</PreviewThumbnailImgWrapper>
+				</Expander.ChildWrapper>
+			</Setting>
 
 			<Subheader meta={meta.config} />
 			<Setting meta={meta.config.userConfig}>
