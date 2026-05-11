@@ -683,6 +683,12 @@ declare interface Array<T> {
 	 * ```
 	 */
 	moveItem(fromItem: T, toIndex?: number): T[];
+
+	/**
+	 * Move the first item matching the predicate to the beginning of the array.
+	 * @param predicate - Function to identify the item to move.
+	 */
+	pinToTopComputed(predicate: (value: T, index: number, array: T[]) => boolean): void;
 }
 
 declare interface ReadonlyArray<T> extends Pick<Array<T>,

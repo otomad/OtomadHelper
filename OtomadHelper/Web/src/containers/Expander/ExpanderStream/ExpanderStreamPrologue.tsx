@@ -25,7 +25,7 @@ export default function ExpanderStreamPrologue({ stream }: {
 	/** Audio or visual? */
 	stream: StreamKind;
 }) {
-	const { form, durationUsing, customDuration, once, visualIdleEffect, audioIdleEffect, emphasisTimes, emphasisDuration } = useSelectConfig(c => c.prologue);
+	const { form, durationUsing, customDuration, once, visualIdleEffect, audioIdleEffect, emphasisTimes, emphasisDuration } = useSubConfig(c => c.prologue);
 	const isAudio = stream === "audio";
 	const meta = metas[stream].prologue;
 
@@ -33,7 +33,7 @@ export default function ExpanderStreamPrologue({ stream }: {
 		<Setting
 			meta={meta}
 			items={PrologueForms}
-			value={form}
+			value={form as never}
 			view="tile"
 			ieOff
 			detailsField={({ key }) => t.descriptions.stream.prologue[key]}
@@ -58,11 +58,15 @@ export default function ExpanderStreamPrologue({ stream }: {
 					/>
 				)}
 			/>
-			<Setting
-				meta={meta.emphasisDuration}
-				disabled={emphasisTimes[0] === 0}
-				actions={<ComboBox current={emphasisDuration} ids={PrologueEmphasisDurations.keys} options={PrologueEmphasisDurations.labels} icons={PrologueEmphasisDurations.meta.icon} />}
-			/>
+			<SubscribeKeys keys={emphasisTimes}>
+				{emphasisTimes => (
+					<Setting
+						meta={meta.emphasisDuration}
+						disabled={emphasisTimes === 0}
+						actions={<ComboBox current={emphasisDuration} ids={PrologueEmphasisDurations.keys} options={PrologueEmphasisDurations.labels} icons={PrologueEmphasisDurations.meta.icon} />}
+					/>
+				)}
+			</SubscribeKeys>
 		</Setting>
 	);
 }

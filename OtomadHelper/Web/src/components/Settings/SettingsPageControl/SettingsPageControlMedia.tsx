@@ -67,19 +67,20 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 	`};
 `;
 
-export default function SettingsPageControlMedia({ stream, fileName, enabled, thumbnail }: FCP<{
+export default function SettingsPageControlMedia({ stream, fileName, enabled: _enabled, thumbnail }: FCP<{
 	/** Audio or visual? */
 	stream: StreamKind;
 	/** File name. */
 	fileName: string;
 	/** Enabled? */
-	enabled: StateProperty<boolean>;
+	enabled: VariousState<boolean>;
 	/** Thumbnail. */
 	thumbnail: string;
 }>) {
 	const icon = stream === "audio" ? "volume" : "image";
+	const [enabled] = useVariousState(_enabled);
 	return (
-		<StyledSettingsPageControlMedia $enabled={enabled[0] ?? true}>
+		<StyledSettingsPageControlMedia $enabled={enabled ?? true}>
 			<Img className="background" src={thumbnail} duplicate="background" />
 			<SettingsPageControlPreviewImage image={thumbnail}>
 				<Icon name={`colored/${icon}`} filled />
@@ -87,7 +88,7 @@ export default function SettingsPageControlMedia({ stream, fileName, enabled, th
 			<div className="right">
 				<p>{fileName}</p>
 				<div className="bottom">
-					<ToggleSwitch on={enabled} hideLabel resetTransitionOnChanging>
+					<ToggleSwitch on={_enabled} hideLabel resetTransitionOnChanging>
 						<StackPanel>
 							<Icon name="lightbulb" />
 							{t.enabled}

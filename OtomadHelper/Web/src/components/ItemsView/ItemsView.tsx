@@ -73,7 +73,7 @@ export default function ItemsView<
 	 *
 	 * If it is `null`, items view will not select its items, and you can control them by yourself.
 	 */
-	current: StateProperty<TMultiple extends true ? T[] : T> | null;
+	current: VariousState<TMultiple extends true ? T[] : T> | null;
 	/**
 	 * In grid view, the width of the child element image.
 	 *
@@ -114,7 +114,7 @@ export default function ItemsView<
 }, "div">) {
 	if (itemWidth === "square") itemWidth = GRID_VIEW_ITEM_HEIGHT;
 
-	const [current, setCurrent] = _current ?? [];
+	const [current, setCurrent] = useVariousState(_current ?? []);
 
 	const allIds = (React.Children.toArray(children).map(child => {
 		if (!isReactInstance(child, ItemsViewItem, "weakest")) return undefined;
@@ -175,7 +175,7 @@ export default function ItemsView<
 
 	return (
 		<>
-			{multiple && selectAll && !isEmpty && <SelectAll value={[current, setCurrent] as StateProperty<T[]>} all={allIds} {...selectAll === true ? {} : selectAll as never} />}
+			{multiple && selectAll && !isEmpty && <SelectAll value={[current, setCurrent] as never as StateProperty<T[]>} all={allIds} {...selectAll === true ? {} : selectAll as never} />}
 			<StyledItemsView
 				className={[className, view, { autoFill }]}
 				role={role === null ? undefined : role === undefined ? multiple ? "group" : "radiogroup" : role}

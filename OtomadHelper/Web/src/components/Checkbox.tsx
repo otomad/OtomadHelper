@@ -175,28 +175,29 @@ export default function Checkbox<T>(props: FCP<{
 	/** Identifier. */
 	id: T;
 	/** An array of selected values in the current checkbox group. */
-	value: StateProperty<T[]>;
+	value: VariousState<T[]>;
 	/** State change event. */
 	onChange?(e: { id: T; value: T[]; checkState: CheckState; checked: boolean }): void;
 } & SharedProps, "label">): React.JSX.Element;
 export default function Checkbox(props: FCP<{
 	/** Is the checkbox currently selected? */
-	value: StateProperty<boolean>;
+	value: VariousState<boolean>;
 	/** State change event. */
 	onChange?(e: { checkState: CheckState; checked: boolean }): void;
 } & SharedProps, "label">): React.JSX.Element;
 export default function Checkbox(props: FCP<{
 	/** Checked status. */
-	value: StateProperty<CheckState>;
+	value: VariousState<CheckState>;
 	/** State change event. */
 	onChange?(e: { checkState: CheckState; checked: boolean | null }): void;
 } & SharedProps, "label">): React.JSX.Element;
-export default function Checkbox<T>({ children, id, value: [value, setValue], disabled = false, onChange, details, plain = false, actions, icon, disableCheckmarkTransition, dynamicFontWeight, ref, ...htmlAttrs }: FCP<{
+export default function Checkbox<T>({ children, id, value: _value, disabled = false, onChange, details, plain = false, actions, icon, disableCheckmarkTransition, dynamicFontWeight, ref, ...htmlAttrs }: FCP<{
 	id?: T;
-	value: StateProperty<T[]> | StateProperty<boolean> | StateProperty<CheckState>;
+	value: VariousState<T[]> | VariousState<boolean> | VariousState<CheckState>;
 	onChange?: Function;
 } & SharedProps, "label">) {
 	const labelEl = useDomRef<"label">(), checkboxEl = useDomRef<"input">(), actionsEl = useDomRef<"div">();
+	const [value, setValue] = useVariousState(_value as VariousState<T[] | boolean | CheckState>);
 	const singleMode = id === undefined, checkStateMode = typeof value === "string";
 	const checked = checkStateMode ? value === "checked" : singleMode ? !!value : (value as T[]).includes(id);
 	const indeterminate = value === "indeterminate";
@@ -209,6 +210,8 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 		map(dynamicFontWeight[0], 0, dynamicFontWeight[1], weights.normal, weights.bold);
 
 	useImperativeHandleRef(ref, labelEl);
+
+	const isInActions = (node: EventTarget | null) => node instanceof Node && !!actionsEl.current?.contains(node);
 
 	const handleChange = (checked: boolean, indeterminate: boolean) => {
 		const checkbox = checkboxEl.current;
@@ -241,7 +244,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 
 	useChangeEffect(() => handleChange(checked, indeterminate), [indeterminate, checked]);
 	useEffect(() => { checkboxEl.current && (checkboxEl.current.indeterminate = indeterminate); }, [indeterminate, checkboxEl]);
-	useOnFormKeyDown(labelEl, { handleCheck });
+	useOnFormKeyDown(labelEl, { handleCheck, skipIf: e => isInActions(e.target) });
 
 	return (
 		<StyledCheckboxLabel
@@ -255,7 +258,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 			aria-checked={indeterminate ? "mixed" : checked}
 			aria-labelledby={`${ariaId}-title`}
 			aria-describedby={`${ariaId}-details`}
-			onClick={e => { if (isInPath(e, actionsEl)) e.preventDefault(); }}
+			onClick={e => { if (isInActions(e.target)) e.preventDefault(); }}
 			{...htmlAttrs}
 		>
 			<Input

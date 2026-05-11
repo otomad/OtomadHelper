@@ -153,7 +153,7 @@ export function useEventListener<K extends keyof WindowEventMap>(target: Window,
  * });
  * ```
  */
-export function useEventListener<K extends keyof DocumentEventMap>(target: Document, event: K | (string & {}), callback: (this: Document, ev: DocumentEventMap[K]) => void, options?: Options, deps?: DependencyList | null): void;
+export function useEventListener<K extends keyof DocumentEventMap>(target: Document, event: K | string & {}, callback: (this: Document, ev: DocumentEventMap[K]) => void, options?: Options, deps?: DependencyList | null): void;
 /**
  * A hook to add an event listener to the specified target element, with both addEventListener and removeEventListener in the lifecycle.
  *
@@ -173,7 +173,7 @@ export function useEventListener<K extends keyof DocumentEventMap>(target: Docum
  * });
  * ```
  */
-export function useEventListener<K extends keyof HTMLElementEventMap, E extends HTMLElement>(target: E | null, event: K | (string & {}), callback: (this: E, ev: HTMLElementEventMap[K]) => void, options?: Options, deps?: DependencyList | null): void;
+export function useEventListener<K extends keyof HTMLElementEventMap, E extends HTMLElement>(target: E | null, event: K | string & {}, callback: (this: E, ev: HTMLElementEventMap[K]) => void, options?: Options, deps?: DependencyList | null): void;
 /**
  * A hook to add an event listener to the specified target element, with both addEventListener and removeEventListener in the lifecycle.
  *
@@ -193,7 +193,7 @@ export function useEventListener<K extends keyof HTMLElementEventMap, E extends 
  * });
  * ```
  */
-export function useEventListener<K extends keyof HTMLElementEventMap, E extends HTMLElement>(target: MaybeRef<E | null>, event: K | (string & {}), callback: (this: E, ev: HTMLElementEventMap[K]) => void, options?: Options, deps?: DependencyList | null): void;
+export function useEventListener<K extends keyof HTMLElementEventMap, E extends HTMLElement>(target: MaybeRef<E | null>, event: K | string & {}, callback: (this: E, ev: HTMLElementEventMap[K]) => void, options?: Options, deps?: DependencyList | null): void;
 /**
  * A hook to add an event listener to the specified target element, with both addEventListener and removeEventListener in the lifecycle.
  *

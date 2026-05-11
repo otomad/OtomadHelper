@@ -211,7 +211,7 @@ interface Props<T extends string | number> {
 	/** Optional. The icons for each option of the combo box. */
 	icons?: readonly DeclaredIcons[];
 	/** The selected option of the combo box. */
-	current: StateProperty<T>;
+	current: VariousState<T>;
 	/** Additional attributes mapped by ID for option elements (base select appearance only). */
 	optionAttrs?: (id: T) => PropsOf<"option">;
 	/** Force to use CSS base-select appearance select combo box? */
@@ -221,10 +221,11 @@ interface Props<T extends string | number> {
 
 export default function ComboBox<T extends string | number>(props: FCP<Props<T>, "select">): React.JSX.Element;
 export default function ComboBox(props: FCP<{ value?: never }, "select">): React.JSX.Element;
-export default function ComboBox<T extends string | number>({ ids = [], options = [], icons = [], current: [current, setCurrent] = NEVER_MIND, disabled, optionAttrs, forceBaseSelectAppearance = false, ...htmlAttrs }: FCP<Partial<Props<T>>, "select">) {
+export default function ComboBox<T extends string | number>({ ids = [], options = [], icons = [], current: _current, disabled, optionAttrs, forceBaseSelectAppearance = false, ...htmlAttrs }: FCP<Partial<Props<T>>, "select">) {
+	const [current, setCurrent] = useVariousState(_current);
 	const [iconSvgs, setIconSvgs] = useState<string[]>();
 	const hasIcons = icons.length > 0;
-	const currentIndex = ids.indexOf(current!);
+	const currentIndex = ids.indexOf(current);
 	const currentOption = options[currentIndex] ?? `<${current}>`;
 	const currentIcon = icons[currentIndex];
 	disabled = useContext(InteractionStateContext).disabled || disabled;
@@ -237,7 +238,7 @@ export default function ComboBox<T extends string | number>({ ids = [], options 
 
 	const showComboBox: MouseEventHandler<HTMLButtonElement> = async e => {
 		const rect = e.currentTarget.getBoundingClientRect();
-		const result = await bridges.bridge.showComboBox(rect, current!, ids, toStringArray(options), iconSvgs) as T;
+		const result = await bridges.bridge.showComboBox(rect, current, ids, toStringArray(options), iconSvgs) as T;
 		setCurrent?.(result);
 	};
 

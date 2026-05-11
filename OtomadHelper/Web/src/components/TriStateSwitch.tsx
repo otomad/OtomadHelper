@@ -6,15 +6,16 @@ type TriStateKey = keyof typeof triStateMap;
 
 const toTriStateKey = (triState: TriState) => String(triState) as TriStateKey;
 
-export default function TriStateSwitch({ current, indetText, indetIcon, className }: FCP<{
+export default function TriStateSwitch({ current: _current, indetText, indetIcon, className }: FCP<{
 	/** The identifier of the selected segmented item. */
-	current: StateProperty<TriState>;
+	current: VariousState<TriState>;
 	/** Text for indeterminate option. */
 	indetText: string;
 	/** Icon for indeterminate option. */
 	indetIcon: DeclaredIcons;
 	className?: ClassValue;
 }, "div">) {
+	const current = useVariousState(_current);
 	const segmentedCurrent = useStateSelector(current, toTriStateKey, key => triStateMap[key]);
 
 	return (
@@ -36,10 +37,11 @@ export default function TriStateSwitch({ current, indetText, indetIcon, classNam
 }
 
 // Business component
-export function OffAndAutoSwitch({ current }: {
+export function OffAndAutoSwitch({ current: _current }: {
 	/** Current selected state. True stands for auto, and false stands for off. */
-	current: StateProperty<boolean>;
+	current: VariousState<boolean>;
 }) {
+	const current = useVariousState(_current);
 	const segmentedCurrent = useStateSelector(current, toTriStateKey, key => triStateMap[key]);
 
 	return (

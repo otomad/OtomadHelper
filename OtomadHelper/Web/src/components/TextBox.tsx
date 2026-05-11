@@ -423,9 +423,9 @@ export /* @internal */ const StyledTextBox = styled.div<{
 
 type HTMLInputFormEvent = Parameters<FormEventHandler<HTMLInputElement>>[0];
 
-export default function TextBox({ value: [value, _setValue], placeholder, disabled, readOnly, id, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, customFlyout, pattern, required, mouseDownTriggerOnChanging = true, fullWidth = false, showClearAll, icon, type = "text", "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-description": ariaDescription, onChange, onChanging, onInput, onKeyDown, onFocusChange, onValidate, ref, inputRef, ...htmlAttrs }: FCP<{
+export default function TextBox({ value: _value, placeholder, disabled, readOnly, id, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, customFlyout, pattern, required, mouseDownTriggerOnChanging = true, fullWidth = false, showClearAll, icon, type = "text", "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-description": ariaDescription, onChange, onChanging, onInput, onKeyDown, onFocusChange, onValidate, ref, inputRef, ...htmlAttrs }: FCP<{
 	/** The value of the input box. */
-	value: StateProperty<string>;
+	value: VariousState<string>;
 	/** Content placeholder. */
 	placeholder?: string;
 	/** Read-only? */
@@ -486,6 +486,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	useImperativeHandleRef(inputRef, inputEl);
 	disabled = useContext(InteractionStateContext).disabled || disabled;
 
+	const [value, _setValue] = useVariousState(_value);
 	const setValue = (value: string | undefined | ((value: string) => string | undefined)) =>
 		value == null || _setValue?.(value as string);
 
@@ -583,9 +584,9 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 }
 
 type NumberLike = number | bigint;
-function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], disabled, readOnly, decimalPlaces, keepTrailing0, min, max, spinnerStep, keyBigStepMultiplier, positiveSign, required = true, inputRef, ...textBoxProps }: Override<OmitConventionalPrivates<PropsOf<typeof TextBox>>, {
+function NumberTextBox<TNumber extends NumberLike>({ value: _value, disabled, readOnly, decimalPlaces, keepTrailing0, min, max, spinnerStep, keyBigStepMultiplier, positiveSign, required = true, inputRef, ...textBoxProps }: Override<OmitConventionalPrivates<PropsOf<typeof TextBox>>, {
 	/** The value of the number, which can be number or bigint type. */
-	value: readonly [get: TNumber, set?: SetStateNarrow<TNumber>];
+	value: Readonly<VariousState<TNumber>>;
 	/** The number of decimal places, leaving blank means no limit. */
 	decimalPlaces?: number;
 	/** Keep trailing zeros in the fractional part? */
@@ -606,6 +607,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 }>) {
 	const inputEl = useDomRef<"input">();
 	useImperativeHandleRef(inputRef, inputEl);
+	const [value, _setValue] = useVariousState(_value);
 	const bigIntMode = typeof value === "bigint";
 	keyBigStepMultiplier ??= (bigIntMode ? 10n : 10) as TNumber;
 	const intMode = bigIntMode || decimalPlaces === 0;

@@ -59,7 +59,7 @@ export function useOnNestedButtonClick(handler?: MouseEventHandler) {
  *
  * @returns A cleanup function that removes the event listeners when the component unmounts.
  */
-export function useOnFormKeyDown(element: RefObject<HTMLElement | null>, { handleCheck = null, parent: parentSelector, item: itemSelector = ':not([tabindex="-1"])', focus: focusSelector = itemSelector, changeWhenMoveFocus, preventSpace = !!handleCheck, disableUpDown = false, disabled = false }: {
+export function useOnFormKeyDown(element: RefObject<HTMLElement | null>, { handleCheck = null, parent: parentSelector, item: itemSelector = ':not([tabindex="-1"])', focus: focusSelector = itemSelector, changeWhenMoveFocus, preventSpace = !!handleCheck, disableUpDown = false, disabled = false, skipIf }: {
 	handleCheck?: (() => void) | null;
 	parent?: string;
 	item?: string;
@@ -68,11 +68,12 @@ export function useOnFormKeyDown(element: RefObject<HTMLElement | null>, { handl
 	preventSpace?: boolean;
 	disableUpDown?: boolean;
 	disabled?: boolean;
+	skipIf?(e: KeyboardEvent): boolean;
 } = {}) {
 	const CUSTOM_CHANGE_EVENT = "customChange";
 
 	useEventListener(element, "keydown", e => {
-		if (disabled) return;
+		if (disabled || skipIf?.(e)) return;
 		const { code } = e;
 		if (preventSpace && code === "Space") {
 			stopEvent(e);

@@ -40,15 +40,18 @@ const asteriskBuiltInPresets = ["floatLeft", "floatRight", "floatUp", "floatDown
 export default function Visual() {
 	const {
 		enabled, preferredTrack: preferredTrackIndex,
-		stretch, loop, staticVisual, truncate, truncateIdleEffect, truncateLoopRegion,
-		multitrackForChords, transformMethod, currentPreset, stack, timeUnremapping, presetPreviewIdeality,
+		stretch, loop, staticVisual, /* truncate, */ truncateIdleEffect, truncateLoopRegion,
+		multitrackForChords, /* transformMethod, */ currentPreset, stack, timeUnremapping, presetPreviewIdeality,
 		mimicalResample, mimicalOscillator, transition, transitionAlignment, transitionDuration, transitionCrossfadeCurve,
-		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioIdleEffect, activeParameterScheme,
+		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioIdleEffect: arpeggioIdleEffect______, /* arpeggioIdleEffect, */ /* activeParameterScheme, */
+	} = useSubConfig(c => c.visual);
+	const {
+		transformMethod, truncate, arpeggioIdleEffect, activeParameterScheme,
 	} = useSelectConfig(c => c.visual);
 	// const activeParameterScheme = useSelectConfigArray(c => c.visual.activeParameterScheme);
-	const { enabled: enablePixelScaling } = useSelectConfig(c => c.visual.pixelScaling);
-	const { enabled: enableStaffVisualizer } = useSelectConfig(c => c.visual.staff);
-	const { createGroups } = useSelectConfig(c => c);
+	const { enabled: enablePixelScaling } = useSubConfig(c => c.visual.pixelScaling);
+	const { enabled: enableStaffVisualizer } = useSubConfig(c => c.visual.staff);
+	const { createGroups } = useSubConfig(c => c);
 	const { prveCheckInfo, isForceStretch, prveCount } = usePrveInfo();
 	const { hideUseTips } = useSnapshot(configStore.settings);
 	const meta = metas.visual;
@@ -87,10 +90,12 @@ export default function Visual() {
 				<ExpanderStreamPlaybackRate stream="visual" />
 				<Setting
 					meta={meta.loop}
-					selectInfo={[
-						!hideUseTips && t.descriptions.stream.loop.loopMedia,
-						loop[0] === null && t.descriptions.stream.loop.unset,
-					]}
+					selectInfo={(
+						<>
+							{!hideUseTips && t.descriptions.stream.loop.loopMedia}
+							<SubscribeKeys keys={loop}>{loop => loop === null && t.descriptions.stream.loop.unset}</SubscribeKeys>
+						</>
+					)}
 					selectValid={[["info"], true]}
 					actions={<TriStateSwitch current={loop} indetText={t.unset} indetIcon="subtract" />}
 				/>
@@ -207,13 +212,13 @@ export default function Visual() {
 						</Expander.Item>
 						<Setting
 							meta={meta.articulations.glissando.amplitude}
-							details={t.descriptions.amplitude({ effect: glissandoEffects.find(({ id }) => id === glissandoEffect[0])?.name })}
+							details={<SubscribeKeys keys={glissandoEffect}>{glissandoEffect => t.descriptions.amplitude({ effect: glissandoEffects.find(({ id }) => id === glissandoEffect)?.name })}</SubscribeKeys>}
 							actions={<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix={t.units.semitone} positiveSign />}
 						/>
 					</Setting>
 					<Setting meta={meta.articulations.appoggiatura} on={appoggiatura} />
 					<Setting meta={meta.articulations.arpeggio} on={arpeggio} actuallyOn={arpeggioIdleEffectActualOn}>
-						<IdleEffectSettings value={arpeggioIdleEffect} pinToTop="negative" />
+						<IdleEffectSettings value={arpeggioIdleEffect______} pinToTop="negative" />
 					</Setting>
 
 					<Subheader meta={meta.mapping} />
@@ -224,14 +229,14 @@ export default function Visual() {
 					<Setting meta={meta.mapping.progress} />
 
 					<Subheader meta={meta.parameters} />
-					<Setting meta={meta.preset} checkInfo={t.stream.preset.builtInPresets[currentPreset[0]]}>
+					<Setting meta={meta.preset} checkInfo={<SubscribeKeys keys={currentPreset}>{currentPreset => t.stream.preset.builtInPresets[currentPreset]}</SubscribeKeys>}>
 						<Setting meta={meta.preset.builtInPresets} asSubtitle="closerAfter" noDivider="after" />
 						<ItemsView view="grid" current={currentPreset}>
 							{builtInPresets.map(name => (
 								<ItemsView.Item
 									id={name}
 									key={name}
-									image={<PreviewParameterPreset key={name} thumbnail={thumbnail} name={name} previewIdeality={presetPreviewIdeality[0]} />}
+									image={<SubscribeKeys keys={presetPreviewIdeality}>{presetPreviewIdeality => <PreviewParameterPreset key={name} thumbnail={thumbnail} name={name} previewIdeality={presetPreviewIdeality} />}</SubscribeKeys>}
 									badge={asteriskBuiltInPresets.includes(name) && [undefined, "asterisk"]}
 								>
 									{t.stream.preset.builtInPresets[name]}

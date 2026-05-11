@@ -18,7 +18,7 @@ const StyledCustomItem = styled.div`
 	}
 `;
 
-export default function CustomItem<T extends string = "custom">({ icon = "edit", title = t.custom, details, id = "custom" as T, current: [current, setCurrent], children, ...htmlAttrs }: FCP<{
+export default function CustomItem<T extends string = "custom">({ icon = "edit", title = t.custom, details, id = "custom" as T, current: _current, children, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons | Exclude<ReactNode, Iterable<ReactNode>>;
 	/** Title. */
@@ -28,10 +28,11 @@ export default function CustomItem<T extends string = "custom">({ icon = "edit",
 	/** Identifier. */
 	id?: T;
 	/** The identifier of the currently selected item. */
-	current: StateProperty<T>;
+	current: VariousState<T>;
 	children?: ReactNode | ((setToCustom: () => void) => ReactNode);
 }, "div">) {
-	const setToCustom = () => setCurrent?.(id);
+	const [current, setCurrent] = useVariousState(_current);
+	const setToCustom = () => setCurrent(id);
 
 	return (
 		<StyledCustomItem {...htmlAttrs}>

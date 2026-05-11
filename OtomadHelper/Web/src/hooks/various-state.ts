@@ -23,13 +23,26 @@ export class StoreSubscribedProperty<TValue> {
 	static [Symbol.hasInstance](value: Any) {
 		return defaultInstanceOf(StoreSubscribedProperty, value) || !!value?.[STORE_SUBSCRIBED_PROPERTY_VALUE];
 	}
+
+	use() {
+		return useStoreSubscribedProperty(this);
+	}
+
+	get value(): TValue {
+		return this.proxyObject[this.key];
+	}
+
+	set value(value: TValue) {
+		this.proxyObject[this.key] = value;
+	}
 }
 
 export type StoreSubscribedPropertiedObject<TState> = {
 	[property in keyof TState]: StoreSubscribedProperty<TState[property]>;
 };
 
-export function currySubscribeStore<TState extends object>(state: TState): StoreSubscribedPropertiedObject<TState> {
+export function currySubscribeStore<TState extends object>(state: TState | StoreSubscribedProperty<TState>): StoreSubscribedPropertiedObject<TState> {
+	if (state instanceof StoreSubscribedProperty) state = state.value;
 	return new Proxy(state as AnyObject, {
 		get(state, property) {
 			if (typeof property !== "string") return state[property];

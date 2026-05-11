@@ -208,19 +208,20 @@ const StyledSegmented = styled.div<{
 	}
 `;
 
-export default function Segmented<T extends string = string>({ current: [current, setCurrent], disabled, className, children }: FCP<{
+export default function Segmented<T extends string = string>({ current: _current, disabled, className, children }: FCP<{
 	/** The identifier of the selected segmented item. */
-	current: StateProperty<T>;
+	current: VariousState<T>;
 	/** Disabled? */
 	disabled?: boolean;
 	className?: ClassValue;
 }>) {
+	const [current, setCurrent] = useVariousState(_current);
 	disabled = useContext(InteractionStateContext).disabled || disabled;
 	const items = React.Children.toArray(children).filter(child => isReactInstance(child, SegmentedItem)) as
 		GetReactElementFromFC<typeof SegmentedItem>[];
 	const itemCount = items.length;
 	const selectedIndex = items.findIndex(item => item.props.id === current);
-	const setCurrentByIndex = (index: number) => items[index] && setCurrent?.(items[index].props.id as T);
+	const setCurrentByIndex = (index: number) => items[index] && setCurrent(items[index].props.id as T);
 	const clonedItems = () => items.map(child => React.cloneElement(child));
 
 	const handleDrag = useCallback<PointerEventHandler<HTMLDivElement>>(e => {

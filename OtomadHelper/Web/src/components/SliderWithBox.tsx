@@ -13,7 +13,7 @@ const StyledSliderWithBox = styled.div`
  */
 export default function SliderWithBox({ value, min = 0, max = 100, defaultValue, decimalPlaces = 3, keyStep = 1, keyBigStepMultiplier = 10, positiveSign, placeholder, prefix, suffix, disabled, onChanging, onChange }: FCP<{
 	/** Current value. */
-	value: StateProperty<number>;
+	value: VariousState<number>;
 	/** Slider minimum value. @default 0 */
 	min?: number;
 	/** Slider maximum value. @default 100 */

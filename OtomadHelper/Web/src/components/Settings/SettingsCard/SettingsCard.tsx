@@ -190,7 +190,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	/** Specifies the display string of the selection of tracks or track events. */
 	selectInfo?: ReactNode | ReactNode[];
 	/** Specifies whether the selection is valid if it's boolean, or the number of selection is not 0 if it's number. */
-	selectValid?: (boolean | number) | (boolean | number | BadgeRequiredArgs)[];
+	selectValid?: boolean | number | (boolean | number | BadgeRequiredArgs)[];
 	/** Trailing Action icon. Use an empty string or Boolean type to indicate disabling. */
 	actionIcon?: DeclaredIcons | "" | boolean;
 	/**

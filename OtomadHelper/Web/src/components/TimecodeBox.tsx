@@ -113,9 +113,9 @@ const StyledTimecodeBox = styled.div`
 	}
 `;
 
-export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, onChanging, disabled, ...htmlAttrs }: FCP<{
+export default function TimecodeBox({ value: _timecode, onFocus, onChanging, disabled, ...htmlAttrs }: FCP<{
 	/** The current time code or time span. */
-	value: StateProperty<string>;
+	value: VariousState<string>;
 	/** Occurs when the component is focused or changed. */
 	onFocus?: PartialArgsFunc<BaseEventHandler>;
 	/** Value changing event. Occurs any time the value changes. */
@@ -123,6 +123,7 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, o
 }, "div">) {
 	const timecodeBoxEl = useDomRef<"div">();
 	const lastActiveItemLastIndex = useRef<number>(undefined);
+	const [timecode, setTimecode] = useVariousState(_timecode);
 	const tokens = useMemo(() => getTimecodeTokens(timecode), [timecode]);
 	disabled = useContext(InteractionStateContext).disabled || disabled;
 	const ariaId = useId();
@@ -134,7 +135,7 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, o
 
 	const handleSpinnerClick = useCallback((itemLastIndex: number, step: number) => {
 		onFocus?.();
-		(setTimecode as SetStateNarrow<string>)?.(timecode => {
+		setTimecode(timecode => {
 			const stepTimecodeTokens = getTimecodeTokens(timecode.replace(/^-/, ""));
 			stepTimecodeTokens.forEach(item => item.token === "digit" && (item.value = "0".padStart(item.value.length, "0")));
 			const selectedItem = stepTimecodeTokens.at(itemLastIndex);
@@ -193,13 +194,13 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, o
 			moveFocus(valueEl, e.code === "ArrowLeft" ? -1 : 1);
 		} else if (e.code.in("Minus", "NumpadSubtract")) {
 			onFocus?.(e);
-			(setTimecode as SetStateNarrow<string>)?.(timecode => getSupposedTimecode(timecode, "-"));
+			setTimecode(timecode => getSupposedTimecode(timecode, "-"));
 		}
 	}, [handleSpinnerClick, moveFocus, onFocus, setTimecode]);
 
 	const handleItemChange = useCallback<TimecodeItemValueChangeEventHandler>((value, lastIndex) => {
 		onFocus?.();
-		(setTimecode as SetStateNarrow<string>)?.(timecode => {
+		setTimecode(timecode => {
 			const tokens = getTimecodeTokens(timecode);
 			const selectedItem = tokens.at(lastIndex);
 			if (selectedItem) selectedItem.value = value;

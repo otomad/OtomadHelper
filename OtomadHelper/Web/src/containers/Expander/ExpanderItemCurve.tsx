@@ -61,10 +61,11 @@ const StyledCrossfadeCurveAction = styled.div`
 	}
 `;
 
-export /* @internal */ function ExpanderItemCrossfadeCurve({ curve: [[multiplicandCurve, reciprocalCurve], setCurve], subset }: Override<Props, {
+export /* @internal */ function ExpanderItemCrossfadeCurve({ curve: _curve, subset }: Override<Props, {
 	/** Two curve types for creating crossfades. */
-	curve: StatePropertyNonNull<CrossfadeCurveType>;
+	curve: VariousState<CrossfadeCurveType>;
 }>) {
+	const [[multiplicandCurve, reciprocalCurve], setCurve] = useVariousState(_curve);
 	const setMultiplicandCurve = (multiplicandCurve: CurveType) => setCurve(([, reciprocalCurve]) => [multiplicandCurve, reciprocalCurve]);
 	const setReciprocalCurve = (reciprocalCurve: CurveType) => setCurve(([multiplicandCurve]) => [multiplicandCurve, reciprocalCurve]);
 

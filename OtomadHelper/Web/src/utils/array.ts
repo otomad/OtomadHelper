@@ -274,6 +274,11 @@
 		return this.move(fromIndex, undefined, toIndex);
 	};
 
+	Array.prototype.pinToTopComputed = function (predicate) {
+		const fromIndex = this.findIndex(predicate);
+		if (fromIndex > 0) this.unshift(this.splice(fromIndex, 1)[0]);
+	};
+
 	makePrototypeKeysNonEnumerable(Array);
 }
 

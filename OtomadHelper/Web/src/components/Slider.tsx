@@ -216,13 +216,26 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 		return value;
 	}, [min, max, step]);
 
+	const trackEl = useDomRef<"div">();
+	const trackRectRef = useRef({ width: 0, left: 0 }); // Cache bounding rect attributes.
+	// Initialize and cache the slider track rect in advance to avoid calling getBoundingClientRect in mouse events.
+	const updateTrackRect = () => {
+		requestIdleCallback(() => {
+			if (!trackEl.current) return;
+			const rect = trackEl.current.getBoundingClientRect();
+			trackRectRef.current = { left: rect.left, width: rect.width };
+		}, { timeout: 1000 });
+	};
+	useEventListener(window, "resize", updateTrackRect, { immediate: true });
+
 	function onThumbDown(e: PointerEvent, triggerByTrack: boolean = false) {
 		if (e.button) { e.preventDefault(); return; }
+		console.time("onThumbDown");
 		setPressed(true);
 		const thumb = (e.currentTarget as HTMLDivElement).parentElement!.querySelector(".thumb") as HTMLDivElement;
-		const thumbSize = 20; // thumb.offsetWidth;
-		const track = thumb.parentElement!.querySelector(".track")!;
-		const { left, width } = track.getBoundingClientRect();
+		const thumbSize = THUMB_SIZE;
+		// const { left, width } = track.getBoundingClientRect();
+		const { width, left } = trackRectRef.current;
 		const x = triggerByTrack ? thumbSize / 2 : e.clientX - left - thumb.offsetLeft * getUiScale1();
 		const aborter = new AbortController();
 		thumb.setPointerCapture(e.pointerId);
@@ -241,18 +254,21 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 				setPressed(false);
 			});
 		}, { signal: aborter.signal });
+		console.timeEnd("onThumbDown");
 	}
 
 	const onTrackDown: PointerEventHandler = e => {
 		if (e.button) { e.preventDefault(); return; }
-		const track = e.currentTarget as HTMLDivElement;
-		// const thumb = track.parentElement!.querySelector(".thumb") as HTMLDivElement;
-		const thumbSizeHalf = 10; // thumb.offsetWidth / 2;
-		const { width } = track.getBoundingClientRect();
-		let value = clampValue(map(e.nativeEvent.offsetX, thumbSizeHalf, width - thumbSizeHalf, min, max));
+		console.time("onTrackDown");
+		const thumbSizeHalf = THUMB_SIZE / 2;
+		// const { width } = track.getBoundingClientRect();
+		const { width, left } = trackRectRef.current;
+		const offsetX = e.clientX - left; // Prevent using `e.offsetX` which may cause reflow.
+		let value = clampValue(map(offsetX, thumbSizeHalf, width - thumbSizeHalf, min, max));
 		if (isRtl()) value = max - value + min;
 		setValue(value);
 		onChanging?.(value);
+		console.timeEnd("onTrackDown");
 		onThumbDown(e, true); // Then call the dragging slider event.
 	};
 
@@ -262,6 +278,7 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 		const largeStep = e.code.in("PageUp", "PageDown");
 		if (!decrease && !increase) return;
 		stopEvent(e);
+		e.currentTarget.focus(); // HACK: If slider is in the action part of checkbox, it can prevent use on form key down in the checkbox.
 		const newValue = e.code === "Home" ? min : e.code === "End" ? max :
 			clampValue(value + (decrease ? -1 : 1) * keyStep * (largeStep ? keyBigStepMultiplier : 1));
 		setValue(newValue);
@@ -303,7 +320,7 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 				aria-valuenow={value}
 				aria-valuetext={hasValue(displayValue) ? String(displayValue) : undefined}
 			>
-				<div className="track" onPointerDown={onTrackDown} />
+				<div className="track" ref={trackEl} onPointerDown={onTrackDown} />
 				<div className="passed" />
 				<SliderThumb className={["thumb", { pressed }]} onPointerDown={onThumbDown} />{/* onDoubleClick={resetToDefault} */ /* Easy to touch by mistake */}
 			</StyledSlider>

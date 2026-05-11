@@ -12,9 +12,9 @@ export /* @internal */ const NegativeTypes = Enum({
 	colorInvert: 3,
 }, { labelPrefix: t.prve.effects });
 
-export default function IdleEffectSettings({ value: [value, setValue], pinToTop, disabled, details, disabledInfo, stream = "visual" }: {
+export default function IdleEffectSettings({ value: _value, pinToTop, disabled, details, disabledInfo, stream = "visual" }: {
 	/** Each effects value, includes enabled and amount. */
-	value: StateProperty<Config.VisualIdleEffectValue> | StateProperty<Config.AudioIdleEffectValue>;
+	value: StoreSubscribedProperty<Config.VisualIdleEffectValue> | StoreSubscribedProperty<Config.AudioIdleEffectValue>;
 	/** Pin a specific effect to the first of all. */
 	pinToTop?: Config.VisualIdleEffect;
 	/** Disabled? */
@@ -27,16 +27,14 @@ export default function IdleEffectSettings({ value: [value, setValue], pinToTop,
 	stream?: StreamKind;
 }) {
 	const isAudio = stream === "audio";
-	const values = [value, setValue] as StatePropertyNonNull<Config.VisualIdleEffectValue>;
+	const [value] = useVariousState(_value as StoreSubscribedProperty<Config.VisualIdleEffectValue>);
+	// NOTE: For better performance, do not use `value` except for computing `enabledEffectCount`.
 
 	const pinnedIdleEffects = useMemo(() => {
 		if (isAudio) return [VisualIdleEffects.allKeys.fade];
 		const effects = VisualIdleEffects.array;
-		if (pinToTop !== undefined) {
-			const fromIndex = effects.findIndex(({ key }) => key === pinToTop);
-			if (fromIndex !== -1)
-				effects.move(fromIndex);
-		}
+		if (pinToTop !== undefined)
+			effects.pinToTopComputed(({ key }) => key === pinToTop);
 		return effects;
 	}, [pinToTop, isAudio]);
 
@@ -44,11 +42,10 @@ export default function IdleEffectSettings({ value: [value, setValue], pinToTop,
 	const effectTitlePlural = pinnedIdleEffects.length === 1 ? 1 : enabledEffectCount;
 
 	function selectNone() {
-		(setValue as SetStateNarrow<Config.VisualIdleEffectValue>)?.(produce(draft => {
-			for (const effect in draft)
-				if (hasOwn(draft, effect))
-					draft[effect].enabled = false;
-		}));
+		const effects = _value.value;
+		for (const effect in effects)
+			if (hasOwn(effects, effect))
+				effects[effect].enabled = false;
 	}
 
 	return (
@@ -74,24 +71,31 @@ export default function IdleEffectSettings({ value: [value, setValue], pinToTop,
 					{t.selectNone}
 				</Button>
 			</Expander.Item>
-			{pinnedIdleEffects.map(({ key, icon, iconForAudio, label, amountType, defaultValue }) => {
-				const { enabled, amount: amountOrNegativeType } = deconstructState(values, values => values[key]);
-				const amount = amountOrNegativeType as StatePropertyNonNull<number>, negativeType = amountOrNegativeType as StatePropertyNonNull<typeof NegativeTypes.keyType>;
-				return (
-					<Checkbox
-						key={key}
-						value={enabled}
-						icon={isAudio && iconForAudio || icon}
-						actions={
-							amountType === "quantifiable" ? <SliderWithBox disabled={disabled} value={amount} suffix={t.units.percent} defaultValue={defaultValue} decimalPlaces={0} /> :
-							amountType === "negative" ? <ComboBox disabled={disabled} current={negativeType} ids={NegativeTypes.keys} options={NegativeTypes.labels} /> :
-							undefined
-						}
-					>
-						{label}
-					</Checkbox>
-				);
-			})}
+			{pinnedIdleEffects.map(effect => <PinnedIdleEffect key={effect.key} isAudio={isAudio} disabled={disabled} effect={effect} value={_value} />)}
 		</Attrs>
+	);
+}
+
+function PinnedIdleEffect({ isAudio, disabled, effect: { key, icon, iconForAudio, label, amountType, defaultValue }, value }: {
+	isAudio: boolean;
+	disabled?: boolean;
+	effect: typeof VisualIdleEffects.array[number];
+	value: PropsOf<typeof IdleEffectSettings>["value"];
+}) {
+	const { enabled, amount: amountOrNegativeType } = currySubscribeStore(value.value[key as "fade"]);
+	const amount = amountOrNegativeType, negativeType = amountOrNegativeType as never as StoreSubscribedProperty<typeof NegativeTypes.keyType>;
+	return (
+		<Checkbox
+			key={key}
+			value={enabled}
+			icon={isAudio && iconForAudio || icon}
+			actions={
+				amountType === "quantifiable" ? <SliderWithBox disabled={disabled} value={amount} suffix={t.units.percent} defaultValue={defaultValue} decimalPlaces={0} /> :
+				amountType === "negative" ? <ComboBox disabled={disabled} current={negativeType} ids={NegativeTypes.keys} options={NegativeTypes.labels} /> :
+				undefined
+			}
+		>
+			{label}
+		</Checkbox>
 	);
 }

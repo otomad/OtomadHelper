@@ -1,10 +1,10 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, badgeField, ariaLabelField, ariaDescriptionField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, radioButtonAttrs, hideCustom = true, before, transition, readOnly, ieOff, filter, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
+export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: _value, checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, badgeField, ariaLabelField, ariaDescriptionField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, radioButtonAttrs, hideCustom = true, before, transition, readOnly, ieOff, filter, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
 	/** List of options. */
 	items: readonly TItem[];
 	/** The identifier of the currently selected value. */
-	value: Readonly<StateProperty<TKey>>;
+	value: Readonly<VariousState<TKey>>;
 	/**
 	 * The conditions for displaying the currently selected state.
 	 * - If it is a string, the constant string is displayed.
@@ -55,11 +55,11 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	/** Radio button group name, optional. */
 	radioGroup?: string;
 	/** Additional attributes for the items view item. */
-	itemsViewItemAttrs?: Partial<PropsOf<typeof ItemsView.Item>> | false | ((item: TItem) => (Partial<PropsOf<typeof ItemsView.Item>> | undefined | false));
+	itemsViewItemAttrs?: Partial<PropsOf<typeof ItemsView.Item>> | false | ((item: TItem) => Partial<PropsOf<typeof ItemsView.Item>> | undefined | false);
 	/** Additional attributes for the items view. */
 	itemsViewAttrs?: Partial<PropsOf<typeof ItemsView>>;
 	/** Additional attributes for the radio button. */
-	radioButtonAttrs?: Partial<Omit<PropsOf<typeof RadioButton>, "value">> | false | ((item: TItem) => (Partial<Omit<PropsOf<typeof RadioButton>, "value">> | undefined | false));
+	radioButtonAttrs?: Partial<Omit<PropsOf<typeof RadioButton>, "value">> | false | ((item: TItem) => Partial<Omit<PropsOf<typeof RadioButton>, "value">> | undefined | false);
 	/**
 	 * Remove the "custom" option from the options so that you can customize the "custom" form control.
 	 *
@@ -106,6 +106,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 			item;
 	};
 	const items = _items as AnyObject[];
+	const [value, setValue] = useVariousState(_value);
 	const filteredItems = useMemo(() => hideCustom === false && !filter ? items : items.filter((item, index) =>
 		getItemField(item, "id") !== (typeof hideCustom === "string" ? hideCustom : "custom") && (filter?.(item, index) ?? true)),
 	[_items, getItemField, hideCustom, items]);
@@ -182,7 +183,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 
 function ExpanderRadioEnum<T extends AnyEnum>({ items, ...otherProps }: Override<PropsOf<typeof ExpanderRadio<T["array"][0], T["keyType"]>>, {
 	items: T;
-	value: Readonly<StateProperty<T["keyType"]>>;
+	value: Readonly<VariousState<T["keyType"]>>;
 	idField?: never;
 }>) {
 	return (
