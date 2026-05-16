@@ -89,6 +89,7 @@ function PinnedIdleEffect({ isAudio, disabled, effect: { key, icon, iconForAudio
 			key={key}
 			value={enabled}
 			icon={isAudio && iconForAudio || icon}
+			disabled={disabled}
 			actions={
 				amountType === "quantifiable" ? <SliderWithBox disabled={disabled} value={amount} suffix={t.units.percent} defaultValue={defaultValue} decimalPlaces={0} /> :
 				amountType === "negative" ? <ComboBox disabled={disabled} current={negativeType} ids={NegativeTypes.keys} options={NegativeTypes.labels} /> :

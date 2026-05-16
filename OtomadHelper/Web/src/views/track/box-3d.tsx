@@ -171,7 +171,7 @@ export default function Box3d() {
 			<CommandBar.Group>
 				<CommandBar position="left" addGaps>
 					<CommandBar.Item icon="delete" caption={t.track.box3d.deleteTracks} details={t.descriptions.track.box3d.deleteTracks} on={deleteTracks} />
-					<CommandBar.Item icon="codepen" caption={t.track.box3d.useLongerSide} details={t.descriptions.track.box3d.useLongerSide} on={useLongerSide} />
+					<CommandBar.Item icon="codepen" caption={t.track.box3d.longerSide} details={t.descriptions.track.box3d.longerSide} on={useLongerSide} />
 				</CommandBar>
 			</CommandBar.Group>
 

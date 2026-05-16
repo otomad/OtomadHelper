@@ -56,7 +56,7 @@ const StyledSpinner = styled.div`
 
 type SpinValue = 1 | -1;
 
-function Spinner({ disabled, step = 1, positionAnchor, shown = false, onSpin, onRelease }: FCP<{
+const Spinner = memo(function Spinner({ disabled, step = 1, positionAnchor, shown = false, onSpin, onRelease }: FCP<{
 	/** Disabled? */
 	disabled?: boolean;
 	/** The value to increase or decrease each time the knob of numeric up down box is clicked. @default 1 */
@@ -70,12 +70,12 @@ function Spinner({ disabled, step = 1, positionAnchor, shown = false, onSpin, on
 	/** Mouse release button event. */
 	onRelease?: BaseEventHandler;
 }>) {
-	const hidden = disabled || !shown;
+	const hidden = useMemo(() => disabled || !shown, [disabled, shown]);
 
-	function spinWithValue(spinValue: SpinValue) {
+	const spinWithValue = useCallback((spinValue: SpinValue) => {
 		const spin = typeof step === "bigint" ? BigInt(spinValue) * step : spinValue * step;
 		onSpin?.(spin);
-	}
+	}, [step, onSpin]);
 
 	return (
 		<StyledSpinner hidden={hidden} aria-hidden={hidden} style={{ positionAnchor }} onMouseDown={mod.prevent()}>
@@ -105,7 +105,7 @@ function Spinner({ disabled, step = 1, positionAnchor, shown = false, onSpin, on
 			</div>
 		</StyledSpinner>
 	);
-}
+});
 // #endregion
 
 const StyledTextBoxActionButton = styled.button.attrs({

@@ -336,7 +336,8 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	// Inert escape
-	html:has([data-inert-escape]) {
+	// DELETE: Bad for performance!
+	/* html:has([data-inert-escape]) {
 		*,
 		::before,
 		::after {
@@ -352,7 +353,7 @@ const GlobalStyle = createGlobalStyle<{
 				interactivity: auto;
 			}
 		}
-	}
+	} */
 
 	// User requested to reduce dynamic effects
 	@container style(--color-scheme-reduce-motion: true) { // \${important(2)}:not(.force-motion, .force-motion *)

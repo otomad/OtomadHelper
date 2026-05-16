@@ -64,7 +64,28 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 							},
 						],
 						nameof,
-						...ENABLE_COMPILER ? [["babel-plugin-react-compiler", { target: "19" }]] : [],
+						...ENABLE_COMPILER ? [["babel-plugin-react-compiler", {
+							target: "19",
+							panicThreshold: "none",
+							logger: {
+								logEvent(filename: string, event: Any) {
+									if (!filename.endsWith(".tsx")) return;
+									if (event.kind === "CompileError") {
+										let filenameWithLoc = filename;
+										if (event.detail.loc) {
+											const { line, column } = event.detail.loc.start;
+											filenameWithLoc += `(${line}:${column})`;
+										}
+										console.error(`\n❌ Compilation failed: ${filenameWithLoc}`);
+										console.error(`Reason: ${event.detail.reason}`);
+										if (event.detail.description)
+											console.error(`Details: ${event.detail.description}`);
+										if (event.detail.suggestions)
+											console.error("Suggestions:", event.detail.suggestions);
+									}
+								},
+							},
+						}]] : [],
 						[
 							"babel-plugin-styled-components",
 							{

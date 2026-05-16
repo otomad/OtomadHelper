@@ -193,10 +193,6 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 }>>) {
 	const settingsCardProps = { icon, title, details, selectInfo, selectValid, disabled, className, role, trailingGap, dirBasedIcon, anchor, wrapActionsWhenNarrow };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
-	const handleClick = useOnNestedButtonClick(e => !childrenDisabled ? setInternalExpanded(expanded => {
-		if (expanded || _isInExpanderGroupAndAutoCollapse) handleStickyCollapse(e, _isInExpanderGroupAndAutoCollapse && !expanded);
-		return !expanded;
-	}) : onClickWhenChildrenDisabled?.());
 	useUpdateEffect(() => setInternalExpanded(expanded), [expanded]);
 	useEffect(() => onToggle?.(internalExpanded), [internalExpanded]);
 	useEffect(() => { if (disabled || childrenDisabled) setInternalExpanded(false); }, [disabled, childrenDisabled]);
@@ -212,6 +208,11 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				expander.scrollIntoView({ block: "start", behavior: combo ? "instant" : "auto" });
 		}, 10, combo ? TRANSLATE_TRANSITION_DURATION / 10 : 1);
 	}
+
+	const handleClick = useOnNestedButtonClick(e => !childrenDisabled ? setInternalExpanded(expanded => {
+		if (expanded || _isInExpanderGroupAndAutoCollapse) handleStickyCollapse(e, _isInExpanderGroupAndAutoCollapse && !expanded);
+		return !expanded;
+	}) : onClickWhenChildrenDisabled?.());
 
 	return (
 		<div className="expander">

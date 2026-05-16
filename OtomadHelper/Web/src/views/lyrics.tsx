@@ -53,7 +53,7 @@ export default function Lyrics() {
 
 					<Subheader>{t.subheaders.seeAlso}</Subheader>
 					<div>
-						<Button hyperlink onClick={() => changePage(["tools"])}>{t.lyrics.useStaticText}</Button>
+						<Button hyperlink onClick={() => changePage(["tools"])}>{t.lyrics.staticText}</Button>
 					</div>
 				</EmptyMessage.YtpDisabled>
 			</EmptyMessage.Typical>

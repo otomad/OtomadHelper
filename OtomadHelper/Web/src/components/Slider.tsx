@@ -3,6 +3,7 @@ import { inSettingsCardTrailing } from "./TextBox";
 const THUMB_SIZE = 20;
 export /* @internal */ const sliderThumbSize = THUMB_SIZE;
 const TRACK_THICKNESS = 4;
+const TRACK_CLICK_HEIGHT = 48;
 const valueCalc = "calc(var(--value) * (100% - var(--thumb-size)))";
 const thumbSizeHalf = "calc(var(--thumb-size) / 2)";
 
@@ -34,13 +35,19 @@ export /* @internal */ const SliderThumb = styled.div`
 	}
 
 	.track:active ~ &::after,
-	&:active::after,
-	&.pressed::after {
+	&:active::after {
 		scale: ${10 / 20} !important;
 	}
 
 	[disabled] &::after {
 		background-color: ${c("fill-color-accent-disabled")};
+	}
+
+	&::before { // Enlarge the click area of the thumb.
+		content: "";
+		position: absolute;
+		inset: -4px;
+		display: block;
 	}
 `;
 
@@ -74,6 +81,15 @@ const StyledSlider = styled.div`
 				${ifColorScheme.contrast}: ${cc("FieldText")};
 				else: ${c("fill-color-control-strong-default")};
 			);
+		}
+
+		&::before { // Enlarge the click area of the track.
+			content: "";
+			position: absolute;
+			inset-block-start: ${(TRACK_CLICK_HEIGHT - THUMB_SIZE - TRACK_THICKNESS) / -2}px;
+			display: block;
+			block-size: ${TRACK_CLICK_HEIGHT}px;
+			inline-size: 100%;
 		}
 	}
 
@@ -189,9 +205,9 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 
 	const restrict = useCallback((n: number | undefined, nanValue: number) => Number.isFinite(n) ? clamp(map(n!, min, max, 0, 1), 0, 1) : nanValue, [min, max]);
 	const sharpValue = useMemo(() => restrict(value, 0), [value, restrict]);
-	const smoothValue = disableSmooth ? sharpValue : useSmoothValue(sharpValue, 0.5);
 	// Modify this parameter to adjust the smooth movement value of the slider.
-	const [pressed, setPressed] = useState(false);
+	let smoothValue = useSmoothValue(sharpValue, 0.5);
+	if (disableSmooth) smoothValue = sharpValue;
 	const id = useId();
 
 	const setValue = useCallback((value: number) => {
@@ -216,26 +232,13 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 		return value;
 	}, [min, max, step]);
 
-	const trackEl = useDomRef<"div">();
-	const trackRectRef = useRef({ width: 0, left: 0 }); // Cache bounding rect attributes.
-	// Initialize and cache the slider track rect in advance to avoid calling getBoundingClientRect in mouse events.
-	const updateTrackRect = () => {
-		requestIdleCallback(() => {
-			if (!trackEl.current) return;
-			const rect = trackEl.current.getBoundingClientRect();
-			trackRectRef.current = { left: rect.left, width: rect.width };
-		}, { timeout: 1000 });
-	};
-	useEventListener(window, "resize", updateTrackRect, { immediate: true });
+	const trackEl = useDomRef<"div">(), thumbEl = useDomRef<"div">();
 
 	function onThumbDown(e: PointerEvent, triggerByTrack: boolean = false) {
-		if (e.button) { e.preventDefault(); return; }
-		console.time("onThumbDown");
-		setPressed(true);
-		const thumb = (e.currentTarget as HTMLDivElement).parentElement!.querySelector(".thumb") as HTMLDivElement;
+		const track = trackEl.current, thumb = thumbEl.current;
+		if (e.button || !track || !thumb) { e.preventDefault(); return; }
 		const thumbSize = THUMB_SIZE;
-		// const { left, width } = track.getBoundingClientRect();
-		const { width, left } = trackRectRef.current;
+		const { left, width } = track.getBoundingClientRect();
 		const x = triggerByTrack ? thumbSize / 2 : e.clientX - left - thumb.offsetLeft * getUiScale1();
 		const aborter = new AbortController();
 		thumb.setPointerCapture(e.pointerId);
@@ -250,29 +253,23 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 			aborter.abort();
 			thumb.releasePointerCapture(e.pointerId);
 			onChange?.(value);
-			nextAnimationTick().then(() => {
-				setPressed(false);
-			});
 		}, { signal: aborter.signal });
-		console.timeEnd("onThumbDown");
 	}
 
 	const onTrackDown: PointerEventHandler = e => {
 		if (e.button) { e.preventDefault(); return; }
-		console.time("onTrackDown");
 		const thumbSizeHalf = THUMB_SIZE / 2;
-		// const { width } = track.getBoundingClientRect();
-		const { width, left } = trackRectRef.current;
-		const offsetX = e.clientX - left; // Prevent using `e.offsetX` which may cause reflow.
-		let value = clampValue(map(offsetX, thumbSizeHalf, width - thumbSizeHalf, min, max));
+		const track = e.currentTarget;
+		const { width } = track.getBoundingClientRect();
+		let value = clampValue(map(e.nativeEvent.offsetX, thumbSizeHalf, width - thumbSizeHalf, min, max));
 		if (isRtl()) value = max - value + min;
 		setValue(value);
 		onChanging?.(value);
-		console.timeEnd("onTrackDown");
 		onThumbDown(e, true); // Then call the dragging slider event.
 	};
 
 	const onKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(e => {
+		if (e.code === "Space") { e.preventDefault(); return; }
 		const increase = e.code.in("ArrowUp", "ArrowRight", "PageUp", "End");
 		const decrease = e.code.in("ArrowDown", "ArrowLeft", "PageDown", "Home");
 		const largeStep = e.code.in("PageUp", "PageDown");
@@ -322,7 +319,7 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 			>
 				<div className="track" ref={trackEl} onPointerDown={onTrackDown} />
 				<div className="passed" />
-				<SliderThumb className={["thumb", { pressed }]} onPointerDown={onThumbDown} />{/* onDoubleClick={resetToDefault} */ /* Easy to touch by mistake */}
+				<SliderThumb className="thumb" ref={thumbEl} onPointerDown={onThumbDown} />{/* onDoubleClick={resetToDefault} */ /* Easy to touch by mistake */}
 			</StyledSlider>
 		</StyledSliderWrapper>
 	);

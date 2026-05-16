@@ -627,7 +627,7 @@ export default {
 			},
 			box3d: {
 				deleteTracks: "Delete original tracks",
-				useLongerSide: "Use longer side of edge length",
+				longerSide: "Use longer side of edge length",
 				faces: {
 					front: "Front",
 					back: "Back",
@@ -707,7 +707,7 @@ export default {
 		},
 		lyrics: {
 			// TODO: rename to “related” and move to “t.subtitles” nested.
-			useStaticText: "Insert subtitles directly from static text",
+			staticText: "Insert subtitles directly from static text",
 			sampleLyrics: "Spicy chicken", // An sample text of karaoke lyrics, you can use any lyrics in your language or translate directly from the original text “Spicy Hotpot Chicken”. Note that the content should not be too long.
 			presetTemplate: "Preset template",
 			enableMode: "Enable {{mode, lowercase}} mode",
@@ -1301,7 +1301,7 @@ export default {
 				},
 				box3d: {
 					deleteTracks: "Due to technical limitations, the selected tracks cannot be moved directly. Currently, it can only create new tracks and migrate the clips automatically, but not track motions, effects, or anything else. You will have to migrate them yourself later. You can decide if you want to delete the original tracks. Newly added tracks are not affected.",
-					useLongerSide: "Uses the long side instead of the short side as the cube’s edge length if the source is a rectangle, which make the cube more natural",
+					longerSide: "Uses the long side instead of the short side as the cube’s edge length if the source is a rectangle, which make the cube more natural",
 				},
 				gradient: {
 					_: "Gives the video tracks a gradient color style, or mirrors the edges of the tracks by flipping a parity pattern in your layout",
@@ -1749,8 +1749,8 @@ export default {
 		},
 		keybindings: {
 			commands: {
-				useTrackEventAsSource: "Use Track Event as Source",
-				useProjectMediaAsSource: "Use Project Media as Source",
+				trackEventAsSource: "Use Track Event as Source",
+				projectMediaAsSource: "Use Project Media as Source",
 				enableYtp: "Enable YTP Feature",
 				disableYtp: "Disable YTP Feature",
 				startGenerating: "Start Generating",
