@@ -150,9 +150,17 @@ const StyledSliderWrapper = styled.div`
 		color: ${c("fill-color-text-secondary")};
 		font-variant-numeric: tabular-nums;
 	}
+
+	&.invert {
+		direction: rtl;
+
+		html:dir(rtl) & {
+			direction: ltr;
+		}
+	}
 `;
 
-export default function Slider({ value: _value, min = 0, max = 100, autoClampValue, defaultValue, step, keyStep = 1, keyBigStepMultiplier = 10, displayValueStep, smoothlyDisplayValue = true, disabled = false, displayValue: _displayValue = false, _disableSmooth: disableSmooth, onChanging, onChange/* , onDisplayValueChanged */ }: FCP<{
+export default function Slider({ value: _value, min = 0, max = 100, autoClampValue, defaultValue, step, keyStep = 1, keyBigStepMultiplier = 10, disabled = false, displayValue: _displayValue = false, displaySpecialValue, invertDirection = false, _disableSmooth: disableSmooth, onChanging, onChange }: FCP<{
 	/** Current value. */
 	value: VariousState<number>;
 	/** Slider minimum value. @default 0 */
@@ -173,22 +181,20 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 	 * @default 10
 	 */
 	keyBigStepMultiplier?: number;
-	/** The display value decimal places will accept it, or use `step` if it is undefined. Defaults same as `step` */
-	displayValueStep?: number;
-	/** Make the display value change smoothly? @default true */
-	smoothlyDisplayValue?: boolean;
 	/** Disabled? */
 	disabled?: boolean;
 	/** Show the text indicates the value? Or get the display text from the value. */
 	displayValue?: boolean | ((value: number) => Readable) | Readable;
+	/** Specify to show special text when it is specific value. */
+	displaySpecialValue?: Record<number, string>;
+	/** Min on the right, max on the left. RTL and vice versa. @default false */
+	invertDirection?: boolean;
 	/** @private Disable smooth value. */
 	_disableSmooth?: boolean;
 	/** Occurs when the slider is being dragged. */
 	onChanging?(value: number): void;
 	/** Occurs when the slider is lifted after being dragged. */
 	onChange?(value: number): void;
-	/** Occurs when you want to get the display value. */
-	// onDisplayValueChanged?(value: Readable | undefined): void;
 }>) {
 	const [value, _setValue] = useVariousState(_value);
 	const errorInfo = `The value range should be between [${min} ~ ${max}], with the current value being ${value}.`;
@@ -203,8 +209,8 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 		if (autoClampValue) _setValue?.(max);
 		else throw new RangeError("The value of Slider is greater than the maximum value. " + errorInfo);
 
-	const restrict = useCallback((n: number | undefined, nanValue: number) => Number.isFinite(n) ? clamp(map(n!, min, max, 0, 1), 0, 1) : nanValue, [min, max]);
-	const sharpValue = useMemo(() => restrict(value, 0), [value, restrict]);
+	const constrain = useCallback((n: number | undefined, nanValue: number) => Number.isFinite(n) ? clamp(map(n!, min, max, 0, 1), 0, 1) : nanValue, [min, max]);
+	const sharpValue = useMemo(() => constrain(value, 0), [value, constrain]);
 	// Modify this parameter to adjust the smooth movement value of the slider.
 	let smoothValue = useSmoothValue(sharpValue, 0.5);
 	if (disableSmooth) smoothValue = sharpValue;
@@ -234,6 +240,8 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 
 	const trackEl = useDomRef<"div">(), thumbEl = useDomRef<"div">();
 
+	const _isRtl = () => isRtl() !== invertDirection;
+
 	function onThumbDown(e: PointerEvent, triggerByTrack: boolean = false) {
 		const track = trackEl.current, thumb = thumbEl.current;
 		if (e.button || !track || !thumb) { e.preventDefault(); return; }
@@ -245,7 +253,7 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 		thumb.addEventListener("pointermove", lodash.debounce((e: PointerEvent) => {
 			const position = clamp(e.clientX - left - x, 0, width - thumbSize);
 			let value = clampValue(map(position, 0, width - thumbSize, min, max));
-			if (isRtl()) value = max - value + min;
+			if (_isRtl()) value = max - value + min;
 			setValue(value);
 			onChanging?.(value);
 		}), { signal: aborter.signal });
@@ -262,7 +270,7 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 		const track = e.currentTarget;
 		const { width } = track.getBoundingClientRect();
 		let value = clampValue(map(e.nativeEvent.offsetX, thumbSizeHalf, width - thumbSizeHalf, min, max));
-		if (isRtl()) value = max - value + min;
+		if (_isRtl()) value = max - value + min;
 		setValue(value);
 		onChanging?.(value);
 		onThumbDown(e, true); // Then call the dragging slider event.
@@ -270,8 +278,9 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 
 	const onKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(e => {
 		if (e.code === "Space") { e.preventDefault(); return; }
-		const increase = e.code.in("ArrowUp", "ArrowRight", "PageUp", "End");
-		const decrease = e.code.in("ArrowDown", "ArrowLeft", "PageDown", "Home");
+		const rtl = _isRtl();
+		const increase = e.code.in("ArrowUp", !rtl ? "ArrowRight" : "ArrowLeft", "PageUp", "End");
+		const decrease = e.code.in("ArrowDown", !rtl ? "ArrowLeft" : "ArrowRight", "PageDown", "Home");
 		const largeStep = e.code.in("PageUp", "PageDown");
 		if (!decrease && !increase) return;
 		stopEvent(e);
@@ -281,26 +290,21 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 		setValue(newValue);
 	}, [value, clampValue, keyBigStepMultiplier, keyStep, min, max, setValue]);
 
-	const steppedSmoothValue = useMemo(() => {
-		const smoothValue2 = map(smoothlyDisplayValue ? smoothValue : sharpValue, 0, 1, min, max);
-		const step2 = displayValueStep ?? step;
-		const steppedSmoothValue = step2 ? smoothValue2.toFixed(step2.countDecimals()) : smoothValue2;
-		return steppedSmoothValue;
-	}, [displayValueStep, max, min, sharpValue, smoothValue, smoothlyDisplayValue, step]);
-
 	const displayValue = useMemo(() => {
 		if (_displayValue === false || _displayValue === undefined) return undefined;
-		else if (_displayValue === true) return steppedSmoothValue;
-		else if (typeof _displayValue === "function") return _displayValue(+steppedSmoothValue);
+		else if (_displayValue === true) return value;
+		else if (typeof _displayValue === "function") return _displayValue(+value);
 		// It is possible to expose more types of values (such as the original value with long decimals, unclamped value, etc.), but it is unnecessary at the moment.
 		else return _displayValue;
-	}, [_displayValue, steppedSmoothValue]);
-
-	// useEffect(() => { onDisplayValueChanged?.(displayValue); }, [displayValue, onDisplayValueChanged]);
+	}, [_displayValue, value]);
 
 	return (
-		<StyledSliderWrapper onAuxClick={resetToDefault}>
-			{hasValue(displayValue) /* && !onDisplayValueChanged */ && <output htmlFor={id} aria-hidden>{displayValue}</output>}
+		<StyledSliderWrapper className={{ invert: invertDirection }} onAuxClick={resetToDefault}>
+			{hasValue(displayValue) && (
+				<output htmlFor={id} aria-hidden>
+					<PatternedNumberFlow specialValue={displaySpecialValue}>{displayValue}</PatternedNumberFlow>
+				</output>
+			)}
 			<StyledSlider
 				tabIndex={disabled ? -1 : 0}
 				style={{

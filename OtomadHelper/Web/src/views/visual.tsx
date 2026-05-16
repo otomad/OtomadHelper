@@ -128,7 +128,17 @@ export default function Visual() {
 					>
 						<Setting
 							meta={meta.truncate.loopRegion}
-							actions={<TextBox.Number value={truncateLoopRegion} min={0} max={100} decimalPlaces={2} suffix={t.units.percent} />}
+							actions={(
+								<SliderWithBox
+									value={truncateLoopRegion}
+									min={0}
+									max={100}
+									decimalPlaces={0}
+									suffix={t.units.percent}
+									defaultValue={50}
+									sliderInvertDirection
+								/>
+							)}
 							{...truncateLoopRegionDisabled && {
 								disabled: true,
 								selectValid: false,
@@ -170,12 +180,13 @@ export default function Visual() {
 									defaultValue={0}
 									min={-100}
 									max={100}
-									displayValueStep={1}
-									displayValue={value => ({
+									step={1}
+									displayValue={value => `${value > 0 ? "+" : ""}${value}%`}
+									displaySpecialValue={{
 										"-100": t.stream.transition.alignment.end,
 										0: t.stream.transition.alignment.center,
 										100: t.stream.transition.alignment.start,
-									})[value] ?? `${value > 0 ? "+" : ""}${value}%`}
+									}}
 								/>
 							)}
 						/>
