@@ -17,6 +17,7 @@ export default function PatternedNumberFlow({ children, specialValue, ...htmlAtt
 		if (typeof value === "string") {
 			let value_string: string;
 			({ 1: prefix = undefined, 2: value_string = "", 3: suffix = undefined } = value.toString().match(/^(.*?)(-?\d+(?:\.\d+)?)(.*)$/) ?? []);
+			({ prefix, suffix } = fixPangu(prefix, suffix));
 			value_number = +value_string;
 		}
 
@@ -31,4 +32,12 @@ export default function PatternedNumberFlow({ children, specialValue, ...htmlAtt
 
 	// return numberFlowProps.map((props, i) => <NumberFlow key={i} {...htmlAttrs} {...props} />);
 	return <NumberFlow isolate {...htmlAttrs} {...numberFlowProps} />;
+}
+
+const cjkCharacters = /(?![\uff00-\uffff])[\p{sc=Han}\p{sc=Hira}\p{sc=Kana}\p{sc=Hang}\p{sc=Bopo}]/u;
+const PUNC_SPACE = "\u2008";
+function fixPangu(prefix?: string, suffix?: string) {
+	if (prefix && cjkCharacters.test(prefix.realCharAt(-1))) prefix += PUNC_SPACE;
+	if (suffix && cjkCharacters.test(suffix.realCharAt(0))) suffix = PUNC_SPACE + suffix;
+	return { prefix, suffix };
 }
