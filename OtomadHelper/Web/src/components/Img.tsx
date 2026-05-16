@@ -46,7 +46,7 @@ export default function Img({ src, duplicate, ref, ...htmlAttrs }: FCP<{
 	const contentsEl = useDomRef<"div">();
 	const imageEl = useDomRef<"img">();
 	const images = useSnapshot(useImages);
-	const source = duplicate ? src + "?" + duplicate : src;
+	const source = duplicate && src && !(src.startsWith("data:") || src.startsWith("blob:")) ? src + "?" + duplicate : src;
 
 	useImperativeHandleRef(ref, imageEl);
 

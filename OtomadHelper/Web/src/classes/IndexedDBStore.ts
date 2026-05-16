@@ -2,6 +2,7 @@
  * A generic utility class for managing data in an IndexedDB object store.
  *
  * @template T - The type of objects stored in the IndexedDB object store.
+ * @template TK - The custom key(s) stored in the IndexedDB object store.
  *
  * @remarks
  * This class provides a high-level abstraction for working with IndexedDB, including methods for
@@ -31,7 +32,7 @@
  * console.log(user); // { id: 1, name: "John Doe", email: "john.doe@example.com" }
  * ```
  */
-export default class IndexedDBStore<T extends object> {
+export default class IndexedDBStore<T extends object, TK extends Record<Extract<keyof TK, string>, number> = {}> {
 	/**
 	 * The IndexedDB database instance.
 	 */
@@ -90,9 +91,11 @@ export default class IndexedDBStore<T extends object> {
 		public readonly databaseVersion: number,
 		public readonly objectStoreName: string,
 		protected readonly objectStoreSchema: {
-			keyPath?: (string & keyof T) | (string & keyof T)[];
+			keyPath?: keyof TK & string | (keyof TK & string)[];
 		} & {
 			[key in keyof T]: IDBIndexParameters | null;
+		} & {
+			[key in keyof TK]: IDBIndexParameters | null;
 		},
 	) { }
 
@@ -160,7 +163,7 @@ export default class IndexedDBStore<T extends object> {
 	 * const id = await store.add({ id: 1, name: "Bob", gender: "male" });
 	 * ```
 	 */
-	add(item: T) {
+	add(item: T & TK) {
 		return IndexedDBStore.getResult(this.store.add(item));
 	}
 
@@ -170,7 +173,7 @@ export default class IndexedDBStore<T extends object> {
 	 * @param id - The key or key range of the item to retrieve.
 	 * @returns A Promise that resolves with the retrieved item or rejects with an error.
 	 */
-	get(id: IDBValidKey | IDBKeyRange): Promise<T>;
+	get(id: IDBValidKey | IDBKeyRange): Promise<T & TK | undefined>;
 	/**
 	 * Retrieves an item from the IndexedDB object store based on a specific key or key range.
 	 *
@@ -183,12 +186,12 @@ export default class IndexedDBStore<T extends object> {
 	 * If the `value` parameter is provided, the function will use the specified index to retrieve the item.
 	 * If the `value` parameter is not provided, the function will retrieve the item using the provided key.
 	 */
-	get<TKey extends keyof T>(key: TKey, value: T[TKey]): Promise<T>;
-	get(...args: unknown[]): Promise<T> {
+	get<TKey extends keyof (T & TK)>(key: TKey, value: (T & TK)[TKey]): Promise<T & TK | undefined>;
+	get(...args: unknown[]): Promise<T & TK> {
 		const request = args.length === 1 ?
 			this.readonlyStore.get(args[0] as IDBValidKey) :
 			this.readonlyStore.index(args[0] as string).get(args[1] as IDBValidKey);
-		return IndexedDBStore.getResult<T>(request);
+		return IndexedDBStore.getResult<T & TK>(request);
 	}
 
 	/**
@@ -209,7 +212,7 @@ export default class IndexedDBStore<T extends object> {
 	 * await store.set({ name: "Jim", gender: "male" }); // Auto generate next available ID.
 	 * ```
 	 */
-	async set(item: T, id?: IDBValidKey): Promise<void>;
+	async set(item: T & TK, id?: {} extends TK ? IDBValidKey : never): Promise<void>;
 	/**
 	 * Updates a specific property of an existing record identified by its ID in the IndexedDB object store.
 	 *
@@ -225,7 +228,7 @@ export default class IndexedDBStore<T extends object> {
 	 * await store.set("name", "Bob", 1); // Explicit specified the id.
 	 * ```
 	 */
-	async set<TKey extends keyof T>(key: TKey, value: T[TKey], id: IDBValidKey): Promise<void>;
+	async set<TKey extends keyof (T & TK)>(key: TKey, value: (T & TK)[TKey], id: IDBValidKey): Promise<void>;
 	/**
 	 * Sets or updates data in the IndexedDB store.
 	 *
@@ -252,7 +255,7 @@ export default class IndexedDBStore<T extends object> {
 			const [key, value, id] = args as [key: keyof T, value: T[keyof T], id: IDBValidKey];
 			for await (const cursor of this.cursor())
 				if (cursor.key === id) {
-					cursor.value[key] = value;
+					cursor.value[key] = value as never;
 					const request = cursor.update(cursor.value);
 					await IndexedDBStore.getResult(request);
 					return;
@@ -288,7 +291,7 @@ export default class IndexedDBStore<T extends object> {
 	 * @remarks It is suggested that you use `entries()` for queries only,
 	 * and use `cursor()` only if you need to modify or delete items.
 	 *
-	 * @yields {IDBCursor & { value: T }} The current cursor pointing to a record in the object store, with the record's value.
+	 * @yields {IDBCursor & { value: T & TK }} The current cursor pointing to a record in the object store, with the record's value.
 	 * @throws {DOMException} If an error occurs while accessing the IndexedDB.
 	 *
 	 * @example
@@ -302,7 +305,7 @@ export default class IndexedDBStore<T extends object> {
 		while (true) {
 			const cursor = await IndexedDBStore.getResult(request);
 			if (!cursor) break;
-			yield cursor as IDBCursor & { value: T };
+			yield cursor as IDBCursor & { value: T & TK };
 			cursor.continue();
 		}
 	}
@@ -310,7 +313,7 @@ export default class IndexedDBStore<T extends object> {
 	/**
 	 * Asynchronously iterates over all key-value pairs in the IndexedDB object store.
 	 *
-	 * @yields {[IDBValidKey, T]} - Yields the key-value pair for each item in the object store.
+	 * @yields {[IDBValidKey, T & TK]} - Yields the key-value pair for each item in the object store.
 	 *
 	 * @example
 	 * ```typescript
@@ -388,7 +391,7 @@ export default class IndexedDBStore<T extends object> {
 	 * console.log(await store.all());
 	 * ```
 	 */
-	all(): Promise<T[]> {
+	all(): Promise<(T & TK)[]> {
 		return IndexedDBStore.getResult(this.store.getAll());
 	}
 
@@ -413,7 +416,7 @@ export default class IndexedDBStore<T extends object> {
 	 * const names = await store.map(item => item.name);
 	 * ```
 	 */
-	async map<TOut>(callbackfn: (value: T, key: IDBValidKey) => MaybePromise<TOut>) {
+	async map<TOut>(callbackfn: (value: T & TK, key: IDBValidKey) => MaybePromise<TOut>) {
 		const result: TOut[] = [];
 		for await (const [key, value] of this.entries())
 			result.push(await callbackfn(value, key));
@@ -432,7 +435,7 @@ export default class IndexedDBStore<T extends object> {
 	 * - `"nextunique"`: Ascending order with unique values.
 	 * - `"prev"`: Descending order.
 	 * - `"prevunique"`: Descending order with unique values.
-	 * @yields {[IDBValidKey, T]} A tuple containing the primary key and the value of each record in the store.
+	 * @yields {[IDBValidKey, T & TK]} A tuple containing the primary key and the value of each record in the store.
 	 * The tuple is of the form `[IDBValidKey, T]`.
 	 * @throws {DOMException} If the IndexedDB operation fails.
 	 *
@@ -445,7 +448,7 @@ export default class IndexedDBStore<T extends object> {
 	 *     console.log(key, value); // Logs sorted alphabetically by name in descending order.
 	 * ```
 	 */
-	async *sortedBy(key: keyof T & string, direction: IDBCursorDirection = "next") {
+	async *sortedBy(key: keyof (T & TK) & string, direction: IDBCursorDirection = "next") {
 		for await (const cursor of this.sortedCursor(key, direction))
 			yield [cursor.primaryKey, cursor.value] as const;
 	}
@@ -464,7 +467,7 @@ export default class IndexedDBStore<T extends object> {
 	 * - `"prev"`: Descending order.
 	 * - `"nextunique"`: Ascending order with unique values.
 	 * - `"prevunique"`: Descending order with unique values.
-	 * @yields {IDBCursor & { value: T }} An `IDBCursor` object extended with a `value` property of type `T`
+	 * @yields {IDBCursor & { value: T & TK }} An `IDBCursor` object extended with a `value` property of type `T`
 	 * representing the current record in the iteration.
 	 * @throws {DOMException} If the IndexedDB operation fails.
 	 *
@@ -477,12 +480,12 @@ export default class IndexedDBStore<T extends object> {
 	 *     console.log(cursor.key, cursor.value); // Logs sorted alphabetically by name in descending order.
 	 * ```
 	 */
-	async *sortedCursor(key: keyof T & string, direction: IDBCursorDirection = "next") {
+	async *sortedCursor(key: keyof (T & TK) & string, direction: IDBCursorDirection = "next") {
 		const request = this.store.index(key).openCursor(null, direction);
 		while (true) {
 			const cursor = await IndexedDBStore.getResult(request);
 			if (!cursor) break;
-			yield cursor as IDBCursor & { value: T };
+			yield cursor as IDBCursor & { value: T & TK };
 			cursor.continue();
 		}
 	}
@@ -508,7 +511,7 @@ export default class IndexedDBStore<T extends object> {
 	 * const namesSortedByAge = await store.map("age", item => item.name);
 	 * ```
 	 */
-	async sortedMap<TOut>(key: keyof T & string, callbackfn: (value: T, primaryKey: IDBValidKey) => MaybePromise<TOut>, direction: IDBCursorDirection = "next") {
+	async sortedMap<TOut>(key: keyof (T & TK) & string, callbackfn: (value: T & TK, primaryKey: IDBValidKey) => MaybePromise<TOut>, direction: IDBCursorDirection = "next") {
 		const result: TOut[] = [];
 		for await (const [primaryKey, value] of this.sortedBy(key, direction))
 			result.push(await callbackfn(value, primaryKey));

@@ -1,11 +1,9 @@
 import { arrayMove } from "@dnd-kit/sortable";
 import IndexedDBStore from "classes/IndexedDBStore";
 import { startCircleViewTransition } from "helpers/color-mode";
-import { Vibrant, WorkerPipeline } from "node-vibrant/worker";
-import PipelineWorker from "node-vibrant/worker.worker?worker";
+import Vibrant from "helpers/vibrant";
 
 const DATABASE_VERSION = 2;
-Vibrant.use(new WorkerPipeline(PipelineWorker as never));
 
 interface BackgroundImageRow {
 	imageData: Blob;
