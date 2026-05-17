@@ -184,7 +184,7 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 
 	${styles.mixins.forwardFocusRing(".toggle-switch-base")};
 
-	&.selected {
+	&[aria-checked="true"] {
 		.base {
 			background-color: ${c("accent-color")} !important;
 			border-color: ${c("accent-color")};
@@ -320,7 +320,6 @@ export default function ToggleSwitch({ on: _on, disabled: _disabled = false, isP
 	const [isDragging, setIsDragging] = useState(false);
 	const [thumbLeft, setThumbLeft] = useState<number>();
 	const [labelTranslate, setLabelTranslate] = useState<number>();
-	const [pressed, setPressed] = useState(false);
 	const ariaId = useId();
 	useImperativeHandleAriaId(ariaIdRef, ariaId);
 	// CAUTION: Parameter changes using styled-components directly will affect performance.
@@ -351,7 +350,6 @@ export default function ToggleSwitch({ on: _on, disabled: _disabled = false, isP
 
 	const onThumbDown = useCallback<PointerEventHandler<HTMLDivElement>>(e => {
 		stopEvent(e);
-		setPressed(true);
 		setIsPressing?.(true);
 		const thumb = e.currentTarget;
 		const control = thumb.parentElement!;
@@ -380,7 +378,6 @@ export default function ToggleSwitch({ on: _on, disabled: _disabled = false, isP
 			setLabelTranslate(undefined);
 			setIsDragging(isMoved); // Define recognition as drag instead of click.
 			const lift = () => {
-				setPressed(false);
 				setIsPressing?.(false);
 			};
 			if (reduceMotion) lift();
@@ -394,7 +391,7 @@ export default function ToggleSwitch({ on: _on, disabled: _disabled = false, isP
 	return (
 		<StyledToggleSwitchLabel
 			as={as as "button"}
-			className={[className, parseNoIndentationProp(noIndentation), { selected: on, pressed, colored: !!color, actuallyOff }]}
+			className={[className, parseNoIndentationProp(noIndentation), { /* selected: on, */ colored: !!color, actuallyOff }]}
 			disabled={disabled}
 			aria-disabled={disabled || undefined}
 			onClick={e => handleCheck(!on, e)}

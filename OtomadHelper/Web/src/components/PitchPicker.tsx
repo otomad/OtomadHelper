@@ -30,16 +30,17 @@ const StyledPitchPicker = styled(StyledButton)`
 
 const REFERENCE_PITCH = new Pitch("C5");
 
-export default function PitchPicker({ spn: [spn, setSpn], ...htmlAttrs }: FCP<{
+export default function PitchPicker({ spn: _spn, ...htmlAttrs }: FCP<{
 	/** Scientific pitch notation. */
-	spn: StateProperty<string>;
+	spn: VariousState<string>;
 }, "button">) {
-	const pitch = useMemo(() => new Pitch(spn!), [spn]);
+	const [spn, setSpn] = useVariousState(_spn);
+	const pitch = useMemo(() => new Pitch(spn), [spn]);
 	const offset = pitch.offsetTo(REFERENCE_PITCH);
 
 	const showPitchPicker: MouseEventHandler<HTMLButtonElement> = async e => {
 		const rect = e.currentTarget.getBoundingClientRect();
-		const result = await bridges.bridge.showPitchPicker(rect, spn!);
+		const result = await bridges.bridge.showPitchPicker(rect, spn);
 		setSpn?.(result);
 	};
 

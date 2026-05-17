@@ -40,7 +40,7 @@ const TextPluginPreviewImage = styled.img`
 
 export default function Internal() {
 	const [currentLanguage] = useLanguage();
-	const { language: [language, setLanguage], openglInterop, autosaveInterval, defaultTextPlugin, defaultTuningMethod, defaultClassicMode, defaultElasticMode, preserveClipboardOnClose, eventGroupSelection } = useSelectConfig(c => c.settings.internal);
+	const { language, openglInterop, autosaveInterval, defaultTextPlugin, defaultTuningMethod, defaultClassicMode, defaultElasticMode, preserveClipboardOnClose, eventGroupSelection } = useSubConfig(c => c.settings.internal);
 	const meta = metas.settings.internal;
 	return (
 		<div className="container">
@@ -51,7 +51,7 @@ export default function Internal() {
 				icon="globe"
 				items={vegasLanguages}
 				view="grid"
-				value={[language, setLanguage]}
+				value={language}
 				idField="tag"
 				nameField={({ tag: language }) => getLocaleName(language, currentLanguage)}
 				checkInfoCondition={language => language && getLocaleName(language, currentLanguage)}

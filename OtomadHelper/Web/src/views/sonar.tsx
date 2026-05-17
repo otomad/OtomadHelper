@@ -3,7 +3,7 @@ import tipsImage from "assets/images/tips/shapes.avif";
 export default function Sonar() {
 	const {
 		enabled, splitDrums, differenceCompositeMode, shadow, shadowColor,
-	} = useSelectConfig(c => c.sonar);
+	} = useSubConfig(c => c.sonar);
 	const graphs = useSelectConfigArray(c => c.sonar.graphs);
 	const meta = metas.sonar;
 
@@ -16,12 +16,14 @@ export default function Sonar() {
 				<EmptyMessage.YtpDisabled fully={t.titles.sonar}>
 					<Setting meta={meta.splitDrums} on={splitDrums} />
 					<Setting meta={meta.differenceCompositeMode} on={differenceCompositeMode} />
-					<Setting
-						meta={meta.shadow}
-						on={shadow}
-						color={shadowColor[0]}
-						actions={<ColorPicker color={shadowColor} />}
-					/>
+					{subKeys([shadowColor], shadowColor => (
+						<Setting
+							meta={meta.shadow}
+							on={shadow}
+							color={shadowColor[0]}
+							actions={<ColorPicker color={shadowColor} />}
+						/>
+					))}
 
 					<Subheader>{t.sonar.graphs}</Subheader>
 					{graphs.map((graph, i) => (
