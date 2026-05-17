@@ -100,10 +100,13 @@ export default function Settings() {
 	const { scheme: [scheme, setScheme], amoledDark: [amoledDark, setAmoledDark], contrast: [contrast, setContrast] } = useStoreState(colorModeStore);
 	const { black: actualAmoledDark, contrast: actualContrast } = useActualColorScheme();
 	const {
-		fontSize, fontFamily, hideUseTips, autoSwitchSourceFrom, autoCollapsePrveClasses, previewWithSource,
-		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur,
-		systemBackdrop_win11, systemBackdrop_win10, accentColor, backgroundColor,
+		fontFamily, accentColor, backgroundColor,
 	} = useSelectConfig(c => c.settings);
+	const {
+		fontSize, hideUseTips, autoSwitchSourceFrom, autoCollapsePrveClasses, previewWithSource,
+		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur,
+		systemBackdrop_win11, systemBackdrop_win10,
+	} = useSubConfig(c => c.settings);
 	const backgroundImages = useBackgroundImages();
 	const { pushPage } = useSnapshot(pageStore);
 	const meta = metas.settings;
@@ -115,7 +118,7 @@ export default function Settings() {
 	const { thumbnail, changeThumbnail, resetThumbnail, isDefaultThumbnail } = useThumbnail();
 
 	// Dev mode
-	const { devMode, rtl } = useStoreState(devStore);
+	const { devMode, rtl } = currySubscribeStore(devStore);
 
 	async function addBackgroundImage() {
 		const files = await openFile({ types: [{ accept: { "image/*": [] } }], multiple: true });
@@ -417,7 +420,7 @@ export default function Settings() {
 			</Setting>
 			<Setting
 				meta={meta.appearance.fontSize}
-				checkInfo={fontSize[0] + t.units.point}
+				checkInfo={subKeys(fontSize, fontSize => fontSize + t.units.point)}
 				expanded={DEV_EXPANDED}
 			>
 				<Expander.ChildWrapper $single>
@@ -431,7 +434,9 @@ export default function Settings() {
 					/>
 					<SampleTextFontSize>
 						<p className="sample">{t.descriptions.settings.appearance.fontSize.sampleText}</p>
-						<p className="info"><Preserves soft>{t.descriptions.settings.appearance.fontSize.info({ current: fontSize[0], default: 14 })}</Preserves></p>
+						<p className="info">{subKeys(fontSize, fontSize =>
+							<Preserves soft>{t.descriptions.settings.appearance.fontSize.info({ current: fontSize, default: 14 })}</Preserves>)}
+						</p>
 					</SampleTextFontSize>
 				</Expander.ChildWrapper>
 			</Setting>
@@ -462,7 +467,11 @@ export default function Settings() {
 			<Setting meta={meta.internal} onClick={() => pushPage("internal")} />
 			<Setting meta={meta.preference.autoSwitchSourceFrom} on={autoSwitchSourceFrom} />
 			<Setting meta={meta.preference.autoCollapsePrveClasses} on={autoCollapsePrveClasses} />
-			<Setting meta={meta.preference.previewWithSource} on={previewWithSource} expanded={DEV_EXPANDED}>
+			<Setting
+				meta={meta.preference.previewWithSource}
+				expanded={DEV_EXPANDED}
+				actions={<ToggleSwitch on={previewWithSource} />}
+			>
 				<Expander.ChildWrapper>
 					<StackPanel>
 						<Button icon="open_file" onClick={changeThumbnail}>{t.browse}</Button>

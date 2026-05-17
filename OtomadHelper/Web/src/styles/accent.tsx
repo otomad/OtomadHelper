@@ -1,6 +1,6 @@
 import { autoColorPalettes } from "helpers/basic-color-palette";
 import colors from "./colors";
-const getAutoColor = (prefix: string, color: typeof autoColorPalettes[number] | (string & {})) =>
+const getAutoColor = (prefix: string, color: typeof autoColorPalettes[number] | string & {}) =>
 	autoColorPalettes.includes(color) ? `var(--${prefix}-${color})` : color;
 
 const StyledDynamicAccentColor = createGlobalStyle<{

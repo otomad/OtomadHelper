@@ -39,7 +39,7 @@ export function useBackgroundImages() {
 	const [items, setItems] = useAtom(itemsAtom);
 	const { backgroundImage: currentImageKey } = useSnapshot(configStore.settings);
 	const setCurrentImageKey = setStateNarrow(
-		current => startCircleViewTransition(current !== -1, () => configStore.settings.backgroundImage = current),
+		current => startCircleViewTransition(current !== -1, () => configStore.settings.backgroundImage = current, { cursor: "wait" }),
 		() => configStore.settings.backgroundImage,
 	);
 	const currentItem = useMemo(() => items.find(item => item.key === currentImageKey), [items, currentImageKey]);

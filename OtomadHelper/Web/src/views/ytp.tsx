@@ -76,7 +76,7 @@ const StyledYtpIconLegend = styled.ul`
 `;
 
 export default function Ytp() {
-	const { enabled, clips, constraint } = useSelectConfig(c => c.ytp);
+	const { enabled, clips, constraint } = useSubConfig(c => c.ytp);
 	const meta = metas.ytp;
 	const [selectEffects, setSelectEffects] = useState<string[]>([]);
 	const selectEffectCount = selectEffects.length;
@@ -89,7 +89,7 @@ export default function Ytp() {
 
 			<EmptyMessage.Typical icon="ytp" title="ytp" enabled={enabled}>
 				<Subheader>{t.titles.parameters}</Subheader>
-				<Setting meta={meta.constrain} checkInfo={transRoughTimeRangeUnit(constraint[0])}>
+				<Setting meta={meta.constrain} checkInfo={subKeys(constraint, constraint => transRoughTimeRangeUnit(constraint))}>
 					<ExpanderChildTrim.RoughTime range={constraint} min={1} decimalPlaces={0} spinnerStep={100} />
 				</Setting>
 				<Setting meta={meta.clips} actions={<TextBox.Number value={clips} min={0} decimalPlaces={0} suffix={t.units.piece} />} />

@@ -145,7 +145,7 @@ const GlobalStyle = createGlobalStyle<{
 		color: var(--foreground-color);
 		font-feature-settings: "halt" on;
 		font-kerning: normal;
-		font-synthesis: none;
+		font-synthesis-style: none;
 		font-variant-ligatures: common-ligatures historical-ligatures contextual;
 		font-variant-numeric: proportional-nums;
 		text-spacing-trim: trim-start;

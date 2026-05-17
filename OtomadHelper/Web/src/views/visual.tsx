@@ -93,7 +93,7 @@ export default function Visual() {
 					selectInfo={(
 						<>
 							{!hideUseTips && t.descriptions.stream.loop.loopMedia}
-							<SubscribeKeys keys={loop}>{loop => loop === null && t.descriptions.stream.loop.unset}</SubscribeKeys>
+							{subKeys(loop, loop => loop === null && t.descriptions.stream.loop.unset)}
 						</>
 					)}
 					selectValid={[["info"], true]}
@@ -223,7 +223,7 @@ export default function Visual() {
 						</Expander.Item>
 						<Setting
 							meta={meta.articulations.glissando.amplitude}
-							details={<SubscribeKeys keys={glissandoEffect}>{glissandoEffect => t.descriptions.amplitude({ effect: glissandoEffects.find(({ id }) => id === glissandoEffect)?.name })}</SubscribeKeys>}
+							details={subKeys(glissandoEffect, glissandoEffect => t.descriptions.amplitude({ effect: glissandoEffects.find(({ id }) => id === glissandoEffect)?.name }))}
 							actions={<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix={t.units.semitone} positiveSign />}
 						/>
 					</Setting>
@@ -240,14 +240,14 @@ export default function Visual() {
 					<Setting meta={meta.mapping.progress} />
 
 					<Subheader meta={meta.parameters} />
-					<Setting meta={meta.preset} checkInfo={<SubscribeKeys keys={currentPreset}>{currentPreset => t.stream.preset.builtInPresets[currentPreset]}</SubscribeKeys>}>
+					<Setting meta={meta.preset} checkInfo={subKeys(currentPreset, currentPreset => t.stream.preset.builtInPresets[currentPreset])}>
 						<Setting meta={meta.preset.builtInPresets} asSubtitle="closerAfter" noDivider="after" />
 						<ItemsView view="grid" current={currentPreset}>
 							{builtInPresets.map(name => (
 								<ItemsView.Item
 									id={name}
 									key={name}
-									image={<SubscribeKeys keys={presetPreviewIdeality}>{presetPreviewIdeality => <PreviewParameterPreset key={name} thumbnail={thumbnail} name={name} previewIdeality={presetPreviewIdeality} />}</SubscribeKeys>}
+									image={subKeys(presetPreviewIdeality, presetPreviewIdeality => <PreviewParameterPreset key={name} thumbnail={thumbnail} name={name} previewIdeality={presetPreviewIdeality} />)}
 									badge={asteriskBuiltInPresets.includes(name) && [undefined, "asterisk"]}
 								>
 									{t.stream.preset.builtInPresets[name]}

@@ -1,6 +1,6 @@
 export default function FontPicker({ font }: {
 	/** Font family. */
-	font: StatePropertyNonNull<string>;
+	font: VariousState<string>;
 }) {
 	const [fonts, setFonts] = useAtom(fontsAtom);
 	const defaultFontFamilyDisplayName = useDefaultFontFamilyDisplayName();

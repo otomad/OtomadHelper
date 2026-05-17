@@ -52,10 +52,10 @@ function ExpanderChildTrimTimecode({ start, end }: FCP<{
 	);
 }
 
-function ExpanderChildTrimValue<TUnit extends string>({ range: [[curStart, curEnd, curUnit], set], units = [], unitNames, decimalPlaces, min, max, spinnerStep }: FCP<{
+function ExpanderChildTrimValue<TUnit extends string>({ range: _range, units = [], unitNames, decimalPlaces, min, max, spinnerStep }: FCP<{
 	children?: never;
 	/** Current range value: start, end, and unit. */
-	range: StatePropertyNonNull<RangeUnit<TUnit>>;
+	range: VariousState<RangeUnit<TUnit>>;
 	/** Value unit list. */
 	units?: readonly TUnit[];
 	/** Get the unit type names from the unit type (always plural). */
@@ -69,6 +69,7 @@ function ExpanderChildTrimValue<TUnit extends string>({ range: [[curStart, curEn
 	/** The value to increase or decrease each time the knob of numeric up down box is clicked. @default 1 */
 	spinnerStep?: number;
 }>) {
+	const [[curStart, curEnd, curUnit], set] = useVariousState(_range);
 	const isStaticUnit = units.length <= 1;
 	const staticUnit = isStaticUnit ? units[0] : undefined;
 	const setStart = (newStart: React.SetStateAction<number>) => set?.(([, end, unit]) => [typeof newStart === "function" ? newStart(curStart) : newStart, end, unit]);

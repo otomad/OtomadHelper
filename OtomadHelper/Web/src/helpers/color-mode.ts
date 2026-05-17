@@ -69,7 +69,12 @@ export function changeColorScheme(scheme?: ColorScheme, amoledDark?: boolean, co
 	startCircleViewTransition(IsColorSchemeChanged > 0, updateThemeSettings).then(afterUpdateThemeSettings);
 }
 
-export function startCircleViewTransition(isSpread: boolean, changeFunc: () => MaybePromise<void | unknown>) {
+interface CircleViewTransitionAnimationOption {
+	/** Set the cursor while transitioning. */
+	cursor?: Cursor;
+}
+
+export function startCircleViewTransition(isSpread: boolean, changeFunc: () => MaybePromise<void | unknown>, { cursor = "progress" }: CircleViewTransitionAnimationOption = {}) {
 	return new Promise<void>(resolve => {
 		// It is difficult to get 100lvh (large viewport) height in JavaScript.
 		const lvsEl = document.getElementById("large-viewport-size");
@@ -96,7 +101,7 @@ export function startCircleViewTransition(isSpread: boolean, changeFunc: () => M
 			}, {
 				pseudoElement: isSpread ? "::view-transition-new(root)" : "::view-transition-old(root)",
 			}],
-		], { cursor: "progress", evaluateContrastPalette: true }).then(() => {
+		], { cursor, evaluateContrastPalette: true }).then(() => {
 			resolve();
 		});
 	});
