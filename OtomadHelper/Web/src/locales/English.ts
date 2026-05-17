@@ -396,8 +396,8 @@ export default {
 			prologue: {
 				_: "Prologue",
 				straightforward: "Straightforward",
-				introduceOriginally: "Introduce originally",
-				introduceEffectively: "Introduce effectively",
+				introduceDryly: "Introduce dryly",
+				introduceWetly: "Introduce wetly",
 				duration: "Introduction duration",
 				untilTheStart: "Until the start",
 				once: "In multitrack, only the first sounding track will have an intro",
@@ -1168,8 +1168,8 @@ export default {
 				prologue: {
 					_: "Plays the introductory section by lengthening the first clip in reverse",
 					straightforward: "No prologue, straight to the primary footage",
-					introduceOriginally: "Uses the original source without any additional effects for the introduction",
-					introduceEffectively: "Uses the source with same effects (such as stretch and pitch) as the first clip for the introduction",
+					introduceDryly: "Uses the original source without any additional effects for the introduction",
+					introduceWetly: "Uses the source with same effects (such as stretch and pitch) as the first clip for the introduction",
 					sourceLength: "The introduction will be the same length as the source, even if it does not match the beat",
 					upToOneBar: "The introduction will last up to one measure",
 					untilTheStart: "The introduction will lengthen to the start time of the generation, unless it exceeds the start of the source media itself",

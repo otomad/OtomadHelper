@@ -1,7 +1,7 @@
 export /* @internal */ const PrologueForms = Enum({
 	straightforward: { icon: "flash_play" },
-	introduceOriginally: { icon: "video_clip_asterisk_hourglass" },
-	introduceEffectively: { icon: "video_clip_sparkle_hourglass" },
+	introduceDryly: { icon: "wind" },
+	introduceWetly: { icon: "water_drop" },
 }, { labelPrefix: t.stream.prologue });
 
 export /* @internal */ const PrologueDurationUsings = Enum({
