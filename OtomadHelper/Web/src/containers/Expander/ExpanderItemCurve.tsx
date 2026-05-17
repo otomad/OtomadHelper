@@ -48,16 +48,8 @@ const StyledCrossfadeCurveAction = styled.div`
 	}
 
 	.synthetic-icon {
-		display: grid;
 		margin-inline-end: 8px;
-
-		.icon {
-			grid-area: 1 / 1;
-
-			&:last-of-type {
-				scale: 1 -1;
-			}
-		}
+		font-size: 20px;
 	}
 `;
 
@@ -72,10 +64,7 @@ export /* @internal */ function ExpanderItemCrossfadeCurve({ curve: _curve, subs
 	return (
 		<Expander.Item title={t.curve.crossfade} details={t.descriptions.curve.crossfade} icon="curve" wrapActionsWhenNarrow>
 			<StyledCrossfadeCurveAction>
-				<div className="synthetic-icon">
-					<Icon name={`curves/${multiplicandCurve}`} />
-					<Icon name={`curves/${reciprocalCurve}`} />
-				</div>
+				<PreviewCurve multiplicandCurve={multiplicandCurve} reciprocalCurve={reciprocalCurve} />
 				<CurveComboBox curve={[multiplicandCurve, setMultiplicandCurve]} subset={subset} />
 				<CurveComboBox curve={[reciprocalCurve, setReciprocalCurve]} subset={subset} />
 			</StyledCrossfadeCurveAction>
