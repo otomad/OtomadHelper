@@ -59,7 +59,7 @@ const StyledSubExpander = styled.div`
 	}
 `;
 
-export /* @internal */ default function SubExpander({ icon, title, details, disabled, expanded = false, _requestExpanded, type = "chevron", noIndentation, anchor, actions, actuallyOn, asSubtitle, selectInfo, children, onChange: _onChange, ...htmlAttrs }: FCP<{
+export /* @internal */ default function SubExpander({ icon, title, details, disabled, expanded = false, _requestExpanded, type = "chevron", noIndentation, anchor, actions, actuallyOn, asSubtitle, selectInfo, wrapActionsWhenNarrow, children, onChange: _onChange, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons;
 	/** Title. */
@@ -102,6 +102,12 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 	asSubtitle?: PropsOf<typeof Expander.Item>["asSubtitle"];
 	/** Specifies the display string of the selection of tracks or track events. */
 	selectInfo?: ReactNode;
+	/**
+	 * Specify that when the window size is too narrow, if the actions cannot be fitted in, should the actions be wrapped to the second row?
+	 * @remarks Available while `type` is `"chevron"` only.
+	 * @default undefined
+	 */
+	wrapActionsWhenNarrow?: boolean;
 }, GenericElement>) {
 	const [, setAriaId, withAriaId] = useAriaIdRefState();
 	let setExpanded: SetStateNarrow<boolean>;
@@ -152,6 +158,7 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 							aria-controls={withAriaId("children")}
 							className={{ expanded }}
 							selectInfo={selectInfo}
+							wrapActionsWhenNarrow={wrapActionsWhenNarrow}
 							{...htmlAttrs}
 						>
 							{actions}

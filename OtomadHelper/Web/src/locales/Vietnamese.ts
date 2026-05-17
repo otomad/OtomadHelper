@@ -99,7 +99,7 @@ export default {
 				media: "Tên phương tiện nguồn",
 				unnamed: "Không tên",
 			},
-			luckyDip: {
+			mysteryBox: {
 				limitToSelected: "Nguồn đã chọn bị giới hạn",
 				track: "Với mỗi track hoặc channel",
 				marker: "Chuyển đổi một lần cho mỗi điểm đánh dấu",
@@ -742,9 +742,9 @@ export default {
 				},
 				naming: {},
 				multisource: {},
-				linearMap: {},
-				matchCut: {},
-				luckyDip: {
+				orchestra: {},
+				syncopator: {},
+				mysteryBox: {
 					_: "Ngẫu nhiên hóa với điểm vào của nguồn.\nĐiều này có thể dẫn đến việc các clip nguồn được chọn ngẫu nhiên có các cao độ cơ bản khác nhau, khiến nó chỉ hữu ích khi tạo video hài hước nhằm mục đích giải trí và hiếm khi được sử dụng để tạo video chất lượng cao.",
 					limitToSelected: "Chuyển đổi ngẫu nhiên giữa nhiều nguồn đã chọn thay vì sử dụng hoàn toàn ngẫu nhiên điểm vào",
 					track: "Cho dù track hay channel phụ thuộc vào Bản nhạc",

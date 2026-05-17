@@ -33,6 +33,12 @@ export const settingsMetaInput = {
 				reuseSameName: { icon: "group_sync" },
 			},
 		},
+		audioBusTrack: {
+			icon: "bus_track",
+			items: {
+				reuseSameName: { icon: "bus_track_sync" },
+			},
+		},
 		naming: {
 			icon: "rename",
 			items: {
@@ -43,26 +49,32 @@ export const settingsMetaInput = {
 				clipName: { icon: "track_event_rename" },
 			},
 		},
-		multisource: subheader(),
-		linearMap: {
+		multisource: subheader({ icon: "comb" }),
+		orchestra: {
 			icon: "launchpad",
 			items: {
 				descending: { icon: "descending", title: t.descending },
+				allowReuseExisted: { icon: "arrow_repeat_all" },
 			},
 		},
-		matchCut: {
+		syncopator: {
 			icon: "flag_auto_beat",
 			items: {
 				order: { icon: "arrow_sort_horizontal", title: t.order },
 				loop: { icon: "arrow_repeat_all", title: t.stream.loop },
-				luckyDip: {
-					title: t.source.luckyDip,
-					aliases: [t.aliases.source.luckyDip],
+				repeat: { icon: "arrow_repeat_1" },
+				applyEffectsByRound: { icon: "sparkle_rounds" },
+				mysteryBox: {
+					title: t.source.mysteryBox,
+					aliases: [t.aliases.source.mysteryBox],
 					icon: "question_square",
 				},
+				accumulateHarmonics: { icon: "columnar_chord_increment" },
+				sustain: { icon: "music_note_seesaw" },
+				pitchCacheCapacity: { icon: "memory" },
 			},
 		},
-		luckyDip: {
+		mysteryBox: {
 			icon: "question_square",
 			items: {
 				limitToSelected: { icon: "video_clip_multiple_checkmark" },
@@ -75,6 +87,7 @@ export const settingsMetaInput = {
 						preparation: { icon: "hourglass" },
 					},
 				},
+				lotionBath: { icon: "prison" },
 			},
 		},
 		consonant: { icon: "consonant" },

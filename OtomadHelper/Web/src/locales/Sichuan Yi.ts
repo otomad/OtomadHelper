@@ -105,9 +105,9 @@ export default {
 			},
 			trackGroup: {
 				_: "crwdns3082:0crwdne3082:0",
-				ungrouped: "crwdns5774:0crwdne5774:0",
-				byScoreTrack: "crwdns5776:0crwdne5776:0",
-				byTaskSession: "crwdns5778:0crwdne5778:0",
+				off: "crwdns5774:0crwdne5774:0",
+				track: "crwdns5776:0crwdne5776:0",
+				session: "crwdns5778:0crwdne5778:0",
 				collapse: "crwdns3084:0crwdne3084:0",
 				reuseSameName: "crwdns5780:0crwdne5780:0",
 			},
@@ -133,9 +133,9 @@ export default {
 				effect: "crwdns5578:0crwdne5578:0",
 			},
 			multisource: "crwdns5788:0crwdne5788:0",
-			linearMap: "crwdns4164:0crwdne4164:0",
-			matchCut: "crwdns4602:0crwdne4602:0",
-			luckyDip: {
+			orchestra: "crwdns4164:0crwdne4164:0",
+			syncopator: "crwdns4602:0crwdne4602:0",
+			mysteryBox: {
 				_: "crwdns5790:0crwdne5790:0",
 				limitToSelected: "crwdns5792:0crwdne5792:0",
 				track: "crwdns5794:0crwdne5794:0",
@@ -1027,17 +1027,17 @@ export default {
 				multisource: {
 					ytpEnabled: "crwdns4286:0crwdne4286:0",
 				},
-				linearMap: {
+				orchestra: {
 					_: "crwdns4290:0crwdne4290:0",
 					descending: "crwdns4292:0crwdne4292:0",
 				},
-				matchCut: {
+				syncopator: {
 					_: "crwdns4608:0crwdne4608:0",
 					order: "crwdns4516:0crwdne4516:0",
 					loop: "crwdns4518:0crwdne4518:0",
-					luckyDip: "crwdns5918:0crwdne5918:0",
+					mysteryBox: "crwdns5918:0crwdne5918:0",
 				},
-				luckyDip: {
+				mysteryBox: {
 					_: "crwdns5920:0crwdne5920:0",
 					limitToSelected: "crwdns5922:0crwdne5922:0",
 					track: "crwdns5924:0crwdne5924:0",
@@ -1530,7 +1530,7 @@ export default {
 					trackName: "crwdns5648:0crwdne5648:0",
 					clipName: "crwdns5650:0crwdne5650:0",
 				},
-				luckyDip: "crwdns5996:0crwdne5996:0",
+				mysteryBox: "crwdns5996:0crwdne5996:0",
 			},
 			score: {
 				tempo: "crwdns4622:0crwdne4622:0",

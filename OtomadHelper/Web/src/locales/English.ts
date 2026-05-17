@@ -106,18 +106,25 @@ export default {
 			},
 			trackGroup: {
 				_: "Grouping tracks",
-				ungrouped: "Ungrouped",
-				byScoreTrack: "Group by score track",
-				byTaskSession: "Group by task session",
+				off: "Ungrouped",
+				track: "Group by score track",
+				session: "Group by task session",
 				collapse: "Collapse track groups by default",
 				reuseSameName: "Reuse groups that have the same nonempty name",
 			},
+			audioBusTrack: {
+				_: "Audio Bus Track",
+				off: "Unrouted",
+				track: "Route by score track",
+				session: "Route by task session",
+				reuseSameName: "Reuse audio bus tracks that have same nonempty name",
+			},
 			naming: {
 				_: "Naming",
-				trackName: "Name for tracks and track groups",
+				trackName: "Name for tracks, track groups, and audio bus tracks",
 				clipName: "Name for clips",
 				unsetBorrowedTrackName: "Do not rename the borrowed existing track",
-				groupByTaskSessionName: "Name for track groups when grouped by task session and with multitrack",
+				groupByTaskSessionName: "Name for track groups and audio bus tracks when grouped or routed by task session and with multitrack",
 				groupByTaskSessionNameTreatSingleAsMultitrack: "Process single track as multitrack",
 				track: "MIDI track name",
 				trackIndex: "MIDI track index",
@@ -134,10 +141,20 @@ export default {
 				effect: "Effect name",
 			},
 			multisource: "Multisource comb",
-			linearMap: "Linear map output",
-			matchCut: "Beat sync match cut",
-			luckyDip: {
-				_: "Lucky dip",
+			orchestra: {
+				_: "Source Orchestra",
+				allowReuseExisted: "Allow reuse",
+			},
+			syncopator: {
+				_: "Source Syncopator",
+				repeat: "Repetitions per clip",
+				applyEffectsByRound: "Apply visual effects by rounds",
+				accumulateHarmonics: "Accumulate overtones of chords separately",
+				sustain: "Sustain source at same pitch",
+				pitchCacheCapacity: "Pitch cache capacity",
+			},
+			mysteryBox: {
+				_: "Mystery Box",
 				limitToSelected: "Limited to selected sources",
 				track: "Make each track or channel different",
 				marker: "Switch once per marker",
@@ -146,8 +163,9 @@ export default {
 					period: "Period",
 					preparation: "Preparation",
 				},
+				lotionBath: "Lotion Bath Tactics",
 			},
-			consonant: "Consonant time",
+			consonant: "Consonant Time",
 		},
 		on: "On", // The label next to a toggle switch.
 		off: "Off", // The label next to a toggle switch.
@@ -1067,24 +1085,24 @@ export default {
 					reuseSameName: "If a group with the same nonempty name already exists, reuse it instead of creating a new one",
 				},
 				naming: {
-					_: "Specify the name for the generated tracks, track groups, and clips",
+					_: "Specify the name for the generated tracks, track groups, audio bus tracks, and clips",
 					unsetBorrowedTrackName: "The borrowed existing track is determined by the “Preferred track” setting. Newly created tracks will not be affected.",
-					groupByTaskSessionNameTreatSingleAsMultitrack: "Track groups will use {{name, lowercase}} when grouped by task session and with single track",
+					groupByTaskSessionNameTreatSingleAsMultitrack: "Track groups and audio bus tracks will use {{name, lowercase}} when grouped by task session and with single track",
 				},
 				multisource: {
 					ytpEnabled: "YTP feature is enabled and these features are currently unconfigurable.",
 				},
-				linearMap: {
+				orchestra: {
 					_: "Select multiple sources that will be mapped to available tracks in order (excess sources or tracks will be omitted)",
 					descending: "Reverses the order of the tracks to map (note that it is not the order of the selected sources)",
 				},
-				matchCut: {
+				syncopator: {
 					_: "Select multiple sources that will be applied in turn by auto beat sync / match cut",
 					order: "Specify the application sequential order of sources",
 					loop: "When disabled, the generation will be stopped immediately when the number of notes required exceeds the number of selected sources. Either refill enough sources or enable Loop.",
-					luckyDip: "No need to select multiple sources, just select one long source. Then it will randomly select the in point of each clips.",
+					mysteryBox: "No need to select multiple sources, just select one long source. Then it will randomly select the in point of each clips.",
 				},
-				luckyDip: {
+				mysteryBox: {
 					_: "Randomizes in points for the source.\nThis can result in randomly selected source clips having different base pitches, making it useful only for creating funny videos for entertainment purposes, and barely used for creating high-caliber videos.",
 					limitToSelected: "Randomly switches among the selected multiple sources instead of using completely random in points",
 					track: "Whether track or channel depends on the Score",
@@ -1591,10 +1609,13 @@ export default {
 			source: {
 				trackGroup: "Track group", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				naming: {
-					trackName: "Track name, Track group name, Name for tracks, Name for track groups", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					trackName: "Track name, Track group name, Bus track name, Audio bus track name, Name for tracks, Name for track groups, Name for audio bus tracks, Name for bus tracks", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 					clipName: "Clip name, Track event name, Name for track events", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				},
-				luckyDip: "Secret box, Mystery box, Blind box, Gacha, Gashapon, Gachapon, Grab bag, Surprise me", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				multisource: "Multisource combination", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				orchestra: "Linear Map Output", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				syncopator: "Beat Sync, Match Cut, Source Flux, Syncopation", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				mysteryBox: "Secret Box, Lucky Dip, Blind Box, Gacha, Gashapon, Gachapon, Grab Bag, Surprise Me, Wildcard Source, Surprise Selector, Lucky Pick", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},
 			score: {
 				tempo: "Speed, BPM", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.

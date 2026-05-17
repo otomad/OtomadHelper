@@ -11,11 +11,11 @@ export /* @internal */ const SelectGeneratedClips = Enum({
 	sonar: { icon: "sonar" },
 	lyrics: { icon: "lyrics" },
 }, { labelPrefix: t.titles });
-export /* @internal */ const TrackGroupBy = Enum({
-	ungrouped: { icon: "prohibited" },
-	byScoreTrack: { icon: "layer" },
-	byTaskSession: { icon: "chat_checkmark" },
-}, { labelPrefix: t.source.trackGroup });
+export /* @internal */ const GroupTrackBy = Enum({
+	off: { icon: "prohibited" },
+	track: { icon: "layer" },
+	session: { icon: "chat_checkmark" },
+});
 export /* @internal */ namespace Namings {
 	const baseTrackNames = [
 		{ id: "clip", name: t.source.naming.clip, icon: "track_event" },
@@ -79,11 +79,15 @@ export default function Source() {
 	const {
 		sourceFrom, trimStart, trimEnd, startTime, customStartTime,
 		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
-		trackGroup, collapseTrackGroup, reuseSameNameTrackGroup,
+		trackGroup, collapseTrackGroup, reuseSameNameTrackGroup, audioBusTrack, reuseSameNameAudioBusTrack,
 		otomadTrackName, vocaloidTrackName, ytpTrackName, otomadClipName, vocaloidClipName, ytpClipName,
 		groupByTaskSessionName, groupByTaskSessionNameTreatSingleAsMultitrack, unsetBorrowedTrackName,
-		luckyDip, consonant, matchCut, matchCutOrder, matchCutLoop, matchCutLuckyDip, linearMap, linearMapDescending,
-		luckyDipLimitToSelected, luckyDipForTrack, luckyDipForMarker, luckyDipForBarOrBeat, luckyDipForBarOrBeatPeriod, luckyDipForBarOrBeatPreparation,
+		mysteryBox, consonant, syncopator,
+		syncopatorOrder, syncopatorLoop, syncopatorMysteryBox, syncopatorRepeat, syncopatorApplyEffectsByRound,
+		syncopatorAccumulateHarmonics, syncopatorSustain, syncopatorPitchCacheCapacity,
+		orchestra, orchestraDescending, orchestraAllowReuseExisted,
+		mysteryBoxLimitToSelected, mysteryBoxForTrack, mysteryBoxForMarker, lotionBath,
+		mysteryBoxForBarOrBeat, mysteryBoxForBarOrBeatPeriod, mysteryBoxForBarOrBeatPreparation,
 	} = useSelectConfig(c => c.source);
 	const { removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = useSelectConfig(c => c.source.afterCompletion);
 	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
@@ -94,7 +98,7 @@ export default function Source() {
 
 	mutexSwitches(removeSourceClips, selectSourceClips);
 	mutexSwitches(removeSourceClipsWithTracks, selectSourceClips);
-	mutexSwitches(luckyDip, consonant, matchCut, linearMap);
+	mutexSwitches(mysteryBox, consonant, syncopator, orchestra);
 	useEffect(() => { removeSourceClipsWithTracks[0] && removeSourceClips[1](true); }, [removeSourceClipsWithTracks[0]]);
 	useEffect(() => { !removeSourceClips[0] && removeSourceClipsWithTracks[1](false); }, [removeSourceClips[0]]);
 
@@ -170,7 +174,9 @@ export default function Source() {
 			</Setting>
 			<Setting
 				meta={meta.trackGroup}
-				items={TrackGroupBy}
+				items={GroupTrackBy}
+				nameField={({ key }) => t.source.trackGroup[key]}
+				checkInfoCondition={key => t.source.trackGroup[key!]}
 				value={trackGroup}
 				view="tile"
 				ieOff
@@ -178,8 +184,19 @@ export default function Source() {
 				<Setting meta={meta.trackGroup.collapse} on={collapseTrackGroup} />
 				<Setting meta={meta.trackGroup.reuseSameName} on={reuseSameNameTrackGroup} />
 			</Setting>
+			<Setting
+				meta={meta.audioBusTrack}
+				items={GroupTrackBy}
+				nameField={({ key }) => t.source.audioBusTrack[key]}
+				checkInfoCondition={key => t.source.audioBusTrack[key!]}
+				value={audioBusTrack}
+				view="tile"
+				ieOff
+			>
+				<Setting meta={meta.audioBusTrack.reuseSameName} on={reuseSameNameAudioBusTrack} />
+			</Setting>
 			<NamingSetting meta={meta.naming}>
-				<Setting meta={meta.naming.trackName} asSubtitle expanded={namingSubExpanderExpanded[0]} noIndentation>
+				<Setting meta={meta.naming.trackName} asSubtitle expanded={namingSubExpanderExpanded[0]} noIndentation wrapActionsWhenNarrow={false}>
 					<Expander.Item title={t.mode.whichMode({ mode: t.mode.otomad })} selectInfo={mode === "otomad" && t.mode.current}>
 						<ComboBox current={otomadTrackName} ids={Namings.otomadTrackNames.map(({ id }) => id)} options={Namings.otomadTrackNames.map(({ name }) => name)} icons={Namings.otomadTrackNames.map(({ icon }) => icon)} />
 					</Expander.Item>
@@ -193,10 +210,11 @@ export default function Source() {
 				</Setting>
 				<Setting
 					meta={meta.naming.groupByTaskSessionName}
-					selectInfo={trackGroup[0] === "byTaskSession" && t.current}
+					selectInfo={trackGroup[0] === "session" && t.current}
 					actions={<ComboBox current={groupByTaskSessionName} ids={Namings.scoredTrackNames.map(({ id }) => id)} options={Namings.scoredTrackNames.map(({ name }) => name)} icons={Namings.scoredTrackNames.map(({ icon }) => icon)} />}
 					expanded={namingSubExpanderExpanded[1]}
 					asSubtitle
+					wrapActionsWhenNarrow={false}
 				>
 					<Setting
 						meta={meta.naming.groupByTaskSessionNameTreatSingleAsMultitrack}
@@ -210,7 +228,7 @@ export default function Source() {
 						selectValid
 					/>
 				</Setting>
-				<Setting meta={meta.naming.clipName} asSubtitle expanded={namingSubExpanderExpanded[2]} noIndentation>
+				<Setting meta={meta.naming.clipName} asSubtitle expanded={namingSubExpanderExpanded[2]} noIndentation wrapActionsWhenNarrow={false}>
 					<Expander.Item title={t.mode.whichMode({ mode: t.mode.otomad })} selectInfo={mode === "otomad" && t.mode.current}>
 						<ComboBox current={otomadClipName} ids={Namings.otomadClipNames.map(({ id }) => id)} options={Namings.otomadClipNames.map(({ name }) => name)} icons={Namings.otomadClipNames.map(({ icon }) => icon)} />
 					</Expander.Item>
@@ -226,39 +244,46 @@ export default function Source() {
 			<Subheader meta={meta.multisource} />
 			{ytpEnabled && <InfoBar status="warning" title={t.descriptions.source.multisource.ytpEnabled} button={<EmptyMessage.YtpDisabled.Buttons />} />}
 			<Attrs disabled={ytpEnabled ? true : undefined}>
-				<Setting meta={meta.linearMap} on={linearMap}>
-					<Setting meta={meta.linearMap.descending} on={linearMapDescending} />
+				<Setting meta={meta.orchestra} on={orchestra}>
+					<Setting meta={meta.orchestra.descending} on={orchestraDescending} />
+					<Setting meta={meta.orchestra.allowReuseExisted} on={orchestraAllowReuseExisted} />
 				</Setting>
-				<Setting meta={meta.matchCut} on={matchCut}>
+				<Setting meta={meta.syncopator} on={syncopator}>
 					<Setting
-						meta={meta.matchCut.order}
+						meta={meta.syncopator.order}
 						actions={(
-							<Segmented current={matchCutOrder}>
+							<Segmented current={syncopatorOrder}>
 								{sequentialOrders.map(({ id, icon }) => <Segmented.Item id={id} key={id} icon={icon}>{t[id]}</Segmented.Item>)}
 							</Segmented>
 						)}
 					/>
-					<Setting meta={meta.matchCut.loop} on={matchCutLoop} />
-					<Setting meta={meta.matchCut.luckyDip} on={matchCutLuckyDip} />
+					<Setting meta={meta.syncopator.loop} on={syncopatorLoop} />
+					<Setting meta={meta.syncopator.repeat} actions={<TextBox.Number value={syncopatorRepeat} min={1} max={100} decimalPlaces={0} />} />
+					<Setting meta={meta.syncopator.applyEffectsByRound} on={syncopatorApplyEffectsByRound} />
+					<Setting meta={meta.syncopator.mysteryBox} on={syncopatorMysteryBox} />
+					<Setting meta={meta.syncopator.accumulateHarmonics} on={syncopatorAccumulateHarmonics} />
+					<Setting meta={meta.syncopator.sustain} on={syncopatorSustain} />
+					<Setting meta={meta.syncopator.pitchCacheCapacity} actions={<TextBox.Number value={syncopatorPitchCacheCapacity} min={1} max={200} decimalPlaces={0} />} />
 				</Setting>
-				<Setting meta={meta.luckyDip} selectInfo={ytpEnabled && t.descriptions.source.luckyDip.ytpEnabled} on={luckyDip}>
-					<Setting meta={meta.luckyDip.limitToSelected} on={luckyDipLimitToSelected} />
-					<Setting meta={meta.luckyDip.track} on={luckyDipForTrack} />
-					<Setting meta={meta.luckyDip.marker} on={luckyDipForMarker} />
-					<Setting meta={meta.luckyDip.barOrBeat} expanded={luckyDipForBarOrBeat} type="switch">
+				<Setting meta={meta.mysteryBox} selectInfo={ytpEnabled && t.descriptions.source.mysteryBox.ytpEnabled} on={mysteryBox}>
+					<Setting meta={meta.mysteryBox.limitToSelected} on={mysteryBoxLimitToSelected} />
+					<Setting meta={meta.mysteryBox.track} on={mysteryBoxForTrack} />
+					<Setting meta={meta.mysteryBox.marker} on={mysteryBoxForMarker} />
+					<Setting meta={meta.mysteryBox.barOrBeat} expanded={mysteryBoxForBarOrBeat} type="switch">
 						<Setting
-							meta={meta.luckyDip.barOrBeat.period}
+							meta={meta.mysteryBox.barOrBeat.period}
 							actions={(
-								<TextBox.NumberUnit value={luckyDipForBarOrBeatPeriod} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={1} />
+								<TextBox.NumberUnit value={mysteryBoxForBarOrBeatPeriod} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={1} />
 							)}
 						/>
 						<Setting
-							meta={meta.luckyDip.barOrBeat.preparation}
+							meta={meta.mysteryBox.barOrBeat.preparation}
 							actions={(
-								<TextBox.NumberUnit value={luckyDipForBarOrBeatPreparation} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={0} />
+								<TextBox.NumberUnit value={mysteryBoxForBarOrBeatPreparation} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={0} />
 							)}
 						/>
 					</Setting>
+					<Setting meta={meta.mysteryBox.lotionBath} on={lotionBath} />
 				</Setting>
 				<Setting
 					meta={meta.consonant}

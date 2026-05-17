@@ -13,7 +13,7 @@ import type { musicalNotationSystems } from "views/lyrics";
 import type { constrainNoteLengthTypes, multipleSelectTrackItems, tempoUsings, trackAndChannel } from "views/score";
 import type { SystemBackdrops } from "views/settings";
 import type { textPlugins } from "views/settings/internal";
-import type { Namings, SelectGeneratedClips, TrackGroupBy, barOrBeatUnitTypes, sequentialOrders, sourceFromEnums, startTimes } from "views/source";
+import type { GroupTrackBy, Namings, SelectGeneratedClips, barOrBeatUnitTypes, sequentialOrders, sourceFromEnums, startTimes } from "views/source";
 import type { arrayTypes, directionTypes, fitTypes as gridFitTypes, parityTypes } from "views/track/grid";
 import type { glissandoEffects, prerenders, stretches, transformMethods, truncates } from "views/visual";
 
@@ -69,7 +69,7 @@ namespace Config {
 	export /* @warn */ type ScoredTrackNameType = typeof Namings.scoredTrackNames[number]["id"];
 	export /* @warn */ type QuickSelectIntervalPreset = typeof QuickSelectIntervalPresets.keyType;
 	export /* @warn */ type NegativeType = typeof NegativeTypes.keyType;
-	export /* @warn */ type TrackGroupBy = typeof TrackGroupBy.keyType;
+	export /* @warn */ type GroupTrackBy = typeof GroupTrackBy.keyType;
 	export /* @warn */ type DurationFilterUnit = typeof durationFilterUnits[number];
 	export /* @warn */ type DurationFilter = typeof defaultDurationFilter;
 
@@ -101,9 +101,11 @@ namespace Config {
 			},
 			preferredTrack: 0,
 			belowAdjustmentTracks: true,
-			trackGroup: "byScoreTrack" satisfies TrackGroupBy as TrackGroupBy,
+			trackGroup: "track" satisfies GroupTrackBy as GroupTrackBy,
 			collapseTrackGroup: true,
 			reuseSameNameTrackGroup: true,
+			audioBusTrack: "track" satisfies GroupTrackBy as GroupTrackBy,
+			reuseSameNameAudioBusTrack: true,
 			unsetBorrowedTrackName: false,
 			otomadTrackName: "track" satisfies OtomadTrackNameType as OtomadTrackNameType,
 			vocaloidTrackName: "voicebank" satisfies VocaloidTrackNameType as VocaloidTrackNameType,
@@ -113,19 +115,26 @@ namespace Config {
 			ytpClipName: "effect" satisfies YtpClipNameType as YtpClipNameType,
 			groupByTaskSessionName: "score" satisfies ScoredTrackNameType as ScoredTrackNameType,
 			groupByTaskSessionNameTreatSingleAsMultitrack: false,
-			linearMap: false,
-			linearMapDescending: false,
-			matchCut: false,
-			matchCutOrder: "sequential" satisfies SequentialOrder as SequentialOrder,
-			matchCutLoop: true,
-			matchCutLuckyDip: false,
-			luckyDip: false,
-			luckyDipLimitToSelected: false,
-			luckyDipForTrack: false,
-			luckyDipForMarker: false,
-			luckyDipForBarOrBeat: false,
-			luckyDipForBarOrBeatPeriod: [4, "bar"] as Unit<BarOrBeatUnit>,
-			luckyDipForBarOrBeatPreparation: [0, "bar"] as Unit<BarOrBeatUnit>,
+			orchestra: false,
+			orchestraDescending: false,
+			orchestraAllowReuseExisted: true,
+			syncopator: false,
+			syncopatorOrder: "sequential" satisfies SequentialOrder as SequentialOrder,
+			syncopatorLoop: true,
+			syncopatorMysteryBox: false,
+			syncopatorRepeat: 1,
+			syncopatorApplyEffectsByRound: false,
+			syncopatorAccumulateHarmonics: false,
+			syncopatorSustain: false,
+			syncopatorPitchCacheCapacity: 4,
+			mysteryBox: false,
+			mysteryBoxLimitToSelected: false,
+			mysteryBoxForTrack: false,
+			mysteryBoxForMarker: false,
+			mysteryBoxForBarOrBeat: false,
+			mysteryBoxForBarOrBeatPeriod: [4, "bar"] as Unit<BarOrBeatUnit>,
+			mysteryBoxForBarOrBeatPreparation: [0, "bar"] as Unit<BarOrBeatUnit>,
+			lotionBath: false,
 			consonant: false,
 		},
 		score: {
@@ -437,7 +446,7 @@ namespace Config {
 export const configStore = Config.configStore;
 export const useSelectConfig = <T extends object>(path: (state: typeof configStore) => T) => useStoreState(path(configStore));
 export const useSelectConfigArray = <T extends object>(path: (state: typeof configStore) => T[]) => useStoreStateArray(path(configStore));
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+
 export const useSubConfig = <T extends object>(path: (state: typeof configStore) => T) => currySubscribeStore(path(configStore));
 if (import.meta.env.DEV) globals.config = configStore;
 

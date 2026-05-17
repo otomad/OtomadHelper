@@ -306,12 +306,18 @@ export function getLocaleName(targetLocale: string | Intl.Locale, displayLocale:
  */
 export function i18nExists(i18nItem: string, context?: string, enableFallbackLang = true, lng?: string) {
 	let path = getI18nKey(i18nItem);
+	if (lodash.isNative(path)) return false;
 	if (context) path += `_${context}`;
-	const fallbackLng = enableFallbackLang ? undefined : false;
-	const notCategoryExists = i18n.exists(path, { lng, fallbackLng, returnObjects: false });
-	if (notCategoryExists) return true;
-	if (notCategoryExists === i18n.exists(path, { lng, fallbackLng, returnObjects: true })) return false;
-	return i18n.exists(path + "._", { lng, fallbackLng, returnObjects: false });
+	try {
+		const fallbackLng = enableFallbackLang ? undefined : false;
+		const notCategoryExists = i18n.exists(path, { lng, fallbackLng, returnObjects: false });
+		if (notCategoryExists) return true;
+		if (notCategoryExists === i18n.exists(path, { lng, fallbackLng, returnObjects: true })) return false;
+		return i18n.exists(path + "._", { lng, fallbackLng, returnObjects: false });
+	} catch (e) {
+		console.error(new RangeError(`Undefined i18n item: ${path}`, { cause: e }));
+		return false;
+	}
 }
 
 /**

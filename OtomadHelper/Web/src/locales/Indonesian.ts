@@ -48,7 +48,7 @@ export default {
 			},
 			trackGroup: {},
 			naming: {},
-			luckyDip: {
+			mysteryBox: {
 				barOrBeat: {},
 			},
 		},
@@ -366,9 +366,9 @@ export default {
 				trackGroup: {},
 				naming: {},
 				multisource: {},
-				linearMap: {},
-				matchCut: {},
-				luckyDip: {
+				orchestra: {},
+				syncopator: {},
+				mysteryBox: {
 					barOrBeat: {},
 				},
 				consonant: {},
