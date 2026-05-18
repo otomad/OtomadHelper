@@ -21,7 +21,7 @@ export default {
 			sonar: "Sonar",
 			lyrics: "Lyrics",
 			shupelunker: "Shupelunker", // Shupelunker is a portmanteau of Shu (Shuzo Matsuoka) and Spelunker (game).\nIf your language has different translations for those words, try using their correct translations to create a new term instead of simply copying names from English.
-			shupelunker_full: "Shupelunker Tactics", // Shupelunker is a portmanteau of Shu (Shuzo Matsuoka) and Spelunker (game).\nIf your language has different translations for those words, try using their correct translations to create a new term instead of simply copying names from English.
+			shupelunker_full: "Shupelunker Tactics / Tartar Tactics", // Shupelunker is a portmanteau of Shu (Shuzo Matsuoka) and Spelunker (game).\nIf your language has different translations for those words, try using their correct translations to create a new term instead of simply copying names from English.
 			ytp: "YTP",
 			ytp_full: "YouTube Poop",
 			mosh: "Mosh", // It is the abbreviated form of Datamosh.\nIf there is no plural in your language, please try translating based on the singular form “Mosh” instead of “Moshes”.
@@ -689,6 +689,7 @@ export default {
 					edge: "Edge", // Edge point of radial gradient and conic gradient.
 					corner: "Corner", // Corner point of diamond gradient.
 				},
+				trippyColoring: "Trippy Coloring",
 			},
 			applyToSelectedTracks: "Apply to selected tracks",
 			deactivate: "Deactivate",
@@ -749,6 +750,7 @@ export default {
 			},
 		},
 		shupelunker: {
+			tartar: "Tartar Tactics",
 			affix: {
 				_: "Match pitch affix position",
 				prefix: "Prefix",
@@ -798,7 +800,7 @@ export default {
 				edge: "Find Edges",
 				sepia: "Sepia",
 				kinescope: "Kinescope",
-				trippyColoring: "Trippy Coloring",
+				swirlPop: "Giant Swirl Lollipop",
 			},
 			sideEffects: {
 				wave: "Wave",
@@ -1366,6 +1368,7 @@ export default {
 			shupelunker: {
 				_: "Shupelunker Tactics is a kind of YTPMV/otoMAD creation technique that subverts the traditional tuning logic. The core is to directly use the base pitch of the audio source to achieve harmony with the melody of the music through precise editing. When creating, it is necessary to select the pieces from the source that fully match the target scale and arrange them in melodic order to form a performance effect similar to LaunchPad. Since the whole process is unpitched, the base pitch of the source must be highly consistent with the melody of the music, so a wider breadth of source libraries is required. Its characteristic is that through fragmented editing and high-speed switching, it not only retains the real texture of the base pitch of the source, but also creates a sense of galloping like incantation chanting, which is especially suitable for songs with compact rhythms and rich scale changes.\nIn contrast, if the pitch of the source clip does not match the melody, “Tartar Tactics” will be generated. It is also unpitched, and synchronization is achieved through extreme rhythmic control, such as articulating clips in portato, stretching or reversing clips, and forcing the source rhythm to match the original song. Inspired by the breakbeat logic of Drum ’n’ Bass, it creates a mechanical impulse like audio-visual impact through high-frequency fragmented editing. Although the content of the production is “meaningless incantation,” it can produce a unique sense of rhythm through the precise arrangement of the rhythm.",
 				// The name of this tactic originated in otoMAD, whose first creation using this tactic had the title of being a parody of Shu (Shuzo Matsuoka) netaed with Spelunker (game), hence the name. This method was also used in early YTPMV, but it never had an official name or method title, it is more like a meme to use this method in a similar way that most YTPMV from the late 2000s to mid 2010s would use.
+				caption: "**Shupelunker Tactics:** a non-tuning YTPMV/otoMAD creation technique. It plays the melody by using the source clips that have the same pitch to the melody, without tuning.\n**Tartar Tactics:** also unpitched. It synchronizes the source with the beat by chopping it rather than tuning it.",
 				affix: "The base pitches of the clips need to be detected by naming them, please specify whether the pitch info should be a prefix or suffix to the clip name",
 				unallocated: {
 					_: "Specify how to fill the vacancies if the sources do not cover all keys",

@@ -241,15 +241,15 @@ export default function GradientFlyoutEditor() {
 									<ItemsView.Item
 										id={TRIPPY_COLORING_ID}
 										key={TRIPPY_COLORING_ID}
-										image={<PreviewYtp thumbnail={thumbnail} name="trippyColoring" />}
+										image={<PreviewYtp thumbnail={thumbnail} name="swirlPop" />}
 										imageOverlay={<AsteriskHelp>{t.descriptions.track.gradient.trippyColoring}</AsteriskHelp>}
 										role="button"
 										_multiple
-										aria-label={t.ytp.effects.trippyColoring}
+										aria-label={t.track.gradient.trippyColoring}
 										checkmarkPosition="top left"
 										// onClick={() => clickAStyle("parity", key)}
 									>
-										<MarqueeIfOverflow speed={MARQUEE_SPEED}>{t.ytp.effects.trippyColoring}</MarqueeIfOverflow>
+										<MarqueeIfOverflow speed={MARQUEE_SPEED}>{t.track.gradient.trippyColoring}</MarqueeIfOverflow>
 									</ItemsView.Item>
 									<Subheader vertical>{tc.groups.parity}</Subheader>
 									{ParityStyles.map(({ key, label, ...raw }) => (

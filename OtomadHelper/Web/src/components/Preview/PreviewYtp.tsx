@@ -168,7 +168,7 @@ const StyledPreviewYtp = styled.div<{
 					position: static;
 				}
 			`,
-			trippyColoring: css`
+			swirlPop: css`
 				img {
 					filter: invert(1) hue-rotate(45deg) saturate(2);
 				}
@@ -293,7 +293,7 @@ export default function PreviewYtp({ thumbnail, name }: FCP<{
 		spherize: webglFilters?.spherize,
 		twist: webglFilters?.twist,
 		pixelate: webglFilters?.pixelate,
-		trippyColoring: webglFilters?.twist,
+		swirlPop: webglFilters?.twist,
 		// spectrum: webglFilters?.spectrum,
 		// emboss: webglFilters?.emboss,
 		// bump: webglFilters?.bump,

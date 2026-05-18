@@ -91,6 +91,7 @@ export default function Source() {
 	} = useSelectConfig(c => c.source);
 	const { removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = useSelectConfig(c => c.source.afterCompletion);
 	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
+	const { enabled: shupelunkerEnabled } = useSelectConfig(c => c.shupelunker);
 	const meta = metas.source;
 	const [mode] = useKichikuMode();
 	const namingSubExpanderExpanded = useStateList(true, true, true);
@@ -292,6 +293,7 @@ export default function Source() {
 					selectInfo={manualEnabled ? t.descriptions.source.consonant.manualEnabled : undefined}
 					selectValid={manualEnabled}
 				/>
+				<Setting meta={metas.shupelunker} actions={<ToggleSwitch on={shupelunkerEnabled} />} />
 			</Attrs>
 
 			<DragToImport>{t.titles.source}</DragToImport>

@@ -394,6 +394,7 @@ namespace Config {
 		},
 		shupelunker: {
 			enabled: false,
+			tartar: false,
 			affix: "prefix",
 			unallocated: {
 				octaves: true,

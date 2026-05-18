@@ -326,6 +326,7 @@ export const settingsMetaInput = {
 		},
 	},
 	shupelunker: {
+		tartar: { icon: "placeholder" },
 		affix: { icon: "affix" },
 		unallocated: {
 			icon: "table_columns_question_mark",

@@ -32,7 +32,7 @@ const effects = {
 	edge: $s("video"),
 	sepia: $s("video"),
 	kinescope: $s("video", ["audio", "chorus"], ["video", "countAndColor", true]),
-	trippyColoring: $s("video"),
+	swirlPop: $s("video"),
 } satisfies Record<string, ReturnType<typeof $s>>;
 const effectNames = Object.keys(effects) as YtpEffectName[];
 export type YtpEffectName = keyof typeof effects;

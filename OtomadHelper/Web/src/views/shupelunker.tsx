@@ -6,8 +6,8 @@ const affixes = [
 ];
 
 export default function Shupelunker() {
-	const { enabled, affix, exclusiveTrack, offset } = useSelectConfig(c => c.shupelunker);
-	const { octaves, fillUp, fillDown, default: defaultAll } = useSelectConfig(c => c.shupelunker.unallocated);
+	const { enabled, tartar, affix, exclusiveTrack, offset } = useSubConfig(c => c.shupelunker);
+	const { octaves, fillUp, fillDown, default: defaultAll } = useSubConfig(c => c.shupelunker.unallocated);
 	const meta = metas.shupelunker;
 
 	return (
@@ -17,6 +17,7 @@ export default function Shupelunker() {
 			<SettingsCardToggleSwitch title={t.enabled} icon="lightbulb" on={enabled} resetTransitionOnChanging />
 			<EmptyMessage.Typical icon="slice" title="shupelunker_full" enabled={enabled}>
 				<EmptyMessage.YtpDisabled fully={t.titles.shupelunker}>
+					<Setting meta={meta.tartar} on={tartar} />
 					<Setting
 						meta={meta.affix}
 						items={affixes}

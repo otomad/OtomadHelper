@@ -11,9 +11,6 @@ patchedDependencies:
   babel-plugin-styled-components@2.1.4:
     hash: c4c55bc6f5757993287d56bcdde424bc2652f6e1fbf5d6563d7478d676542610
     path: patches/babel-plugin-styled-components@2.1.4.patch
-  babel-plugin-transform-jsx-classnames:
-    hash: 3261c0fb8fd9750eb153af71ac2bebf9f5bf26eefba4c76cc91d7cf4af24efd1
-    path: patches/babel-plugin-transform-jsx-classnames.patch
   enum-plus:
     hash: d6230efff6fc9386cb997731a664f9fd5f22f32d3df42d207efe117f863fb1d9
     path: patches/enum-plus.patch
@@ -212,9 +209,6 @@ importers:
       babel-plugin-styled-components:
         specifier: ^2.1.4
         version: 2.1.4(patch_hash=c4c55bc6f5757993287d56bcdde424bc2652f6e1fbf5d6563d7478d676542610)(@babel/core@7.28.5)(styled-components@6.1.19(patch_hash=dd9b1cffb608f53a2cd214ba48847c9b5b74dc6c1ab789a009f55c7ccb5ae3f9)(react-dom@19.2.4(patch_hash=5fe66b4e1bb66b34fc67fa699c1228546051068a99435c4763e688550384ac96)(react@19.2.4))(react@19.2.4))
-      babel-plugin-transform-jsx-classnames:
-        specifier: ^1.2.2
-        version: 1.2.2(patch_hash=3261c0fb8fd9750eb153af71ac2bebf9f5bf26eefba4c76cc91d7cf4af24efd1)
       click-to-react-component:
         specifier: ^1.1.3
         version: 1.1.3(@types/react@19.2.2(patch_hash=a45cd7d41a73017efd57908f91ad7f7b8375af685f0e19d3fb7035d0af6650b5))(react-dom@19.2.4(patch_hash=5fe66b4e1bb66b34fc67fa699c1228546051068a99435c4763e688550384ac96)(react@19.2.4))(react@19.2.4)
@@ -2035,13 +2029,6 @@ packages:
     resolution: {integrity: sha512-Xgp9g+A/cG47sUyRwwYxGM4bR/jDRg5N6it/8+HxCnbT5XNKSKDT9xm4oag/osgqjC2It/vH0yXsomOG6k558g==}
     peerDependencies:
       styled-components: '>= 2'
-
-  babel-plugin-syntax-jsx@6.18.0:
-    resolution: {integrity: sha512-qrPaCSo9c8RHNRHIotaufGbuOBN8rtdC4QrrFFc43vyWCCz7Kl7GL1PGaXtMGQZUXrkCjNEgxDfmAuAabr/rlw==}
-
-  babel-plugin-transform-jsx-classnames@1.2.2:
-    resolution: {integrity: sha512-lJUsw07cV0NBaM7aHZ0vC9vlgF+7P6OCj2xzc0Z8SXnOmOj73wr1y7ki5WQ7VYmpmAUXGnEJhd6hJtA5itMMFg==}
-    engines: {node: '>= 8.0'}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -7782,12 +7769,6 @@ snapshots:
       styled-components: 6.1.19(patch_hash=dd9b1cffb608f53a2cd214ba48847c9b5b74dc6c1ab789a009f55c7ccb5ae3f9)(react-dom@19.2.4(patch_hash=5fe66b4e1bb66b34fc67fa699c1228546051068a99435c4763e688550384ac96)(react@19.2.4))(react@19.2.4)
     transitivePeerDependencies:
       - '@babel/core'
-
-  babel-plugin-syntax-jsx@6.18.0: {}
-
-  babel-plugin-transform-jsx-classnames@1.2.2(patch_hash=3261c0fb8fd9750eb153af71ac2bebf9f5bf26eefba4c76cc91d7cf4af24efd1):
-    dependencies:
-      babel-plugin-syntax-jsx: 6.18.0
 
   balanced-match@1.0.2: {}
 
