@@ -247,13 +247,11 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 	}
 `);
 
-export default function ToggleSwitch({ on: _on, disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, anchor, actions, actuallyOn, noIndentation, ariaIdRef, className, children, onChange, ...htmlAttrs }: FCP<{
+export default function ToggleSwitch({ on: _on, disabled: _disabled = false, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, anchor, actions, actuallyOn, noIndentation, ariaIdRef, className, children, onChange, ...htmlAttrs }: FCP<{
 	/** Is on? */
 	on: VariousState<boolean>;
 	/** Disabled */
 	disabled?: boolean;
-	/** Communicates to the parent component whether the current toggle switch is pressed. */
-	isPressing?: StateProperty<boolean>;
 	/** Hide "on/off" text label? */
 	hideLabel?: boolean;
 	/** Change the tag name. */
@@ -350,7 +348,6 @@ export default function ToggleSwitch({ on: _on, disabled: _disabled = false, isP
 
 	const onThumbDown = useCallback<PointerEventHandler<HTMLDivElement>>(e => {
 		stopEvent(e);
-		setIsPressing?.(true);
 		const thumb = e.currentTarget;
 		const control = thumb.parentElement!;
 		const controlRect = control.getBoundingClientRect();
@@ -377,16 +374,11 @@ export default function ToggleSwitch({ on: _on, disabled: _disabled = false, isP
 			setThumbLeft(undefined);
 			setLabelTranslate(undefined);
 			setIsDragging(isMoved); // Define recognition as drag instead of click.
-			const lift = () => {
-				setIsPressing?.(false);
-			};
-			if (reduceMotion) lift();
-			else nextAnimationTick().then(lift);
 		};
 		thumb.setPointerCapture(e.pointerId);
 		thumb.addEventListener("pointermove", pointerMove, { signal: aborter.signal });
 		thumb.addEventListener("pointerup", pointerUp, { signal: aborter.signal });
-	}, [handleCheck, setIsPressing, reduceMotion]);
+	}, [handleCheck, reduceMotion]);
 
 	return (
 		<StyledToggleSwitchLabel
@@ -432,7 +424,7 @@ export default function ToggleSwitch({ on: _on, disabled: _disabled = false, isP
 							on ? actuallyOff ? t.onActuallyOff : t.on : t.off}
 					</output>
 				)}
-				<div className={["base", "toggle-switch-base", { pressing: isPressing }]}>
+				<div className={["base", "toggle-switch-base"]}>
 					<div className="thumb" style={thumbStyle} onPointerDown={onThumbDown} />
 				</div>
 			</div>

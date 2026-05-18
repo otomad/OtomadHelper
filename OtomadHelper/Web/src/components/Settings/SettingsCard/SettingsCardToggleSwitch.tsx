@@ -35,10 +35,9 @@ export default function SettingsCardToggleSwitch({ on: _on, disabled, children, 
 	/** Occurs while toggling. */
 	onChange?(on: boolean): void;
 }>>) {
-	const [isToggleSwitchPressing, setIsToggleSwitchPressing] = useState(false);
 	actionIcon ||= "";
 	const [on, setOn] = useVariousState(_on);
-	onClick ??= () => !isToggleSwitchPressing && setOn(on => { onChange?.(!on); return !on; });
+	onClick ??= () => setOn(on => { onChange?.(!on); return !on; });
 	const isExpander = shouldBeExpander(children);
 
 	return (
@@ -55,7 +54,6 @@ export default function SettingsCardToggleSwitch({ on: _on, disabled, children, 
 						on={[on, setOn]}
 						lock={lock}
 						actuallyOn={actuallyOn}
-						isPressing={[isToggleSwitchPressing, setIsToggleSwitchPressing]}
 						tabIndex={isExpander ? undefined : -1}
 						disabled={disabled}
 						resetTransitionOnChanging={resetTransitionOnChanging}
