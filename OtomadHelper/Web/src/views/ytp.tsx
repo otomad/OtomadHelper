@@ -93,7 +93,7 @@ export default function Ytp() {
 					<ExpanderChildTrim.RoughTime range={constraint} min={1} decimalPlaces={0} spinnerStep={100} />
 				</Setting>
 				<Setting meta={meta.clips} actions={<TextBox.Number value={clips} min={0} decimalPlaces={0} suffix={t.units.piece} />} />
-				<Subheader>{t(2).titles.effect}</Subheader>
+				<Subheader>{t(11).titles.effect}</Subheader>
 				<Setting
 					meta={meta.effects}
 					actions={(
@@ -140,4 +140,4 @@ export default function Ytp() {
 	);
 }
 
-const transRoughTimeRangeUnit = (range: RangeUnit<RoughTimeUnit>) => `${range[0]}${t.rangeDash}${range[1]}${t(2).units[range[2]]}`;
+const transRoughTimeRangeUnit = (range: RangeUnit<RoughTimeUnit>) => `${range[0]}${t.rangeDash}${range[1]}${t(11).units[range[2]]}`;

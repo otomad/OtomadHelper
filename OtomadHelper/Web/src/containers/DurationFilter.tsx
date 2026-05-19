@@ -86,7 +86,7 @@ export default function DurationFilter({ filter, target: _target }: {
 	const hasMin = Number.isFinite(min), hasMax = Number.isFinite(max);
 	const tO = tAlias.aria.operators;
 	const oneValue = !hasMin || !hasMax;
-	const unit = (plural: number) => t.units[_unit[0]]({ count: plural, context: "full" }), target = t(2)[_target];
+	const unit = (plural: number) => t.units[_unit[0]]({ count: plural, context: "full" }), target = t(11)[_target];
 	const caption = useMemo(() => {
 		if (isAllPassed(filter[0]))
 			return tO.allPassed;
@@ -147,7 +147,7 @@ export default function DurationFilter({ filter, target: _target }: {
 						<Button className="compare" onClick={() => minEqual_[1](equal => !equal)}>{minEqual ? "≥" : ">"}</Button>
 					</Tooltip>
 					<TextBox.Number value={min_} decimalPlaces={3} min={0} required={false} placeholder="−∞" />
-					<ComboBox className="units" current={_unit} ids={durationFilterUnits} options={durationFilterUnits.map(unit => t(2).units[unit])} />
+					<ComboBox className="units" current={_unit} ids={durationFilterUnits} options={durationFilterUnits.map(unit => t(11).units[unit])} />
 					<Tooltip title={tO.comparisonOperator} placement="block-end" disabled={hideUseTips}>
 						<Button className="compare" onClick={() => maxEqual_[1](equal => !equal)}>{maxEqual ? "≤" : "<"}</Button>
 					</Tooltip>

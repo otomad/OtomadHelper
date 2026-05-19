@@ -10,12 +10,22 @@ export /* @internal */ const SelectGeneratedClips = Enum({
 	staff: { icon: "g_clef" },
 	sonar: { icon: "sonar" },
 	lyrics: { icon: "lyrics" },
-}, { labelPrefix: t.titles });
+}, { labelPrefix: t(11).titles });
+export /* @internal */ const SelectGeneratedTracks = Enum({
+	audio: { icon: "volume" },
+	video: { icon: "video" },
+}, { labelPrefix: t(11).titles });
 export /* @internal */ const GroupTrackBy = Enum({
 	off: { icon: "prohibited" },
 	track: { icon: "layer" },
 	session: { icon: "chat_checkmark" },
 });
+export /* @internal */ const MoveCursorTo = Enum({
+	original: { icon: "subtract" },
+	start: { icon: "start_point" },
+	beforeFirst: { icon: "arrow_left_text_cursor" },
+	afterLast: { icon: "arrow_right_text_cursor" },
+}, { labelPrefix: t.source.moveCursorTo });
 export /* @internal */ namespace Namings {
 	const baseTrackNames = [
 		{ id: "clip", name: t.source.naming.clip, icon: "track_event" },
@@ -77,19 +87,26 @@ const isUnderVegas16 = true;
 
 export default function Source() {
 	const {
-		sourceFrom, trimStart, trimEnd, startTime, customStartTime,
+		sourceFrom, trimStart, trimEnd, startTime, customStartTime, moveCursorTo,
 		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
 		trackGroup, collapseTrackGroup, reuseSameNameTrackGroup, audioBusTrack, reuseSameNameAudioBusTrack,
+	} = useSelectConfig(c => c.source);
+	const {
 		otomadTrackName, vocaloidTrackName, ytpTrackName, otomadClipName, vocaloidClipName, ytpClipName,
 		groupByTaskSessionName, groupByTaskSessionNameTreatSingleAsMultitrack, unsetBorrowedTrackName,
+	} = useSelectConfig(c => c.source.naming);
+	const {
 		mysteryBox, consonant, syncopator,
 		syncopatorOrder, syncopatorLoop, syncopatorMysteryBox, syncopatorRepeat, syncopatorApplyEffectsByRound,
 		syncopatorAccumulateHarmonics, syncopatorSustain, syncopatorPitchCacheCapacity,
 		orchestra, orchestraDescending, orchestraAllowReuseExisted,
 		mysteryBoxLimitToSelected, mysteryBoxForTrack, mysteryBoxForMarker, lotionBath,
 		mysteryBoxForBarOrBeat, mysteryBoxForBarOrBeatPeriod, mysteryBoxForBarOrBeatPreparation,
-	} = useSelectConfig(c => c.source);
-	const { removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = useSelectConfig(c => c.source.afterCompletion);
+	} = useSelectConfig(c => c.source.multisourceComb);
+	const {
+		removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips,
+		keepOriginalTrackSelection, selectGeneratedTracks: _selectGeneratedTracks,
+	} = useSelectConfig(c => c.source.afterCompletion);
 	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
 	const { enabled: shupelunkerEnabled } = useSelectConfig(c => c.shupelunker);
 	const meta = metas.source;
@@ -107,6 +124,12 @@ export default function Source() {
 		_selectGeneratedClips,
 		items => typeof items === "boolean" ? SelectGeneratedClips.keys : items === undefined ? [] : items,
 		items => new Set(items).equals(new Set(SelectGeneratedClips.keys)) ? true : items,
+		{ processPrevStateInSetterWithGetter: true },
+	);
+	const selectGeneratedTracks = useStateSelector(
+		_selectGeneratedTracks,
+		items => typeof items === "boolean" ? SelectGeneratedTracks.keys : items === undefined ? [] : items,
+		items => new Set(items).equals(new Set(SelectGeneratedTracks.keys)) ? true : items,
 		{ processPrevStateInSetterWithGetter: true },
 	);
 
@@ -143,16 +166,6 @@ export default function Source() {
 			</Setting>
 
 			<Subheader meta={meta.advanced} />
-			<Setting meta={meta.afterCompletion}>
-				<Setting meta={meta.afterCompletion.removeSourceClips} on={removeSourceClips} lock={lockRemoveOrSelectSourceClips} />
-				<Setting meta={meta.afterCompletion.removeSourceClipsWithTracks} on={removeSourceClipsWithTracks} lock={lockRemoveOrSelectSourceClips} />
-				<Setting meta={meta.afterCompletion.selectSourceClips} on={selectSourceClips} lock={lockRemoveOrSelectSourceClips} />
-				<ItemsView view="tile" multiple current={selectGeneratedClips} selectAll={{ meta: meta.afterCompletion.selectGeneratedClips, icon: undefined }}>
-					{SelectGeneratedClips.map(({ key, label, icon }) =>
-						<ItemsView.Item id={key} key={key} icon={icon}>{label}</ItemsView.Item>)}
-				</ItemsView>
-			</Setting>
-
 			<Setting
 				meta={meta.preferredTrack}
 				selectInfo={preferredTrack === 0 ? t.source.preferredTrack.top : t(preferredTrack).source.preferredTrack.ordinal}
@@ -173,6 +186,33 @@ export default function Source() {
 					lock={isUnderVegas16 ? false : null}
 				/>
 			</Setting>
+			<Setting meta={meta.afterCompletion}>
+				<Setting meta={meta.afterCompletion.removeSourceClips} on={removeSourceClips} lock={lockRemoveOrSelectSourceClips} />
+				<Setting meta={meta.afterCompletion.removeSourceClipsWithTracks} on={removeSourceClipsWithTracks} lock={lockRemoveOrSelectSourceClips} />
+				<Setting meta={meta.afterCompletion.selectSourceClips} on={selectSourceClips} lock={lockRemoveOrSelectSourceClips} />
+				<ItemsView view="tile" multiple current={selectGeneratedClips} selectAll={{ meta: meta.afterCompletion.selectGeneratedClips, icon: undefined }}>
+					{SelectGeneratedClips.map(({ key, label, icon }) =>
+						<ItemsView.Item id={key} key={key} icon={icon}>{label}</ItemsView.Item>)}
+				</ItemsView>
+				<Setting meta={meta.afterCompletion.keepOriginalTrackSelection} on={keepOriginalTrackSelection} />
+				<ItemsView
+					view="tile"
+					multiple
+					current={selectGeneratedTracks}
+					selectAll={{ meta: meta.afterCompletion.selectGeneratedTracks, icon: undefined }}
+					disabled={keepOriginalTrackSelection[0]}
+					indeterminatenesses={keepOriginalTrackSelection[0] ? true : undefined}
+				>
+					{SelectGeneratedTracks.map(({ key, label, icon }) =>
+						<ItemsView.Item id={key} key={key} icon={icon}>{label}</ItemsView.Item>)}
+				</ItemsView>
+			</Setting>
+			<Setting
+				meta={meta.moveCursorTo}
+				items={MoveCursorTo}
+				value={moveCursorTo}
+				view="tile"
+			/>
 			<Setting
 				meta={meta.trackGroup}
 				items={GroupTrackBy}

@@ -21,7 +21,7 @@ export default function Tools() {
 				details={t.descriptions.tools.replacer}
 				type="button"
 				icon="replace"
-				selectInfo={t(0).selectInfo.trackEvent}
+				selectInfo={t(11).selectInfo.trackEvent}
 				selectValid={0}
 			/>
 			<SettingsCard

@@ -6,7 +6,7 @@ export const settingsMetaInput = {
 		from: { icon: "video_clip_multiple" },
 		trim: { icon: "aspect_ratio" },
 		startTime: { icon: "start_point" },
-		advanced: subheader(t.subheaders.advanced),
+		advanced: subheader({ title: t.subheaders.advanced, icon: "more_horizontal" }),
 		afterCompletion: {
 			icon: "post_processing",
 			items: {
@@ -14,8 +14,11 @@ export const settingsMetaInput = {
 				removeSourceClipsWithTracks: { icon: "delete_layer" },
 				selectSourceClips: { icon: "select_all" },
 				selectGeneratedClips: { icon: "select_all" },
+				keepOriginalTrackSelection: { icon: "subtract_square_multiple" },
+				selectGeneratedTracks: { icon: "select_all" },
 			},
 		},
+		moveCursorTo: { icon: "arrow_bidirectional_left_right_text_cursor" },
 		preferredTrack: {
 			icon: "layer_checkmark",
 			items: {
@@ -231,7 +234,7 @@ export const settingsMetaInput = {
 			},
 		},
 		transformMethod: { icon: "zoom_fit" },
-		effects: subheader({ icon: "sparkle", title: t(2).titles.effect }),
+		effects: subheader({ icon: "sparkle", title: t(11).titles.effect }),
 		articulations: {
 			type: "subheader",
 			items: {

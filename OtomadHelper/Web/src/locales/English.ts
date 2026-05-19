@@ -15,10 +15,15 @@ export default {
 			source: "Source", // Aka Material.
 			score: "Score",
 			audio: "Audio",
+			audio_other: "Audios",
 			visual: "Visual",
+			visual_other: "Visuals",
+			video: "Video",
+			video_other: "Videos",
 			track: "Track",
 			track_other: "Tracks",
 			sonar: "Sonar",
+			sonar_other: "Sonars",
 			lyrics: "Lyrics",
 			shupelunker: "Shupelunker", // Shupelunker is a portmanteau of Shu (Shuzo Matsuoka) and Spelunker (game).\nIf your language has different translations for those words, try using their correct translations to create a new term instead of simply copying names from English.
 			shupelunker_full: "Shupelunker Tactics / Tartar Tactics", // Shupelunker is a portmanteau of Shu (Shuzo Matsuoka) and Spelunker (game).\nIf your language has different translations for those words, try using their correct translations to create a new term instead of simply copying names from English.
@@ -33,7 +38,8 @@ export default {
 			effect: "Effect",
 			effect_other: "Effects",
 			prve: "PV Rhythm & Cadence Dynamic Pulsing", // “PV” stands for Promotion Video.
-			staff: "Staff", // Musical staff.
+			staff: "Staff", // Musical staff.\nNote that the plural of “staff” is “staves”, not “staffs”.
+			staff_other: "Staves",
 			staff_full: "Staff Visualizer",
 			pixelScaling: "Pixel Scaling",
 			parameters: "Parameters",
@@ -88,13 +94,6 @@ export default {
 				projectStart: "Project start",
 				cursor: "Cursor",
 			},
-			afterCompletion: {
-				_: "After completion",
-				removeSourceClips: "Remove source track clips",
-				removeSourceClipsWithTracks: "Remove source track clips with their corresponding tracks",
-				selectSourceClips: "Select source track clips",
-				selectGeneratedClips: "Select all clips generated",
-			},
 			preferredTrack: {
 				_: "Preferred track",
 				index: "Preferred track index",
@@ -103,6 +102,22 @@ export default {
 				belowAdjustmentTracks: "If one or more adjustment tracks are below this track, select the next track that none of them",
 				newTrack: "New track",
 				quickSelect: "Quickly select the current track",
+			},
+			afterCompletion: {
+				_: "After completion",
+				removeSourceClips: "Remove source track clips",
+				removeSourceClipsWithTracks: "Remove source track clips with their corresponding tracks",
+				selectSourceClips: "Select source track clips",
+				selectGeneratedClips: "Select all clips generated",
+				keepOriginalTrackSelection: "Keep original track selection",
+				selectGeneratedTracks: "Select all tracks that contain generated clips",
+			},
+			moveCursorTo: {
+				_: "Move the cursor to",
+				original: "Original position",
+				start: "Where to start",
+				beforeFirst: "Before the first event",
+				afterLast: "After the last event",
 			},
 			trackGroup: {
 				_: "Grouping tracks",
@@ -1095,17 +1110,18 @@ export default {
 					ytpEnabled: "YTP feature is enabled and these features are currently unconfigurable.",
 				},
 				orchestra: {
-					_: "Select multiple sources that will be mapped to available tracks in order (excess sources or tracks will be omitted)",
+					_: "Select multiple sources that will be mapped to available score multitracks in order (excess sources or tracks will be omitted)",
 					descending: "Reverses the order of the tracks to map (note that it is not the order of the selected sources)",
 				},
 				syncopator: {
-					_: "Select multiple sources that will be applied in turn by auto beat sync / match cut",
+					_: "Select multiple sources that will be applied in turn by synchronizing the beat automatically",
 					order: "Specify the application sequential order of sources",
 					loop: "When disabled, the generation will be stopped immediately when the number of notes required exceeds the number of selected sources. Either refill enough sources or enable Loop.",
 					mysteryBox: "No need to select multiple sources, just select one long source. Then it will randomly select the in point of each clips.",
 				},
 				mysteryBox: {
-					_: "Randomizes in points for the source.\nThis can result in randomly selected source clips having different base pitches, making it useful only for creating funny videos for entertainment purposes, and barely used for creating high-caliber videos.",
+					_: "No need to select multiple sources intentionally, just select at least one long source. Then it will randomly select the in point of each clips automatically.\nEvery new attempt is an unknown surprise.",
+					// Randomizes in points for the source.\nThis can result in randomly selected source clips having different base pitches, making it useful only for creating funny videos for entertainment purposes, and barely used for creating high-caliber videos.
 					limitToSelected: "Randomly switches among the selected multiple sources instead of using completely random in points",
 					track: "Whether track or channel depends on the Score",
 					marker: "When a marker is encountered in the score, the in point of the source will be changed once. If several markers have the same non-empty name, they will use the same in point of the source.",

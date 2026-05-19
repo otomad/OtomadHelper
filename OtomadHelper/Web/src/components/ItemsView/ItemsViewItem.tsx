@@ -15,6 +15,10 @@ export /* @internal */ const styledSimpleIndicator = css`
 		inline-size: 3px;
 		background-color: ${c("accent-color")};
 
+		[disabled] & {
+			background-color: ${c("fill-color-accent-disabled")};
+		}
+
 		@starting-style {
 			scale: 1 0;
 		}
@@ -223,6 +227,10 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 			}
 		}
 
+		&[disabled] > .base {
+			color: ${c("fill-color-text-disabled")};
+		}
+
 		&:not(.selected) > .base::before {
 			scale: 1 0;
 		}
@@ -295,6 +303,10 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 		${styles.text.bodyStrong};
 	}
 
+	&.selected.indeterminate ${ItemsViewItemTextPart} .title {
+		font-weight: 500;
+	}
+
 	.checkbox-label {
 		${tgs()} {
 			opacity: 0;
@@ -331,7 +343,7 @@ const ItemsViewItemStateContext = createContext<{
 
 export type OnItemsViewItemClickEventHandler<T> = (id: T, selected: CheckState, e: React.MouseEvent<HTMLElement>) => void;
 
-export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected: _selected = "unchecked", details, actions, withBorder = false, alignItems = "center", baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, criticallyHighlight, checkmarkPosition = "top right", _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable = false, children, className, "aria-label": ariaLabel, "aria-description": ariaDescription, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected: _selected = "unchecked", details, actions, withBorder = false, alignItems = "center", baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, criticallyHighlight, checkmarkPosition = "top right", _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable = false, children, disabled, className, "aria-label": ariaLabel, "aria-description": ariaDescription, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
 	/** Image. */
 	image?: string | ReactNode;
 	/** Icon. */
@@ -385,7 +397,7 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 	onClick?: OnItemsViewItemClickEventHandler<T>;
 }, "button">) {
 	const [__selected, setSelected] = useVariousState(_selected as VariousState<boolean>, true);
-	const selected: CheckState = typeof __selected === "string" ? __selected : __selected ? "checked" : "unchecked";
+	const selected = typeof __selected === "string" ? __selected as CheckState : __selected ? "checked" : "unchecked";
 	if (typeof tooltip === "string" || isI18nItem(tooltip))
 		tooltip = { title: String(tooltip), placement: "block" };
 	if (badge !== undefined && !Array.isArray(badge))
@@ -398,7 +410,16 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 			{details && <p className="details" id={`${ariaId}-details`}><Preserves>{details}</Preserves></p>}
 		</ItemsViewItemTextPart>
 	);
-	const checkboxContent = <Checkbox className={["items-view-item-checkbox", checkmarkPosition]} value={[selected]} plain inert disableCheckmarkTransition={disableCheckmarkTransition} />;
+	const checkboxContent = (
+		<Checkbox
+			className={["items-view-item-checkbox", checkmarkPosition]}
+			value={[selected]}
+			plain
+			inert
+			disableCheckmarkTransition={disableCheckmarkTransition}
+			disabled={disabled}
+		/>
+	);
 	const checkbox = multipleChangeable ?
 		<CssTransition in={multiple} timeout={250} requestAnimationFrame>{checkboxContent}</CssTransition> :
 		multiple && checkboxContent;
@@ -425,14 +446,16 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 						$selectionColor={selectionColor}
 						$dirBasedIcon={dirBasedIcon}
 						$alignItems={alignItems}
-						className={[className, view, { selected: selected !== "unchecked", criticallyHighlight }]}
+						className={[className, view, { selected: selected !== "unchecked", indeterminate: selected === "indeterminate", criticallyHighlight }]}
 						tabIndex={0}
 						role={multiple ? "checkbox" : "radio"}
+						disabled={disabled}
 						aria-checked={checkStateToAriaChecked(selected)}
 						aria-labelledby={ariaLabel !== undefined ? undefined : `${ariaId}-title`}
 						aria-describedby={ariaDescription !== undefined ? undefined : `${ariaId}-details`}
 						aria-label={ariaLabel}
 						aria-description={ariaDescription}
+						aria-disabled={disabled}
 						onClick={e => { onClick?.(id, selected, e); setSelected?.(selected => !selected); }}
 						{...htmlAttrs}
 					>

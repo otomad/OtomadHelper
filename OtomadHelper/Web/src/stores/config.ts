@@ -13,7 +13,7 @@ import type { musicalNotationSystems } from "views/lyrics";
 import type { constrainNoteLengthTypes, multipleSelectTrackItems, tempoUsings, trackAndChannel } from "views/score";
 import type { SystemBackdrops } from "views/settings";
 import type { textPlugins } from "views/settings/internal";
-import type { GroupTrackBy, Namings, SelectGeneratedClips, barOrBeatUnitTypes, sequentialOrders, sourceFromEnums, startTimes } from "views/source";
+import type { GroupTrackBy, MoveCursorTo as MoveCursorToTypes, Namings, SelectGeneratedClips, SelectGeneratedTracks, barOrBeatUnitTypes, sequentialOrders, sourceFromEnums, startTimes } from "views/source";
 import type { arrayTypes, directionTypes, fitTypes as gridFitTypes, parityTypes } from "views/track/grid";
 import type { glissandoEffects, prerenders, stretches, transformMethods, truncates } from "views/visual";
 
@@ -31,6 +31,7 @@ namespace Config {
 	export /* @warn */ type Timecode = string;
 	export /* @warn */ type MultipleSelectTrackItem = typeof multipleSelectTrackItems[number];
 	export /* @warn */ type SelectGeneratedClips = typeof SelectGeneratedClips.keyType;
+	export /* @warn */ type SelectGeneratedTracks = typeof SelectGeneratedTracks.keyType;
 	export /* @warn */ type BeepEngine = typeof beepEngines[number];
 	export /* @warn */ type BarOrBeatUnit = typeof barOrBeatUnitTypes[number];
 	export /* @warn */ type SourceFrom = typeof sourceFromEnums[number];
@@ -72,6 +73,7 @@ namespace Config {
 	export /* @warn */ type GroupTrackBy = typeof GroupTrackBy.keyType;
 	export /* @warn */ type DurationFilterUnit = typeof durationFilterUnits[number];
 	export /* @warn */ type DurationFilter = typeof defaultDurationFilter;
+	export /* @warn */ type MoveCursorTo = typeof MoveCursorToTypes.keyType;
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -93,49 +95,56 @@ namespace Config {
 			trimEnd: EMPTY_TIMECODE,
 			startTime: "projectStart" satisfies StartTime as StartTime,
 			customStartTime: EMPTY_TIMECODE,
+			preferredTrack: 0,
+			belowAdjustmentTracks: true,
 			afterCompletion: {
 				removeSourceClips: false,
 				removeSourceClipsWithTracks: false,
 				selectSourceClips: true,
 				selectGeneratedClips: [] as true | SelectGeneratedClips[],
+				keepOriginalTrackSelection: false,
+				selectGeneratedTracks: [] as true | SelectGeneratedTracks[],
 			},
-			preferredTrack: 0,
-			belowAdjustmentTracks: true,
+			moveCursorTo: "beforeFirst" satisfies MoveCursorTo as MoveCursorTo,
 			trackGroup: "track" satisfies GroupTrackBy as GroupTrackBy,
 			collapseTrackGroup: true,
 			reuseSameNameTrackGroup: true,
-			audioBusTrack: "track" satisfies GroupTrackBy as GroupTrackBy,
+			audioBusTrack: "off" satisfies GroupTrackBy as GroupTrackBy,
 			reuseSameNameAudioBusTrack: true,
-			unsetBorrowedTrackName: false,
-			otomadTrackName: "track" satisfies OtomadTrackNameType as OtomadTrackNameType,
-			vocaloidTrackName: "voicebank" satisfies VocaloidTrackNameType as VocaloidTrackNameType,
-			ytpTrackName: "unnamed" satisfies YtpTrackNameType as YtpTrackNameType,
-			otomadClipName: "unset" satisfies OtomadClipNameType as OtomadClipNameType,
-			vocaloidClipName: "lyric" satisfies VocaloidClipNameType as VocaloidClipNameType,
-			ytpClipName: "effect" satisfies YtpClipNameType as YtpClipNameType,
-			groupByTaskSessionName: "score" satisfies ScoredTrackNameType as ScoredTrackNameType,
-			groupByTaskSessionNameTreatSingleAsMultitrack: false,
-			orchestra: false,
-			orchestraDescending: false,
-			orchestraAllowReuseExisted: true,
-			syncopator: false,
-			syncopatorOrder: "sequential" satisfies SequentialOrder as SequentialOrder,
-			syncopatorLoop: true,
-			syncopatorMysteryBox: false,
-			syncopatorRepeat: 1,
-			syncopatorApplyEffectsByRound: false,
-			syncopatorAccumulateHarmonics: false,
-			syncopatorSustain: false,
-			syncopatorPitchCacheCapacity: 4,
-			mysteryBox: false,
-			mysteryBoxLimitToSelected: false,
-			mysteryBoxForTrack: false,
-			mysteryBoxForMarker: false,
-			mysteryBoxForBarOrBeat: false,
-			mysteryBoxForBarOrBeatPeriod: [4, "bar"] as Unit<BarOrBeatUnit>,
-			mysteryBoxForBarOrBeatPreparation: [0, "bar"] as Unit<BarOrBeatUnit>,
-			lotionBath: false,
-			consonant: false,
+			naming: {
+				unsetBorrowedTrackName: false,
+				otomadTrackName: "track" satisfies OtomadTrackNameType as OtomadTrackNameType,
+				vocaloidTrackName: "voicebank" satisfies VocaloidTrackNameType as VocaloidTrackNameType,
+				ytpTrackName: "unnamed" satisfies YtpTrackNameType as YtpTrackNameType,
+				otomadClipName: "unset" satisfies OtomadClipNameType as OtomadClipNameType,
+				vocaloidClipName: "lyric" satisfies VocaloidClipNameType as VocaloidClipNameType,
+				ytpClipName: "effect" satisfies YtpClipNameType as YtpClipNameType,
+				groupByTaskSessionName: "score" satisfies ScoredTrackNameType as ScoredTrackNameType,
+				groupByTaskSessionNameTreatSingleAsMultitrack: false,
+			},
+			multisourceComb: {
+				orchestra: false,
+				orchestraDescending: false,
+				orchestraAllowReuseExisted: true,
+				syncopator: false,
+				syncopatorOrder: "sequential" satisfies SequentialOrder as SequentialOrder,
+				syncopatorLoop: true,
+				syncopatorMysteryBox: false,
+				syncopatorRepeat: 1,
+				syncopatorApplyEffectsByRound: false,
+				syncopatorAccumulateHarmonics: false,
+				syncopatorSustain: false,
+				syncopatorPitchCacheCapacity: 4,
+				mysteryBox: false,
+				mysteryBoxLimitToSelected: false,
+				mysteryBoxForTrack: false,
+				mysteryBoxForMarker: false,
+				mysteryBoxForBarOrBeat: false,
+				mysteryBoxForBarOrBeatPeriod: [4, "bar"] as Unit<BarOrBeatUnit>,
+				mysteryBoxForBarOrBeatPreparation: [0, "bar"] as Unit<BarOrBeatUnit>,
+				lotionBath: false,
+				consonant: false,
+			},
 		},
 		score: {
 			format: "midi",

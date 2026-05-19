@@ -65,7 +65,7 @@ export /* @internal */ const StyledItemsView = styled.div`
 export default function ItemsView<
 	T,
 	TMultiple extends boolean = false,
->({ view, current: _current, itemWidth, multiple = false as TMultiple, multipleChangeable = false, indeterminatenesses = [], children, className, role, transition, style, inlineAlignment, autoFill, readOnly, emptyState, "aria-label": ariaLabel, selectAll, onItemCountChange, onItemEmptyChange, ...htmlAttrs }: FCP<{
+>({ view, current: _current, itemWidth, multiple = false as TMultiple, multipleChangeable = false, indeterminatenesses = [], children, className, role, transition, style, inlineAlignment, autoFill, readOnly, emptyState, "aria-label": ariaLabel, selectAll, disabled, onItemCountChange, onItemEmptyChange, ...htmlAttrs }: FCP<{
 	/** View mode: list, tile, grid. */
 	view: ItemView;
 	/**
@@ -86,8 +86,12 @@ export default function ItemsView<
 	multiple?: TMultiple;
 	/** Can `multiple` prop be dynamically changed? Set it to false for better performance, and set it to true to present a better animation. @default false */
 	multipleChangeable?: boolean;
-	/** Specifies which items are set to an indeterminate state. */
-	indeterminatenesses?: T[];
+	/**
+	 * Specifies which items are set to an indeterminate state.
+	 * #### Special value:
+	 * - `true`: Every options (including select all check box) will be indeterminate state.
+	 */
+	indeterminatenesses?: T[] | true;
 	/**
 	 * Override the default aria role attribute.
 	 *
@@ -150,8 +154,9 @@ export default function ItemsView<
 			_view: view,
 			_multiple: overriddenMultiple !== undefined ? overriddenMultiple : multiple,
 			_multipleChangeable: multipleChangeable,
+			disabled: child.props.disabled || disabled,
 			..._current !== null && {
-				selected: !isSelected(id) ? "unchecked" : indeterminatenesses.includesDeep(id) ? "indeterminate" : "checked",
+				selected: indeterminatenesses === true ? "indeterminate" : !isSelected(id) ? "unchecked" : indeterminatenesses.includesDeep(id) ? "indeterminate" : "checked",
 				onClick: (...e: Parameters<OnItemsViewItemClickEventHandler<unknown>>) => { handleClick(id); onParentClick?.(...e); },
 			},
 		});
@@ -175,7 +180,15 @@ export default function ItemsView<
 
 	return (
 		<>
-			{multiple && selectAll && !isEmpty && <SelectAll value={[current, setCurrent] as never as StateProperty<T[]>} all={allIds} {...selectAll === true ? {} : selectAll as never} />}
+			{multiple && selectAll && !isEmpty && (
+				<SelectAll
+					value={[current, setCurrent] as never as StateProperty<T[]>}
+					all={allIds}
+					disabled={disabled}
+					indeterminate={indeterminatenesses === true}
+					{...selectAll === true ? {} : selectAll as never}
+				/>
+			)}
 			<StyledItemsView
 				className={[className, view, { autoFill }]}
 				role={role === null ? undefined : role === undefined ? multiple ? "group" : "radiogroup" : role}
@@ -186,6 +199,7 @@ export default function ItemsView<
 					justifyContent: inlineAlignment,
 					"--grid-template-width": view === "grid" ? styles.toValue(itemWidth) : undefined,
 				}}
+				disabled={disabled}
 				inert={readOnly}
 				data-is-other={isOther}
 				aria-readonly={readOnly}
