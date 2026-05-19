@@ -1,9 +1,9 @@
 export /* @internal */ const sourceFromEnums = ["trackEvent", "projectMedia", "browseFile"] as const;
-export /* @internal */ const startTimes = [
-	{ id: "projectStart", name: t.source.startTime.projectStart, icon: "arrow_export" },
-	{ id: "cursor", name: t.source.startTime.cursor, icon: "text_cursor" },
-	{ id: "custom", name: t.custom, icon: "edit" },
-] as const;
+export /* @internal */ const StartTimes = Enum({
+	projectStart: { label: t.source.startTime.projectStart, icon: "arrow_export" },
+	cursor: { label: t.source.startTime.cursor, icon: "text_cursor" },
+	custom: { label: t.custom, icon: "edit" },
+}, { labelPrefix: t(11).titles });
 export /* @internal */ const SelectGeneratedClips = Enum({
 	audio: { icon: "volume" },
 	visual: { icon: "image" },
@@ -97,9 +97,9 @@ export default function Source() {
 	} = useSelectConfig(c => c.source.naming);
 	const {
 		mysteryBox, consonant, syncopator,
-		syncopatorOrder, syncopatorLoop, syncopatorMysteryBox, syncopatorRepeat, syncopatorApplyEffectsByRound,
+		syncopatorOrder, syncopatorMysteryBox, syncopatorRepeatOne, syncopatorRepeatRound, syncopatorApplyEffectsByRound,
 		syncopatorAccumulateHarmonics, syncopatorSustain, syncopatorPitchCacheCapacity,
-		orchestra, orchestraDescending, orchestraAllowReuseExisted,
+		orchestra, orchestraDescending, orchestraAllowReuseExisted, orchestraMysteryBox,
 		mysteryBoxLimitToSelected, mysteryBoxForTrack, mysteryBoxForMarker, lotionBath,
 		mysteryBoxForBarOrBeat, mysteryBoxForBarOrBeatPeriod, mysteryBoxForBarOrBeatPreparation,
 	} = useSelectConfig(c => c.source.multisourceComb);
@@ -153,12 +153,9 @@ export default function Source() {
 			</Setting>
 			<Setting
 				meta={meta.startTime}
-				items={startTimes}
+				items={StartTimes}
 				value={startTime}
 				view="tile"
-				idField="id"
-				nameField="name"
-				iconField="icon"
 			>
 				<CustomItem current={startTime}>
 					{setToCustom => <TimecodeBox value={customStartTime} onFocus={setToCustom} />}
@@ -212,11 +209,18 @@ export default function Source() {
 				items={MoveCursorTo}
 				value={moveCursorTo}
 				view="tile"
+				detailsField={({ key }) => (
+					<>
+						{t.descriptions.source.moveCursorTo[key]}
+						{key === "start" && <SettingsCard.SelectInfo>{StartTimes.label(startTime[0])}</SettingsCard.SelectInfo>}
+					</>
+				)}
 			/>
 			<Setting
 				meta={meta.trackGroup}
 				items={GroupTrackBy}
 				nameField={({ key }) => t.source.trackGroup[key]}
+				detailsField={({ key }) => t.descriptions.source.trackGroup[key]}
 				checkInfoCondition={key => t.source.trackGroup[key!]}
 				value={trackGroup}
 				view="tile"
@@ -229,6 +233,7 @@ export default function Source() {
 				meta={meta.audioBusTrack}
 				items={GroupTrackBy}
 				nameField={({ key }) => t.source.audioBusTrack[key]}
+				detailsField={({ key }) => t.descriptions.source.audioBusTrack[key]}
 				checkInfoCondition={key => t.source.audioBusTrack[key!]}
 				value={audioBusTrack}
 				view="tile"
@@ -286,8 +291,12 @@ export default function Source() {
 			{ytpEnabled && <InfoBar status="warning" title={t.descriptions.source.multisource.ytpEnabled} button={<EmptyMessage.YtpDisabled.Buttons />} />}
 			<Attrs disabled={ytpEnabled ? true : undefined}>
 				<Setting meta={meta.orchestra} on={orchestra}>
-					<Setting meta={meta.orchestra.descending} on={orchestraDescending} />
-					<Setting meta={meta.orchestra.allowReuseExisted} on={orchestraAllowReuseExisted} />
+					<Setting
+						meta={meta.orchestra.selectionMode}
+						actions={<DualStateSwitch current={orchestraMysteryBox} falseText={t.source.syncopator} trueText={t.source.mysteryBox} falseIcon="flag_auto_beat" trueIcon="question_square" />}
+					/>
+					<Setting meta={meta.orchestra.descending} on={orchestraDescending} disabled={orchestraMysteryBox[0]} />
+					<Setting meta={meta.orchestra.allowReuseExisted} on={orchestraAllowReuseExisted} lock={orchestraMysteryBox[0] ? true : undefined} />
 				</Setting>
 				<Setting meta={meta.syncopator} on={syncopator}>
 					<Setting
@@ -298,13 +307,13 @@ export default function Source() {
 							</Segmented>
 						)}
 					/>
-					<Setting meta={meta.syncopator.loop} on={syncopatorLoop} />
-					<Setting meta={meta.syncopator.repeat} actions={<TextBox.Number value={syncopatorRepeat} min={1} max={100} decimalPlaces={0} />} />
+					<Setting meta={meta.syncopator.repeatOne} title={t(syncopatorRepeatOne[0]).source.syncopator.repeatOne} actions={<TextBox.Number value={syncopatorRepeatOne} min={1} max={100} decimalPlaces={0} />} />
+					<Setting meta={meta.syncopator.repeatRound} title={t(syncopatorRepeatRound[0]).source.syncopator.repeatRound} actions={<TextBox.Number value={syncopatorRepeatRound} min={0} max={100} decimalPlaces={0} />} />
 					<Setting meta={meta.syncopator.applyEffectsByRound} on={syncopatorApplyEffectsByRound} />
-					<Setting meta={meta.syncopator.mysteryBox} on={syncopatorMysteryBox} />
+					<Setting meta={meta.syncopator.mysteryBox} on={syncopatorMysteryBox} details={t.descriptions.source.mysteryBox.splitOnce("\n")[0]} />
 					<Setting meta={meta.syncopator.accumulateHarmonics} on={syncopatorAccumulateHarmonics} />
 					<Setting meta={meta.syncopator.sustain} on={syncopatorSustain} />
-					<Setting meta={meta.syncopator.pitchCacheCapacity} actions={<TextBox.Number value={syncopatorPitchCacheCapacity} min={1} max={200} decimalPlaces={0} />} />
+					<Setting meta={meta.syncopator.pitchCacheCapacity} actions={<TextBox.Number value={syncopatorPitchCacheCapacity} min={1} max={200} decimalPlaces={0} />} disabled={!syncopatorSustain[0]} />
 				</Setting>
 				<Setting meta={meta.mysteryBox} selectInfo={ytpEnabled && t.descriptions.source.mysteryBox.ytpEnabled} on={mysteryBox}>
 					<Setting meta={meta.mysteryBox.limitToSelected} on={mysteryBoxLimitToSelected} />

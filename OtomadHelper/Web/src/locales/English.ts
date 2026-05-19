@@ -158,11 +158,15 @@ export default {
 			multisource: "Multisource comb",
 			orchestra: {
 				_: "Source Orchestra",
+				selectionMode: "Selection mode",
 				allowReuseExisted: "Allow reuse",
 			},
 			syncopator: {
 				_: "Source Syncopator",
-				repeat: "Repetitions per clip",
+				repeatOne: "Repetition per clip",
+				repeatOne_other: "Repetitions per clip",
+				repeatRound: "Total repetition round",
+				repeatRound_other: "Total repetition rounds",
 				applyEffectsByRound: "Apply visual effects by rounds",
 				accumulateHarmonics: "Accumulate overtones of chords separately",
 				sustain: "Sustain source at same pitch",
@@ -1097,9 +1101,27 @@ export default {
 				preferredTrack: {
 					fillingInstructions: "If 0, then generated above all tracks;\nIf positive, then generated below the nth track;\nIf negative, then generated below the nth-to-last track.\nIf any preferred track is specified in Audio or Visual, that will override this option.",
 				},
+				moveCursorTo: {
+					_: "After completion, positions the cursor to a specified location in the timeline",
+					original: "Retains the timeline cursor in the original position before the generation",
+					start: "Depends on the value set by “Start time” setting",
+					beforeFirst: "Moves the cursor to before the first generated event in the timeline",
+					afterLast: "Moves the cursor to after the last generated event in the timeline",
+				},
 				trackGroup: {
-					_: "Groups tracks by score track",
+					_: "Creates groups for the tracks",
+					off: "Disables track grouping",
+					track: "Groups tracks based on the score track used",
+					session: "Create one new group containing all tracks of the next generation",
+					collapse: "Toggle collapsing the track group list",
 					reuseSameName: "If a group with the same nonempty name already exists, reuse it instead of creating a new one",
+				},
+				audioBusTrack: {
+					_: "Routes audio tracks to audio buses (Mixing Console)",
+					off: "Disables routing to audio buses",
+					track: "Routes the audio track to a new bus based on the score track used",
+					session: "Create one new bus receiving all audio tracks of the next generation",
+					reuseSameName: "If an audio bus track with the same nonempty name already exists, reuse it instead of creating a new one",
 				},
 				naming: {
 					_: "Specify the name for the generated tracks, track groups, audio bus tracks, and clips",
@@ -1112,12 +1134,18 @@ export default {
 				orchestra: {
 					_: "Select multiple sources that will be mapped to available score multitracks in order (excess sources or tracks will be omitted)",
 					descending: "Reverses the order of the tracks to map (note that it is not the order of the selected sources)",
+					allowReuseExisted: "Allows the same sources to be used across different score multitracks, or the generation will be prevented if reused",
 				},
 				syncopator: {
 					_: "Select multiple sources that will be applied in turn by synchronizing the beat automatically",
 					order: "Specify the application sequential order of sources",
-					loop: "When disabled, the generation will be stopped immediately when the number of notes required exceeds the number of selected sources. Either refill enough sources or enable Loop.",
-					mysteryBox: "No need to select multiple sources, just select one long source. Then it will randomly select the in point of each clips.",
+					// loop: "When disabled, the generation will be stopped immediately when the number of notes required exceeds the number of selected sources. Either refill enough sources or enable Loop.",
+					repeatOne: "Specify the amount of times a source can be used before switching to the next source",
+					repeatRound: "Specify the maximum number of times to loop while there are no more sources available, the generation will be terminated immediately if exceeded.\nSet to 0 means it can loop infinitely.",
+					applyEffectsByRound: "Applies visual effects in cycles rather than every clips",
+					accumulateHarmonics: "Makes use of multiple sources when a chord is generated",
+					sustain: "Uses the same source for the following notes with the same pitch",
+					pitchCacheCapacity: "Specify the capacity required to memorize the pitch",
 				},
 				mysteryBox: {
 					_: "No need to select multiple sources intentionally, just select at least one long source. Then it will randomly select the in point of each clips automatically.\nEvery new attempt is an unknown surprise.",
@@ -1131,6 +1159,7 @@ export default {
 						preparation: "Delay before first execution",
 					},
 					ytpEnabled: "YTP feature is enabled and it already supports randomization, it is unnecessary to set it here.",
+					lotionBath: "Forces the source to sequentially change throughout the whole duration",
 				},
 				consonant: {
 					_: "To prevent consonants from being stretched or delayed, you can separate the consonant and vowel parts of the same audio or video source so that special optimization can be applied to the consonant part of the source.\nIf at least two audio or video clips are selected, the first clip is considered the initial consonant part, the second clip is considered the vowel part, and the third segment (if any) is considered the final consonant part.",

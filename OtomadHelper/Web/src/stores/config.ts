@@ -13,13 +13,13 @@ import type { musicalNotationSystems } from "views/lyrics";
 import type { constrainNoteLengthTypes, multipleSelectTrackItems, tempoUsings, trackAndChannel } from "views/score";
 import type { SystemBackdrops } from "views/settings";
 import type { textPlugins } from "views/settings/internal";
-import type { GroupTrackBy, MoveCursorTo as MoveCursorToTypes, Namings, SelectGeneratedClips, SelectGeneratedTracks, barOrBeatUnitTypes, sequentialOrders, sourceFromEnums, startTimes } from "views/source";
+import type { GroupTrackBy, MoveCursorTo as MoveCursorToTypes, Namings, SelectGeneratedClips, SelectGeneratedTracks, StartTimes, barOrBeatUnitTypes, sequentialOrders, sourceFromEnums } from "views/source";
 import type { arrayTypes, directionTypes, fitTypes as gridFitTypes, parityTypes } from "views/track/grid";
 import type { glissandoEffects, prerenders, stretches, transformMethods, truncates } from "views/visual";
 
 namespace Config {
 	// WARN: https://github.com/unplugin/unplugin-auto-import/issues/591
-	export /* @warn */ type StartTime = typeof startTimes[number]["id"];
+	export /* @warn */ type StartTime = typeof StartTimes.keyType;
 	export /* @warn */ type TempoUsing = typeof tempoUsings[number]["id"];
 	export /* @warn */ type ConstrainNoteLengthType = typeof constrainNoteLengthTypes[number]["id"];
 	export /* @warn */ type Encoding = typeof Encodings.keyType;
@@ -124,14 +124,15 @@ namespace Config {
 			},
 			multisourceComb: {
 				orchestra: false,
+				orchestraMysteryBox: false,
 				orchestraDescending: false,
 				orchestraAllowReuseExisted: true,
 				syncopator: false,
 				syncopatorOrder: "sequential" satisfies SequentialOrder as SequentialOrder,
-				syncopatorLoop: true,
-				syncopatorMysteryBox: false,
-				syncopatorRepeat: 1,
+				syncopatorRepeatOne: 1,
+				syncopatorRepeatRound: 0,
 				syncopatorApplyEffectsByRound: false,
+				syncopatorMysteryBox: false,
 				syncopatorAccumulateHarmonics: false,
 				syncopatorSustain: false,
 				syncopatorPitchCacheCapacity: 4,

@@ -56,6 +56,7 @@ export const settingsMetaInput = {
 		orchestra: {
 			icon: "launchpad",
 			items: {
+				selectionMode: { icon: "select_all" },
 				descending: { icon: "descending", title: t.descending },
 				allowReuseExisted: { icon: "arrow_repeat_all" },
 			},
@@ -64,12 +65,13 @@ export const settingsMetaInput = {
 			icon: "flag_auto_beat",
 			items: {
 				order: { icon: "arrow_sort_horizontal", title: t.order },
-				loop: { icon: "arrow_repeat_all", title: t.stream.loop },
-				repeat: { icon: "arrow_repeat_1" },
+				repeatOne: { icon: "arrow_repeat_1" },
+				repeatRound: { icon: "arrow_repeat_all" },
 				applyEffectsByRound: { icon: "sparkle_rounds" },
 				mysteryBox: {
 					title: t.source.mysteryBox,
 					aliases: [t.aliases.source.mysteryBox],
+					details: t.descriptions.source.mysteryBox,
 					icon: "question_square",
 				},
 				accumulateHarmonics: { icon: "columnar_chord_increment" },
@@ -329,7 +331,7 @@ export const settingsMetaInput = {
 		},
 	},
 	shupelunker: {
-		tartar: { icon: "placeholder" },
+		tartar: { icon: "music_x_note" },
 		affix: { icon: "affix" },
 		unallocated: {
 			icon: "table_columns_question_mark",
