@@ -180,6 +180,9 @@ const StyledSettingsCard = styled(StyledCard)<{
 	}
 `);
 
+type SelectValidPropType = boolean | number | BadgeRequiredArgs;
+type SelectValidAndInfoType = [valid: SelectValidPropType, info: ReactNode, key?: React.Key][];
+
 export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, wrapActionsWhenNarrow, anchor, ariaIdRef, ref, _requestExpanded, _isExpander, onClick, onFocus, ...htmlAttrs }: FCP<{
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
 	icon?: DeclaredIcons | "" | boolean | ReactElement;
@@ -188,9 +191,9 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	/** Detailed description. */
 	details?: ReactNode;
 	/** Specifies the display string of the selection of tracks or track events. */
-	selectInfo?: ReactNode | ReactNode[];
+	selectInfo?: ReactNode | SelectValidAndInfoType;
 	/** Specifies whether the selection is valid if it's boolean, or the number of selection is not 0 if it's number. */
-	selectValid?: boolean | number | (boolean | number | BadgeRequiredArgs)[];
+	selectValid?: SelectValidPropType;
 	/** Trailing Action icon. Use an empty string or Boolean type to indicate disabling. */
 	actionIcon?: DeclaredIcons | "" | boolean;
 	/**
@@ -234,6 +237,12 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	useImperativeHandleAriaId(ariaIdRef, ariaId);
 	tabIndex ??= type.in("container", "container-but-button") ? -1 : 0;
 	const lastWrapped = useRef<boolean>(undefined);
+
+	const selectValidAndInfo = useMemo<SelectValidAndInfoType>(() => {
+		if (!isRenderable(selectInfo)) return [];
+		if (!Array.isArray(selectInfo)) return [[selectValid, selectInfo]];
+		return selectInfo;
+	}, [selectValid, selectInfo]);
 
 	const handleFocus: FocusEventHandler<HTMLDivElement> = e => {
 		onFocus?.(e);
@@ -301,8 +310,8 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 									<div className="text">
 										<p className="title" id={`${ariaId}-title`} aria-hidden><Preserves>{title}</Preserves></p>
 										<p className="details" id={`${ariaId}-details`} aria-hidden><Preserves>{details}</Preserves></p>
-										{selectInfo && wrapIfNotArray(selectInfo).map((info, i) =>
-											<SettingsCardSelectInfo key={i} valid={Array.isArray(selectValid) ? selectValid[i] : selectValid}>{info}</SettingsCardSelectInfo>)}
+										{selectValidAndInfo.map(([valid, info, key], i) =>
+											<SettingsCardSelectInfo key={key ?? i} valid={valid}>{info}</SettingsCardSelectInfo>)}
 									</div>
 								</Transitions.DynamicAutoSize>
 							</>

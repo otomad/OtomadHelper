@@ -97,7 +97,7 @@ namespace Config {
 			customStartTime: EMPTY_TIMECODE,
 			preferredTrack: 0,
 			belowAdjustmentTracks: true,
-			afterCompletion: {
+			removeOrSelect: {
 				removeSourceClips: false,
 				removeSourceClipsWithTracks: false,
 				selectSourceClips: true,

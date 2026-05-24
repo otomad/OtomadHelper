@@ -300,7 +300,7 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 
 	return (
 		<StyledSliderWrapper className={{ invert: invertDirection }} onAuxClick={resetToDefault}>
-			{hasValue(displayValue) && (
+			{isRenderable(displayValue) && (
 				<output htmlFor={id} aria-hidden>
 					<PatternedNumberFlow specialValue={displaySpecialValue}>{displayValue}</PatternedNumberFlow>
 				</output>
@@ -319,7 +319,7 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 				aria-valuemin={min}
 				aria-valuemax={max}
 				aria-valuenow={value}
-				aria-valuetext={hasValue(displayValue) ? String(displayValue) : undefined}
+				aria-valuetext={isRenderable(displayValue) ? String(displayValue) : undefined}
 			>
 				<div className="track" ref={trackEl} onPointerDown={onTrackDown} />
 				<div className="passed" />
@@ -327,13 +327,4 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 			</StyledSlider>
 		</StyledSliderWrapper>
 	);
-}
-
-/**
- * Ignore `undefined`, `null`, `NaN`, and empty string.
- * @param test - The value to test.
- * @returns Is the tested value not `undefined`, `null`, `NaN`, or empty string?
- */
-function hasValue(test: Readable | undefined | null): test is Readable {
-	return !!test || test === 0 || test === 0n;
 }

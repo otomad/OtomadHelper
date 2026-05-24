@@ -6,9 +6,9 @@ export const settingsMetaInput = {
 		from: { icon: "video_clip_multiple" },
 		trim: { icon: "aspect_ratio" },
 		startTime: { icon: "start_point" },
-		advanced: subheader({ title: t.subheaders.advanced, icon: "more_horizontal" }),
-		afterCompletion: {
-			icon: "post_processing",
+		afterCompletion: subheader({ icon: "post_processing" }),
+		removeOrSelect: {
+			icon: "checkmark_circle_delete",
 			items: {
 				removeSourceClips: { icon: "delete_track_event" },
 				removeSourceClipsWithTracks: { icon: "delete_layer" },
@@ -19,6 +19,7 @@ export const settingsMetaInput = {
 			},
 		},
 		moveCursorTo: { icon: "arrow_bidirectional_left_right_text_cursor" },
+		advanced: subheader({ title: t.subheaders.advanced, icon: "more_horizontal" }),
 		preferredTrack: {
 			icon: "layer_checkmark",
 			items: {

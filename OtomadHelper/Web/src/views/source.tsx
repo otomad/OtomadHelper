@@ -106,7 +106,7 @@ export default function Source() {
 	const {
 		removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips,
 		keepOriginalTrackSelection, selectGeneratedTracks: _selectGeneratedTracks,
-	} = useSelectConfig(c => c.source.afterCompletion);
+	} = useSelectConfig(c => c.source.removeOrSelect);
 	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
 	const { enabled: shupelunkerEnabled } = useSelectConfig(c => c.shupelunker);
 	const meta = metas.source;
@@ -162,6 +162,41 @@ export default function Source() {
 				</CustomItem>
 			</Setting>
 
+			<Subheader meta={meta.afterCompletion} />
+			<Setting meta={meta.removeOrSelect}>
+				<Setting meta={meta.removeOrSelect.removeSourceClips} on={removeSourceClips} lock={lockRemoveOrSelectSourceClips} />
+				<Setting meta={meta.removeOrSelect.removeSourceClipsWithTracks} on={removeSourceClipsWithTracks} lock={lockRemoveOrSelectSourceClips} />
+				<Setting meta={meta.removeOrSelect.selectSourceClips} on={selectSourceClips} lock={lockRemoveOrSelectSourceClips} />
+				<ItemsView view="tile" multiple current={selectGeneratedClips} selectAll={{ meta: meta.removeOrSelect.selectGeneratedClips, icon: undefined }}>
+					{SelectGeneratedClips.map(({ key, label, icon }) =>
+						<ItemsView.Item id={key} key={key} icon={icon}>{label}</ItemsView.Item>)}
+				</ItemsView>
+				<Setting meta={meta.removeOrSelect.keepOriginalTrackSelection} on={keepOriginalTrackSelection} />
+				<ItemsView
+					view="tile"
+					multiple
+					current={selectGeneratedTracks}
+					selectAll={{ meta: meta.removeOrSelect.selectGeneratedTracks, icon: undefined }}
+					disabled={keepOriginalTrackSelection[0]}
+					indeterminatenesses={keepOriginalTrackSelection[0] ? true : undefined}
+				>
+					{SelectGeneratedTracks.map(({ key, label, icon }) =>
+						<ItemsView.Item id={key} key={key} icon={icon}>{label}</ItemsView.Item>)}
+				</ItemsView>
+			</Setting>
+			<Setting
+				meta={meta.moveCursorTo}
+				items={MoveCursorTo}
+				value={moveCursorTo}
+				view="tile"
+				detailsField={({ key }) => (
+					<>
+						{t.descriptions.source.moveCursorTo[key]}
+						{key === "start" && <SettingsCard.SelectInfo>{StartTimes.label(startTime[0])}</SettingsCard.SelectInfo>}
+					</>
+				)}
+			/>
+
 			<Subheader meta={meta.advanced} />
 			<Setting
 				meta={meta.preferredTrack}
@@ -183,39 +218,6 @@ export default function Source() {
 					lock={isUnderVegas16 ? false : null}
 				/>
 			</Setting>
-			<Setting meta={meta.afterCompletion}>
-				<Setting meta={meta.afterCompletion.removeSourceClips} on={removeSourceClips} lock={lockRemoveOrSelectSourceClips} />
-				<Setting meta={meta.afterCompletion.removeSourceClipsWithTracks} on={removeSourceClipsWithTracks} lock={lockRemoveOrSelectSourceClips} />
-				<Setting meta={meta.afterCompletion.selectSourceClips} on={selectSourceClips} lock={lockRemoveOrSelectSourceClips} />
-				<ItemsView view="tile" multiple current={selectGeneratedClips} selectAll={{ meta: meta.afterCompletion.selectGeneratedClips, icon: undefined }}>
-					{SelectGeneratedClips.map(({ key, label, icon }) =>
-						<ItemsView.Item id={key} key={key} icon={icon}>{label}</ItemsView.Item>)}
-				</ItemsView>
-				<Setting meta={meta.afterCompletion.keepOriginalTrackSelection} on={keepOriginalTrackSelection} />
-				<ItemsView
-					view="tile"
-					multiple
-					current={selectGeneratedTracks}
-					selectAll={{ meta: meta.afterCompletion.selectGeneratedTracks, icon: undefined }}
-					disabled={keepOriginalTrackSelection[0]}
-					indeterminatenesses={keepOriginalTrackSelection[0] ? true : undefined}
-				>
-					{SelectGeneratedTracks.map(({ key, label, icon }) =>
-						<ItemsView.Item id={key} key={key} icon={icon}>{label}</ItemsView.Item>)}
-				</ItemsView>
-			</Setting>
-			<Setting
-				meta={meta.moveCursorTo}
-				items={MoveCursorTo}
-				value={moveCursorTo}
-				view="tile"
-				detailsField={({ key }) => (
-					<>
-						{t.descriptions.source.moveCursorTo[key]}
-						{key === "start" && <SettingsCard.SelectInfo>{StartTimes.label(startTime[0])}</SettingsCard.SelectInfo>}
-					</>
-				)}
-			/>
 			<Setting
 				meta={meta.trackGroup}
 				items={GroupTrackBy}
@@ -308,7 +310,7 @@ export default function Source() {
 						)}
 					/>
 					<Setting meta={meta.syncopator.repeatOne} title={t(syncopatorRepeatOne[0]).source.syncopator.repeatOne} actions={<TextBox.Number value={syncopatorRepeatOne} min={1} max={100} decimalPlaces={0} />} />
-					<Setting meta={meta.syncopator.repeatRound} title={t(syncopatorRepeatRound[0]).source.syncopator.repeatRound} actions={<TextBox.Number value={syncopatorRepeatRound} min={0} max={100} decimalPlaces={0} />} />
+					<Setting meta={meta.syncopator.repeatRound} title={t(syncopatorRepeatRound[0]).source.syncopator.repeatRound} actions={<TextBox.Number value={syncopatorRepeatRound} min={0} max={100} decimalPlaces={0} />} selectInfo={t.descriptions.source.syncopator.repeatRoundInfinityInfo} selectValid={syncopatorRepeatRound[0] === 0 ? true : ["info"]} />
 					<Setting meta={meta.syncopator.applyEffectsByRound} on={syncopatorApplyEffectsByRound} />
 					<Setting meta={meta.syncopator.mysteryBox} on={syncopatorMysteryBox} details={t.descriptions.source.mysteryBox.splitOnce("\n")[0]} />
 					<Setting meta={meta.syncopator.accumulateHarmonics} on={syncopatorAccumulateHarmonics} />

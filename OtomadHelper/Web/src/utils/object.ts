@@ -859,3 +859,12 @@ export function deconstructState<TState, TSelected = TState>(state: StatePropert
 		[key in keyof TSelected]: StatePropertyNonNull<TSelected[key]>
 	};
 }
+
+/**
+ * Check if a React node contains actual rendering content (excludes all falsy values, empty iterators and arrays, but retains `0` and `0n`).
+ * @param node - A `ReactNode` to test.
+ * @returns Will the node been rendered anything visible?
+ */
+export function isRenderable(node: ReactNode): node is Exclude<ReactNode, null | undefined | false | ""> {
+	return node === 0 || node === 0n || !(!node || typeof node === "object" && Symbol.iterator in node && node[Symbol.iterator]().next().done);
+}

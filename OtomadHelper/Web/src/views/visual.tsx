@@ -90,13 +90,10 @@ export default function Visual() {
 				<ExpanderStreamPlaybackRate stream="visual" />
 				<Setting
 					meta={meta.loop}
-					selectInfo={(
-						<>
-							{!hideUseTips && t.descriptions.stream.loop.loopMedia}
-							{subKeys(loop, loop => loop === null && t.descriptions.stream.loop.unset)}
-						</>
-					)}
-					selectValid={[["info"], true]}
+					selectInfo={[
+						["info", !hideUseTips && t.descriptions.stream.loop.loopMedia],
+						[true, subKeys(loop, loop => loop === null && t.descriptions.stream.loop.unset)],
+					]}
 					actions={<TriStateSwitch current={loop} indetText={t.unset} indetIcon="subtract" />}
 				/>
 				<ExpanderStreamPrerender stream="visual" />

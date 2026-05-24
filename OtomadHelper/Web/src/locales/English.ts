@@ -103,8 +103,9 @@ export default {
 				newTrack: "New track",
 				quickSelect: "Quickly select the current track",
 			},
-			afterCompletion: {
-				_: "After completion",
+			afterCompletion: "After completion",
+			removeOrSelect: {
+				_: "Remove or select",
 				removeSourceClips: "Remove source track clips",
 				removeSourceClipsWithTracks: "Remove source track clips with their corresponding tracks",
 				selectSourceClips: "Select source track clips",
@@ -173,7 +174,7 @@ export default {
 				pitchCacheCapacity: "Pitch cache capacity",
 			},
 			mysteryBox: {
-				_: "Mystery Box",
+				_: "Mystery Box", // If your community has a high atmosphere for anime games, you can translate it from the original word “Gacha”.
 				limitToSelected: "Limited to selected sources",
 				track: "Make each track or channel different",
 				marker: "Switch once per marker",
@@ -1101,6 +1102,7 @@ export default {
 				preferredTrack: {
 					fillingInstructions: "If 0, then generated above all tracks;\nIf positive, then generated below the nth track;\nIf negative, then generated below the nth-to-last track.\nIf any preferred track is specified in Audio or Visual, that will override this option.",
 				},
+				removeOrSelect: "After completion, removes or selects the specified clips or their corresponding tracks",
 				moveCursorTo: {
 					_: "After completion, positions the cursor to a specified location in the timeline",
 					original: "Retains the timeline cursor in the original position before the generation",
@@ -1122,6 +1124,7 @@ export default {
 					track: "Routes the audio track to a new bus based on the score track used",
 					session: "Create one new bus receiving all audio tracks of the next generation",
 					reuseSameName: "If an audio bus track with the same nonempty name already exists, reuse it instead of creating a new one",
+					knownBugInfo: "",
 				},
 				naming: {
 					_: "Specify the name for the generated tracks, track groups, audio bus tracks, and clips",
@@ -1141,11 +1144,12 @@ export default {
 					order: "Specify the application sequential order of sources",
 					// loop: "When disabled, the generation will be stopped immediately when the number of notes required exceeds the number of selected sources. Either refill enough sources or enable Loop.",
 					repeatOne: "Specify the amount of times a source can be used before switching to the next source",
-					repeatRound: "Specify the maximum number of times to loop while there are no more sources available, the generation will be terminated immediately if exceeded.\nSet to 0 means it can loop infinitely.",
+					repeatRound: "Specify the maximum number of times to loop while there are no more sources available, the generation will be terminated immediately if exceeded.",
+					repeatRoundInfinityInfo: "Set to 0 means it can loop infinitely.",
 					applyEffectsByRound: "Applies visual effects in cycles rather than every clips",
 					accumulateHarmonics: "Makes use of multiple sources when a chord is generated",
 					sustain: "Uses the same source for the following notes with the same pitch",
-					pitchCacheCapacity: "Specify the capacity required to memorize the pitch",
+					pitchCacheCapacity: "Specify the capacity required to memorize the pitches",
 				},
 				mysteryBox: {
 					_: "No need to select multiple sources intentionally, just select at least one long source. Then it will randomly select the in point of each clips automatically.\nEvery new attempt is an unknown surprise.",
