@@ -349,7 +349,7 @@ export default {
 						a19: "Drums (tiếng vang nhỏ)",
 					},
 				},
-				alternativeForExceedTheRange: {
+				altTuningMethod: {
 					_: "Nếu vượt quá phạm vi",
 					multiple: "Sử dụng nhiều Plugin hiệu ứng âm thanh",
 					plugin: "Chuyển sang plugin hiệu ứng âm thanh Pitch Shift",
@@ -831,7 +831,7 @@ export default {
 							exceedTheRange: "Có thể hoạt động vượt quá phạm vi",
 						},
 					},
-					alternativeForExceedTheRange: {
+					altTuningMethod: {
 						_: "Xử lý các nốt ngoài phạm vi bằng phương pháp thay thế",
 						plugin: "Đạt đến bất kỳ cao độ nào bằng cách sử dụng Plugin hiệu ứng âm thanh Pitch Shift nhiều lần",
 						octave: "Ít nhất hãy tránh các khoảng cách không hài hòa bằng cách tăng hoặc giảm thang âm quãng tám xuống phạm vi {{formulaFor24}}",

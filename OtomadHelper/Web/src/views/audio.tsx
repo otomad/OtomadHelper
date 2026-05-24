@@ -73,6 +73,7 @@ const PrelistenActions = styled(StackPanel)`
 
 const TuningMethodEvaluation = styled.ul`
 	margin-block-start: 3px;
+	transition-behavior: allow-discrete;
 
 	li {
 		display: flex;
@@ -83,6 +84,20 @@ const TuningMethodEvaluation = styled.ul`
 			font-size: 14px;
 		}
 	}
+
+	~ .settings-card-select-info {
+		margin-block-start: 3px;
+		margin-inline-start: 1.5px;
+
+		> .badge {
+			margin-inline-end: 7px;
+		}
+
+		&:not(.shown) {
+			opacity: 0;
+			visibility: hidden;
+		}
+	}
 `;
 // #endregion
 
@@ -91,19 +106,20 @@ export default function Audio() {
 		enabled, preferredTrack: preferredTrackIndex,
 		stretch, loop, normalize, truncate, multitrackForChords, stack, timeUnremapping, autoPan, autoPanCurve,
 		/* tuningMethod, */ tuningMethodAcid, /* tuningMethodScaleless, */
-		stretchAttributeElastic, stretchAttributeClassic, stretchAttributePitchShift, alternativeForExceedTheRange, resample, preserveFormant, currentPreset,
+		stretchAttributeElastic, stretchAttributeClassic, stretchAttributePitchShift, altTuningMethod,
+		resample, preserveFormant, vocalFry, currentPreset,
 		/* basePitch, */ basePitchBased, cent, glissando,
 	} = useSubConfig(c => c.audio);
 	const {
-		tuningMethod, tuningMethodScaleless, basePitch,
+		noTuning, tuningMethod, tuningMethodScaleless, basePitch,
 	} = useSelectConfig(c => c.audio);
 	const { engine, waveform, duration: beepDuration, volume: beepVolume, adjustAudioToBasePitch } = useSubConfig(c => c.audio.prelistenAttributes);
 	const { createGroups } = useSubConfig(c => c);
 	const activeParameterScheme = useSelectConfigArray(c => c.audio.activeParameterScheme);
 	const meta = metas.audio;
 	const [stopPrelistening, setStopPrelistening] = useState<() => void>();
-	const tuningMethodScalelessUnlocked = tuningMethod[0].in("unset", "elastic", "classic"), tuningMethodScalelessEnabled = tuningMethodScaleless[0] && tuningMethodScalelessUnlocked;
-	const alternativeForExceedTheRangeDisabled = !tuningMethod[0].in("elastic", "classic", "unset");
+	const tuningMethodScalelessUnlocked = !noTuning[0] && tuningMethod[0].in("unset", "elastic", "classic"), tuningMethodScalelessEnabled = tuningMethodScaleless[0] && tuningMethodScalelessUnlocked;
+	const altTuningMethodDisabled = !tuningMethod[0].in("elastic", "classic", "unset");
 	const { thumbnail } = useThumbnail();
 
 	const { pushPage } = useSnapshot(pageStore);
@@ -166,6 +182,9 @@ export default function Audio() {
 						iconField="icon"
 						nameField={t.stream.stretch}
 						detailsField={t.descriptions.stream.stretch}
+						disabled={tuningMethod[0] === "none"}
+						selectInfo={tuningMethod[0] === "none" && t.descriptions.stream.stretch.disabledByTuningInfo}
+						selectValid="warning"
 					/>
 					<Setting
 						meta={meta.truncate}
@@ -201,7 +220,7 @@ export default function Audio() {
 						nameField={({ id }) => id === "unset" ? t.unset : t.stream.tuning.tuningMethod[id]}
 						checkInfoCondition={id => id === "unset" ? t.unset : t.stream.tuning.tuningMethod[id!]}
 						detailsField={({ id }) => {
-							const evaluable = id.in("pitchShift", "elastic", "classic", "oscillator"), isAudioFx = id === "pitchShift", isOscillator = id === "oscillator";
+							const evaluable = id.in("pitchShift", "elastic", "classic", "oscillator"), isAudioFx = id === "pitchShift", isOscillator = id === "oscillator", sameAsUnset = id.in("pitchShift", "oscillator");
 							const check = (bool: boolean) => (bool ? "checkmark" : "dismiss") satisfies DeclaredIcons;
 							return (
 								<>
@@ -213,58 +232,61 @@ export default function Audio() {
 											<li><Icon name={check(isAudioFx || isOscillator)} />{t.descriptions.stream.tuning.tuningMethod.evaluates.exceedTheRange}</li>
 										</TuningMethodEvaluation>
 									)}
+									{sameAsUnset && <SettingsCard.SelectInfo valid="info" className={{ shown: noTuning[0] }}>{t.descriptions.stream.tuning.tuningMethod.sameAsUnsetInfo}</SettingsCard.SelectInfo>}
 								</>
 							);
 						}}
+						before={<Setting meta={meta.tuning.tuningMethod.noTuning} on={noTuning} />}
 					>
-						<Setting meta={meta.tuning.tuningMethod.acid} on={tuningMethodAcid} lock={tuningMethod[0] === "none" || tuningMethod[0] === "oscillator" ? false : null} />
+						<Setting meta={meta.tuning.tuningMethod.acid} on={tuningMethodAcid} lock={noTuning[0] || tuningMethod[0].in("none", "oscillator") ? false : null} />
 						<Setting meta={meta.tuning.tuningMethod.scaleless} on={tuningMethodScaleless} lock={tuningMethodScalelessUnlocked ? null : false} />
 					</Setting>
-					<Attrs disabled={tuningMethod[0] === "none" || tuningMethodScalelessEnabled || undefined}>
-						<Setting<Any, Any>
-							meta={meta.tuning.stretchAttributes}
-							view="tile"
-							idField
-							{
-								...tuningMethod[0] === "elastic" ? {
-									value: stretchAttributeElastic,
-									items: tuningElasticModes,
-									nameField: (id: string) => t.stream.tuning.stretchAttributes.elastic[id],
-									checkInfoCondition: (id: string) => t.stream.tuning.stretchAttributes.elastic[id],
-									details: t.descriptions.stream.tuning.stretchAttributes({ context: "elastic" }),
-								} : tuningMethod[0].in("classic", "pitchShift") ? {
-									value: tuningMethod[0] === "pitchShift" ? stretchAttributePitchShift : stretchAttributeClassic,
-									items: tuningClassicModes,
-									nameField: (id: string) => <TuningClassicModeListItem id={id} />,
-									checkInfoCondition: (id: string) => t.stream.tuning.stretchAttributes.classic[id],
-									details: t.descriptions.stream.tuning.stretchAttributes({ context: "classic" }),
-								} : {
-									disabled: true,
-									value: [],
-									items: [],
-									details: t.descriptions.stream.tuning.stretchAttributes,
-								}
+					<Setting<Any, Any>
+						meta={meta.tuning.stretchAttributes}
+						view="tile"
+						idField
+						{
+							...tuningMethod[0] === "elastic" ? {
+								value: stretchAttributeElastic,
+								items: tuningElasticModes,
+								nameField: (id: string) => t.stream.tuning.stretchAttributes.elastic[id],
+								checkInfoCondition: (id: string) => t.stream.tuning.stretchAttributes.elastic[id],
+								details: t.descriptions.stream.tuning.stretchAttributes({ context: "elastic" }),
+							} : tuningMethod[0].in("classic", "pitchShift") ? {
+								value: tuningMethod[0] === "pitchShift" ? stretchAttributePitchShift : stretchAttributeClassic,
+								items: tuningClassicModes,
+								nameField: (id: string) => <TuningClassicModeListItem id={id} />,
+								checkInfoCondition: (id: string) => t.stream.tuning.stretchAttributes.classic[id],
+								details: t.descriptions.stream.tuning.stretchAttributes({ context: "classic" }),
+							} : {
+								disabled: true,
+								value: [],
+								items: [],
+								details: t.descriptions.stream.tuning.stretchAttributes,
 							}
-						/>
+						}
+						disabled={!tuningMethod[0].in("elastic", "classic", "pitchShift") || tuningMethodScalelessEnabled}
+					/>
+					<Attrs disabled={noTuning[0] || tuningMethod[0] === "none" || tuningMethodScalelessEnabled || undefined}>
 						<Attrs disabled={tuningMethod[0] === "oscillator" || undefined}>
 							<Setting
-								meta={meta.tuning.alternativeForExceedTheRange}
+								meta={meta.tuning.altTuningMethod}
 								items={exceeds}
-								value={alternativeForExceedTheRange}
+								value={altTuningMethod}
 								view="list"
 								idField="id"
 								iconField="icon"
-								nameField={({ id }) => t.stream.tuning.alternativeForExceedTheRange[id]}
+								nameField={({ id }) => t.stream.tuning.altTuningMethod[id]}
 								detailsField={item => (
 									<TransInterpolation
-										i18nKey={t.descriptions.stream.tuning.alternativeForExceedTheRange[item.id]}
+										i18nKey={t.descriptions.stream.tuning.altTuningMethod[item.id]}
 										formulaFor39={<MathFormulaFor39 />}
 										formulaFor24="±24"
 									/>
 								)}
-								checkInfoCondition={id => t.stream.tuning.alternativeForExceedTheRange[id!]}
-								disabled={alternativeForExceedTheRangeDisabled}
-								checkInfo={alternativeForExceedTheRangeDisabled ? tuningMethod[0] === "pitchShift" ? t.stream.tuning.alternativeForExceedTheRange.multiple : t.stream.tuning.tuningMethod[tuningMethod[0]] : undefined}
+								checkInfoCondition={id => t.stream.tuning.altTuningMethod[id!]}
+								disabled={altTuningMethodDisabled}
+								checkInfo={altTuningMethodDisabled ? tuningMethod[0] === "pitchShift" ? t.stream.tuning.altTuningMethod.multiple : t.stream.tuning.tuningMethod[tuningMethod[0]] : undefined}
 							/>
 							<Setting
 								meta={meta.tuning.resample}
@@ -277,6 +299,11 @@ export default function Audio() {
 								lock={tuningMethod[0].in("elastic", "unset") ? null : false}
 							/>
 						</Attrs>
+						<Setting
+							meta={meta.tuning.vocalFry}
+							on={vocalFry}
+							lock={tuningMethod[0] === "oscillator" ? null : false}
+						/>
 						<Setting meta={meta.tuning.basePitch} actions={<PitchPicker spn={basePitch} />}>
 							<PianoPicker pitch={basePitch} showReset />
 							<Setting

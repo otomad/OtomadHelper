@@ -503,8 +503,9 @@ export default {
 			tuning: {
 				_: "Tuning",
 				tuningMethod: {
-					_: "Tuning method",
-					none: "No Tuning",
+					_: "Tuning/Stretch method",
+					noTuning: "No Tuning",
+					none: "No Tuning, No Stretching",
 					pitchShift: "Pitch Shift",
 					elastic: "Elastic", // Élastique
 					classic: "Classic",
@@ -514,7 +515,7 @@ export default {
 					oscillator_full: "Granular Oscillator",
 				},
 				stretchAttributes: {
-					_: "Stretch attributes",
+					_: "Tuning/Stretch attributes",
 					elastic: {
 						pro: "Professional",
 						efficient: "Efficient",
@@ -543,8 +544,8 @@ export default {
 						a19: "Drums (tiny echo)",
 					},
 				},
-				alternativeForExceedTheRange: {
-					_: "If exceeds the range",
+				altTuningMethod: {
+					_: "Alternative tuning method if exceeds range",
 					multiple: "Use Audio Effect Plugin Multiple Times",
 					plugin: "Switch to Pitch Shift Audio Effect Plugin",
 					octave: "Raise/Lower Octaves",
@@ -554,6 +555,7 @@ export default {
 				},
 				resample: "Resample",
 				preserveFormant: "Preserve formant",
+				vocalFry: "Vocal fry",
 				basePitch: {
 					_: "Base pitch",
 					cent: "Cent",
@@ -1201,6 +1203,7 @@ export default {
 					flexingAndExtending: "Stretches whether the note is longer than the clip or not",
 					extendingOnly: "Stretches if only the note is longer than the clip, otherwise shortens the duration",
 					flexingOnly: "Stretches if only the note is shorter than the clip, otherwise lengthens the duration",
+					disabledByTuningInfo: "Stretching has been disabled by the tuning/stretch method. To restore it, please switch to other tuning/stretch methods except “$t(stream.tuning.tuningMethod.none).”",
 				},
 				loop: {
 					_: "When the clip is lengthened to the end of the source media, playback starts over",
@@ -1288,12 +1291,13 @@ export default {
 					_: "When disabled, the original pitch will remain untuned",
 					tuningMethod: {
 						_: "Uses a different tuning algorithm",
-						none: "No pitch effect",
+						noTuning: "No pitch effect, but keeps stretching still available",
+						none: "Completely disable pitch and stretch effects",
 						pitchShift: "Uses the Pitch Shift Audio Effect Plugin. It is a DirectX plugin with the same algorithm as the Classic Method and can support a wider range of pitches. The extension requires some presets to be loaded before use.",
 						elastic: "Uses the Elastic Pitch Change Method. The Élastique Method uses technology from zplane.development, and provides enhanced real-time time stretching and pitch-shifting capabilities. It is just the default method to directly press the +/− keys.",
 						classic: "Uses the Classic Pitch Change Method. It uses the old technology from Vegas Video 2.0 through Vegas Pro 8.0, and provides more crossfade types to choose from, depending on your source.",
 						scaleless: "Locks stretch and pitch, and changes the stretch to get the corresponding pitch regardless of the actual note pitch, just for fun",
-						unset: "Preserves the original tuning method of the clip unchanged or the default value, even if it is “No Tuning”",
+						unset: "Preserves the original tuning method of the clip unchanged or the default value, even if it is “$t(stream.tuning.tuningMethod.none)”",
 						acid: "Transposes the clip to fit the tempo if you are using ACIDized loops rendered by ACID Pro",
 						oscillator: "Use the Granular Oscillator Audio Effect Technology. It simulates a specific pitch by repeatedly playing a short sample rapidly over a specific period, generates a pulse sequence corresponds to the pitch and forms a continuous pitch by exploiting the perception fusion effect of the human ear on fast pulses.",
 						evaluates: {
@@ -1301,11 +1305,12 @@ export default {
 							changeRate: "Effective on playback rate change",
 							exceedTheRange: "Can work exceed the range",
 						},
+						sameAsUnsetInfo: "This option is identical to the “Unset” option, as tuning has been disabled",
 					},
-					stretchAttributes: "The current tuning method does not support setting any stretch properties",
+					stretchAttributes: "The current tuning/stretch method does not support setting any tuning/stretch attributes",
 					stretchAttributes_elastic: "Choose the most suitable mode for the current source from the sub-algorithms of the Elastic tuning method. Different modes provide different levels of quality and performance.",
 					stretchAttributes_classic: "Choose a mode from the Classic tuning method to specify how the file is divided and crossfaded to prevent artifacts. Depending on the source, you may need to experiment with different crossfade types.",
-					alternativeForExceedTheRange: {
+					altTuningMethod: {
 						_: "Handles notes that out of range with an alternative method",
 						plugin: "Reaches any pitch by using the Pitch Shift Audio Effect Plugin repeatedly",
 						octave: "At least avoid dissonant intervals by raising or lowering the octave scale to the range of {{formulaFor24}}",
@@ -1315,6 +1320,7 @@ export default {
 					},
 					resample: "Adjusts stretch to change pitch in sync, causing the stretch to flex as the pitch increases, mimicking old-school audio devices",
 					preserveFormant: "Maintains voice tone characteristics while tuning",
+					vocalFry: "Forces the sample to be 1 tick long in the Granular Oscillator method to produce a sound similar to vocal fry",
 					basePitch: {
 						_: "Specify the base pitch of the audio clip",
 						cent: "Fine tune pitch",
@@ -1697,10 +1703,13 @@ export default {
 				},
 				tuning: {
 					tuningMethod: {
-						oscillator: "", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+						_: "Tuning method, Tuning algorithm, Time stretch / pitch shift method", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+						oscillator: "Manual Oscillator, Granular Synthesis", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 					},
-					alternativeForExceedTheRange: "Alternative method for exceeding the range, Alternative for exceed the range", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					stretchAttributes: "Stretch attributes, Stretch attrs",
+					altTuningMethod: "If exceed range, If exceed the range, Alternative method for exceeding the range, Alternative for exceed the range", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 					resample: "Lock stretch and pitch, Lock to stretch, Pitch change lock, Pitch lock, Lock pitch", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					vocalFry: "1 tick, One tick, 1 tick mode, One tick mode", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				},
 				mimical: "Imitative tuning methods", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},

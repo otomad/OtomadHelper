@@ -482,7 +482,7 @@ export default {
 						a19: "鼓（微弱回音）",
 					},
 				},
-				alternativeForExceedTheRange: {
+				altTuningMethod: {
 					_: "超出音域替代方法",
 					multiple: "多次使用音效插件",
 					plugin: "切换到移调音效插件",
@@ -1188,7 +1188,7 @@ export default {
 					stretchAttributes: "当前调音方法不支持设置任何拉伸属性",
 					stretchAttributes_elastic: "从弹性调音方法的子算法中选取最适合当前素材的模式，不同的模式下提供的质量与所需的性能也不同。",
 					stretchAttributes_classic: "从古典调音方法中选择一种模式以指定如何分割和交叉淡化文件从而防止产生伪影。根据素材的不同，你可能需要尝试不同的交叉淡化类型。",
-					alternativeForExceedTheRange: {
+					altTuningMethod: {
 						_: "使用另一种平替方法来处理超出音域范围之外的音符",
 						plugin: "通过反复使用移调音频效果插件从而达到任意音高",
 						octave: "通过升高或降低八度到 {{formulaFor24}} 的音域范围内来至少避免不协和音程",
@@ -1561,7 +1561,7 @@ export default {
 					tuningMethod: {
 						oscillator: "手动振荡器、手工振荡器、震荡器、人工震荡器、手动震荡器、手工震荡器、振荡、震荡",
 					},
-					alternativeForExceedTheRange: "超出范围替代方法、如果超出音域、如果超出范围、超出音域",
+					altTuningMethod: "超出范围替代方法、如果超出音域、如果超出范围、超出音域",
 					resample: "重采样、重新采样、锁定伸缩与音调、锁定拉伸与音调、锁定伸缩与音高、锁定拉伸与音高、锁定伸缩与变调、锁定拉伸与变调、锁定以拉伸、锁定音调、锁定音高",
 				},
 				mimical: "模拟调音方法",

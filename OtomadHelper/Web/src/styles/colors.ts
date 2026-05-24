@@ -198,6 +198,7 @@ export function globalColors() {
 	return css.join("");
 }
 
+// eslint-disable-next-line @stylistic/no-extra-parens
 export type SystemColors = (
 	| "ActiveText" | "ButtonBorder" | "ButtonFace" | "ButtonText" | "Canvas" | "CanvasText" | "Field" | "FieldText" | "GrayText" | "Highlight" | "HighlightText" | "LinkText" | "VisitedText" // Standard
 	// | "AccentColor" | "AccentColorText" | "Mark" | "MarkText" // Experimental

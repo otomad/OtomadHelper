@@ -144,14 +144,16 @@ export const settingsMetaInput = {
 				tuningMethod: {
 					icon: "tuning",
 					items: {
+						noTuning: { icon: "tuning_off" },
 						acid: { icon: "logo/acid" },
 						scaleless: { icon: "scaleless" },
 					},
 				},
 				stretchAttributes: { icon: "tuning_wrench", details: undefined },
-				alternativeForExceedTheRange: { icon: "tuning_warning" },
+				altTuningMethod: { icon: "tuning_warning" },
 				resample: { icon: "link_multiple" },
 				preserveFormant: { icon: "person_voice" },
+				vocalFry: { icon: "bubble_multiple" },
 				basePitch: {
 					icon: "music_note",
 					items: {

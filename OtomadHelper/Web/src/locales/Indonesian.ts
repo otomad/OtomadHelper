@@ -158,7 +158,7 @@ export default {
 					},
 					classic: {},
 				},
-				alternativeForExceedTheRange: {},
+				altTuningMethod: {},
 				preserveFormant: "Pertahankan forman",
 				basePitch: {
 					_: "Nada dasar",
@@ -396,7 +396,7 @@ export default {
 					tuningMethod: {
 						evaluates: {},
 					},
-					alternativeForExceedTheRange: {},
+					altTuningMethod: {},
 					basePitch: {},
 					prelisten: {},
 					mimical: {},

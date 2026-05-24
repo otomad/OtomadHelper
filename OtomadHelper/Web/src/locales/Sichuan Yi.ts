@@ -483,7 +483,7 @@ export default {
 						a19: "crwdns4476:0crwdne4476:0",
 					},
 				},
-				alternativeForExceedTheRange: {
+				altTuningMethod: {
 					_: "crwdns3714:0crwdne3714:0",
 					multiple: "crwdns3716:0crwdne3716:0",
 					plugin: "crwdns3718:0crwdne3718:0",
@@ -1187,7 +1187,7 @@ export default {
 					stretchAttributes: "crwdns4524:0crwdne4524:0",
 					stretchAttributes_elastic: "crwdns4526:0crwdne4526:0",
 					stretchAttributes_classic: "crwdns4528:0crwdne4528:0",
-					alternativeForExceedTheRange: {
+					altTuningMethod: {
 						_: "crwdns3788:0crwdne3788:0",
 						plugin: "crwdns3790:0crwdne3790:0",
 						octave: "crwdns3792:0{{formulaFor24}}crwdne3792:0",
@@ -1562,7 +1562,7 @@ export default {
 					tuningMethod: {
 						oscillator: "crwdns5264:0crwdne5264:0",
 					},
-					alternativeForExceedTheRange: "crwdns5206:0crwdne5206:0",
+					altTuningMethod: "crwdns5206:0crwdne5206:0",
 					resample: "crwdns5208:0crwdne5208:0",
 				},
 				mimical: "crwdns5210:0crwdne5210:0",

@@ -482,7 +482,7 @@ export default {
 						a19: "ドラム(小さいエコー)",
 					},
 				},
-				alternativeForExceedTheRange: {
+				altTuningMethod: {
 					_: "範囲を超えた場合",
 					multiple: "オーディオエフェクトプラグインの複数使用",
 					plugin: "ピッチシフトオーディオエフェクトプラグインに切り替える",
@@ -1186,7 +1186,7 @@ export default {
 					stretchAttributes: "現在のチューニング方法はストレッチプロパティの設定をサポートしていません",
 					stretchAttributes_elastic: "Elastic チューニングメソッドのサブアルゴリズムから、現在のソースに最適なモードを選択します。 異なるモードは、品質とパフォーマンスの異なるレベルを提供します。",
 					stretchAttributes_classic: "Classicチューニング方法からモードを選択し、アーティファクトを防ぐためにファイルを分割する方法とクロスフェードを指定します。 ソースに応じて、異なる種類のクロスフェードを試す必要がある場合があります。",
-					alternativeForExceedTheRange: {
+					altTuningMethod: {
 						_: "別の方法で範囲外のメモを処理",
 						plugin: "ピッチシフトオーディオエフェクトプラグインを繰り返し使用して任意のピッチに到達します。",
 						octave: "オクターブ音量を {{formulaFor24}}の範囲まで上げたり下げたりすることによって、少なくとも不協和音の間隔を避けてください。",
@@ -1557,7 +1557,7 @@ export default {
 					tuningMethod: {
 						oscillator: "",
 					},
-					alternativeForExceedTheRange: "範囲を超える代替方法, 範囲を超えるための代替方法",
+					altTuningMethod: "範囲を超える代替方法, 範囲を超えるための代替方法",
 					resample: "ストレッチとピッチをロック、ストレッチをロック、ピッチ変更ロック、ピッチをロックする",
 				},
 				mimical: "模擬チューニング方法",
