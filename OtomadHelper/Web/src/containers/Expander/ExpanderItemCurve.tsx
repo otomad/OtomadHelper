@@ -6,7 +6,7 @@ const curves = {
 
 interface Props {
 	/** Curve type. */
-	curve: StateProperty<CurveType>;
+	curve: VariousState<CurveType>;
 	/**
 	 * Constrain the available curve types.
 	 * - "all": linear, fast, slow, smooth, sharp, hold;

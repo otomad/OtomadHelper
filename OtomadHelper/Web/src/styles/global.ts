@@ -114,6 +114,10 @@ const GlobalStyle = createGlobalStyle<{
 		}
 	}
 
+	small {
+		${styles.text.caption};
+	}
+
 	@layer base {
 		:focus,
 		:focus-visible {

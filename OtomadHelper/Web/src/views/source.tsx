@@ -242,6 +242,7 @@ export default function Source() {
 				ieOff
 			>
 				<Setting meta={meta.audioBusTrack.reuseSameName} on={reuseSameNameAudioBusTrack} />
+				<InfoBar><p><Preserves>{t.descriptions.source.audioBusTrack.knownBugInfo}</Preserves></p></InfoBar>
 			</Setting>
 			<NamingSetting meta={meta.naming}>
 				<Setting meta={meta.naming.trackName} asSubtitle expanded={namingSubExpanderExpanded[0]} noIndentation wrapActionsWhenNarrow={false}>
@@ -310,7 +311,7 @@ export default function Source() {
 						)}
 					/>
 					<Setting meta={meta.syncopator.repeatOne} title={t(syncopatorRepeatOne[0]).source.syncopator.repeatOne} actions={<TextBox.Number value={syncopatorRepeatOne} min={1} max={100} decimalPlaces={0} />} />
-					<Setting meta={meta.syncopator.repeatRound} title={t(syncopatorRepeatRound[0]).source.syncopator.repeatRound} actions={<TextBox.Number value={syncopatorRepeatRound} min={0} max={100} decimalPlaces={0} />} selectInfo={t.descriptions.source.syncopator.repeatRoundInfinityInfo} selectValid={syncopatorRepeatRound[0] === 0 ? true : ["info"]} />
+					<Setting meta={meta.syncopator.repeatRound} title={t(syncopatorRepeatRound[0]).source.syncopator.repeatRound} actions={<TextBox.Number value={syncopatorRepeatRound} min={0} max={100} decimalPlaces={0} />} selectInfo={t.descriptions.source.syncopator.repeatRoundInfinityInfo} selectValid={syncopatorRepeatRound[0] === 0 ? true : "info"} />
 					<Setting meta={meta.syncopator.applyEffectsByRound} on={syncopatorApplyEffectsByRound} />
 					<Setting meta={meta.syncopator.mysteryBox} on={syncopatorMysteryBox} details={t.descriptions.source.mysteryBox.splitOnce("\n")[0]} />
 					<Setting meta={meta.syncopator.accumulateHarmonics} on={syncopatorAccumulateHarmonics} />

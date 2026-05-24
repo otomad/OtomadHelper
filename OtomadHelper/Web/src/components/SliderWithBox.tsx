@@ -35,9 +35,9 @@ export default function SliderWithBox({ value, min = 0, max = 100, defaultValue,
 	/** Content placeholder. */
 	placeholder?: string;
 	/** Prefix. */
-	prefix?: string;
+	prefix?: PropsOf<typeof TextBox.Number<number>>["prefix"];
 	/** Suffix. */
-	suffix?: string;
+	suffix?: PropsOf<typeof TextBox.Number<number>>["suffix"];
 	/** Disabled? */
 	disabled?: boolean;
 	/** Slider - Min on the right, max on the left. RTL and vice versa. */

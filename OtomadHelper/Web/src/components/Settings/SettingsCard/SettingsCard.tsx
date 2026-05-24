@@ -180,7 +180,6 @@ const StyledSettingsCard = styled(StyledCard)<{
 	}
 `);
 
-type SelectValidPropType = boolean | number | BadgeRequiredArgs;
 type SelectValidAndInfoType = [valid: SelectValidPropType, info: ReactNode, key?: React.Key][];
 
 export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, wrapActionsWhenNarrow, anchor, ariaIdRef, ref, _requestExpanded, _isExpander, onClick, onFocus, ...htmlAttrs }: FCP<{

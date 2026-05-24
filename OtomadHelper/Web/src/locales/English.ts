@@ -1124,7 +1124,7 @@ export default {
 					track: "Routes the audio track to a new bus based on the score track used",
 					session: "Create one new bus receiving all audio tracks of the next generation",
 					reuseSameName: "If an audio bus track with the same nonempty name already exists, reuse it instead of creating a new one",
-					knownBugInfo: "",
+					knownBugInfo: "Note: When using the audio bus track feature in certain versions of Vegas Pro on certain devices, rendering WAV *(Microsoft Wave)* and W64 *(Sony Wave64)* formats may be impossible, and all Audio FX parameters of audio bus tracks may be lost when rendering to other formats. If you accidentally encounter this bug, it is recommended that you either change your Vegas Pro version, or set it to unroute audio tracks and manually delete all audio bus tracks to avoid rendering issues.",
 				},
 				naming: {
 					_: "Specify the name for the generated tracks, track groups, audio bus tracks, and clips",
@@ -1293,7 +1293,7 @@ export default {
 						elastic: "Uses the Elastic Pitch Change Method. The Élastique Method uses technology from zplane.development, and provides enhanced real-time time stretching and pitch-shifting capabilities. It is just the default method to directly press the +/− keys.",
 						classic: "Uses the Classic Pitch Change Method. It uses the old technology from Vegas Video 2.0 through Vegas Pro 8.0, and provides more crossfade types to choose from, depending on your source.",
 						scaleless: "Locks stretch and pitch, and changes the stretch to get the corresponding pitch regardless of the actual note pitch, just for fun",
-						unset: "Preserves the original tuning method of the clip unchanged or the default value, even if it is No Tuning",
+						unset: "Preserves the original tuning method of the clip unchanged or the default value, even if it is “No Tuning”",
 						acid: "Transposes the clip to fit the tempo if you are using ACIDized loops rendered by ACID Pro",
 						oscillator: "Use the Granular Oscillator Audio Effect Technology. It simulates a specific pitch by repeatedly playing a short sample rapidly over a specific period, generates a pulse sequence corresponds to the pitch and forms a continuous pitch by exploiting the perception fusion effect of the human ear on fast pulses.",
 						evaluates: {

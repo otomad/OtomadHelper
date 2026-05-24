@@ -584,7 +584,7 @@ export default function TextBox({ value: _value, placeholder, disabled, readOnly
 }
 
 type NumberLike = number | bigint;
-function NumberTextBox<TNumber extends NumberLike>({ value: _value, disabled, readOnly, decimalPlaces, keepTrailing0, min, max, spinnerStep, keyBigStepMultiplier, positiveSign, required = true, inputRef, ...textBoxProps }: Override<OmitConventionalPrivates<PropsOf<typeof TextBox>>, {
+function NumberTextBox<TNumber extends NumberLike>({ value: _value, disabled, readOnly, decimalPlaces, keepTrailing0, min, max, spinnerStep, keyBigStepMultiplier, positiveSign, required = true, inputRef, prefix, suffix, ...textBoxProps }: Override<OmitConventionalPrivates<PropsOf<typeof TextBox>>, {
 	/** The value of the number, which can be number or bigint type. */
 	value: Readonly<VariousState<TNumber>>;
 	/** The number of decimal places, leaving blank means no limit. */
@@ -604,6 +604,10 @@ function NumberTextBox<TNumber extends NumberLike>({ value: _value, disabled, re
 	keyBigStepMultiplier?: TNumber;
 	/** Show the positive sign if the value is positive? */
 	positiveSign?: boolean;
+	/** Prefix. */
+	prefix?: string | ((value: TNumber) => string);
+	/** Suffix. */
+	suffix?: string | ((value: TNumber) => string);
 }>) {
 	const inputEl = useDomRef<"input">();
 	useImperativeHandleRef(inputRef, inputEl);
@@ -754,6 +758,8 @@ function NumberTextBox<TNumber extends NumberLike>({ value: _value, disabled, re
 			data-type="number"
 			required={required}
 			aria-required={required}
+			prefix={typeof prefix === "function" ? prefix(value) : prefix}
+			suffix={typeof suffix === "function" ? suffix(value) : suffix}
 			onChange={handleBlurChange}
 			onInput={handleInput}
 			onKeyDown={handleKeyDown}

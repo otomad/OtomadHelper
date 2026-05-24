@@ -72,6 +72,8 @@ const PrelistenActions = styled(StackPanel)`
 `;
 
 const TuningMethodEvaluation = styled.ul`
+	margin-block-start: 3px;
+
 	li {
 		display: flex;
 		gap: 6px;
@@ -88,12 +90,15 @@ export default function Audio() {
 	const {
 		enabled, preferredTrack: preferredTrackIndex,
 		stretch, loop, normalize, truncate, multitrackForChords, stack, timeUnremapping, autoPan, autoPanCurve,
-		tuningMethod, tuningMethodAcid, tuningMethodScaleless,
+		/* tuningMethod, */ tuningMethodAcid, /* tuningMethodScaleless, */
 		stretchAttributeElastic, stretchAttributeClassic, stretchAttributePitchShift, alternativeForExceedTheRange, resample, preserveFormant, currentPreset,
-		basePitch, basePitchBased, cent, glissando,
+		/* basePitch, */ basePitchBased, cent, glissando,
+	} = useSubConfig(c => c.audio);
+	const {
+		tuningMethod, tuningMethodScaleless, basePitch,
 	} = useSelectConfig(c => c.audio);
-	const { engine, waveform, duration: beepDuration, volume: beepVolume, adjustAudioToBasePitch } = useSelectConfig(c => c.audio.prelistenAttributes);
-	const { createGroups } = useSelectConfig(c => c);
+	const { engine, waveform, duration: beepDuration, volume: beepVolume, adjustAudioToBasePitch } = useSubConfig(c => c.audio.prelistenAttributes);
+	const { createGroups } = useSubConfig(c => c);
 	const activeParameterScheme = useSelectConfigArray(c => c.audio.activeParameterScheme);
 	const meta = metas.audio;
 	const [stopPrelistening, setStopPrelistening] = useState<() => void>();
@@ -108,9 +113,9 @@ export default function Audio() {
 			stopPrelistening();
 			return;
 		}
-		if (engine[0] === "WebAudio") {
-			const { stop, promise } = beep(waveform[0],
-				(adjustAudioToBasePitch[0] ? new Pitch("C", 5) : new Pitch(basePitch[0])).frequency, beepDuration[0], beepVolume[0]);
+		if (engine.value === "WebAudio") {
+			const { stop, promise } = beep(waveform.value,
+				(adjustAudioToBasePitch.value ? new Pitch("C", 5) : new Pitch(basePitch[0])).frequency, beepDuration.value, beepVolume.value);
 			setStopPrelistening(() => stop);
 			promise.then(() => setStopPrelistening(undefined));
 		} else return;
@@ -146,7 +151,7 @@ export default function Audio() {
 				/>
 				<Setting
 					meta={meta.loop}
-					selectInfo={loop[0] === null && t.descriptions.stream.loop.unset}
+					selectInfo={subKeys(loop, loop => loop === null && t.descriptions.stream.loop.unset)}
 					actions={<TriStateSwitch current={loop} indetText={t.unset} indetIcon="subtract" />}
 				/>
 				<ExpanderStreamPrerender stream="audio" />
@@ -196,23 +201,23 @@ export default function Audio() {
 						nameField={({ id }) => id === "unset" ? t.unset : t.stream.tuning.tuningMethod[id]}
 						checkInfoCondition={id => id === "unset" ? t.unset : t.stream.tuning.tuningMethod[id!]}
 						detailsField={({ id }) => {
-							const evaluable = id.in("pitchShift", "elastic", "classic"), isAudioFx = id === "pitchShift";
+							const evaluable = id.in("pitchShift", "elastic", "classic", "oscillator"), isAudioFx = id === "pitchShift", isOscillator = id === "oscillator";
 							const check = (bool: boolean) => (bool ? "checkmark" : "dismiss") satisfies DeclaredIcons;
 							return (
 								<>
 									<p>{t.descriptions.stream.tuning.tuningMethod[id]}</p>
 									{evaluable && (
 										<TuningMethodEvaluation>
-											<li><Icon name={check(!isAudioFx)} />{t.descriptions.stream.tuning.tuningMethod.evaluates.fast}</li>
+											<li><Icon name={check(!isAudioFx && !isOscillator)} />{t.descriptions.stream.tuning.tuningMethod.evaluates.fast}</li>
 											<li><Icon name={check(!isAudioFx)} />{t.descriptions.stream.tuning.tuningMethod.evaluates.changeRate}</li>
-											<li><Icon name={check(isAudioFx)} />{t.descriptions.stream.tuning.tuningMethod.evaluates.exceedTheRange}</li>
+											<li><Icon name={check(isAudioFx || isOscillator)} />{t.descriptions.stream.tuning.tuningMethod.evaluates.exceedTheRange}</li>
 										</TuningMethodEvaluation>
 									)}
 								</>
 							);
 						}}
 					>
-						<Setting meta={meta.tuning.tuningMethod.acid} on={tuningMethodAcid} lock={tuningMethod[0] !== "none" ? null : false} />
+						<Setting meta={meta.tuning.tuningMethod.acid} on={tuningMethodAcid} lock={tuningMethod[0] === "none" || tuningMethod[0] === "oscillator" ? false : null} />
 						<Setting meta={meta.tuning.tuningMethod.scaleless} on={tuningMethodScaleless} lock={tuningMethodScalelessUnlocked ? null : false} />
 					</Setting>
 					<Attrs disabled={tuningMethod[0] === "none" || tuningMethodScalelessEnabled || undefined}>
@@ -283,7 +288,7 @@ export default function Audio() {
 										max={100}
 										decimalPlaces={0}
 										defaultValue={0}
-										suffix={t(cent[0]).units.cent}
+										suffix={cent => t(cent).units.cent}
 									/>
 								)}
 							/>
@@ -346,7 +351,7 @@ export default function Audio() {
 					<Setting meta={meta.mapping.progress} />
 
 					<Subheader meta={meta.parameters} />
-					<Setting meta={meta.preset} checkInfo={t.stream.preset.builtInPresets[currentPreset[0]]}>
+					<Setting meta={meta.preset} checkInfo={subKeys(currentPreset, currentPreset => t.stream.preset.builtInPresets[currentPreset])}>
 						<Setting meta={meta.preset.builtInPresets} asSubtitle="closerAfter" noDivider="after" />
 						<ItemsView view="tile" current={currentPreset}>
 							{builtInPresets.map(name => <ItemsView.Item id={name} key={name}>{t.stream.preset.builtInPresets[name]}</ItemsView.Item>)}
