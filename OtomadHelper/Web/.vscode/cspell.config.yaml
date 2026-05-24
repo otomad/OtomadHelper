@@ -507,3 +507,4 @@ flagWords:
   - lte -> leq
   - gte -> geq
   - grammer -> grammar
+  - literial -> literal
