@@ -129,9 +129,9 @@ export default function Audio() {
 			stopPrelistening();
 			return;
 		}
-		if (engine.value === "WebAudio") {
-			const { stop, promise } = beep(waveform.value,
-				(adjustAudioToBasePitch.value ? new Pitch("C", 5) : new Pitch(basePitch[0])).frequency, beepDuration.value, beepVolume.value);
+		if (engine.current === "WebAudio") {
+			const { stop, promise } = beep(waveform.current,
+				(adjustAudioToBasePitch.current ? new Pitch("C", 5) : new Pitch(basePitch[0])).frequency, beepDuration.current, beepVolume.current);
 			setStopPrelistening(() => stop);
 			promise.then(() => setStopPrelistening(undefined));
 		} else return;

@@ -12,13 +12,13 @@ export /* @internal */ const NegativeTypes = Enum({
 	colorInvert: 3,
 }, { labelPrefix: t.prve.effects });
 
-export default function IdleEffectSettings({ value: _value, pinToTop, disabled, details, disabledInfo, stream = "visual" }: {
+export default function IdleEffectSettings({ value: _value, pinToTop, disabled: _disabled, details, disabledInfo, stream = "visual" }: {
 	/** Each effects value, includes enabled and amount. */
 	value: StoreSubscribedProperty<Config.VisualIdleEffectValue> | StoreSubscribedProperty<Config.AudioIdleEffectValue>;
 	/** Pin a specific effect to the first of all. */
 	pinToTop?: Config.VisualIdleEffect;
 	/** Disabled? */
-	disabled?: boolean;
+	disabled?: VariousStateWithSelf<boolean>;
 	/** Detailed description. It can also be get the selected effect count. */
 	details?: string | ((selectedEffectCount: number) => string);
 	/** If provided and also disabled, it will replace the details. */
@@ -29,6 +29,7 @@ export default function IdleEffectSettings({ value: _value, pinToTop, disabled, 
 	const isAudio = stream === "audio";
 	const [value] = useVariousState(_value as StoreSubscribedProperty<Config.VisualIdleEffectValue>);
 	// NOTE: For better performance, do not use `value` except for computing `enabledEffectCount`.
+	const disabled = useReadonlyVariousState(_disabled);
 
 	const pinnedIdleEffects = useMemo(() => {
 		if (isAudio) return [VisualIdleEffects.allKeys.fade];
@@ -42,7 +43,7 @@ export default function IdleEffectSettings({ value: _value, pinToTop, disabled, 
 	const effectTitlePlural = pinnedIdleEffects.length === 1 ? 1 : enabledEffectCount;
 
 	function selectNone() {
-		const effects = _value.value;
+		const effects = _value.current;
 		for (const effect in effects)
 			if (hasOwn(effects, effect))
 				effects[effect].enabled = false;
@@ -82,7 +83,7 @@ function PinnedIdleEffect({ isAudio, disabled, effect: { key, icon, iconForAudio
 	effect: typeof VisualIdleEffects.array[number];
 	value: PropsOf<typeof IdleEffectSettings>["value"];
 }) {
-	const { enabled, amount: amountOrNegativeType } = currySubscribeStore(value.value[key as "fade"]);
+	const { enabled, amount: amountOrNegativeType } = currySubscribeStore(value.current[key as "fade"]);
 	const amount = amountOrNegativeType, negativeType = amountOrNegativeType as never as StoreSubscribedProperty<typeof NegativeTypes.keyType>;
 	return (
 		<Checkbox

@@ -1,8 +1,8 @@
-export default function SettingsCardToggleSwitch({ on: _on, disabled, children, actionIcon, resetTransitionOnChanging, className, color, actions, lock, actuallyOn, title, expanded, onClick, onChange, ...settingsCardProps }: FCP<Override<PropsOf<typeof SettingsCard>, {
+export default function SettingsCardToggleSwitch({ on: _on, disabled: _disabled, children, actionIcon, resetTransitionOnChanging, className, color, actions, lock, actuallyOn, title, expanded, onClick, onChange, ...settingsCardProps }: FCP<Override<PropsOf<typeof SettingsCard>, {
 	/** Is on? */
 	on: VariousState<boolean>;
 	/** Disabled? */
-	disabled?: boolean;
+	disabled?: VariousStateWithSelf<boolean>;
 	/**
 	 * Reset the page's transition effect when toggling the switch.
 	 * @remarks This is business logic, but present in the base component.
@@ -39,6 +39,7 @@ export default function SettingsCardToggleSwitch({ on: _on, disabled, children, 
 	const [on, setOn] = useVariousState(_on);
 	onClick ??= () => setOn(on => { onChange?.(!on); return !on; });
 	const isExpander = shouldBeExpander(children);
+	const disabled = useReadonlyVariousState(_disabled);
 
 	return (
 		<SettingsCardOrExpander

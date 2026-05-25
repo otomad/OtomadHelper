@@ -1,39 +1,49 @@
-const STORE_SUBSCRIBED_PROPERTY_VALUE = Symbol("store-subscribed-property.value_and_is_type");
-
 /**
  * An object that contains the proxy object and a key, used for subscribe store key.
  * @template TValue - For narrow type only, useless.
  */
 export class StoreSubscribedProperty<TValue> {
 	constructor(
-		public proxyObject: AnyObject,
-		public key: string,
+		public readonly proxyObject: AnyObject,
+		public readonly key: string,
 	) { }
 
-	/**
-	 * This symbol valued property plays two roles:
-	 * 1. In TypeScript part, it plays the role of *indicating the type of the value*. This is because if you don't reference
-	 * the generic parameter `TValue` inside the class body, TypeScript could treat `StoreSubscribedProperty<int>`
-	 * and `StoreSubscribedProperty<string>` as the same type.
-	 * 2. In JavaScript part, it plays the role of *checking the type*. Other places can check this property to examine
-	 * the object is the `StoreSubscribedProperty`.
-	 */
-	[STORE_SUBSCRIBED_PROPERTY_VALUE]: TValue = true as never;
-
-	static [Symbol.hasInstance](value: Any) {
-		return defaultInstanceOf(StoreSubscribedProperty, value) || !!value?.[STORE_SUBSCRIBED_PROPERTY_VALUE];
-	}
-
-	use() {
-		return useStoreSubscribedProperty(this);
-	}
-
-	get value(): TValue {
+	get current(): TValue {
 		return this.proxyObject[this.key];
 	}
 
-	set value(value: TValue) {
+	set current(value: TValue) {
 		this.proxyObject[this.key] = value;
+	}
+
+	use(): StatePropertyNonNull<TValue> {
+		const { proxyObject, key } = this;
+		const state = useSnapshot(proxyObject)[key] as TValue;
+		const setState = setStateNarrow(newValue => proxyObject[key] = newValue, () => proxyObject[key]);
+		return [state, setState];
+	}
+}
+
+export class ComputedStoreSubscribeProperty<TValue, TTuple extends readonly Any[]> {
+	constructor(
+		public readonly keys: { [Index in keyof TTuple]: IStoreSubscribedProperty<TTuple[Index]> | undefined },
+		private readonly getter: (...values: { [Index in keyof TTuple]: TTuple[Index] }) => TValue,
+		private readonly setter: (newValue: TValue) => void = noop,
+	) { }
+
+	get current(): TValue {
+		return this.getter(...this.keys.map(key => key?.current) as never);
+	}
+
+	set current(value: TValue) {
+		this.setter(value);
+	}
+
+	use(): StatePropertyNonNull<TValue> {
+		const keys = this.keys.map(key => key?.use()[0]);
+		const result = this.getter(...keys as never);
+		const setState = this.setter === noop ? noop as never : setStateNarrow(this.setter, () => this.current);
+		return [result, setState];
 	}
 }
 
@@ -42,7 +52,7 @@ export type StoreSubscribedPropertiedObject<TState> = {
 };
 
 export function currySubscribeStore<TState extends object>(state: TState | StoreSubscribedProperty<TState>): StoreSubscribedPropertiedObject<TState> {
-	if (state instanceof StoreSubscribedProperty) state = state.value;
+	if (state instanceof StoreSubscribedProperty) state = state.current;
 	return new Proxy(state as AnyObject, {
 		get(state, property) {
 			if (typeof property !== "string") return state[property];
@@ -51,26 +61,36 @@ export function currySubscribeStore<TState extends object>(state: TState | Store
 	}) as never;
 }
 
-export function useStoreSubscribedProperty<T>(value: StoreSubscribedProperty<T>): StatePropertyNonNull<T> {
-	const { proxyObject, key } = value;
-	const state = useSnapshot(proxyObject)[key] as T;
-	const setState = setStateNarrow(newValue => proxyObject[key] = newValue, () => proxyObject[key]);
-	return [state, setState];
-}
+type IStoreSubscribedProperty<T> = StoreSubscribedProperty<T> | ComputedStoreSubscribeProperty<T, Any>;
 
-export type VariousState<T> = StateProperty<T> /* | StateGetterProperty<T> */ | StoreSubscribedProperty<T>;
+export const computedSubStore: <T, TTuple extends readonly Any[]>(...args: ConstructorParameters<typeof ComputedStoreSubscribeProperty<T, TTuple>>) => ComputedStoreSubscribeProperty<T, TTuple> = (keys, getter, setter) => new ComputedStoreSubscribeProperty(keys, getter, setter);
+
+export type VariousState<T> = StateProperty<T> /* | StateGetterProperty<T> */ | IStoreSubscribedProperty<T>;
 export type VariousStateWithSelf<T> = VariousState<T> | T;
 
 export function useVariousState<T>(value?: VariousState<T>): StatePropertyNonNull<T>;
 export function useVariousState<T>(value?: VariousStateWithSelf<T>, includeValueItself?: true): StatePropertyNonNull<T>;
 export function useVariousState<T>(value: VariousState<T> = [], includeValueItself = false): StatePropertyNonNull<T> {
 	"use no memo";
-	if (value instanceof StoreSubscribedProperty)
-		return useStoreSubscribedProperty(value);
+	if (value instanceof StoreSubscribedProperty || value instanceof ComputedStoreSubscribeProperty)
+		return value.use();
 	else if (isReadonlyArray(value))
 		return [value[0] as T, value[1] ?? noop];
 	else if (includeValueItself)
 		return [value, noop];
 	else
 		throw new TypeError("The provided value is not supported by `useVariousState` function");
+}
+
+function getVariousState<T>(value: VariousStateWithSelf<T> = []): T {
+	if (value instanceof StoreSubscribedProperty || value instanceof ComputedStoreSubscribeProperty)
+		return value.current;
+	else if (isReadonlyArray(value))
+		return value[0] as T;
+	else
+		return value;
+}
+
+export function useReadonlyVariousState<T>(value?: VariousStateWithSelf<T>) {
+	return useVariousState(value, true)[0];
 }

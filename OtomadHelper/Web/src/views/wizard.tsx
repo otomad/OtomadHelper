@@ -1,22 +1,28 @@
 import Score from "./score";
 
 export default function Wizard() {
+	"use no memo";
 	const mode = useKichikuMode();
 	const ytpEnabled = mode[0] === "ytp";
-	const { sourceFrom } = useSelectConfig(c => c.source);
-	const { enabled: audioEnabled, tuningMethod, basePitch } = useSelectConfig(c => c.audio);
-	const { enabled: visualEnabled } = useSelectConfig(c => c.visual);
-	const { effects: prveEffects } = useSelectConfig(c => c.visual.prve.general);
-	const tuningEnabled = useStateSelector(tuningMethod,
+	const { sourceFrom } = useSubConfig(c => c.source);
+	const { enabled: audioEnabled, stretch: audioStretchOption, tuningMethod, basePitch } = useSubConfig(c => c.audio);
+	const { enabled: visualEnabled, stretch: visualStretchOption } = useSubConfig(c => c.visual);
+	const { effects: prveEffects } = useSubConfig(c => c.visual.prve.general);
+	const tuningEnabled = computedSubStore([tuningMethod],
 		method => method !== "none",
-		enabled => enabled ? "elastic" : "none",
-		{ processPrevStateInSetterWithGetter: true },
+		enabled => tuningMethod.current = enabled ? "elastic" : "none",
 	);
-	const hFlipEnabled = useStateSelector(prveEffects,
+	const hFlipEnabled = computedSubStore([prveEffects],
 		effects => effects.some(effect => effect.fx === "hFlip"),
-		enabled => enabled ? [{ fx: "hFlip", initial: [1, 2] }] : [{ fx: "normal", initial: [0] }],
-		{ processPrevStateInSetterWithGetter: true },
+		enabled => prveEffects.current = enabled ? [{ fx: "hFlip", initial: [1, 2] }] : [{ fx: "normal", initial: [0] }],
 	);
+	const [audioStretch, visualStretch] = [audioStretchOption, visualStretchOption].map(option => computedSubStore([option],
+		option => option !== "noStretching",
+		enabled => option.current = enabled ? "flexingAndExtending" : "noStretching",
+	));
+	const isAudioDisabled = computedSubStore([audioEnabled], audioEnabled => ytpEnabled || !audioEnabled);
+	const isAudioTuningDisabled = computedSubStore([audioEnabled, tuningEnabled], (audioEnabled, tuningEnabled) => ytpEnabled || !audioEnabled || !tuningEnabled);
+	const isVisualDisabled = computedSubStore([visualEnabled], visualEnabled => ytpEnabled || !visualEnabled);
 	const { thumbnail } = useThumbnail();
 	const { changePage } = useSnapshot(pageStore);
 
@@ -39,14 +45,16 @@ export default function Wizard() {
 
 			<Subheader>{t.titles.audio}</Subheader>
 			<SettingsCardToggleSwitch on={audioEnabled} title={t.stream.enabled.audio} icon="lightbulb" />
-			<SettingsCardToggleSwitch disabled={ytpEnabled || !audioEnabled[0]} on={tuningEnabled} title={t.stream.tuning} details={t.descriptions.stream.tuning} icon="tuning" />
-			<SettingsCard disabled={ytpEnabled || !audioEnabled[0] || !tuningEnabled[0]} title={t.stream.tuning.basePitch} details={t.descriptions.stream.tuning.basePitch} icon="music_note">
+			<SettingsCardToggleSwitch disabled={isAudioDisabled} on={audioStretch} title={t.stream.stretch} details={t.descriptions.stream.stretch} icon="arrow_bidirectional_left_right" />
+			<SettingsCardToggleSwitch disabled={isAudioDisabled} on={tuningEnabled} title={t.stream.tuning} details={t.descriptions.stream.tuning} icon="tuning" />
+			<SettingsCard disabled={isAudioTuningDisabled} title={t.stream.tuning.basePitch} details={t.descriptions.stream.tuning.basePitch} icon="music_note">
 				<PitchPicker spn={basePitch} />
 			</SettingsCard>
 
 			<Subheader>{t.titles.visual}</Subheader>
 			<SettingsCardToggleSwitch on={visualEnabled} title={t.stream.enabled.visual} icon="lightbulb" />
-			<SettingsCardToggleSwitch disabled={ytpEnabled || !visualEnabled[0]} on={hFlipEnabled} title={t.prve.effects.hFlip} details={t.descriptions.prve.hFlip} icon="flip_h" />
+			<SettingsCardToggleSwitch disabled={isVisualDisabled} on={visualStretch} title={t.stream.stretch} details={t.descriptions.stream.stretch} icon="arrow_bidirectional_left_right" />
+			<SettingsCardToggleSwitch disabled={isVisualDisabled} on={hFlipEnabled} title={t.prve.effects.hFlip} details={t.descriptions.prve.hFlip} icon="flip_h" />
 
 			<Activity visible={!ytpEnabled}>
 				<Score _trackSelectorOnly />

@@ -251,7 +251,7 @@ export default function ToggleSwitch({ on: _on, disabled: _disabled = false, hid
 	/** Is on? */
 	on: VariousState<boolean>;
 	/** Disabled */
-	disabled?: boolean;
+	disabled?: VariousStateWithSelf<boolean>;
 	/** Hide "on/off" text label? */
 	hideLabel?: boolean;
 	/** Change the tag name. */
@@ -314,7 +314,8 @@ export default function ToggleSwitch({ on: _on, disabled: _disabled = false, hid
 }, "button">) {
 	const [__on, setOn] = useVariousState(_on);
 	const on = typeof lock === "boolean" ? lock : __on;
-	const disabled = typeof lock === "boolean" || _disabled;
+	const __disabled = useReadonlyVariousState(_disabled);
+	const disabled = typeof lock === "boolean" || __disabled;
 	const [isDragging, setIsDragging] = useState(false);
 	const [thumbLeft, setThumbLeft] = useState<number>();
 	const [labelTranslate, setLabelTranslate] = useState<number>();

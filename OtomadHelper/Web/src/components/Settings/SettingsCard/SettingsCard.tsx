@@ -182,7 +182,7 @@ const StyledSettingsCard = styled(StyledCard)<{
 
 type SelectValidAndInfoType = [valid: SelectValidPropType, info: ReactNode, key?: React.Key][];
 
-export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, wrapActionsWhenNarrow, anchor, ariaIdRef, ref, _requestExpanded, _isExpander, onClick, onFocus, ...htmlAttrs }: FCP<{
+export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled: _disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, wrapActionsWhenNarrow, anchor, ariaIdRef, ref, _requestExpanded, _isExpander, onClick, onFocus, ...htmlAttrs }: FCP<{
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
 	icon?: DeclaredIcons | "" | boolean | ReactElement;
 	/** Title. */
@@ -224,11 +224,14 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	anchor?: string;
 	/** Pass settings card aria ID to the parent component. */
 	ariaIdRef?: AriaIdRef;
+	/** Disabled? */
+	disabled?: VariousStateWithSelf<boolean>;
 	/** @private Compatible with Expander. */
 	_requestExpanded?: never;
 	/** @private Is called by Expander? */
 	_isExpander?: true;
 }, "div">) {
+	const disabled = useReadonlyVariousState(_disabled);
 	actionIcon ??= type === "button" ? "chevron_right" :
 		type === "expander" ? "chevron_down" : undefined;
 	const dragHandleContext = useContext(SortableView.Item.Context);

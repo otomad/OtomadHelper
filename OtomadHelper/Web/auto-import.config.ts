@@ -58,6 +58,7 @@ export default [
 		"lodash": [ // unplugin-auto-import cannot tree-shaking for lodash-es, causing nearly half of the build time to pack lodash-es.
 			["*", "_"],
 			["*", "lodash"],
+			"noop",
 		],
 		"styled-tools": [
 			["prop", "styledProp"],

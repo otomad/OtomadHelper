@@ -21,7 +21,7 @@ function UnmemoizedSubscribeKeys<TTuple extends readonly Any[]>({ children, keys
 function UnmemoizedSubscribeKeys<TValue>({ children, keys }: PropsImplement<TValue>): ReactNode {
 	const singleMode = useMemo(() => !Array.isArray(keys), [keys]);
 	keys = wrapIfNotArray(keys);
-	const values = keys.map(key => useStoreSubscribedProperty(key));
+	const values = keys.map(key => useVariousState(key));
 	if (singleMode) {
 		const [value, setValue] = values[0];
 		return children(value, setValue);

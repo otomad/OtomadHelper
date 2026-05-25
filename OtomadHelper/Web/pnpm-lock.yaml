@@ -148,6 +148,9 @@ importers:
       variable-name-conversion:
         specifier: ^1.7.0
         version: 1.7.0
+      view-transitions-toolkit:
+        specifier: ^1.0.0
+        version: 1.0.0
     devDependencies:
       '@commitlint/cli':
         specifier: latest
@@ -5778,6 +5781,9 @@ packages:
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
+
+  view-transitions-toolkit@1.0.0:
+    resolution: {integrity: sha512-WAH/3wqKK9OugbCH+W6KeFHIg24WBnT/FxB+AzlPdBtdEF9vRkmvkLr0aVjY5j1nTHgmHAfUCgjfdWHMwURGKg==}
 
   vite-plugin-glsl@1.5.1:
     resolution: {integrity: sha512-kFI8rUItruG2Dfltyhr6tP3jlgCBGda2TnIvUodBHbpdQ7KT0NWyKpS1EqV47DoAl4woKzer7GWd1fiEvzf4nQ==}
@@ -12068,6 +12074,8 @@ snapshots:
   variable-name-conversion@1.7.0: {}
 
   vary@1.1.2: {}
+
+  view-transitions-toolkit@1.0.0: {}
 
   vite-plugin-glsl@1.5.1(rollup@4.52.5)(vite@7.3.1(@types/node@25.1.0)(jiti@2.6.1)(lightningcss@1.28.2)(terser@5.37.0)):
     dependencies:

@@ -72,7 +72,8 @@
 		"styled-tools": "^1.7.2",
 		"use-immer": "^0.11.0",
 		"valtio": "^2.2.0",
-		"variable-name-conversion": "^1.7.0"
+		"variable-name-conversion": "^1.7.0",
+		"view-transitions-toolkit": "^1.0.0"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "latest",

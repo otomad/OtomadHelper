@@ -601,13 +601,6 @@ export function defineGetterInPrototype<TType, TKey extends keyof TType>(constru
 }
 
 /**
- * A no-operation function that returns undefined regardless of the arguments it receives.
- *
- * @returns undefined
- */
-export const noop = lodash.noop;
-
-/**
  * Providing a list of boolean state properties (such as a list of toggle switches),
  * the logic of their setters will now be changed: when any toggle switch is turned on,
  * the other toggle switches in the list will be turned off. Achieve an effect similar to a radio button group.
