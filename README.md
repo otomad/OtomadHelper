@@ -81,7 +81,7 @@ Vegas Pro 13+ supported.
 
 Vegas Pro 16 and above support all features, and Vegas Pro 13 ~ 15 are compatible to run (some features are missing). The correct version must be installed though.
 
-Tested **fine** on Vegas Pro 17, 18, 19, 20, 21, 22.
+Tested **fine** on Vegas Pro 17, 18, 19, 20, 21, 22, 23.
 
 ### Glossary
 You could learn about many features more easily through pictures.
@@ -136,7 +136,7 @@ If you use this script, the script will use the following permissions.
 * [Mark Heath's **NAudio** .NET Audio Library](https://github.com/naudio/NAudio)
 * [Ben Brown, Kiwifruitdev, Nuppington's **YTP+**](https://github.com/YTP-Plus)
 * [Edward's **JETDV** Scripts](https://www.jetdv.com/)
-* [Vegas Pro Scripting **Forum**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
+* [BorisFX's Vegas Pro Scripting **Forum**](https://forum.borisfx.com/c/vegas-pro/vegas-scripting/60)
 * [Opulos's **Alpha Color Dialog**](https://sourceforge.net/projects/alpha-color-dialog/)
 * [Ookii Dialogs WinForms **Progress Dialog**](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
 * [Delthas's **Vegas Datamosh**](https://github.com/delthas/vegas-datamosh)
@@ -179,15 +179,19 @@ Inspired by:
 ---
 
 <br />
-<h2 align="center">General Instructions (for commonly all scripts)</h2>
+<h2 align="center">General Instructions (Applies to All Scripts)</h2>
 
-### Tips
-Various scripts for MAGIX Vegas **(v14 and above)**.
+These scripts are designed for **BorisFX's Vegas Pro** (v2026 and later).  
+This also applies to MAGIX's VEGAS PRO (v14 - 23)
 
-Compilation note for Sony Vegas **(v13 and under)**:
-* The namespace name of the *.NET assembly* has changed from `Sony.Vegas` to `ScriptPortal.Vegas` in **v14 and onward**.
-	* Change **`using ScriptPortal.Vegas;`** to **`using Sony.Vegas;`** in the scripts to compile for **v13**.
-* Actually, the scripts are not supported **v12 and under**.
+**Note for Sony Vegas (v13 and earlier):**
+- The .NET assembly namespace changed from `Sony.Vegas` to `ScriptPortal.Vegas` starting with v14.
+- To compile these scripts for Vegas v13, change **`using ScriptPortal.Vegas;`** to **`using Sony.Vegas;`**.
+- The scripts are **not supported** on Vegas v12 and below.
+
+### Installation
+
+Place the scripts in the Vegas installation directory under the **"Script Menu"** folder.
 
 ### Install
 * Scripts belong in the Vegas install directory, in the "Script Menu" folder.
