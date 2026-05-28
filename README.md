@@ -62,7 +62,7 @@ You can also read [@Evauation](https://github.com/Evauation)'s [documentation](h
 ### Install
 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the latest version of this script.
 2. Unzip **ALL** the files in the zip file you've just downloaded to the "Script Menu" folder in the Vegas installation directory.
-> (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
+> (ie. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu)
 3. Make sure that the DLL file `(DLL\NAudio.dll)` is not locked. **Specific steps:**
 	1. In the Vegas installation directory, enter folder `Script Menu\DLL`.
 	2. Right-click the NAudio.dll file and select Properties.
@@ -81,7 +81,7 @@ Vegas Pro 13+ supported.
 
 Vegas Pro 16 and above support all features, and Vegas Pro 13 ~ 15 are compatible to run (some features are missing). The correct version must be installed though.
 
-Tested **fine** on Vegas Pro 17, 18, 19, 20, 21, 22.
+Tested **fine** on Vegas Pro 17, 18, 19, 20, 21, 22, 23, 2026.
 
 ### Glossary
 You could learn about many features more easily through pictures.
@@ -182,7 +182,7 @@ Inspired by:
 <h2 align="center">General Instructions (for commonly all scripts)</h2>
 
 ### Tips
-Various scripts for MAGIX Vegas **(v14 and above)**.
+Various scripts for MAGIX VEGAS and BorisFX Vegas **(v14 and above)**.
 
 Compilation note for Sony Vegas **(v13 and under)**:
 * The namespace name of the *.NET assembly* has changed from `Sony.Vegas` to `ScriptPortal.Vegas` in **v14 and onward**.
@@ -191,7 +191,7 @@ Compilation note for Sony Vegas **(v13 and under)**:
 
 ### Install
 * Scripts belong in the Vegas install directory, in the "Script Menu" folder.
-	* (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
+	* (ie. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu)
 * Some scripts require additional DLLs, put them in a "DLL" folder in the "Script Menu" folder.
-	* (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu\\DLL)
+	* (ie. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu\\DLL)
 * Make sure that the DLL files (such as `DLL\NAudio.dll`) are not blocked.
