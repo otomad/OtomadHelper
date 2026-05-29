@@ -72,7 +72,8 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 							panicThreshold: "none",
 							logger: {
 								logEvent(filename: string, event: Any) {
-									if (!filename.endsWith(".tsx")) return;
+									// eslint-disable-next-line no-constant-condition, no-constant-binary-expression
+									if (true || PROD || !filename.endsWith(".tsx")) return;
 									if (event.kind === "CompileError") {
 										let filenameWithLoc = filename;
 										if (event.detail.loc) {

@@ -242,7 +242,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 					</CssTransition>
 				)}
 			</ExpanderParent>
-			<CssTransition in={internalExpanded} unmountOnExit transitionEndProperty={["--placeholder-transition-longest-property"]} requestAnimationFrame>
+			<CssTransition in={internalExpanded} mountOnEnter hiddenOnExit transitionEndProperty={["--placeholder-transition-longest-property"]} requestAnimationFrame>
 				<ExpanderChild
 					disabled={disabled || childrenDisabled}
 					className={{ clipChildren }}

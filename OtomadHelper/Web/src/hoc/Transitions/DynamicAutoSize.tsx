@@ -41,8 +41,11 @@ export default function DynamicAutoSize({ specified, skipTransition, children }:
 				// });
 			}
 		});
-		observer.observe(el.current);
-		return () => observer.disconnect();
+		const observe = () => observer.observe(el.current!);
+		const viewTransition = pageContentViewTransitionStore.transitioningPromise;
+		if (viewTransition) viewTransition?.then(observe);
+		else observe();
+		return () => observer?.disconnect();
 	}, [specified, reduceMotion]);
 
 	return cloneRef(children, el);

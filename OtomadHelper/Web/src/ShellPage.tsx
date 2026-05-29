@@ -36,7 +36,7 @@ const showFlavoredComplete = Math.random() >= 0.9;
 
 export default function ShellPage() {
 	const t = useT();
-	const { page, changePage, pagePath, transition, canBack, back, reset, setPageContentId, poppedScroll, commandBarDisabled, pageChangeResolver } = useSnapshot(pageStore);
+	const { page, changePage, pagePath, transition, canBack, back, reset, setPageContentId, commandBarDisabled } = useSnapshot(pageStore);
 
 	function getTitle(viewName: string, context: "long" | "full" | "short", plural?: number) {
 		const _context = context === "short" ? undefined : context;
@@ -97,7 +97,7 @@ export default function ShellPage() {
 			canBack={canBack}
 			onBack={back}
 			pageContentId={pageContentId}
-			poppedScroll={poppedScroll}
+			poppedScroll={() => pageStore.poppedScroll}
 			commandBar={(
 				<CommandBar disabled={commandBarDisabled}>
 					{
@@ -119,7 +119,6 @@ export default function ShellPage() {
 			)}
 			searchValue={searchValue}
 			onSearch={props => <HandleSearchResults {...props} />}
-			onEnter={() => pageChangeResolver?.resolve()}
 			style={{ zoom, "--zoom": zoom }} // TODO: Use webview2 native zoom function.
 		>
 			<title>{documentTitle}</title>

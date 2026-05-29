@@ -95,7 +95,7 @@ function useLottieSequence(animationItem: RefObject<AnimationItem | undefined>, 
 				const state = sequence[index];
 				const previousStates = sequence.slice(0, index);
 				const duplicateIndex = previousStates.indexOf(state);
-				if (~duplicateIndex) {
+				if (duplicateIndex !== -1) {
 					const deleteCount = index - duplicateIndex;
 					sequence.splice(duplicateIndex, deleteCount);
 					index = duplicateIndex;
@@ -117,8 +117,13 @@ function useLottieSequence(animationItem: RefObject<AnimationItem | undefined>, 
 			}
 
 			const anim = animationItem.current;
-			if (isPaused && anim && state[0])
-				actions.goToAndPlay(state[0], true);
+			if (isPaused && anim && state[0]) {
+				const playNext = () => actions.goToAndPlay(state[0], true);
+				// Fix the animated icon laggy when switching tabs.
+				if (state[0] === "PressedToSelected" && pageContentViewTransitionStore.transitioningPromise)
+					delay(100).finally(playNext);
+				else playNext();
+			}
 		});
 	}
 
@@ -317,6 +322,7 @@ export default function AnimatedIcon({
 
 	const previousAnimationName = useRef("Normal");
 	const onAnimationStart = useCallback<AnimationEventHandler>(e => {
+		if (pageContentViewTransitionStore.beginToTransition) return;
 		let [previous, current] = [previousAnimationName.current, e.animationName];
 		if (!current.startsWith(STATUS_PREFIX)) return;
 		current = current.replace(STATUS_PREFIX, "");

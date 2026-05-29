@@ -31,50 +31,40 @@ export default function IconOff({ name: _name }: FCP<{
 	}, [name, symbolId]);
 
 	useEffect(() => {
-		// Delay the slash animation if SwitchTransition hasn't translate to this page yet.
-		const page = comp.current?.closest("main.page");
-		if (!page) return;
-		const isEntered = () => page.classList.containsAny("enter", "enter-active", "enter-done");
-		if (isEntered()) return;
-		// This will only trigger if the page transition is "forward" or "backward".
-		setShouldDelayToShow(true);
-		const observer = new MutationObserver(() => {
-			if (isEntered()) {
-				setShouldDelayToShow(false);
-				observer.disconnect();
-			}
-		});
-		observer.observe(page, { attributeFilter: ["class"] });
-		return () => observer.disconnect();
+		const viewTransition = pageContentViewTransitionStore.transitioningPromise;
+		if (viewTransition) {
+			setShouldDelayToShow(true);
+			viewTransition.finally(() => setShouldDelayToShow(false));
+		}
 	}, [comp]);
-
-	if (shouldDelayToShow) return;
 
 	return (
 		<StyledIconOff ref={comp} role="img" aria-description={ariaLabel} aria-hidden>
 			<svg width={ICON_INITIAL_SIZE} height={ICON_INITIAL_SIZE} viewBox={`0 0 ${ICON_INITIAL_SIZE} ${ICON_INITIAL_SIZE}`} xmlns="http://www.w3.org/2000/svg">
 				<mask id={maskId}>
 					<g fill="white" dangerouslySetInnerHTML={{ __html: svgPath }} />
-					<g
-						fill="none"
-						strokeDasharray={STROKE_DASHARRAY}
-						strokeDashoffset={STROKE_DASHARRAY}
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={1}
-					>
-						<path stroke="black" d="M1.21 -0.21L16.21 14.79" strokeWidth="var(--shadow-stroke-width)" />
-						<path stroke="white" d="M0.5 0.5L15.5 15.5" />
-						<animate
-							fill="freeze"
-							attributeName="stroke-dashoffset"
-							dur="250ms"
-							values={`${STROKE_DASHARRAY}; 0`}
-							calcMode="spline"
-							keySplines="0.5 0 0 1"
-							begin="100ms"
-						/>
-					</g>
+					{!shouldDelayToShow && (
+						<g
+							fill="none"
+							strokeDasharray={STROKE_DASHARRAY}
+							strokeDashoffset={STROKE_DASHARRAY}
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth={1}
+						>
+							<path stroke="black" d="M1.21 -0.21L16.21 14.79" strokeWidth="var(--shadow-stroke-width)" />
+							<path stroke="white" d="M0.5 0.5L15.5 15.5" />
+							<animate
+								fill="freeze"
+								attributeName="stroke-dashoffset"
+								dur="250ms"
+								values={`${STROKE_DASHARRAY}; 0`}
+								calcMode="spline"
+								keySplines="0.5 0 0 1"
+								begin="100ms"
+							/>
+						</g>
+					)}
 				</mask>
 				<rect width={ICON_INITIAL_SIZE} height={ICON_INITIAL_SIZE} fill="currentColor" mask={`url("#${maskId}")`} />
 			</svg>

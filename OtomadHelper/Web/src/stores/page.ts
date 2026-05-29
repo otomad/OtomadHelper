@@ -119,16 +119,17 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 		nextPage = normalizePage(nextPage);
 		const { page } = pageStore;
 		if (lodash.isEqual(page, nextPage)) return false;
-		pageStore.pageChangeResolver = Promise.withResolvers();
+		const pageChangeResolver = pageStore.pageChangeResolver = Promise.withResolvers();
 		const transition = getTransition(page, nextPage);
-		// document.startViewTransition(() =>
-		Object.assign(pageStore, {
-			prevPage: page,
-			page: nextPage,
-			transition,
-			...getScrolls(transition, nextPage),
+		emit("app:startPageTransition", pageChangeResolver.resolve, transition);
+		pageChangeResolver.promise.then(() => {
+			Object.assign(pageStore, {
+				prevPage: page,
+				page: nextPage,
+				transition,
+				...getScrolls(transition, nextPage),
+			});
 		});
-		// );
 		return true;
 	}
 

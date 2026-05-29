@@ -12,6 +12,7 @@ export type ApplicationEvents = {
 	"app:hideOtherFlyouts": [exceptId?: string];
 	"app:startColorPaletteViewTransition": [changeFunc: () => MaybePromise<void>];
 	"app:evaluateContrastPalette": [];
+	"app:startPageTransition": [done: (..._: Any) => void, transition: string];
 };
 
 expectType<Record<string, unknown[]>>(undefined! as ApplicationEvents);

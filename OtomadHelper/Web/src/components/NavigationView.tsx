@@ -245,6 +245,7 @@ const StyledNavigationView = styled.div<{
 
 	> .right {
 		inline-size: 100%;
+		overflow-inline: clip;
 
 		&.hairtail {
 			> .title-wrapper,
@@ -344,7 +345,7 @@ const StyledNavigationView = styled.div<{
 
 					> * {
 						animation: ${({ $transitionName }) => $transitionName === "jump" ? floatUp : ""}
-							300ms calc(50ms * --sibling-index-0()) ${eases.easeOutMax} backwards;
+							300ms calc(50ms * --sibling-index-0() + 150ms) ${eases.easeOutMax} backwards;
 					}
 
 					.card.media-pool > .base {
@@ -372,9 +373,67 @@ const StyledNavigationView = styled.div<{
 				}
 			}
 
-			> :is(.exit, .exit-done) > .container > * {
-				animation: none !important;
+			// #region Page transitions
+			&:active-view-transition-type(jump, forward, backward) {
+				view-transition-name: page-content;
+
+				* {
+					view-transition-name: none;
+				}
 			}
+
+			&:active-view-transition-type(jump) {
+				&::view-transition-old(page-content) {
+					animation: ${keyframes`
+						to {
+							translate: 0 -2rem;
+							opacity: 0;
+						}
+					`} ${eases.easeInExpo} 150ms both;
+				}
+
+				&::view-transition-new(page-content) {
+					animation: ${keyframes`
+						from {
+							translate: 0 5rem;
+							opacity: 0;
+						}
+					`} ${eases.easeOutExpo} 500ms 150ms both;
+				}
+			}
+
+			${(["forward", "backward"] as const).map(type => css`
+				&:active-view-transition-type(${type}) {
+					&::view-transition-old(page-content) {
+						animation:
+							${keyframes`
+								to {
+									translate: ${type === "forward" ? -20 : 20}%;
+								}
+							`} ${eases.easeInExpo} 300ms both,
+							${keyframes`
+								to {
+									visibility: hidden;
+								}
+							`} step-end 300ms both;
+					}
+
+					&::view-transition-new(page-content) {
+						animation:
+							${keyframes`
+								from {
+									translate: ${type === "forward" ? 20 : -20}%;
+								}
+							`} ${eases.easeOutExpo} 300ms 300ms both,
+							${keyframes`
+								from {
+									visibility: hidden;
+								}
+							`} step-start 300ms 300ms both;
+					}
+				}
+			`)}
+			// #endregion
 		}
 
 		.title-wrapper,
@@ -402,62 +461,6 @@ const StyledPage = styled.main`
 	display: flex;
 	block-size: 100%;
 	transition: none;
-
-	&.exit {
-		pointer-events: none; // Prevent users from quickly clicking buttons to enter sub-pages.
-	}
-
-	&.exit-done {
-		display: none;
-	}
-
-	// #region Page transitions
-	.jump > &:is(.exit, .exit-done) {
-		translate: 0 -2rem;
-		opacity: 0;
-		transition: all ${eases.easeInExpo} 150ms;
-	}
-
-	.jump > &.enter {
-		translate: 0 5rem;
-		opacity: 0;
-	}
-
-	.jump > &.enter-active {
-		translate: 0;
-		opacity: 1;
-		transition: all ${eases.easeOutExpo} 500ms;
-	}
-
-	.forward > &.exit,
-	.backward > &.exit {
-		transition: all ${eases.easeInExpo} 300ms;
-	}
-
-	.forward > &:is(.exit, .exit-done),
-	.backward > &.enter {
-		translate: -20%;
-
-		&:dir(rtl) {
-			translate: 20%;
-		}
-	}
-
-	.forward > &.enter,
-	.backward > &:is(.exit, .exit-done) {
-		translate: 20%;
-
-		&:dir(rtl) {
-			translate: -20%;
-		}
-	}
-
-	.forward > &.enter-active,
-	.backward > &.enter-active {
-		translate: 0 !important;
-		transition: all ${eases.easeOutExpo} 300ms;
-	}
-	// #endregion
 `;
 
 function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, navItemsId, flyout, isCompact, searchValue, onRequestHide, onRequestExpand, onSearch }: FCP<{
@@ -589,13 +592,16 @@ const usePaneDisplayMode = () => {
 };
 
 export const MainPageContext = createContext({
-	/** Current view transition status. */
-	transitionStatus: "entered" as TransitionUpdateStatus,
 	/** Indicates the current component is inside the main page. */
 	isInPage: false,
 });
 
-export default function NavigationView({ currentNav: [currentNav, setCurrentNav], navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, commandBar, pageContentId, poppedScroll, searchValue, onSearch, onEnter, ...htmlAttrs }: FCP<{
+export const pageContentViewTransitionStore = createStore({
+	transitioningPromise: null as Promise<void> | null,
+	beginToTransition: false,
+});
+
+export default function NavigationView({ currentNav: [currentNav, setCurrentNav], navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, commandBar, pageContentId, poppedScroll: getPoppedScroll, searchValue, onSearch, ...htmlAttrs }: FCP<{
 	/** Current navigation page status parameters. */
 	currentNav: StateProperty<string[]>;
 	/** All navigation items. */
@@ -614,14 +620,12 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 	commandBar?: ReactNode;
 	/** Manually specify the identifier for the page content element. */
 	pageContentId?: string;
-	/** The page scroll value popped from the stack. */
-	poppedScroll?: PageScroll;
+	/** Get the page scroll value popped from the stack. */
+	poppedScroll?(): PageScroll | undefined;
 	/** The current search box text. */
 	searchValue: StateProperty<string>;
 	/** Get search results. */
 	onSearch?: PropsOf<typeof SearchBox>["onSearch"];
-	/** Occurs when the new page enter. */
-	onEnter?(): void;
 }, "div">) {
 	const currentNavTab = useStateSelector([currentNav, setCurrentNav], nav => nav[0], value => [value]);
 	const pagePath = currentNav!.join("/");
@@ -632,13 +636,28 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
 	const pageContentEl = useDomRef<"div">();
 	const paneDisplayModeChanging = useChanging([paneDisplayMode]);
+	const reduceMotion = useMediaQuery.reduceMotion();
+
+	useListen("app:startPageTransition", (done, type) => {
+		pageContentViewTransitionStore.beginToTransition = true;
+		const pageContent = pageContentEl.current;
+		if (!pageContent || reduceMotion) { done(); return; }
+		pageContent.activeViewTransition?.skipTransition();
+		const viewTransition = pageContent.startViewTransition({ update: done, types: [type] });
+		pageContentViewTransitionStore.transitioningPromise = viewTransition.finished;
+		viewTransition.ready.then(() => {
+			pageContentViewTransitionStore.beginToTransition = false;
+			scrollToTopOrPrevious();
+		});
+		viewTransition.finished.then(() => pageContentViewTransitionStore.transitioningPromise = null);
+	});
 
 	function scrollToTopOrPrevious() {
-		onEnter?.();
 		const pageContent = pageContentEl.current;
 		if (!pageContent) return;
-		const container = pageContent.lastElementChild?.firstElementChild;
-		while (poppedScroll && container?.classList.contains("container")) { // Cheat `if` as `while` to use `break` in it.
+		const container = pageContent.querySelector(":scope > main > .container");
+		const poppedScroll = getPoppedScroll?.();
+		while (poppedScroll && container) { // Cheat `if` as `while` to use `break` in it.
 			let child = container.children[poppedScroll.elementIndex] as HTMLElement | undefined;
 			while (isElementContents(child))
 				child = child!.firstElementChild as HTMLElement;
@@ -653,8 +672,6 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 	}
 
 	const navItemsId = useId();
-	const [mainPageTransitionStatus, setMainPageTransitionStatus] = useState<TransitionUpdateStatus>("entered");
-	const reduceMotion = useMediaQuery.reduceMotion();
 
 	const currentNavItem = useMemo(() =>
 		navItems.find(item => !("type" in item) && item.id === currentNavTab[0]) as NavItem,
@@ -740,22 +757,10 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 						</div>
 					</header>
 					<div className={["page-content", transitionName]} ref={pageContentEl} id={pageContentId}>
-						<MainPageContext value={{ transitionStatus: mainPageTransitionStatus, isInPage: true }}>
-							<SwitchTransition mode={transitionName === "jump" ? "out-in" : "out-in-preload"}>
-								<CssTransition
-									key={pagePath}
-									onUpdated={(_, status) => {
-										setMainPageTransitionStatus(status);
-										if (status === (reduceMotion ? "entered" : "enter")) scrollToTopOrPrevious();
-									}}
-									moreCoherentWhenCombo
-									maxTimeout={1000}
-								>
-									<StyledPage data-path={pagePath} aria-label={titles.last().name}>
-										{children}
-									</StyledPage>
-								</CssTransition>
-							</SwitchTransition>
+						<MainPageContext value={{ isInPage: true }}>
+							<StyledPage data-path={pagePath} aria-label={titles.last().name}>
+								{children}
+							</StyledPage>
 						</MainPageContext>
 					</div>
 				</Attrs>

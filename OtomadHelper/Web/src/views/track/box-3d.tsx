@@ -1,5 +1,6 @@
 import grab from "assets/cursors/grab.svg?cursor";
 import grabbing from "assets/cursors/grabbing.svg?cursor";
+import clsx from "clsx";
 
 const faces = ["front", "back", "left", "right", "top", "bottom"] as const;
 // const SIDE_LENGTH = 200;
@@ -179,7 +180,7 @@ export default function Box3d() {
 				<div className="container-outer">
 					<div className="container" style={rotationCss}>
 						{faces.map(face => {
-							const className = [face, "face", { selected: selectedFace === face }];
+							const className = clsx(face, "face", { selected: selectedFace === face });
 							return (
 								<Fragment key={face}>
 									<div className={className} onClick={() => setSelectedFace(face)}>{t.track.box3d.faces[face]}</div>
