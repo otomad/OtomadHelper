@@ -56,7 +56,7 @@ const StyledSettingsAboutLogo = styled.div`
 		}
 	}
 
-	.page-content.jump main.page:is(.enter, .enter-done) & {
+	&.page-content-jump-transitioning {
 		.icon-wrapper {
 			animation: ${keyframes`
 				from {
@@ -110,10 +110,11 @@ export /* @internal */ default function SettingsAboutLogo() {
 	const iconStyles = ["fluent", "aero", "liquid glass"] as const;
 	const [iconStyle, setIconStyle] = useState<ValueOf<typeof iconStyles>>("fluent");
 	const nextIconStyle = () => setIconStyle(iconStyle => iconStyles.nextItem(iconStyle));
+	const isJumpTransitioning = pageContentViewTransitionStore.lastTransitionType === "jump";
 
 	return (
 		<StyledSettingsAboutLogoWrapper>
-			<StyledSettingsAboutLogo role="img" aria-label={OTOMAD_HELPER_LOGO}>
+			<StyledSettingsAboutLogo role="img" aria-label={OTOMAD_HELPER_LOGO} className={{ pageContentJumpTransitioning: isJumpTransitioning }}>
 				<div className="row-1">
 					<div className="icon-wrapper" data-icon-style={iconStyle} onClick={nextIconStyle}>
 						<Attrs className="light">

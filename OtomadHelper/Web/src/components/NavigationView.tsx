@@ -599,6 +599,7 @@ export const MainPageContext = createContext({
 export const pageContentViewTransitionStore = createStore({
 	transitioningPromise: null as Promise<void> | null,
 	beginToTransition: false,
+	lastTransitionType: "",
 });
 
 export default function NavigationView({ currentNav: [currentNav, setCurrentNav], navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, commandBar, pageContentId, poppedScroll: getPoppedScroll, searchValue, onSearch, ...htmlAttrs }: FCP<{
@@ -645,6 +646,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 		pageContent.activeViewTransition?.skipTransition();
 		const viewTransition = pageContent.startViewTransition({ update: done, types: [type] });
 		pageContentViewTransitionStore.transitioningPromise = viewTransition.finished;
+		pageContentViewTransitionStore.lastTransitionType = type;
 		viewTransition.ready.then(() => {
 			pageContentViewTransitionStore.beginToTransition = false;
 			scrollToTopOrPrevious();

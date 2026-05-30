@@ -280,7 +280,8 @@ export default function Audio() {
 								detailsField={item => (
 									<TransInterpolation
 										i18nKey={t.descriptions.stream.tuning.altTuningMethod[item.id]}
-										formulaFor39={<MathFormulaFor39 />}
+										formulaFor39={<MathFormulae.For39 />}
+										formulaFor51={<MathFormulae.For51 />}
 										formulaFor24="±24"
 									/>
 								)}

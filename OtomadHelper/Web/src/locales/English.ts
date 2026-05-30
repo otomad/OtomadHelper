@@ -1314,7 +1314,7 @@ export default {
 						_: "Handles notes that out of range with an alternative method",
 						plugin: "Reaches any pitch by using the Pitch Shift Audio Effect Plugin repeatedly",
 						octave: "At least avoid dissonant intervals by raising or lowering the octave scale to the range of {{formulaFor24}}",
-						octaveExp: "Vegas actually supports a range of {{formulaFor39}} internally, use with caution as it may cause Vegas to crash",
+						octaveExp: "Same as “$t(stream.tuning.altTuningMethod.octave),” but the range extends to {{formulaFor39}}. If locks stretch and pitch, the range extends to {{formulaFor51}}.\nThis invokes the internal logic of Vegas. Please use with caution as it may cause Vegas to crash.",
 						dock: "Docks at the highest or lowest key within the range of {{formulaFor24}}",
 						silent: "Mutes those notes",
 					},
@@ -1615,6 +1615,7 @@ export default {
 				instructions: "This is a simulated piano keyboard. You can click on the piano keys to select the pitch(es).\nThe selected keys will have visual feedback.",
 			},
 			formulaFor39: "plus or minus twelve divided by log base ten of two, which is approximately equal to plus or minus thirty-nine point eight six three one three seven", // ±12/lg2 (≈±39.863137)
+			formulaFor51: "delta p belongs to the closed interval from negative twelve, divided by log base twenty of two, to plus twenty-four, which is approximately equal to minus fifty-one point eight six three one three seven to plus twenty-four", // Δp∈[-12/log₂₀(2),+24] (≈-51.863137 – +24)
 			trimTimecode: {
 				trimStart: "Start time",
 				trimEnd: "End time",

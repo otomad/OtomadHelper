@@ -88,18 +88,18 @@ declare module "react/jsx-runtime" {
 		interface MathMLMNAttributes extends MathMLAttributes { }
 		interface MathMLMOAttributes extends MathMLAttributes {
 			/** This attribute is non-standard. */
-			accent?: boolean | undefined;
-			fence?: boolean | undefined;
+			accent?: Booleanish | undefined;
+			fence?: Booleanish | undefined;
 			form?: "prefix" | "infix" | "postfix" | undefined;
-			largeop?: boolean | undefined;
+			largeop?: Booleanish | undefined;
 			lspace?: string | undefined;
 			maxsize?: string | undefined;
 			minsize?: string | undefined;
-			movablelimits?: boolean | undefined;
+			movablelimits?: Booleanish | undefined;
 			rspace?: string | undefined;
-			separator?: boolean | undefined;
-			stretchy?: "false" | "true" | undefined;
-			symmetric?: boolean | undefined;
+			separator?: Booleanish | undefined;
+			stretchy?: Booleanish | undefined;
+			symmetric?: Booleanish | undefined;
 		}
 		interface MathMLMOverAttributes extends MathMLAttributes {
 			accent?: boolean | undefined;

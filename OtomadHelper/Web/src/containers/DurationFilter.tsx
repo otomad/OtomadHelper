@@ -167,7 +167,12 @@ function isAllPassed({ min, max, minEqual, maxEqual }: Config.DurationFilter) {
 DurationFilter.isAllPassed = isAllPassed;
 
 function RangeFormula({ filter }: { filter: Config.DurationFilter }) {
-	const ARGUMENT = "x";
+	const variable = (
+		<mrow>
+			<mi mathvariant="normal">Δ</mi>
+			<mi>t</mi>
+		</mrow>
+	);
 	const { min, max, minEqual, maxEqual } = filter;
 	const hasMin = Number.isFinite(min), hasMax = Number.isFinite(max);
 
@@ -177,7 +182,7 @@ function RangeFormula({ filter }: { filter: Config.DurationFilter }) {
 		if (!hasMin || !hasMax)
 			return (
 				<>
-					<mi>{ARGUMENT}</mi>
+					{variable}
 					<mo>{hasMin ? minEqual ? "≥" : ">" : maxEqual ? "≤" : "<"}</mo>
 					<mn>{hasMin ? min : max}</mn>
 				</>
@@ -185,7 +190,7 @@ function RangeFormula({ filter }: { filter: Config.DurationFilter }) {
 		else if (min === max)
 			return (
 				<>
-					<mi>{ARGUMENT}</mi>
+					{variable}
 					<mo>{minEqual ? "=" : "≠"}</mo>
 					<mn>{min}</mn>
 				</>
@@ -195,7 +200,7 @@ function RangeFormula({ filter }: { filter: Config.DurationFilter }) {
 				<>
 					<mn>{min}</mn>
 					<mo>{minEqual ? "≤" : "<"}</mo>
-					<mi>{ARGUMENT}</mi>
+					{variable}
 					<mo>{maxEqual ? "≤" : "<"}</mo>
 					<mn>{max}</mn>
 				</>
@@ -203,11 +208,11 @@ function RangeFormula({ filter }: { filter: Config.DurationFilter }) {
 		else
 			return (
 				<>
-					<mi>{ARGUMENT}</mi>
+					{variable}
 					<mo>{maxEqual ? "≤" : "<"}</mo>
 					<mn>{max}</mn>
 					<mo>∨</mo>
-					<mi>{ARGUMENT}</mi>
+					{variable}
 					<mo>{minEqual ? "≥" : ">"}</mo>
 					<mn>{min}</mn>
 				</>
@@ -218,7 +223,7 @@ function RangeFormula({ filter }: { filter: Config.DurationFilter }) {
 		<math>
 			<mrow>
 				<mo form="prefix" stretchy="false">{"{"}</mo>
-				<mi>{ARGUMENT}</mi>
+				{variable}
 				<mo>∈</mo>
 				<msub>
 					<mi>ℝ</mi>
