@@ -115,7 +115,7 @@
 	<data name="WrongOpeningMethod.Script.Content" xml:space="preserve">
 		<value>The new version of Otomad Helper is an extension. Unlike the old version, it is not a script.
 
-Please move the extension to the Application Extensions directory of VEGAS instead of the Script Menu directory.
+Please move the extension to the Application Extensions directory of Vegas instead of the Script Menu directory.
 
 Location:</value>
 	</data>
@@ -257,12 +257,6 @@ Location:</value>
 	<data name="ColorPicker.Aria.BAxisInLab" xml:space="preserve">
 		<value>b-Axis</value>
 	</data>
-	<data name="QuickSelectIntervalEditor.Clear" xml:space="preserve">
-		<value>Clear</value>
-	</data>
-	<data name="QuickSelectIntervalEditor.Invert" xml:space="preserve">
-		<value>Invert</value>
-	</data>
 	<data name="QuickSelectIntervalEditor.Rename" xml:space="preserve">
 		<value>Rename</value>
 	</data>
@@ -281,10 +275,10 @@ Location:</value>
 	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
 		<value>Delete?</value>
 	</data>
-	<data name="Keybindings.Commands.UseTrackEventAsSource" xml:space="preserve">
+	<data name="Keybindings.Commands.TrackEventAsSource" xml:space="preserve">
 		<value>Use Track Event as Source</value>
 	</data>
-	<data name="Keybindings.Commands.UseProjectMediaAsSource" xml:space="preserve">
+	<data name="Keybindings.Commands.ProjectMediaAsSource" xml:space="preserve">
 		<value>Use Project Media as Source</value>
 	</data>
 	<data name="Keybindings.Commands.EnableYtp" xml:space="preserve">
@@ -319,12 +313,6 @@ Location:</value>
 	</data>
 	<data name="Descriptions.ColorPicker.Aria.BAxisInLab" xml:space="preserve">
 		<value>Negative number indicates blue, positive number indicates yellow</value>
-	</data>
-	<data name="Descriptions.QuickSelectIntervalEditor.Clear" xml:space="preserve">
-		<value>Unselects all items</value>
-	</data>
-	<data name="Descriptions.QuickSelectIntervalEditor.Invert" xml:space="preserve">
-		<value>Inverts the current selection</value>
 	</data>
 	<data name="Descriptions.QuickSelectIntervalEditor.Revert" xml:space="preserve">
 		<value>Reverts to the selection before setting</value>
@@ -410,6 +398,18 @@ Please enter the indexes of each initial step separated by commas as the sequenc
 	</data>
 	<data name="Shared.Exceptions.PrveStepSequenceOutOfRange" xml:space="preserve">
 		<value>In the step sequence parameter, at least an index value exceeds the total number of steps or is negative.</value>
+	</data>
+	<data name="Shared.QuickSelectIntervalEditor.Clear" xml:space="preserve">
+		<value>Clear</value>
+	</data>
+	<data name="Shared.QuickSelectIntervalEditor.Invert" xml:space="preserve">
+		<value>Invert</value>
+	</data>
+	<data name="Shared.Descriptions.QuickSelectIntervalEditor.Clear" xml:space="preserve">
+		<value>Unselects all items</value>
+	</data>
+	<data name="Shared.Descriptions.QuickSelectIntervalEditor.Invert" xml:space="preserve">
+		<value>Inverts the current selection</value>
 	</data>
 	<data name="Shared.Midi.Unknown" xml:space="preserve">
 		<value>Unknown</value>

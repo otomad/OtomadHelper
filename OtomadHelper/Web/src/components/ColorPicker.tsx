@@ -24,7 +24,7 @@ const StyledColorButton = styled(StyledButton)`
 		inset: ${PADDING}px;
 		background-color: ${c("color")};
 		border-radius: inherit;
-		box-shadow: 0 0 0 1px --contrast-color(var(--color), 0.37) inset;
+		box-shadow: 0 0 0 1px rgb(from contrast-color(var(--color)) r g b / 37%) inset;
 
 		&.spectrum {
 			--background-color: light-dark(white, black);
@@ -39,7 +39,7 @@ const StyledColorButton = styled(StyledButton)`
 	.icon,
 	.animated-icon {
 		position: absolute;
-		color: --contrast-color(var(--color));
+		color: contrast-color(var(--color));
 		font-size: 16px;
 
 		&:is(.spectrum ~ *) {
@@ -131,7 +131,7 @@ export function ColorButton({ color, icon, animatedIcon, selected = false, value
 	 * - `string`: Custom outline color.
 	 * @default undefined
 	 */
-	selectedOutlineColor?: "colored" | (string & {});
+	selectedOutlineColor?: "colored" | string & {};
 }, "button">) {
 	const [isIconAnimating, setIsIconAnimating] = useState(false);
 	// The edit icon will keep showing until the animation finishes playing.

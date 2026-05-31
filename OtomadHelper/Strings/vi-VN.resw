@@ -85,13 +85,6 @@
 	<data name="WrongOpeningMethod.Script.Title" xml:space="preserve">
 		<value>Đặt gói mở rộng nhầm chỗ rồi!</value>
 	</data>
-	<data name="WrongOpeningMethod.Script.Content" xml:space="preserve">
-		<value>Phiên bản Otomad Helper này là một tiện ích mở rộng. So với các phiên bản trước, đây không còn là một file script nữa.
-
-Hãy dời tiện ích này đến mục Application Extensions trong VEGAS, thay vì mục Script Menu như trước.
-
-Vị trí:</value>
-	</data>
 	<data name="TextBox.Menu.ClearAll" xml:space="preserve">
 		<value>Xóa tất cả</value>
 	</data>
@@ -218,12 +211,6 @@ Vị trí:</value>
 	<data name="ColorPicker.Aria.Hex" xml:space="preserve">
 		<value>Thập lục phân</value>
 	</data>
-	<data name="QuickSelectIntervalEditor.Clear" xml:space="preserve">
-		<value>Xóa</value>
-	</data>
-	<data name="QuickSelectIntervalEditor.Invert" xml:space="preserve">
-		<value>Đảo ngược màu</value>
-	</data>
 	<data name="QuickSelectIntervalEditor.Rename" xml:space="preserve">
 		<value>Tên</value>
 	</data>
@@ -236,10 +223,10 @@ Vị trí:</value>
 	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
 		<value>Xoá?</value>
 	</data>
-	<data name="Keybindings.Commands.UseTrackEventAsSource" xml:space="preserve">
+	<data name="Keybindings.Commands.TrackEventAsSource" xml:space="preserve">
 		<value>Dùng phân đoạn trong track làm tư liệu</value>
 	</data>
-	<data name="Keybindings.Commands.UseProjectMediaAsSource" xml:space="preserve">
+	<data name="Keybindings.Commands.ProjectMediaAsSource" xml:space="preserve">
 		<value>Dùng tư liệu trong file dự án làm tư liệu</value>
 	</data>
 	<data name="Keybindings.Commands.EnableYtp" xml:space="preserve">
@@ -277,5 +264,11 @@ Vị trí:</value>
 	</data>
 	<data name="Shared.Plugins.TvSimulatorShort" xml:space="preserve">
 		<value>TV</value>
+	</data>
+	<data name="Shared.QuickSelectIntervalEditor.Clear" xml:space="preserve">
+		<value>Xóa</value>
+	</data>
+	<data name="Shared.QuickSelectIntervalEditor.Invert" xml:space="preserve">
+		<value>Đảo ngược màu</value>
 	</data>
 </root>

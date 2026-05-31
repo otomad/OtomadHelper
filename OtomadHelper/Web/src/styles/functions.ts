@@ -8,18 +8,6 @@ export default css`
 	}
 
 	/**
-	 * Use pure CSS to calculate the high contrast text color (black or white) by the oklab model from
-	 * the specified background color.
-	 * @param --color - Background color.
-	 * @param --alpha - The alpha value of the result color, defaults to 1.
-	 * @returns A contrastive text color.
-	 * @remarks When \`contrast-color()\` available, this function will be deprecated.
-	 */
-	@function --contrast-color(--color <color>, --alpha type(<number> | <percentage>): 1) returns <color> {
-		result: oklch(from var(--color) calc(1 - round(to-zero, L / 0.645)) 0 0deg / var(--alpha));
-	}
-
-	/**
 	 * Same as native \`light-dark()\` function, but accept non-color values.
 	 */
 	@function --light-dark(--light, --dark) {

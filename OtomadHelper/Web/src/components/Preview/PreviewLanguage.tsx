@@ -111,7 +111,7 @@ export default function PreviewLanguage({ language, showProgress = true }: FCP<{
 	const languageName = (allLanguages.includes(language) ?
 		t.metadata.name({ lng: language }) :
 		getLocaleName(language, language)).toTitleCase();
-	const [progresses] = useAtom(approvalProgresses);
+	const progresses = useAtomValue(approvalProgresses);
 	const progress = progresses.get(language) ?? -1;
 
 	return (

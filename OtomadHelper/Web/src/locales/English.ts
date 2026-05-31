@@ -1051,6 +1051,7 @@ export default {
 				fontSize: "Font size",
 				fontFamily: "Font",
 				defaultFontFamily: "Default font",
+				systemFontFamily: "System font",
 			},
 			preference: {
 				_: "Preferences",
@@ -1107,7 +1108,7 @@ export default {
 				removeOrSelect: "After completion, removes or selects the specified clips or their corresponding tracks",
 				moveCursorTo: {
 					_: "After completion, positions the cursor to a specified location in the timeline",
-					original: "Retains the timeline cursor in the original position before the generation",
+					original: "Retains the cursor in the original position on the timeline before generation",
 					start: "Depends on the value set by “Start time” setting",
 					beforeFirst: "Moves the cursor to before the first generated event in the timeline",
 					afterLast: "Moves the cursor to after the last generated event in the timeline",
@@ -1115,7 +1116,7 @@ export default {
 				trackGroup: {
 					_: "Creates groups for the tracks",
 					off: "Disables track grouping",
-					track: "Groups tracks based on the score track used",
+					track: "Groups tracks based on the score tracks used",
 					session: "Create one new group containing all tracks of the next generation",
 					collapse: "Toggle collapsing the track group list",
 					reuseSameName: "If a group with the same nonempty name already exists, reuse it instead of creating a new one",
@@ -1123,7 +1124,7 @@ export default {
 				audioBusTrack: {
 					_: "Routes audio tracks to audio buses (Mixing Console)",
 					off: "Disables routing to audio buses",
-					track: "Routes the audio track to a new bus based on the score track used",
+					track: "Routes audio tracks to new buses based on the score tracks used",
 					session: "Create one new bus receiving all audio tracks of the next generation",
 					reuseSameName: "If an audio bus track with the same nonempty name already exists, reuse it instead of creating a new one",
 					knownBugInfo: "Note: When using the audio bus track feature in certain versions of Vegas Pro on certain devices, rendering WAV *(Microsoft Wave)* and W64 *(Sony Wave64)* formats may be impossible, and all Audio FX parameters of audio bus tracks may be lost when rendering to other formats. If you accidentally encounter this bug, it is recommended that you either change your Vegas Pro version, or set it to unroute audio tracks and manually delete all audio bus tracks to avoid rendering issues.",
@@ -1131,7 +1132,7 @@ export default {
 				naming: {
 					_: "Specify the name for the generated tracks, track groups, audio bus tracks, and clips",
 					unsetBorrowedTrackName: "The borrowed existing track is determined by the “Preferred track” setting. Newly created tracks will not be affected.",
-					groupByTaskSessionNameTreatSingleAsMultitrack: "Track groups and audio bus tracks will use {{name, lowercase}} when grouped by task session and with single track",
+					groupByTaskSessionNameTreatSingleAsMultitrack: "Track groups and audio bus tracks will use {{name, lowercase}} when grouped or routed by task session and with single track",
 				},
 				multisource: {
 					ytpEnabled: "YTP feature is enabled and these features are currently unconfigurable.",
@@ -1146,9 +1147,9 @@ export default {
 					order: "Specify the application sequential order of sources",
 					// loop: "When disabled, the generation will be stopped immediately when the number of notes required exceeds the number of selected sources. Either refill enough sources or enable Loop.",
 					repeatOne: "Specify the amount of times a source can be used before switching to the next source",
-					repeatRound: "Specify the maximum number of times to loop while there are no more sources available, the generation will be terminated immediately if exceeded.",
-					repeatRoundInfinityInfo: "Set to 0 means it can loop infinitely.",
-					applyEffectsByRound: "Applies visual effects in cycles rather than every clips",
+					repeatRound: "Specify the maximum number of times to loop while there are no more sources available, the generation will be terminated immediately if exceeded",
+					repeatRoundInfinityInfo: "Set to 0 means it can loop infinitely",
+					applyEffectsByRound: "Applies the step sequence of visual effects in cycles rather than to every clip",
 					accumulateHarmonics: "Makes use of multiple sources when a chord is generated",
 					sustain: "Uses the same source for the following notes with the same pitch",
 					pitchCacheCapacity: "Specify the capacity required to memorize the pitches",
@@ -1165,7 +1166,7 @@ export default {
 						preparation: "Delay before first execution",
 					},
 					ytpEnabled: "YTP feature is enabled and it already supports randomization, it is unnecessary to set it here.",
-					lotionBath: "Forces the source to sequentially change throughout the whole duration",
+					lotionBath: "Forces the source to change sequentially throughout the whole duration, compulsively and economically",
 				},
 				consonant: {
 					_: "To prevent consonants from being stretched or delayed, you can separate the consonant and vowel parts of the same audio or video source so that special optimization can be applied to the consonant part of the source.\nIf at least two audio or video clips are selected, the first clip is considered the initial consonant part, the second clip is considered the vowel part, and the third segment (if any) is considered the final consonant part.",
@@ -1311,7 +1312,7 @@ export default {
 					stretchAttributes_elastic: "Choose the most suitable mode for the current source from the sub-algorithms of the Elastic tuning method. Different modes provide different levels of quality and performance.",
 					stretchAttributes_classic: "Choose a mode from the Classic tuning method to specify how the file is divided and crossfaded to prevent artifacts. Depending on the source, you may need to experiment with different crossfade types.",
 					altTuningMethod: {
-						_: "Handles notes that out of range with an alternative method",
+						_: "Handles notes that out of range with an alternative tuning method",
 						plugin: "Reaches any pitch by using the Pitch Shift Audio Effect Plugin repeatedly",
 						octave: "At least avoid dissonant intervals by raising or lowering the octave scale to the range of {{formulaFor24}}",
 						octaveExp: "Same as “$t(stream.tuning.altTuningMethod.octave),” but the range extends to {{formulaFor39}}. If locks stretch and pitch, the range extends to {{formulaFor51}}.\nThis invokes the internal logic of Vegas. Please use with caution as it may cause Vegas to crash.",
@@ -1383,7 +1384,7 @@ export default {
 					mirrorPriorityInfo: "If multiple mirrors are applied to the same target simultaneously, the former mirror has a higher priority than the latter. For example, if both “$t(prve.effects.hMirror_left)” and “$t(prve.effects.hMirror_right)” are applied to a target together, only “$t(prve.effects.hMirror_left)” will be applied eventually.",
 					colorInvertInfo: "To achieve “$t(prve.effects.colorInvert),” just apply “$t(prve.effects.hueInvert)” and “$t(prve.effects.luminInvert)” to the same target.",
 					exchange: "Exchange values",
-					trippyColoring: "Uses typical effects randomly from *Sparta Remix* series YTPMVs in China.",
+					trippyColoring: "Uses typical effects randomly from *Sparta Remix* series YTPMVs in bilibili.",
 				},
 				legato: {
 					_: "Fills in the gaps between the track clips",
@@ -1634,7 +1635,7 @@ export default {
 				geq: "greater than or equal to",
 				eq: "equal to",
 				neq: "not equal to",
-				comparisonOperator: "Click to switch whether to include “or equal to” in the comparison operator.\nTip: Clear the value in the text box to indicate that the direction of the number axis has no limit.",
+				comparisonOperator: "Click to switch whether to include “or equal to” in the comparison operator.\nTip: Clear the value in the text box to indicate that this direction of the number axis has no limit.",
 			},
 		},
 		charsets: {
@@ -1707,10 +1708,10 @@ export default {
 						_: "Tuning method, Tuning algorithm, Time stretch / pitch shift method", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 						oscillator: "Manual Oscillator, Granular Synthesis", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 					},
-					stretchAttributes: "Stretch attributes, Stretch attrs",
-					altTuningMethod: "If exceed range, If exceed the range, Alternative method for exceeding the range, Alternative for exceed the range", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					stretchAttributes: "Stretch attributes, Stretch attrs, Stretch mode, Tuning mode, Time stretch / pitch shift mode",
+					altTuningMethod: "If exceed range, If exceed the range, Alternative method for exceeding the range, Alternative for exceed the range, Alternative tuning method, Alternative tuning algorithm, Alternate tuning method if exceeds range, Alternate method for exceeding the range, Alternate for exceed the range, Alternate tuning method, Alternate tuning algorithm", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 					resample: "Lock stretch and pitch, Lock to stretch, Pitch change lock, Pitch lock, Lock pitch", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
-					vocalFry: "1 tick, One tick, 1 tick mode, One tick mode", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					vocalFry: "1 tick, One tick, 1 tick mode, One tick mode, 1tick, 1tick mode, Dubstep dishwasher, LFO Modulation, Growl Bass, Wobble, Stick-Slip Phenomenon, Grains Sound, Grainy Sound, Grainy Pulse, Roughness, Intermittent Sound, Low-Frequency Discrete Pulses, Low-Frequency Grains, Pulse Grain, Glitchy Pulse", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				},
 				mimical: "Imitative tuning methods", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},

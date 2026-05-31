@@ -16,19 +16,15 @@ export default {
 			home: "Trang chủ",
 			source: "Nguồn",
 			score: "Bản nhạc",
-			audio: "Âm thanh",
-			visual: "Hình ảnh",
-			sonar: "Sonar",
 			lyrics: "Lời hát",
 			shupelunker: "Shupelunker",
-			shupelunker_full: "Kỹ thuật Shupelunker",
+			shupelunker_full: "Kỹ thuật Shupelunker / Kỹ thuật Tartar",
 			ytp: "YTP",
 			ytp_full: "YouTube Poop",
 			mosh_full: "Datamosh",
 			tools: "Công cụ",
 			management: "Công cụ quản lý",
 			settings: "Cài đặt",
-			staff: "Khuông nhạc",
 			staff_full: "Tái hiện khuông nhạc",
 			pixelScaling: "Tỷ lệ pixel",
 			parameters: "Thông số",
@@ -52,11 +48,16 @@ export default {
 			fader: "Phai nhạt",
 			exportScore: "Xuất score",
 			clawer: "Gắp",
+			audio: "Âm thanh",
+			visual: "Hình ảnh",
+			video: "Các video",
 			track: "Các track",
+			sonar: "Sonar",
 			mosh: "Mosh",
 			effect: "Hiệu ứng",
 		},
 		mode: {
+			otomad: "otoMAD / YTPMV",
 			ytp: "YTP",
 		},
 		source: {
@@ -70,12 +71,6 @@ export default {
 				projectStart: "Bắt đầu dự án",
 				cursor: "Con trỏ",
 			},
-			afterCompletion: {
-				_: "Sau khi hoàn thành",
-				removeSourceClips: "Loại bỏ track chứa clip gốc",
-				selectSourceClips: "Chọn track chứa clip gốc",
-				selectGeneratedClips: "Chọn tất cả clip đã tạo",
-			},
 			preferredTrack: {
 				_: "Track ưa thích",
 				index: "Chỉ số track ưa thích",
@@ -85,10 +80,18 @@ export default {
 				newTrack: "Track mới",
 				quickSelect: "Nhanh chóng chọn track hiện tại",
 			},
+			afterCompletion: "Sau khi hoàn thành",
+			removeOrSelect: {
+				removeSourceClips: "Loại bỏ track chứa clip gốc",
+				selectSourceClips: "Chọn track chứa clip gốc",
+				selectGeneratedClips: "Chọn tất cả clip đã tạo",
+			},
+			moveCursorTo: {},
 			trackGroup: {
 				_: "Nhóm các track",
 				collapse: "Thu gọn các nhóm track theo mặc định",
 			},
+			audioBusTrack: {},
 			naming: {
 				track: "Tên track MIDI",
 				trackIndex: "Chỉ số track MIDI",
@@ -99,9 +102,10 @@ export default {
 				media: "Tên phương tiện nguồn",
 				unnamed: "Không tên",
 			},
+			orchestra: {},
+			syncopator: {},
 			mysteryBox: {
 				limitToSelected: "Nguồn đã chọn bị giới hạn",
-				track: "Với mỗi track hoặc channel",
 				marker: "Chuyển đổi một lần cho mỗi điểm đánh dấu",
 				barOrBeat: {
 					_: "Chuyển đổi một lần cho mỗi ô nhịp hoặc nhịp",
@@ -109,7 +113,6 @@ export default {
 					preparation: "Chuẩn bị",
 				},
 			},
-			consonant: "Thời gian phụ âm",
 		},
 		on: "Bật",
 		off: "Tắt",
@@ -312,15 +315,13 @@ export default {
 			tuning: {
 				_: "Tuning",
 				tuningMethod: {
-					_: "Phương pháp tuning",
-					none: "Không tuning",
+					noTuning: "Không tuning",
 					pitchShift: "Đổi Cao Độ",
 					classic: "Classic",
 					scaleless: "Không tỷ lệ",
 					acid: "ACID",
 				},
 				stretchAttributes: {
-					_: "Thuộc tính kéo dãn",
 					elastic: {
 						pro: "Professional",
 						efficient: "Efficient",
@@ -350,8 +351,6 @@ export default {
 					},
 				},
 				altTuningMethod: {
-					_: "Nếu vượt quá phạm vi",
-					multiple: "Sử dụng nhiều Plugin hiệu ứng âm thanh",
 					plugin: "Chuyển sang plugin hiệu ứng âm thanh Pitch Shift",
 					silent: "Im lặng",
 				},
@@ -423,7 +422,7 @@ export default {
 			},
 			box3d: {
 				deleteTracks: "Xoá các track gốc",
-				useLongerSide: "Sử dụng cạnh dài hơn của chiều dài cạnh",
+				longerSide: "Sử dụng cạnh dài hơn của chiều dài cạnh",
 				faces: {
 					front: "Trước",
 					back: "Trở lại",
@@ -471,13 +470,12 @@ export default {
 			},
 		},
 		sonar: {
-			splitDrums: "Tách các trống",
 			differenceCompositeMode: "Chế độ composite khác",
 			shadow: "Đổ bóng",
 			graphs: "Biểu đồ",
 		},
 		lyrics: {
-			useStaticText: "Chèn phụ đề trực tiếp từ văn bản tĩnh",
+			staticText: "Chèn phụ đề trực tiếp từ văn bản tĩnh",
 			sampleLyrics: "Gà lẩu cay",
 			presetTemplate: "Mẫu preset",
 			enableMode: "Bật chế độ {{mode, lowercase}}",
@@ -711,6 +709,7 @@ export default {
 					mica: "Mica",
 					micaAlt: "Mica khác",
 					solid: "Đặc",
+					blur: "Làm mờ",
 				},
 			},
 			preference: {
@@ -737,15 +736,14 @@ export default {
 				preferredTrack: {
 					fillingInstructions: "Nếu giá trị là 0 thì tạo ra trên tất cả các track;\nNếu dương, thì được tạo ra bên dưới track thứ n;\nNếu âm, thì được tạo bên dưới track thứ n tính từ cuối.\nNếu bất kỳ track ưa thích nào được chỉ định là Âm thanh hoặc Hình ảnh, thì tùy chọn này sẽ bị ghi đè.",
 				},
-				trackGroup: {
-					_: "Nhóm các track bằng track score",
-				},
+				moveCursorTo: {},
+				trackGroup: {},
+				audioBusTrack: {},
 				naming: {},
 				multisource: {},
 				orchestra: {},
 				syncopator: {},
 				mysteryBox: {
-					_: "Ngẫu nhiên hóa với điểm vào của nguồn.\nĐiều này có thể dẫn đến việc các clip nguồn được chọn ngẫu nhiên có các cao độ cơ bản khác nhau, khiến nó chỉ hữu ích khi tạo video hài hước nhằm mục đích giải trí và hiếm khi được sử dụng để tạo video chất lượng cao.",
 					limitToSelected: "Chuyển đổi ngẫu nhiên giữa nhiều nguồn đã chọn thay vì sử dụng hoàn toàn ngẫu nhiên điểm vào",
 					track: "Cho dù track hay channel phụ thuộc vào Bản nhạc",
 					marker: "Khi gặp một điểm đánh dấu trong bản nhạc, điểm vào của nguồn sẽ được thay đổi một lần. Nếu một số điểm đánh dấu có cùng tên không rỗng, chúng sẽ sử dụng cùng một điểm vào của nguồn.",
@@ -819,11 +817,9 @@ export default {
 				tuning: {
 					tuningMethod: {
 						_: "Sử dụng một thuật toán tuning khác",
-						none: "Không có hiệu ứng cao độ",
 						pitchShift: "Sử dụng Plugin hiệu ứng âm thanh Pitch Shift. Đây là plugin DirectX có cùng thuật toán với Classic Method và có thể hỗ trợ nhiều cao độ hơn. Tiện ích mở rộng này yêu cầu phải tải một số preset trước khi sử dụng.",
 						elastic: "Sử dụng Phương pháp thay đổi cao độ Elastic. Phương pháp Élastique sử dụng công nghệ từ zplane.development và cung cấp khả năng kéo dãn thời gian thực và thay đổi cao độ được cải tiến. Đây chỉ là phương pháp mặc định để nhấn trực tiếp các phím +/−.",
 						scaleless: "Khóa độ dãn và cao độ, và thay đổi độ dãn để có được cao độ tương ứng bất kể cao độ nốt nhạc thực tế ra sao, chỉ cho vui",
-						unset: "Giữ nguyên phương pháp tuning ban đầu của clip không thay đổi hoặc giá trị mặc định, ngay cả khi Không Tuning",
 						acid: "Chuyển đổi clip để phù hợp với nhịp độ nếu bạn đang sử dụng vòng lặp ACIDized được kết xuất bởi ACID Pro",
 						evaluates: {
 							fast: "Nhanh chóng tạo ra",
@@ -832,10 +828,8 @@ export default {
 						},
 					},
 					altTuningMethod: {
-						_: "Xử lý các nốt ngoài phạm vi bằng phương pháp thay thế",
 						plugin: "Đạt đến bất kỳ cao độ nào bằng cách sử dụng Plugin hiệu ứng âm thanh Pitch Shift nhiều lần",
 						octave: "Ít nhất hãy tránh các khoảng cách không hài hòa bằng cách tăng hoặc giảm thang âm quãng tám xuống phạm vi {{formulaFor24}}",
-						octaveExp: "VEGAS thực sự hỗ trợ phạm vi {{formulaFor39}} nội bộ, hãy sử dụng thận trọng vì nó có thể khiến VEGAS bị sập",
 						silent: "Tắt tiếng những nốt đó",
 					},
 					preserveFormant: "Duy trì đặc điểm tông giọng trong khi tuning",
@@ -869,11 +863,9 @@ export default {
 				},
 				box3d: {
 					deleteTracks: "Do hạn chế về mặt kỹ thuật, không thể di chuyển trực tiếp các track đã chọn. Hiện tại, nó chỉ có thể tạo track mới và di chuyển các clip tự động, nhưng không thể di chuyển track motion, hiệu ứng hoặc bất kỳ thứ gì khác. Bạn sẽ phải tự di chuyển chúng sau. Bạn có thể quyết định xem bạn có muốn xóa track gốc hay không. Các track mới thêm vào không bị ảnh hưởng.",
-					useLongerSide: "Sử dụng cạnh dài thay vì cạnh ngắn làm chiều dài cạnh của khối lập phương nếu nguồn là hình chữ nhật, giúp khối lập phương tự nhiên hơn",
+					longerSide: "Sử dụng cạnh dài thay vì cạnh ngắn làm chiều dài cạnh của khối lập phương nếu nguồn là hình chữ nhật, giúp khối lập phương tự nhiên hơn",
 				},
-				gradient: {
-					gridIntegration: {},
-				},
+				gradient: {},
 				legato: {
 					_: "Lấp vào khoảng trống giữa các track clip",
 					increaseSpacing: "Phân khoảng cách giữa mỗi clip",
@@ -957,7 +949,6 @@ export default {
 			},
 			pixelScaling: {
 				caption: "Mở rộng tỉ lệ bằng cách sử dụng các thuật toán khuếch đại và nội suy cạnh cứng lân cận gần nhất",
-				_: "Co dãn Điểm ảnh là kỹ nghệ co dãn cho đồ họa pixel hoặc các ảnh số cần sự sắc nét. Mục đích là nhằm giải quyết tình trạng mờ điểm ảnh do thuật toán co dãn chèn song phương cài sẵn trên VEGAS bằng cách phối trộn các màu tại các điểm ảnh lân cận, xóa bỏ đường biên màu rõ ràng, là tính chất của đồ họa pixel. Tính năng này tỷ lệ theo thuật toán chèn gần nhất: Trực tiếp sao chép giá trị màu của điểm ảnh gần nhất, đảm bảo là ảnh đã co dãn bảo đảm được đường biên rõ nét, tránh bị mờ ảnh.\nTính năng này đặc biệt hữu ích với tư liệu game cổ, hoặc giao diện có độ phân giải thấp, hoặc các phân cảnh cần cải thiện điểm ảnh. Ví dụ: khi thu phóng một hoạt họa nhân vật game 8-bit, có thể ngăn đường biên màu của nhân vật bị “mềm”, đảm bảo rằng mỗi điểm ảnh khi thu phóng đều giữ nguyên trạng. Lưu ý: để tính năng hoạt động cần phải thiết đặt môi trường FFmpeg hoặc cài gói mở rộng Datamosh.\nTính năng này chiếu theo độ phân giải của dự án để tạo ra một tệp có kích thước tương đối xấp xỉ bằng thuật toán chèn lân cận, tên tệp đi kèm hậu tố “_Scaled”. Tính năng hỗ trợ bất cứ định dạng hình ảnh/video nào, cũng như các tệp hình ảnh trình tự, khi nhập vào VEGAS.",
 			},
 			settings: {
 				translation: "Bạn muốn tham gia quá trình dịch thuật, có thể thoải mái gia nhập.",
@@ -1020,6 +1011,7 @@ export default {
 			trimTimecode: {
 				trimStart: "Thời gian bắt đầu",
 			},
+			operators: {},
 		},
 		charsets: {
 			hans: "Tiếng Trung - giản thể",
@@ -1044,6 +1036,8 @@ export default {
 			track: {},
 		},
 		preset: "Preset",
+		note: "Số nốt",
+		clip: "Các clip",
 	},
 	csharp: {
 		host: {
@@ -1070,7 +1064,6 @@ export default {
 		wrongOpeningMethod: {
 			script: {
 				title: "Đặt gói mở rộng nhầm chỗ rồi!",
-				content: "Phiên bản Otomad Helper này là một tiện ích mở rộng. So với các phiên bản trước, đây không còn là một file script nữa.\n\nHãy dời tiện ích này đến mục Application Extensions trong VEGAS, thay vì mục Script Menu như trước.\n\nVị trí:",
 			},
 		},
 		textBox: {
@@ -1130,8 +1123,6 @@ export default {
 			},
 		},
 		quickSelectIntervalEditor: {
-			clear: "Xóa",
-			invert: "Đảo ngược màu",
 			rename: "Tên",
 			columns: "Cột",
 			rows: "Hàng",
@@ -1143,8 +1134,8 @@ export default {
 		},
 		keybindings: {
 			commands: {
-				useTrackEventAsSource: "Dùng phân đoạn trong track làm tư liệu",
-				useProjectMediaAsSource: "Dùng tư liệu trong file dự án làm tư liệu",
+				trackEventAsSource: "Dùng phân đoạn trong track làm tư liệu",
+				projectMediaAsSource: "Dùng tư liệu trong file dự án làm tư liệu",
 				enableYtp: "Bật chế độ YTP",
 				disableYtp: "Tắt chế độ YTP",
 				startGenerating: "Bắt đầu tạo",
@@ -1178,6 +1169,13 @@ export default {
 			tvSimulator_short: "TV",
 		},
 		exceptions: {},
+		quickSelectIntervalEditor: {
+			clear: "Xóa",
+			invert: "Đảo ngược màu",
+		},
+		descriptions: {
+			quickSelectIntervalEditor: {},
+		},
 		midi: {
 			instruments: {},
 			percussions: {},

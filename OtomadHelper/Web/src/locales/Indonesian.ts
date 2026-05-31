@@ -13,12 +13,8 @@ export default {
 		rangeDash: " – ",
 		quotes: " “\n” ",
 		titles: {
-			audio: "Audio",
-			visual: "Visual",
-			sonar: "Sonar",
 			ytp: "YTP",
 			tools: "Alat",
-			staff: "Staff",
 			parameters: "Parameter",
 			grid_full: "Tata Letak Kisi",
 			box3d: "Tata Letak Kotak 3D",
@@ -40,14 +36,18 @@ export default {
 				projectStart: "Proyek dimulai",
 				cursor: "Kursor",
 			},
-			afterCompletion: {},
 			preferredTrack: {
 				_: "Trek pilihan",
 				top: "Atas",
 				newTrack: "Trek baru",
 			},
+			removeOrSelect: {},
+			moveCursorTo: {},
 			trackGroup: {},
+			audioBusTrack: {},
 			naming: {},
+			orchestra: {},
+			syncopator: {},
 			mysteryBox: {
 				barOrBeat: {},
 			},
@@ -145,8 +145,7 @@ export default {
 			tuning: {
 				_: "Tuning",
 				tuningMethod: {
-					_: "Metode Tuning",
-					none: "Tanpa Tuning",
+					noTuning: "Tanpa Tuning",
 					classic: "Classic",
 				},
 				stretchAttributes: {
@@ -204,7 +203,7 @@ export default {
 			},
 			box3d: {
 				deleteTracks: "Hapus trek asli",
-				useLongerSide: "Gunakan sisi panjang tepi yang lebih panjang",
+				longerSide: "Gunakan sisi panjang tepi yang lebih panjang",
 				faces: {
 					front: "Depan",
 					back: "Belakang",
@@ -231,7 +230,6 @@ export default {
 			clear: {},
 		},
 		sonar: {
-			splitDrums: "Drum terpisah",
 			differenceCompositeMode: "Perbedaan modus komposit",
 			shadow: "Bayangan",
 		},
@@ -348,7 +346,9 @@ export default {
 					contrast: "Kontras tinggi",
 				},
 				palette: {},
-				transparency: {},
+				transparency: {
+					blur: "Kabur",
+				},
 			},
 			preference: {},
 			config: {
@@ -363,7 +363,9 @@ export default {
 			versionRequest: {},
 			source: {
 				preferredTrack: {},
+				moveCursorTo: {},
 				trackGroup: {},
+				audioBusTrack: {},
 				naming: {},
 				multisource: {},
 				orchestra: {},
@@ -411,9 +413,7 @@ export default {
 					mirrorEdges: {},
 				},
 				box3d: {},
-				gradient: {
-					gridIntegration: {},
-				},
+				gradient: {},
 				legato: {},
 			},
 			sonar: {},
@@ -468,6 +468,7 @@ export default {
 		aria: {
 			previewPiano: {},
 			trimTimecode: {},
+			operators: {},
 		},
 		charsets: {},
 		aliases: {
@@ -489,6 +490,7 @@ export default {
 			track: {},
 		},
 		preset: "Preset",
+		note: "Jumlah not",
 	},
 	csharp: {
 		host: {
@@ -528,7 +530,6 @@ export default {
 			aria: {},
 		},
 		quickSelectIntervalEditor: {
-			invert: "Invert",
 			rename: "Nama",
 			columns: "Kolom",
 			rows: "Baris",
@@ -562,6 +563,12 @@ export default {
 			wave: "Gelombang",
 		},
 		exceptions: {},
+		quickSelectIntervalEditor: {
+			invert: "Invert",
+		},
+		descriptions: {
+			quickSelectIntervalEditor: {},
+		},
 		midi: {
 			instruments: {},
 			percussions: {},

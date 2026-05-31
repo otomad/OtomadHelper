@@ -94,9 +94,6 @@
 	<data name="ColorPicker.AxisAbbrs.Chroma" xml:space="preserve">
 		<value>C</value>
 	</data>
-	<data name="QuickSelectIntervalEditor.Invert" xml:space="preserve">
-		<value>Invert</value>
-	</data>
 	<data name="QuickSelectIntervalEditor.Rename" xml:space="preserve">
 		<value>Nama</value>
 	</data>
@@ -117,5 +114,8 @@
 	</data>
 	<data name="Shared.Plugins.Wave" xml:space="preserve">
 		<value>Gelombang</value>
+	</data>
+	<data name="Shared.QuickSelectIntervalEditor.Invert" xml:space="preserve">
+		<value>Invert</value>
 	</data>
 </root>

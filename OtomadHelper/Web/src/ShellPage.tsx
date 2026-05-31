@@ -127,4 +127,4 @@ export default function ShellPage() {
 	);
 }
 
-subscribeStoreKey(configStore.settings, "fontFamily", fontFamily => document.documentElement.style.setProperty("--custom-font-family", fontFamily));
+subscribeStoreKey(configStore.settings, "fontFamily", fontFamily => applyFontFamilyToDocument(fontFamily));
