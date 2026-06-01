@@ -546,8 +546,8 @@ export default {
 				},
 				altTuningMethod: {
 					_: "Alternative tuning method if exceeds range",
-					multiple: "Use Audio Effect Plugin Multiple Times",
-					plugin: "Switch to Pitch Shift Audio Effect Plugin",
+					multiple: "Use Audio FX Plugin Multiple Times",
+					plugin: "Switch to Pitch Shift Audio FX Plugin",
 					octave: "Raise/Lower Octaves",
 					octaveExp: "Raise/Lower Octaves (Experimental)",
 					dock: "Dock at Top/Bottom",

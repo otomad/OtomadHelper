@@ -7,7 +7,7 @@ export /* @internal */ const tuningMethods = [
 	{ id: "pitchShift", icon: "plugin" },
 	{ id: "elastic", icon: "add_subtract" },
 	{ id: "classic", icon: "hourglass" },
-	{ id: "oscillator", icon: "waveforms/sawtooth" },
+	{ id: "oscillator", icon: "pixelated_sawtooth" },
 ] as const;
 
 export /* @internal */ const exactTuningMethods = [
