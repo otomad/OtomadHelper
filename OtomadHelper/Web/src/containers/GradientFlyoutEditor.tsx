@@ -16,11 +16,11 @@ const ParityStyles = Enum({
 });
 
 const GradientStyles = Enum({
-	hue: { label: t.stream.parameters.hue },
-	saturation: { label: t.stream.parameters.saturation },
-	contrast: { label: t.stream.parameters.contrast },
-	threshold: { label: t.stream.parameters.threshold },
-	brightness: { label: t.stream.parameters.brightness },
+	hue: { label: t.stream.parameters.colorGrading.hue },
+	saturation: { label: t.stream.parameters.colorGrading.saturation },
+	contrast: { label: t.stream.parameters.colorGrading.contrast },
+	threshold: { label: t.stream.parameters.colorGrading.threshold },
+	brightness: { label: t.stream.parameters.colorGrading.brightness },
 	opacity: { label: t.settings.appearance.backgroundImage.opacity },
 });
 

@@ -153,7 +153,7 @@ export const settingsMetaInput = {
 				altTuningMethod: { icon: "tuning_warning" },
 				resample: { icon: "link_multiple" },
 				preserveFormant: { icon: "person_voice" },
-				vocalFry: { icon: "pixelated_sawtooth" },
+				vocalFry: { icon: "radioactivity" },
 				basePitch: {
 					icon: "music_note",
 					items: {

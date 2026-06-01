@@ -40,7 +40,14 @@ export /* @internal */ const tuningClassicModes = forMap(19, i => "a" + String(i
 /** @deprecated */
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
-const builtInPresets = ["normal", "fadeOut"];
+const builtInPresets = Enum({
+	normal: { icon: "star", isPlunk: false },
+	fadeOut: { icon: "fade", isPlunk: false },
+	dePop: { icon: "flash_off", isPlunk: false },
+	jario: { icon: "jario", isPlunk: true },
+	standard: { icon: "curves/linear", isPlunk: true },
+	snappy: { icon: "curves/fast", isPlunk: true },
+});
 
 // #region Styles
 const PrelistenActions = styled(StackPanel)`
@@ -382,7 +389,11 @@ export default function Audio() {
 					<Setting meta={meta.preset} checkInfo={subKeys(currentPreset, currentPreset => t.stream.preset.builtInPresets[currentPreset])}>
 						<Setting meta={meta.preset.builtInPresets} asSubtitle="closerAfter" noDivider="after" />
 						<ItemsView view="tile" current={currentPreset}>
-							{builtInPresets.map(name => <ItemsView.Item id={name} key={name}>{t.stream.preset.builtInPresets[name]}</ItemsView.Item>)}
+							{builtInPresets.map(({ key, icon, isPlunk }) => (
+								<ItemsView.Item id={key} key={key} icon={icon}>
+									{!isPlunk ? t.stream.preset.builtInPresets[key] : t.stream.parameters.plunk + t.colon + t.stream.parameters.plunk.presets[key]}
+								</ItemsView.Item>
+							))}
 						</ItemsView>
 						<Setting meta={meta.preset.customPresets} asSubtitle noDivider="after" />
 						<div>

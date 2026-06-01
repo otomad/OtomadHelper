@@ -385,7 +385,7 @@ export default function Score({ _trackSelectorOnly = false }: {
 			>
 				{constrainNoteLengthType[0] !== "none" && (
 					<Expander.Item
-						title={t.score.constrain[constrainNoteLengthType[0]]}
+						title={t.constrain[constrainNoteLengthType[0]]}
 						details={t.descriptions.score.constrain[constrainNoteLengthType[0]]}
 						icon={constrainNoteLengthTypes.find(i => i.id === constrainNoteLengthType[0])!.icon}
 						wrapActionsWhenNarrow={false}
@@ -396,7 +396,7 @@ export default function Score({ _trackSelectorOnly = false }: {
 					</Expander.Item>
 				)}
 				{constrainNoteLengthType[0].in("percentage", "fixedDecrement") && (
-					<Expander.Item title={t.score.constrain.min} details={t.descriptions.score.constrain.min} icon="greater_or_equal" wrapActionsWhenNarrow={false}>
+					<Expander.Item title={t.constrain.min} details={t.descriptions.score.constrain.min} icon="greater_or_equal" wrapActionsWhenNarrow={false}>
 						<TimecodeBox value={constrainNoteLengthMin} />
 					</Expander.Item>
 				)}
