@@ -89,16 +89,16 @@ export default {
 			stretch: "Stretch",
 		},
 		fileFormats: {},
+		constrain: {
+			max: "Panjang maksimal",
+			fixed: "Panjang tetap",
+		},
 		score: {
 			filter: {},
 			tempo: {
 				project: "Tempo projek",
 			},
 			autoChangeProjectProperties: {},
-			constrain: {
-				max: "Panjang maksimal",
-				fixed: "Panjang tetap",
-			},
 			pan: {
 				_: "Pan",
 				left: "Kiri",
@@ -189,7 +189,21 @@ export default {
 				},
 			},
 			parameters: {
-				threshold: "Ambang",
+				fade: {
+					fadeIn: "Fade in",
+					fadeOut: "Fade out",
+				},
+				plunk: {
+					presets: {},
+				},
+				glow: {
+					_: "Glow",
+					brightness: "Glow brightness",
+				},
+				transform: {},
+				colorGrading: {
+					threshold: "Ambang",
+				},
 			},
 			enabled: {},
 		},

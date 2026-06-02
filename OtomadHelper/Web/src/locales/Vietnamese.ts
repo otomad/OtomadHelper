@@ -212,6 +212,11 @@ export default {
 			ust: "File trình tự văn bản UTAU/OpenUTAU",
 			vsq: "File trình tự Vocaloid",
 		},
+		constrain: {
+			none: "Không hạn chế",
+			max: "Độ dài tối đa",
+			fixed: "Độ dài cố định",
+		},
 		score: {
 			from: "Bản nhạc từ",
 			midi: "MIDI",
@@ -229,12 +234,7 @@ export default {
 			},
 			timeSignature: "Số chỉ nhịp",
 			autoChangeProjectProperties: {},
-			constrain: {
-				_: "Hạn chế độ dài nốt",
-				none: "Không hạn chế",
-				max: "Độ dài tối đa",
-				fixed: "Độ dài cố định",
-			},
+			constrain: "Hạn chế độ dài nốt",
 			noteCount: "Số nốt",
 			beginNote: "Nốt bắt đầu",
 			pan: {
@@ -351,7 +351,6 @@ export default {
 					},
 				},
 				altTuningMethod: {
-					plugin: "Chuyển sang plugin hiệu ứng âm thanh Pitch Shift",
 					silent: "Im lặng",
 				},
 				resample: "Resample",
@@ -400,10 +399,26 @@ export default {
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "Sao chép từ một sơ đồ tham số khác ở đây",
-				hue: "Tông màu",
-				saturation: "Độ bão hòa",
-				threshold: "Threshold",
-				brightness: "Độ sáng",
+				fade: {
+					fadeIn: "Rõ dần",
+					fadeOut: "Mờ dần",
+				},
+				plunk: {
+					presets: {},
+				},
+				glow: {
+					_: "Ánh sáng",
+					brightness: "Độ sáng phát sáng",
+				},
+				transform: {
+					size: "Kích cỡ",
+				},
+				colorGrading: {
+					hue: "Tông màu",
+					saturation: "Độ bão hòa",
+					threshold: "Threshold",
+					brightness: "Độ sáng",
+				},
 			},
 			enabled: {},
 		},
