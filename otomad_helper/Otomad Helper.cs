@@ -35223,7 +35223,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public GroupTrackBy RouteAudioBusTrackBy {
 			get { return AudioBusTrackByTrackRadio.Checked ? GroupTrackBy.TRACK : AudioBusTrackBySessionRadio.Checked ? GroupTrackBy.SESSION : GroupTrackBy.OFF; }
-			set { AudioBusTrackOffRadio.Related.Selected = value == GroupTrackBy.TRACK ? AudioBusTrackByTrackRadio : value == GroupTrackBy.SESSION ? AudioBusTrackBySessionRadio : TrackGroupOffRadio; }
+			set { AudioBusTrackOffRadio.Related.Selected = value == GroupTrackBy.TRACK ? AudioBusTrackByTrackRadio : value == GroupTrackBy.SESSION ? AudioBusTrackBySessionRadio : AudioBusTrackOffRadio; }
 		}
 
 		public Timecode GenerateAtCustomTimecode = Timecode.FromMilliseconds(0);
