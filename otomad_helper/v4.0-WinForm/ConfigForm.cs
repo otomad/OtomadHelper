@@ -1470,5 +1470,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void DatamoshInfoLbl_MouseLeave(object sender, EventArgs e) {
 			Console.WriteLine(DatamoshInfoLbl);
 		}
+
+		private void MidiAutoChangeProjectPropertiesApplyBtn_Click(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
 	}
 }
