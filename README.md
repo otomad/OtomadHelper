@@ -3,7 +3,7 @@
 	<h1>VegasScripts</h1>
 	<p>
 		<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="State" />
-		<img src="https://img.shields.io/badge/VERSION-4.47.17.0-orange?style=flat-square" alt="Version" />
+		<img src="https://img.shields.io/github/v/release/otomad/OtomadHelper?style=flat-square&label=version&color=orange" alt="Version" />
 		<img src="https://img.shields.io/github/downloads/otomad/OtomadHelper/total.svg?style=flat-square&label=DOWNLOADS" alt="Downloads">
 	</p>
 </div>
