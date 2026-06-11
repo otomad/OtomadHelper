@@ -88,9 +88,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	/// </summary>
 	public sealed class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 66, 9, 0);
+		public static readonly Version VERSION = new Version(4, 66, 11, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2026, 6, 9);
+		public static readonly DateTime REVISION_DATE = new DateTime(2026, 6, 11);
 
 		// 配置参数变量
 		#region 视频属性
@@ -2043,6 +2043,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (!sonarMode) generatedVideoTracks.UnionWith(trackHelper.videoTracks);
 			if (GroupTrackBy == GroupTrackBy.SESSION || IsStack)
 				generatedTracks.UnionWiths(assignedSonarTracks, trackHelper.videoTracks, trackHelper.audioTracks);
+			else if (RouteAudioBusTrackBy == GroupTrackBy.SESSION)
+				generatedTracks.UnionWiths(trackHelper.audioTracks);
 			nextTrackIndex = trackHelper.Dispose();
 			return !progressForm.RequestAbort;
 		}
@@ -3293,8 +3295,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (VConfig && !IsVPreferredTrack) vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, startIndex, ""));
 			if (GroupTrackBy != GroupTrackBy.OFF)
 				generatedTracks.Adds(aTrack as Track, vTrack as Track);
-			else
+			else {
+				if (RouteAudioBusTrackBy != GroupTrackBy.OFF)
+					generatedTracks.Add(aTrack);
 				UngroupTracks(aTrack, vTrack);
+			}
 			#region 多素材支持
 			AddSampleTracks();
 			Action<bool> DeleteYtpSampleTracks = reserveYtpTracks => {
