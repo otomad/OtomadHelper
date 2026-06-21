@@ -6,4 +6,5 @@ export default defineConfig({
 	useTabs: true,
 	semi: true,
 	singleQuote: false,
+	arrowParens: "avoid",
 });

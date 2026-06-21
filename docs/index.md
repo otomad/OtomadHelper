@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: Otomad Helper
-  text: Help to create YTPMV in Vegas Pro
+  text: Helps to create YTPMVs in Vegas Pro
   tagline: An extension to assist in creating YTPMV/YTP/otoMAD in Vegas Pro
   image:
     src: /favicon_light.svg
@@ -13,8 +13,11 @@ hero:
       text: Download Now!
       link: https://otomad.github.io/otomad/link/OtomadHelper.html#latest
     - theme: alt
-      text: Documentations
+      text: New Documentations (v8)
       link: /introduction
+    - theme: alt
+      text: Old Documentations (v4)
+      link: /v4/introduction
 
 features:
   - icon: 🆅️

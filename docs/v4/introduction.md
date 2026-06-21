@@ -1,6 +1,6 @@
 # Welcome to Otomad Helper Documentation!
 
-**Otomad Helper** is a YTPMV/otoMAD/YTP extension for Vegas Pro that enables Vegas to accept scores such as MIDI sequence files as input and automatically generate YTPMV tracks.
+**Otomad Helper** for Vegas, designed to allow Vegas to accept MIDI files as input, and automatically generate YTPMV/otoMAD tracks.
 
 Check out the [usage](usage.md) section for further information, including how to [install](usage.md#installation) the extension.
 
@@ -13,3 +13,7 @@ This project is under active development.
 You can also click on the “Read the Docs” menu on the bottom left corner of any page to switch languages.
 
 To learn more about the features of Otomad Helper, click on any of the following pages below...
+
+## Contents
+
+- [Usage](usage.md)

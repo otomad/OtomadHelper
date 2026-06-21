@@ -4,6 +4,47 @@
  */
 
 /**
+ * Global
+ */
+html {
+	interpolate-size: allow-keywords;
+	touch-action: manipulation;
+	font-kerning: normal;
+	font-synthesis-style: none;
+	font-variant-ligatures: common-ligatures historical-ligatures contextual;
+	font-variant-numeric: proportional-nums;
+	text-spacing-trim: trim-start;
+	text-spacing-trim: trim-both;
+	text-autospace: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: geometricPrecision;
+	tab-size: 4;
+	scroll-behavior: smooth;
+	font-optical-sizing: auto;
+	hyphens: auto;
+	hyphenate-limit-chars: 10;
+	-webkit-tap-highlight-color: transparent;
+	text-wrap: pretty;
+}
+
+[lang] {
+	&:is(:lang(zh), :lang(ja), :lang(ko)) {
+		text-align: justify;
+		hanging-punctuation: none;
+	}
+
+	&:is(:lang(th), :lang(lo), :lang(km), :lang(my)) {
+		text-align: justify;
+	}
+
+	&:not(:lang(zh), :lang(ja), :lang(ko)) {
+		text-align: start;
+		hanging-punctuation: first allow-end last;
+	}
+}
+
+/**
  * Colors
  *
  * Each colors have exact same color scale system with 3 levels of solid
@@ -89,8 +130,8 @@
  */
 :root {
 	--vp-home-hero-name-color: transparent;
-	--vp-home-hero-name-background: linear-gradient(120deg, #2FBDEC, #FB7299);
-	--vp-home-hero-image-background-image: linear-gradient(256deg, #2FBDEC 20%, #FB7299 80%);
+	--vp-home-hero-name-background: linear-gradient(120deg, #2fbdec, #fb7299);
+	--vp-home-hero-image-background-image: linear-gradient(256deg, #2fbdec 20%, #fb7299 80%);
 	--vp-home-hero-image-filter: blur(44px);
 
 	@media (min-width: 640px) {
@@ -117,7 +158,8 @@
  */
 :root {
 	--vp-font-family-base: "Segoe UI Variable", "Segoe UI", var(--vp-cjk-font-family), "Microsoft YaHei UI", sans-serif;
-	--vp-font-family-mono: "Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+	--vp-font-family-mono:
+		"Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
 	--vp-cjk-font-family: "Microsoft YaHei UI";
 }
 
@@ -131,4 +173,119 @@
 
 :lang(ko) {
 	--vp-cjk-font-family: "Malgun Gothic";
+}
+
+/**
+ * Component: Home Hero Sub-Heading
+ */
+.VPHero .heading .text {
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 32px;
+
+	@media (min-width: 640px) {
+		font-size: 32px;
+		line-height: 40px;
+	}
+
+	@media (min-width: 960px) {
+		font-size: 48px;
+		line-height: 56px;
+	}
+}
+
+/**
+ * Component: Details
+ */
+details.details.custom-block {
+	--padding: 16px;
+	background-color: transparent;
+	border-radius: 0;
+	border-block: 1px solid var(--vp-c-divider);
+	border-inline: none;
+	transition: border-color 250ms, padding 250ms;
+	padding-block: var(--padding);
+
+	summary {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		user-select: text;
+		margin: calc(var(--padding) * -1);
+		padding: var(--padding);
+		vertical-align: middle;
+
+		&:hover {
+			color: var(--vp-c-brand-1);
+			transition: color 100ms;
+		}
+
+		&::marker {
+			content: none;
+		}
+
+		&::before {
+			content: "";
+			display: inline-block;
+			width: 1em;
+			height: 1em;
+			transition: rotate 250ms;
+			inset-inline-start: .8em;
+			background-color: currentColor;
+			line-height: normal;
+			margin-inline: -4px 4px;
+			scale: 1.25;
+			rotate: 90deg;
+			mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/%3E%3C/svg%3E");
+			mask-position: 50%;
+			mask-size: 1em;
+			mask-repeat: no-repeat;
+		}
+	}
+
+	&::details-content {
+		transition: block-size 250ms, content-visibility 250ms allow-discrete;
+		overflow: hidden;
+		block-size: 0;
+	}
+
+	&:open {
+		padding-block-end: 8px;
+
+		summary::before {
+			rotate: 180deg;
+		}
+
+		&::details-content {
+			block-size: auto;
+		}
+	}
+
+	& + & {
+		margin-block-start: 0;
+		border-block-start-width: 0;
+	}
+
+	&:has(+ &) {
+		margin-block-end: 0;
+	}
+
+	&:has(summary:hover) {
+		border-color: var(--vp-c-brand-1);
+	}
+
+	&:has(+ & summary:hover) {
+		border-block-end-color: var(--vp-c-brand-1);
+	}
+}
+
+/**
+ * Component: View Transition API
+ */
+@view-transition {
+	navigation: auto;
+}
+
+:root {
+	view-transition-name: root;
 }
