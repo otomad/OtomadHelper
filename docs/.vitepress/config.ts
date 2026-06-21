@@ -1,4 +1,6 @@
 import { defineConfig } from "vitepress";
+import i18nMacroPlugin from "./plugins/i18n-macro";
+import i18nRouterPlugin from "./plugins/i18n-router";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -7,8 +9,83 @@ export default defineConfig({
 	base: process.env.READTHEDOCS_CANONICAL_URL
 		? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
 		: "",
+	markdown: {
+		config: md => {
+			md.use(i18nMacroPlugin);
+		},
+	},
+	vite: {
+		server: {
+			port: 7000,
+		},
+		plugins: [i18nRouterPlugin()],
+	},
+	lastUpdated: true,
 	title: "Otomad Helper",
 	description: "Helps to create YTPMVs in Vegas Pro",
+	locales: {
+		root: {
+			label: "English",
+			lang: "en",
+			themeConfig: {
+				nav: [
+					{ text: "Home", link: "/" },
+					{ text: "New Documentations (v8)", link: "/introduction" },
+					{ text: "Old Documentations (v4)", link: "/v4/introduction" },
+				],
+				sidebar: {
+					"/": [
+						{
+							text: "Introduction",
+							items: [
+								{ text: "What’s Otomad Helper?", link: "/introduction" },
+								{ text: "Usage", link: "/usage" },
+								{ text: "FAQ", link: "/faq" },
+							],
+						},
+					],
+					"/v4/": [
+						{
+							text: "Introduction",
+							items: [{ text: "What’s Otomad Helper?", link: "/v4/introduction" }],
+						},
+					],
+				},
+			},
+		},
+		"zh-CN": {
+			label: "简体中文",
+			lang: "zh-CN",
+			themeConfig: {
+				darkModeSwitchLabel: "主题",
+				lightModeSwitchTitle: "切换到浅色模式",
+				darkModeSwitchTitle: "切换到深色模式",
+				nav: [
+					{ text: "主页", link: "/zh-CN/" },
+					{ text: "新版文档 (v8)", link: "/zh-CN/introduction" },
+					{ text: "旧版文档 (v4)", link: "/zh-CN/v4/introduction" },
+				],
+				sidebar: {
+					"/": [
+						{
+							text: "简介",
+							items: [
+								{ text: "音MAD助手是什么？", link: "/zh-CN/introduction" },
+								{ text: "用法", link: "/zh-CN/usage" },
+								{ text: "疑难解答", link: "/zh-CN/faq" },
+							],
+						},
+					],
+					"/v4/": [
+						{
+							text: "简介",
+							items: [{ text: "音MAD助手是什么？", link: "/zh-CN/v4/introduction" }],
+						},
+					],
+				},
+			},
+		},
+	},
 	themeConfig: {
 		editLink: {
 			pattern: "https://github.com/otomad/OtomadHelper/tree/docs/docs/:path",
@@ -18,33 +95,40 @@ export default defineConfig({
 			dark: "/favicon_dark.svg",
 		},
 		// https://vitepress.dev/reference/default-theme-config
-		nav: [
-			{ text: "Home", link: "/" },
-			{ text: "New Documentations (v8)", link: "/introduction" },
-			{ text: "Old Documentations (v4)", link: "/v4/introduction" },
-		],
-		sidebar: {
-			"/": [
-				{
-					text: "Introduction",
-					items: [
-						{ text: "What’s Otomad Helper", link: "/introduction" },
-						{ text: "Usage", link: "/usage" },
-						{ text: "FAQ", link: "/faq" },
-					],
-				},
-			],
-			"/v4/": [
-				{
-					text: "Introduction",
-					items: [{ text: "What’s Otomad Helper", link: "/v4/introduction" }],
-				},
-			],
-		},
 		socialLinks: [
-			{ icon: "github", link: "https://github.com/otomad/OtomadHelper" },
-			{ icon: "youtube", link: "https://youtube.com/@cmosekil" },
-			{ icon: "bilibili", link: "https://space.bilibili.com/38207429" },
+			{ icon: "github", link: "https://github.com/otomad/OtomadHelper", ariaLabel: "GitHub" },
+			{ icon: "youtube", link: "https://youtube.com/@cmosekil", ariaLabel: "YouTube" },
+			{ icon: "bilibili", link: "https://space.bilibili.com/38207429", ariaLabel: "bilibili" },
 		],
+		search: {
+			provider: "local",
+			options: {
+				locales: {
+					"zh-CN": {
+						translations: {
+							button: {
+								buttonText: "搜索",
+								buttonAriaLabel: "搜索",
+							},
+							modal: {
+								displayDetails: "显示详细列表",
+								resetButtonTitle: "重置搜索",
+								backButtonTitle: "关闭搜索",
+								noResultsText: "没有结果",
+								footer: {
+									selectText: "选择",
+									selectKeyAriaLabel: "输入",
+									navigateText: "导航",
+									navigateUpKeyAriaLabel: "上箭头",
+									navigateDownKeyAriaLabel: "下箭头",
+									closeText: "关闭",
+									closeKeyAriaLabel: "Esc",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 	},
 });

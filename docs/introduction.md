@@ -10,6 +10,9 @@ This project is under active development.
 
 ## Languages
 
+@en Language test
+@zh-CN 语言测试
+
 You can also click on the “Read the Docs” menu on the bottom left corner of any page to switch languages.
 
 To learn more about the features of Otomad Helper, click on any of the following pages below...

@@ -30,3 +30,9 @@ features:
     title: YTP
     details: YTP is also able to be generated.
 ---
+
+<script setup>
+import TeamMembers from "./.vitepress/containers/TeamMembers.vue";
+</script>
+
+<TeamMembers lang="en" />
