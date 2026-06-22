@@ -1,6 +1,5 @@
 import { defineConfig } from "vitepress";
 import i18nMacroPlugin from "./plugins/i18n-macro";
-import i18nHmrPlugin from "./plugins/i18n-hmr";
 import fs from "fs";
 
 // https://vitepress.dev/reference/site-config
@@ -11,6 +10,8 @@ export default defineConfig({
 		? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
 		: "",
 	markdown: {
+		breaks: true,
+		cjkFriendlyEmphasis: true,
 		config: md => {
 			md.use(i18nMacroPlugin);
 		},
@@ -19,7 +20,6 @@ export default defineConfig({
 		server: {
 			port: 7000,
 		},
-		plugins: [i18nHmrPlugin()],
 	},
 	lastUpdated: true,
 	title: "Otomad Helper",
@@ -83,7 +83,7 @@ export default defineConfig({
 					{ text: "旧版文档 (v4)", link: "/zh-CN/v4/introduction" },
 				],
 				sidebar: {
-					"/": [
+					"/zh-CN/": [
 						{
 							text: "简介",
 							items: [
@@ -93,7 +93,7 @@ export default defineConfig({
 							],
 						},
 					],
-					"/v4/": [
+					"/zh-CN/v4/": [
 						{
 							text: "简介",
 							items: [{ text: "音MAD助手是什么？", link: "/zh-CN/v4/introduction" }],

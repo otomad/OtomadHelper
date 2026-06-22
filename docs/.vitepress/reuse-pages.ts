@@ -6,12 +6,14 @@ import type { RouteModule } from "vitepress";
 export default function reusePages(dirname: string): RouteModule {
 	const rootLangDirname = getRootLangPath(dirname);
 	return {
-		watch: [`${rootLangDirname}/*.md`],
+		watch: [`${rootLangDirname}/*.md`, "./*.md"],
 		paths: watchedFiles =>
-			watchedFiles.map(file => ({
-				params: { page: path.parse(file).name },
-				content: fs.readFileSync(path.resolve(rootLangDirname, file), "utf-8"),
-			})),
+			[...new Map(watchedFiles.map(filePath => [path.parse(filePath).name, filePath]))].map(
+				([pageName, filePath]) => ({
+					params: { page: pageName },
+					content: fs.readFileSync(path.resolve(rootLangDirname, filePath), "utf-8"),
+				}),
+			),
 	};
 }
 

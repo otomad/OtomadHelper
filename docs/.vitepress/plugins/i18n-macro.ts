@@ -19,7 +19,6 @@ export default function i18nMacroPlugin(md: MarkdownIt) {
 		// 1. 宏处理：【块多语言】 (@@@)
 		// ==========================================
 		if (src.includes("@@@")) {
-			// 匹配连续的多语言块，直到遇到孤立的 \n@@@
 			const blockClusterRegex = /(?:@@@[\w-]+\n[\s\S]*?\n)+@@@/g;
 
 			src = src.replace(blockClusterRegex, cluster => {
@@ -31,7 +30,6 @@ export default function i18nMacroPlugin(md: MarkdownIt) {
 					languagesData[match[1]] = match[2];
 				}
 
-				// Fallback 策略
 				return languagesData[currentLang] !== undefined
 					? languagesData[currentLang]
 					: languagesData["en"] !== undefined
@@ -41,52 +39,66 @@ export default function i18nMacroPlugin(md: MarkdownIt) {
 		}
 
 		// ==========================================
-		// 2. 宏处理：【行多语言】 (@en / @zh-CN)
+		// 2. 宏处理：【行多语言】 - 状态机重构版
 		// ==========================================
 		if (src.includes("@")) {
 			const lines = src.split("\n");
 			const newLines = [];
 
-			let i = 0;
-			while (i < lines.length) {
-				const line = lines[i];
-				const match = line.trim().match(/^@([\w-]+)\s+(.*)$/);
+			let currentCluster = null as any; // 当前正在收集的多语言组
 
-				// 如果当前行是多语言宏指令
-				if (match) {
-					const currentCluster = {} as any;
-
-					// 向下连续收集所有紧挨着的行多语言指令，形成一个“语言组”
-					while (i < lines.length) {
-						const innerMatch = lines[i].trim().match(/^@([\w-]+)\s+(.*)$/);
-						if (!innerMatch) break; // 遇到了不是以 @ 开头的行，说明这组多语言结束了
-
-						currentCluster[innerMatch[1]] = innerMatch[2];
-						i++;
-					}
-
-					// 从这一组语言中提取符合当前路由的行 (带 Fallback 机制)
-					let finalLineContent = "";
-					if (currentCluster[currentLang] !== undefined) {
-						finalLineContent = currentCluster[currentLang];
-					} else if (currentCluster["en"] !== undefined) {
-						finalLineContent = currentCluster["en"];
-					} else {
-						finalLineContent = (Object.values(currentCluster)[0] as string) || "";
-					}
-
-					newLines.push(finalLineContent);
-					// 注意：此处不需要 i++，因为外层的 while 和内层结束条件已经正确递增了指针
+			// 辅助函数：专门用来结算一组多语言，并把过滤后的文本塞进新行数组
+			const flushCluster = (cluster: any) => {
+				if (!cluster) return;
+				if (cluster[currentLang] !== undefined) {
+					newLines.push(cluster[currentLang]);
+				} else if (cluster["en"] !== undefined) {
+					newLines.push(cluster["en"]);
 				} else {
-					// 普通 Markdown 行，原样保留
+					// 如果既没有当前语言，也没有英文 fallback，保底选择写在最前面的那个语言
+					newLines.push(Object.values(cluster)[0] || "");
+				}
+			};
+
+			for (let i = 0; i < lines.length; i++) {
+				const line = lines[i];
+				const match = line.trim().match(/^@([\w-]+) (.*)$/);
+
+				if (match) {
+					const lang = match[1];
+					const text = match[2];
+
+					// 初始化新组
+					if (!currentCluster) {
+						currentCluster = {};
+					}
+					// 关键修复点：如果当前语言在组里已经有了（例如已经有了 en，又遇到了下一个 en）
+					// 说明开启了全新的一行（例如列表的第2项），必须立刻结算旧组，并为新行开启新组
+					else if (currentCluster[lang] !== undefined) {
+						flushCluster(currentCluster);
+						currentCluster = {};
+					}
+
+					// 将当前语言的内容存入组中
+					currentCluster[lang] = text;
+				} else {
+					// 遇到了普通 Markdown 行（非 @ 开头），先把之前可能积压的组结算掉
+					if (currentCluster) {
+						flushCluster(currentCluster);
+						currentCluster = null;
+					}
 					newLines.push(line);
-					i++;
 				}
 			}
+
+			// 循环结束后，如果末尾还有未结算的组，进行最后一次结算
+			if (currentCluster) {
+				flushCluster(currentCluster);
+			}
+
 			src = newLines.join("\n");
 		}
 
-		// 将替换后清爽的、标准的 Markdown 源码还给 state.src
 		state.src = src;
 	});
 }

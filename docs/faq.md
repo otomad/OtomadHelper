@@ -1,4 +1,5 @@
-# FAQ
+@en # FAQ
+@zhs # 疑难解答
 
 :::details Question 1
 Answer 1

@@ -6,7 +6,8 @@
 /**
  * Global
  */
-html {
+html,
+body {
 	interpolate-size: allow-keywords;
 	touch-action: manipulation;
 	font-kerning: normal;
@@ -26,6 +27,7 @@ html {
 	hyphenate-limit-chars: 10;
 	-webkit-tap-highlight-color: transparent;
 	text-wrap: pretty;
+	font-synthesis-style: none !important;
 }
 
 [lang] {
@@ -42,6 +44,10 @@ html {
 		text-align: start;
 		hanging-punctuation: first allow-end last;
 	}
+}
+
+em:is(:lang(zh), :lang(ja), :lang(ko)) {
+	text-decoration: underline;
 }
 
 /**
@@ -203,7 +209,9 @@ details.details.custom-block {
 	border-radius: 0;
 	border-block: 1px solid var(--vp-c-divider);
 	border-inline: none;
-	transition: border-color 250ms, padding 250ms;
+	transition:
+		border-color 250ms,
+		padding 250ms;
 	padding-block: var(--padding);
 
 	summary {
@@ -230,7 +238,7 @@ details.details.custom-block {
 			width: 1em;
 			height: 1em;
 			transition: rotate 250ms;
-			inset-inline-start: .8em;
+			inset-inline-start: 0.8em;
 			background-color: currentColor;
 			line-height: normal;
 			margin-inline: -4px 4px;
@@ -244,7 +252,9 @@ details.details.custom-block {
 	}
 
 	&::details-content {
-		transition: block-size 250ms, content-visibility 250ms allow-discrete;
+		transition:
+			block-size 250ms,
+			content-visibility 250ms allow-discrete;
 		overflow: hidden;
 		block-size: 0;
 	}
