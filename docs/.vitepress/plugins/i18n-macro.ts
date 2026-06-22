@@ -6,7 +6,13 @@ import MarkdownIt from "markdown-it";
 export default function i18nMacroPlugin(md: MarkdownIt) {
 	// 注册在 core 流程的最开始（block 之前），此时 state.src 还是纯字符串
 	md.core.ruler.before("block", "i18n_macro_preprocessor", state => {
-		const currentLang = state.env.lang || "en";
+		let currentLang = state.env.localeIndex || "en";
+		const locale = parseLocale(currentLang);
+		// 中文的语言标签太复杂了，简化它们。
+		if (locale?.language === "zh") {
+			if (locale?.script === "Hans") currentLang = "zhs";
+			else if (locale?.script === "Hant") currentLang = "zht";
+		}
 		let src = state.src;
 
 		// ==========================================
@@ -66,7 +72,7 @@ export default function i18nMacroPlugin(md: MarkdownIt) {
 					} else if (currentCluster["en"] !== undefined) {
 						finalLineContent = currentCluster["en"];
 					} else {
-						finalLineContent = Object.values(currentCluster)[0] as string || "";
+						finalLineContent = (Object.values(currentCluster)[0] as string) || "";
 					}
 
 					newLines.push(finalLineContent);
@@ -83,4 +89,12 @@ export default function i18nMacroPlugin(md: MarkdownIt) {
 		// 将替换后清爽的、标准的 Markdown 源码还给 state.src
 		state.src = src;
 	});
+}
+
+function parseLocale(tag: Intl.UnicodeBCP47LocaleIdentifier | Intl.Locale) {
+	try {
+		return new Intl.Locale(tag).maximize();
+	} catch {
+		return null;
+	}
 }

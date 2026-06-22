@@ -1,6 +1,27 @@
 {
 	"editor.codeActionsOnSave": {
-		"source.fixAll.oxc": "always"
+		"source.format.oxc": "always",
 	},
 	"css.validate": false,
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode",
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode",
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode",
+	},
+	"[css]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode",
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode",
+	},
+	"[scss]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode",
+	},
+	"[vue]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode",
+	},
 }

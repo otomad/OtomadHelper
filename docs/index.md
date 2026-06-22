@@ -14,10 +14,10 @@ hero:
       link: https://otomad.github.io/otomad/link/OtomadHelper.html#latest
     - theme: alt
       text: New Documentations (v8)
-      link: /introduction
+      link: ./introduction
     - theme: alt
       text: Old Documentations (v4)
-      link: /v4/introduction
+      link: ./v4/introduction
 
 features:
   - icon: 🆅️

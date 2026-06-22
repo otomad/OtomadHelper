@@ -1,6 +1,7 @@
 import { defineConfig } from "vitepress";
 import i18nMacroPlugin from "./plugins/i18n-macro";
-import i18nRouterPlugin from "./plugins/i18n-router";
+import i18nHmrPlugin from "./plugins/i18n-hmr";
+import fs from "fs";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -18,11 +19,24 @@ export default defineConfig({
 		server: {
 			port: 7000,
 		},
-		plugins: [i18nRouterPlugin()],
+		plugins: [i18nHmrPlugin()],
 	},
 	lastUpdated: true,
 	title: "Otomad Helper",
 	description: "Helps to create YTPMVs in Vegas Pro",
+	head: [
+		[
+			"link",
+			{
+				rel: "icon",
+				href: "/favicon.ico",
+				type: "image/vnd.microsoft.icon",
+				sizes: "16x16 24x24 32x32 48x48 64x64",
+			},
+		],
+		["link", { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" }],
+		["link", { rel: "apple-touch-icon", href: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" }],
+	],
 	locales: {
 		root: {
 			label: "English",
@@ -60,6 +74,9 @@ export default defineConfig({
 				darkModeSwitchLabel: "主题",
 				lightModeSwitchTitle: "切换到浅色模式",
 				darkModeSwitchTitle: "切换到深色模式",
+				editLink: { text: "编辑此页" },
+				docFooter: { prev: "上一页", next: "下一页" },
+				outline: { label: "页面导航" },
 				nav: [
 					{ text: "主页", link: "/zh-CN/" },
 					{ text: "新版文档 (v8)", link: "/zh-CN/introduction" },
