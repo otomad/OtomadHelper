@@ -11,6 +11,28 @@
 	}
 }
 
+.VPNavScreenTranslations {
+	transition: height 250ms;
+
+	.title .chevron {
+		transition: rotate 250ms;
+	}
+
+	&.open .title .chevron {
+		rotate: 180deg;
+	}
+}
+
+.VPNavBarTranslations {
+	.vpi-chevron-down {
+		transition: rotate 250ms;
+	}
+
+	> button[aria-expanded="true"] .vpi-chevron-down {
+		rotate: 180deg;
+	}
+}
+
 .VPNavBarSearchButton {
 	view-transition-name: nav-bar-search-button;
 }

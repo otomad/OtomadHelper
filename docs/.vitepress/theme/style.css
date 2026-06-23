@@ -242,13 +242,11 @@ details.details.custom-block {
 			width: 1em;
 			height: 1em;
 			transition: rotate 250ms;
+			translate: -4px 1px;
 			inset-inline-start: 0.8em;
 			background-color: currentColor;
 			line-height: normal;
-			margin-inline: -4px 4px;
-			scale: 1.25;
-			rotate: 90deg;
-			mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/%3E%3C/svg%3E");
+			mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m9 18l6-6l-6-6'/%3E%3C/svg%3E");
 			mask-position: 50%;
 			mask-size: 1em;
 			mask-repeat: no-repeat;
@@ -267,7 +265,7 @@ details.details.custom-block {
 		padding-block-end: 8px;
 
 		summary::before {
-			rotate: 180deg;
+			rotate: 90deg;
 		}
 
 		&::details-content {

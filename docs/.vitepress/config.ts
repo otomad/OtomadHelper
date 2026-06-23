@@ -84,6 +84,8 @@ export default defineConfig({
 				docFooter: { prev: "上一页", next: "下一页" },
 				outline: { label: "页面导航" },
 				lastUpdated: { text: "最后更新于" },
+				sidebarMenuLabel: "菜单",
+				returnToTopLabel: "回到顶部",
 				nav: [
 					{ text: "主页", link: "/zh-CN/" },
 					{ text: "新版文档 (v8)", link: "/zh-CN/introduction" },
