@@ -13,11 +13,12 @@ export default {
 		// View Transition API
 		let resolver: PromiseWithResolvers<void> | undefined;
 		const locales = Object.keys(siteData.value.locales).filter(lang => lang !== "root");
-		router.onBeforeRouteChange = to => {
+		router.onBeforeRouteChange = toWithSearchAndHash => {
 			if (!globalThis.location) return;
-			const from = location.pathname;
+			const from = location.pathname,
+				to = toWithSearchAndHash.replace(/[?#].*/, "");
+			if (!enableTransitions() || from === to) return;
 			const localeChanged = isLocaleChanged(from, to, locales);
-			if (!enableTransitions()) return;
 			resolver = Promise.withResolvers<void>();
 			if (localeChanged) document.documentElement.classList.add("locale-changing");
 			const viewTransition = document.startViewTransition(async () => await resolver!.promise).finished;
