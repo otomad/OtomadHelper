@@ -1,0 +1,38 @@
+{
+	"compilerOptions": {
+		"paths": {
+			"@vp/*": [
+				"./docs/.vitepress/*"
+			],
+			"@assets/*": [
+				"./docs/assets/*"
+			],
+		},
+		"module": "esnext",
+		"target": "esnext",
+		"moduleResolution": "bundler",
+		"lib": [
+			"DOM",
+			"DOM.Iterable",
+			"ESNext",
+		],
+		"types": [
+			"node",
+			"vitepress/client",
+		]
+	},
+	"include": [
+		"docs/**/*.ts",
+		"docs/**/*.vue",
+		"docs/**/*.md",
+	],
+	"vueCompilerOptions": {
+		"vitePressExtensions": [
+			".md"
+		],
+	},
+	"exclude": [
+		"**/node_modules/**",
+		"**/dist/**",
+	],
+}

@@ -169,7 +169,11 @@ em:is(:lang(zh), :lang(ja), :lang(ko)) {
 	--vp-cjk-font-family: "Microsoft YaHei UI";
 }
 
-:lang(zh-Hant) {
+:root [lang] {
+	font-family: "Segoe UI Variable", "Segoe UI", var(--vp-cjk-font-family), "Microsoft YaHei UI", sans-serif;
+}
+
+:is(:lang(zh-Hant), :lang(zh-TW), :lang(zh-HK), :lang(zh-MO)) {
 	--vp-cjk-font-family: "Microsoft JhengHei UI";
 }
 
@@ -305,4 +309,22 @@ details.details.custom-block {
  */
 .vp-doc img.avatar-img {
 	margin: 0;
+}
+
+/**
+ * Component: Overview Image
+ */
+img.overview {
+	max-height: 600px;
+	margin-inline: auto;
+	border-radius: 6px;
+
+	&.shadow {
+		box-shadow: 0 4px 6px 0px #0003;
+	}
+
+	&.light:is(html.dark *),
+	&.dark:is(html:not(.dark) *) {
+		display: none;
+	}
 }

@@ -20,6 +20,12 @@ export default defineConfig({
 		server: {
 			port: 7000,
 		},
+		resolve: {
+			alias: {
+				"@vp": import.meta.dirname,
+				"@assets": import.meta.resolve("../assets"),
+			},
+		},
 	},
 	lastUpdated: true,
 	title: "Otomad Helper",
@@ -77,6 +83,7 @@ export default defineConfig({
 				editLink: { text: "编辑此页" },
 				docFooter: { prev: "上一页", next: "下一页" },
 				outline: { label: "页面导航" },
+				lastUpdated: { text: "最后更新于" },
 				nav: [
 					{ text: "主页", link: "/zh-CN/" },
 					{ text: "新版文档 (v8)", link: "/zh-CN/introduction" },

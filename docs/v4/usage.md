@@ -4,31 +4,29 @@
 @en ## Installation
 @zhs ## 安装
 
-@en 1. [Download](https://otomad.github.io/otomad/link/OtomadHelper.html#latest) the latest version of this extension.
-@zhs 1. [下载](https://otomad.github.io/otomad/link/OtomadHelper.html#latest)最新版扩展程序。
-@en 2. Unzip **ALL** the files in the compressed file you’ve just downloaded to the “Application Extensions” folder.
-@zhs 2. 将你刚刚下载到的压缩文件中的**所有**文件解压缩到“Application Extensions”文件夹中。
-@en     If this folder does not exist, please create a new one.
-@zhs    如果该文件夹不存在，请新建。
-@en     (ie. C:\\ProgramData\\VEGAS Pro\\Application Extensions)
-@zhs    （例：C:\\ProgramData\\VEGAS Pro\\Application Extensions）
-@en 3. Make sure that the DLL file is not locked.
-@zhs 3. 请确保 DLL 文件未锁定。
+@en 1. [Download](https://otomad.github.io/otomad/link/OtomadHelper.html#latest) the latest version of this script.
+@zhs 1. [下载](https://otomad.github.io/otomad/link/OtomadHelper.html#latest)最新版脚本。
+@en 2. Unzip **ALL** the files in the zip file you’ve just downloaded to the “Script Menu” folder in the Vegas installation directory.
+@zhs 2. 将你刚刚下载到的ZIP文件中的**所有**文件解压缩到Vegas安装目录中的“Script Menu”文件夹中。
+@en     (ie. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu)
+@zhs    （例：C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu）
+@en 3. Make sure that the DLL file `(DLL\NAudio.dll)` is not locked.
+@zhs 3. 请确保 DLL 文件 `(DLL\NAudio.dll)` 未锁定。
 
 @en ::: info Specific steps
 @zhs ::: info 具体步骤
-@en 1. Enter folder `C:\ProgramData\VEGAS Pro\Application Extensions`.
-@zhs 1. 进入 `C:\ProgramData\VEGAS Pro\Application Extensions` 文件夹。
-@en 2. Right-click the “Otomad Helper.dll” file and select Properties.
-@zhs 2. 右键单击 “Otomad Helper.dll” 文件，然后选择“属性”。
+@en 1. In the Vegas installation directory, enter folder `Script Menu\DLL`.
+@zhs 1. 在 Vegas 安装目录中，依次进入 `Script Menu\DLL` 文件夹。
+@en 2. Right-click the “NAudio.dll” file and select Properties.
+@zhs 2. 右键单击 “NAudio.dll” 文件，然后选择“属性”。
 @en 3. If you see the “Unblock” button (Windows 7/8.x) or checkbox (Windows 10+), click or check it.
 @zhs 3. 如果您看到了“解除锁定”按钮 (Windows 7/8.x) 或复选框 (Windows 10+)，请单击或选中它。
 @en 4. Click OK button and you’re done.
 @zhs 4. 单击“确定”按钮即可。
 :::
 
-@en 4. Open Vegas Pro to launch it. Select menu *View > Extension > Otomad Helper* to open.
-@zhs 4. 打开 Vegas Pro 来启动。选择菜单 *视图 > 扩展 > Otomad Helper* 打开。
+@en 4. Open Vegas Pro to launch it. Select menu *Tools > Scripting > Otomad Helper* to open.
+@zhs 4. 打开 Vegas Pro 来启动。选择菜单 *工具 > 脚本化 > Otomad Helper* 打开。
 
 @en ## Using Otomad Helper
 @zhs ## 使用Otomad Helper

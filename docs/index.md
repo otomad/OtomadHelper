@@ -32,7 +32,7 @@ features:
 ---
 
 <script setup>
-import TeamMembers from "./.vitepress/containers/TeamMembers.vue";
+import TeamMembers from "@vp/components/TeamMembers.vue";
 </script>
 
 <TeamMembers lang="en" />

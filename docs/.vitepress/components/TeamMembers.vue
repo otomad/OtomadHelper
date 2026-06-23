@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { VPTeamPage, VPTeamPageTitle, VPTeamMembers, VPTeamPageSection } from "vitepress/theme";
 
-const props = withDefaults(defineProps<{
-	lang: string;
-}>(), {
-	lang: "en",
-});
+const props = withDefaults(
+	defineProps<{
+		lang: string;
+	}>(),
+	{
+		lang: "en",
+	},
+);
 
 function get(object) {
 	let key = props.lang;
@@ -28,41 +31,31 @@ const coreMembers = [
 		avatar: "https://www.github.com/Chaosinism.png",
 		name: "Chaosinism",
 		title: get({ en: "Original Author", zhs: "原作者" }),
-		links: [
-			{ icon: "github", link: "https://github.com/Chaosinism" },
-		],
+		links: [{ icon: "github", link: "https://github.com/Chaosinism" }],
 	},
 	{
 		avatar: "https://www.github.com/Evauation.png",
 		name: "Evauation",
 		title: get({ en: "Collaborator", zhs: "协助者" }),
-		links: [
-			{ icon: "github", link: "https://github.com/Evauation" },
-		],
+		links: [{ icon: "github", link: "https://github.com/Evauation" }],
 	},
 	{
 		avatar: "https://www.github.com/zzzzzz9125.png",
 		name: "zzzzzz9125",
 		title: get({ en: "Collaborator", zhs: "协助者" }),
-		links: [
-			{ icon: "github", link: "https://github.com/zzzzzz9125" },
-		],
+		links: [{ icon: "github", link: "https://github.com/zzzzzz9125" }],
 	},
 	{
 		avatar: "https://www.github.com/wcz123694578.png",
 		name: get({ en: "wcz", zhs: "吴从周" }),
 		title: get({ en: "Collaborator", zhs: "协助者" }),
-		links: [
-			{ icon: "github", link: "https://github.com/wcz123694578" },
-		],
+		links: [{ icon: "github", link: "https://github.com/wcz123694578" }],
 	},
 	{
 		avatar: "https://www.github.com/cyahega.png",
 		name: "Cyahega",
 		title: get({ en: "Vietnamese Translator", zhs: "越南语翻译" }),
-		links: [
-			{ icon: "github", link: "https://github.com/cyahega" },
-		],
+		links: [{ icon: "github", link: "https://github.com/cyahega" }],
 	},
 ];
 
