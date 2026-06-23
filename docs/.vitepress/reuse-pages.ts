@@ -1,11 +1,11 @@
 import fs from "fs";
 import path from "path";
-import type { RouteModule } from "vitepress";
+import { defineRoutes, type RouteModule } from "vitepress";
 
 // Reference: https://vitepress.dev/guide/routing#dynamic-routes
 export default function reusePages(dirname: string): RouteModule {
 	const rootLangDirname = getRootLangPath(dirname);
-	return {
+	return defineRoutes({
 		watch: [`${rootLangDirname}/*.md`, "./*.md"],
 		paths: watchedFiles =>
 			[...new Map(watchedFiles.map(filePath => [path.parse(filePath).name, filePath]))].map(
@@ -14,7 +14,7 @@ export default function reusePages(dirname: string): RouteModule {
 					content: fs.readFileSync(path.resolve(rootLangDirname, filePath), "utf-8"),
 				}),
 			),
-	};
+	});
 }
 
 const ROOT_DIR = "docs";

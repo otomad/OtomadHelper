@@ -6,7 +6,7 @@ import { nextTick, provide } from "vue";
 const { isDark } = useData();
 
 const enableTransitions = () =>
-	"startViewTransition" in document && window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+	"startViewTransition" in document && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 	if (!enableTransitions()) {
@@ -19,9 +19,12 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 		`circle(${Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))}px at ${x}px ${y}px)`,
 	];
 
-	await document.startViewTransition(async () => {
-		isDark.value = !isDark.value;
-		await nextTick();
+	await document.startViewTransition({
+		update: async () => {
+			isDark.value = !isDark.value;
+			await nextTick();
+		},
+		types: ["instant"],
 	}).ready;
 
 	document.documentElement.animate(
@@ -41,20 +44,26 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 </template>
 
 <style>
-::view-transition-old(root),
-::view-transition-new(root) {
-	animation: none;
-	mix-blend-mode: normal;
-}
+:root:active-view-transition-type(instant) {
+	* {
+		view-transition-name: none !important;
+	}
 
-::view-transition-old(root),
-.dark::view-transition-new(root) {
-	z-index: 1;
-}
+	&::view-transition-old(root),
+	&::view-transition-new(root) {
+		animation: none;
+		mix-blend-mode: normal;
+	}
 
-::view-transition-new(root),
-.dark::view-transition-old(root) {
-	z-index: 9999;
+	&::view-transition-old(root),
+	&.dark::view-transition-new(root) {
+		z-index: 1;
+	}
+
+	&::view-transition-new(root),
+	&.dark::view-transition-old(root) {
+		z-index: 9999;
+	}
 }
 
 .VPSwitchAppearance {
@@ -63,5 +72,9 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 
 .VPSwitchAppearance .check {
 	transform: none !important;
+}
+
+:root.locale-changing * {
+	view-transition-name: none !important;
 }
 </style>

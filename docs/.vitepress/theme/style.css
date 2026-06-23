@@ -300,10 +300,6 @@ details.details.custom-block {
 	navigation: auto;
 }
 
-:root {
-	view-transition-name: root;
-}
-
 /**
  * Fix Component: Team Members in Home
  */

@@ -1,0 +1,154 @@
+.VPLocalSearchBox > * {
+	transition: all 250ms allow-discrete;
+	transition-property: translate, opacity;
+
+	@starting-style {
+		opacity: 0;
+
+		&:is(.shell) {
+			translate: 0 -1rem;
+		}
+	}
+}
+
+.VPNavBarSearchButton {
+	view-transition-name: nav-bar-search-button;
+}
+
+.VPHomeHero,
+.VPFeatures {
+	view-transition-class: home-hero;
+}
+
+.VPHomeHero {
+	view-transition-name: home-hero;
+}
+
+.VPFeatures {
+	view-transition-name: home-features;
+}
+
+::view-transition-old(.home-hero):only-child {
+	animation-name: float-up-out;
+}
+
+::view-transition-new(.home-hero):only-child {
+	animation-name: float-up-in;
+}
+
+.VPNav {
+	view-transition-name: nav;
+}
+
+.VPSidebar {
+	view-transition-name: side-bar;
+}
+
+::view-transition-old(side-bar):only-child {
+	animation-name: float-right-out;
+}
+
+::view-transition-new(side-bar):only-child {
+	animation-name: float-right-in;
+}
+
+::view-transition-group(nav) {
+	z-index: 20;
+}
+
+::view-transition-group(nav-bar-search-button) {
+	z-index: 21;
+}
+
+.VPDocAsideOutline {
+	view-transition-name: doc-aside;
+}
+
+::view-transition-old(doc-aside):only-child {
+	animation-name: float-left-out;
+}
+
+::view-transition-new(doc-aside):only-child {
+	animation-name: float-left-in;
+}
+
+.VPDocOutlineItem {
+	view-transition-name: doc-aside-outline-items;
+}
+
+::view-transition-old(doc-aside-outline-items) {
+	animation-name: float-left-out;
+}
+
+::view-transition-new(doc-aside-outline-items) {
+	animation-name: float-left-in;
+}
+
+.VPDoc .content .content-container {
+	view-transition-name: match-element;
+	view-transition-class: doc-content;
+}
+
+::view-transition-old(.doc-content) {
+	animation: page-jump-out cubic-bezier(0.95, 0.05, 0.795, 0.035) 150ms both;
+}
+
+::view-transition-new(.doc-content) {
+	animation: page-jump-in cubic-bezier(0.19, 1, 0.22, 1) 500ms 150ms both;
+}
+
+@keyframes float-up-out {
+	to {
+		translate: 0 -2rem;
+		opacity: 0;
+	}
+}
+
+@keyframes float-up-in {
+	from {
+		translate: 0 -2rem;
+		opacity: 0;
+	}
+}
+
+@keyframes float-right-out {
+	to {
+		translate: -2rem;
+		opacity: 0;
+	}
+}
+
+@keyframes float-right-in {
+	from {
+		translate: -2rem;
+		opacity: 0;
+	}
+}
+
+@keyframes float-left-out {
+	to {
+		translate: 2rem;
+		opacity: 0;
+	}
+}
+
+@keyframes float-left-in {
+	from {
+		translate: 2rem;
+		opacity: 0;
+	}
+}
+
+@keyframes page-jump-out {
+	to {
+		translate: 0 -2rem;
+		opacity: 0;
+	}
+}
+
+@keyframes page-jump-in {
+	from {
+		translate: 0 5rem;
+		opacity: 0;
+	}
+}
