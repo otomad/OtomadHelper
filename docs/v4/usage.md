@@ -4,21 +4,21 @@
 @en ## Installation
 @zhs ## 安装
 
-@en 1. [Download](https://otomad.github.io/otomad/link/OtomadHelper.html#latest) the latest version of this script.
-@zhs 1. [下载](https://otomad.github.io/otomad/link/OtomadHelper.html#latest)最新版脚本。
+@en 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the latest version of this script.
+@zhs 1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)最新版脚本。
 @en 2. Unzip **ALL** the files in the zip file you’ve just downloaded to the “Script Menu” folder in the Vegas installation directory.
 @zhs 2. 将你刚刚下载到的ZIP文件中的**所有**文件解压缩到Vegas安装目录中的“Script Menu”文件夹中。
-@en     (ie. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu)
-@zhs    （例：C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu）
+@en    > (ie. C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu)
+@zhs   >（例：C:\\Program Files\\BorisFX\\Vegas Pro 2026\\Script Menu）
 @en 3. Make sure that the DLL file `(DLL\NAudio.dll)` is not locked.
-@zhs 3. 请确保 DLL 文件 `(DLL\NAudio.dll)` 未锁定。
+@zhs 3. 请确保DLL文件 `(DLL\NAudio.dll)` 未锁定。
 
 @en ::: info Specific steps
 @zhs ::: info 具体步骤
 @en 1. In the Vegas installation directory, enter folder `Script Menu\DLL`.
-@zhs 1. 在 Vegas 安装目录中，依次进入 `Script Menu\DLL` 文件夹。
+@zhs 1. 在Vegas安装目录中，依次进入 `Script Menu\DLL` 文件夹。
 @en 2. Right-click the “NAudio.dll” file and select Properties.
-@zhs 2. 右键单击 “NAudio.dll” 文件，然后选择“属性”。
+@zhs 2. 右键单击“NAudio.dll”文件，然后选择“属性”。
 @en 3. If you see the “Unblock” button (Windows 7/8.x) or checkbox (Windows 10+), click or check it.
 @zhs 3. 如果您看到了“解除锁定”按钮 (Windows 7/8.x) 或复选框 (Windows 10+)，请单击或选中它。
 @en 4. Click OK button and you’re done.
@@ -27,6 +27,26 @@
 
 @en 4. Open Vegas Pro to launch it. Select menu *Tools > Scripting > Otomad Helper* to open.
 @zhs 4. 打开 Vegas Pro 来启动。选择菜单 *工具 > 脚本化 > Otomad Helper* 打开。
+
+@en ### Datamosh Extension Pack
+@zhs ### 数据抹失扩展包
+
+@en If you want to use the full features of Datamosh, you have to install the Datamosh extension pack.
+@zhs 如果需要使用数据抹失的全部功能，需要安装数据抹失扩展包方可使用。
+
+@en 1. [Download](https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh) the Datamosh extension pack.
+@zhs 1. [下载](https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh)数据抹失扩展包。
+@en 2. Unzip the 7z file and move the `_internal` folder to the same directory as the script `Otomad Helper.cs`.
+@zhs 2. 解压7z文件并将 `_internal` 文件夹移动到脚本 `Otomad Helper.cs` 所在的相同目录下。
+
+@en ## **Compatibility**
+@zhs ## **兼容性**
+
+@en Vegas Pro 13+ supported.
+@zhs 支持Vegas Pro 13及以上版本。
+
+@en Vegas Pro 16 and above support all features, and Vegas Pro 13 – 15 are compatible to run (some features are missing). The correct version must be installed though.
+@zhs Vegas Pro 16及以上版本支持所有功能，Vegas Pro 13 ~ 15可以兼容运行（会缺失部分功能）。前提是必须安装对应的版本。
 
 @en ## Using Otomad Helper
 @zhs ## 使用Otomad Helper

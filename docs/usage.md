@@ -4,14 +4,14 @@
 @en ## Installation
 @zhs ## 安装
 
-@en 1. [Download](https://otomad.github.io/otomad/link/OtomadHelper.html#latest) the latest version of this extension.
-@zhs 1. [下载](https://otomad.github.io/otomad/link/OtomadHelper.html#latest)最新版扩展程序。
+@en 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the latest version of this extension.
+@zhs 1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)最新版扩展程序。
 @en 2. Unzip **ALL** the files in the compressed file you’ve just downloaded to the “Application Extensions” folder.
 @zhs 2. 将你刚刚下载到的压缩文件中的**所有**文件解压缩到“Application Extensions”文件夹中。
 @en     If this folder does not exist, please create a new one.
 @zhs    如果该文件夹不存在，请新建。
-@en     (ie. C:\\ProgramData\\VEGAS Pro\\Application Extensions)
-@zhs    （例：C:\\ProgramData\\VEGAS Pro\\Application Extensions）
+@en    > (ie. C:\\ProgramData\\VEGAS Pro\\Application Extensions)
+@zhs   > （例：C:\\ProgramData\\VEGAS Pro\\Application Extensions）
 @en 3. Make sure that the DLL file is not locked.
 @zhs 3. 请确保 DLL 文件未锁定。
 

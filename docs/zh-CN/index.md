@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: 立即下载！
-      link: https://otomad.github.io/otomad/link/OtomadHelper.html#latest
+      link: https://github.com/otomad/OtomadHelper/releases/latest
     - theme: alt
       text: 新版文档 (v8)
       link: ./introduction

@@ -322,3 +322,14 @@ img.overview {
 		display: none;
 	}
 }
+
+/**
+ * Component: Hero Image
+ */
+.VPHero .image-container {
+	transition: filter 500ms;
+
+	&:has(.VPImage:hover) {
+		filter: saturate(1.5);
+	}
+}

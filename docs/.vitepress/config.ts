@@ -1,4 +1,4 @@
-import { defineConfig } from "vitepress";
+import { defineConfig, type DefaultTheme } from "vitepress";
 import i18nMacroPlugin from "./plugins/i18n-macro";
 import fs from "fs";
 
@@ -50,27 +50,10 @@ export default defineConfig({
 			themeConfig: {
 				nav: [
 					{ text: "Home", link: "/" },
-					{ text: "New Documentations (v8)", link: "/introduction" },
-					{ text: "Old Documentations (v4)", link: "/v4/introduction" },
+					{ text: "New Documentations (v8)", link: "/introduction", activeMatch: "^/[^/]+$" },
+					{ text: "Old Documentations (v4)", link: "/v4/introduction", activeMatch: "/v4/" },
 				],
-				sidebar: {
-					"/": [
-						{
-							text: "Introduction",
-							items: [
-								{ text: "What’s Otomad Helper?", link: "/introduction" },
-								{ text: "Usage", link: "/usage" },
-								{ text: "FAQ", link: "/faq" },
-							],
-						},
-					],
-					"/v4/": [
-						{
-							text: "Introduction",
-							items: [{ text: "What’s Otomad Helper?", link: "/v4/introduction" }],
-						},
-					],
-				},
+				sidebar: sidebar("en"),
 			},
 		},
 		"zh-CN": {
@@ -88,27 +71,10 @@ export default defineConfig({
 				returnToTopLabel: "回到顶部",
 				nav: [
 					{ text: "主页", link: "/zh-CN/" },
-					{ text: "新版文档 (v8)", link: "/zh-CN/introduction" },
-					{ text: "旧版文档 (v4)", link: "/zh-CN/v4/introduction" },
+					{ text: "新版文档 (v8)", link: "/zh-CN/introduction", activeMatch: "^/zh-CN/[^/]+$" },
+					{ text: "旧版文档 (v4)", link: "/zh-CN/v4/introduction", activeMatch: "/zh-CN/v4/" },
 				],
-				sidebar: {
-					"/zh-CN/": [
-						{
-							text: "简介",
-							items: [
-								{ text: "音MAD助手是什么？", link: "/zh-CN/introduction" },
-								{ text: "用法", link: "/zh-CN/usage" },
-								{ text: "疑难解答", link: "/zh-CN/faq" },
-							],
-						},
-					],
-					"/zh-CN/v4/": [
-						{
-							text: "简介",
-							items: [{ text: "音MAD助手是什么？", link: "/zh-CN/v4/introduction" }],
-						},
-					],
-				},
+				sidebar: sidebar("zhs"),
 			},
 		},
 	},
@@ -158,3 +124,73 @@ export default defineConfig({
 		},
 	},
 });
+
+type SidebarLocales = "en" | "zhs";
+type SidebarItems = Record<string, DefaultTheme.SidebarItem[]>;
+type Override<TSource, TOverrider> = Omit<TSource, keyof TOverrider> & TOverrider;
+function sidebar(locale: SidebarLocales): SidebarItems {
+	type SidebarTemplate = Record<
+		string,
+		(Record<SidebarLocales, string> &
+			Override<
+				DefaultTheme.SidebarItem,
+				{
+					items: (Record<SidebarLocales, string> & DefaultTheme.SidebarItem)[];
+				}
+			>)[]
+	>;
+	const sidebar: SidebarTemplate = {
+		"/": [
+			{
+				en: "Introduction",
+				zhs: "简介",
+				items: [
+					{ en: "What is Otomad Helper?", zhs: "音MAD助手是什么？", link: "/introduction" },
+					{ en: "Usage", zhs: "用法", link: "/usage" },
+					{ en: "FAQ", zhs: "疑难解答", link: "/faq" },
+				],
+			},
+		],
+		"/v4/": [
+			{
+				en: "Introduction",
+				zhs: "简介",
+				items: [
+					{ en: "What is Otomad Helper?", zhs: "音MAD助手是什么？", link: "/introduction" },
+					{ en: "Usage", zhs: "用法", link: "/usage" },
+				],
+			},
+			{
+				en: "Tabs",
+				zhs: "选项卡",
+				items: [
+					{ en: "Source", zhs: "素材", link: "/source" },
+					{ en: "Score", zhs: "乐曲", link: "/score" },
+					{ en: "Audio", zhs: "音频", link: "/audio" },
+					{ en: "Visual", zhs: "画面", link: "/visual" },
+					{ en: "Staff", zhs: "五线谱", link: "/staff" },
+					{ en: "Sonar", zhs: "声呐", link: "/sonar" },
+					{ en: "YTP", zhs: "YTP", link: "/ytp" },
+					{ en: "Tools", zhs: "工具", link: "/tools" },
+					{ en: "Mosh", zhs: "抹失", link: "/mosh" },
+				],
+			},
+		],
+	};
+	const lang = (() => {
+		if (locale === "en") return "";
+		else if (locale === "zhs") return "zh-CN";
+		else return locale;
+	})();
+	return Object.fromEntries(
+		Object.entries(sidebar).map(([base, nav]) => {
+			if (lang) base = "/" + lang + base;
+			for (const section of nav) {
+				section.text = section[locale];
+				section.base = base;
+				for (const item of section.items) item.text = item[locale];
+			}
+			return [base, nav] as const;
+		}),
+	) as SidebarItems;
+}

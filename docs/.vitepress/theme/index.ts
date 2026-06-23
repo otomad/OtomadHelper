@@ -14,6 +14,7 @@ export default {
 		let resolver: PromiseWithResolvers<void> | undefined;
 		const locales = Object.keys(siteData.value.locales).filter(lang => lang !== "root");
 		router.onBeforeRouteChange = to => {
+			if (!globalThis.location) return;
 			const from = location.pathname;
 			const localeChanged = isLocaleChanged(from, to, locales);
 			if (!enableTransitions()) return;
@@ -27,13 +28,14 @@ export default {
 		router.onAfterRouteChange = () => {
 			if (!enableTransitions() || !resolver) return;
 			resolver.resolve();
-			resolver = undefined;
 		};
 	},
 } satisfies Theme;
 
 const enableTransitions = () =>
-	"startViewTransition" in document && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	globalThis.window &&
+	"startViewTransition" in document &&
+	!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function isLocaleChanged(from: string, to: string, locales: string[]) {
 	const [fromLocale, toLocale] = [from, to].map(route => locales.find(locale => route.startsWith("/" + locale)));

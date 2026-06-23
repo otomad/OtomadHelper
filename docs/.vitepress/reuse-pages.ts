@@ -8,12 +8,16 @@ export default function reusePages(dirname: string): RouteModule {
 	return defineRoutes({
 		watch: [`${rootLangDirname}/*.md`, "./*.md"],
 		paths: watchedFiles =>
-			[...new Map(watchedFiles.map(filePath => [path.parse(filePath).name, filePath]))].map(
-				([pageName, filePath]) => ({
-					params: { page: pageName },
-					content: fs.readFileSync(path.resolve(rootLangDirname, filePath), "utf-8"),
-				}),
-			),
+			[
+				...new Map(
+					watchedFiles
+						.filter(filePath => !filePath.includes("[")) // 本函数假定当前项目所在文件夹路径中一定不含带有方括号的文件夹，否则会产生异常。
+						.map(filePath => [path.parse(filePath).name, filePath]),
+				),
+			].map(([pageName, filePath]) => ({
+				params: { page: pageName },
+				content: fs.readFileSync(path.resolve(rootLangDirname, filePath), "utf-8"),
+			})),
 	});
 }
 

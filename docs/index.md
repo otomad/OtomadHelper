@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: Download Now!
-      link: https://otomad.github.io/otomad/link/OtomadHelper.html#latest
+      link: https://github.com/otomad/OtomadHelper/releases/latest
     - theme: alt
       text: New Documentations (v8)
       link: ./introduction
