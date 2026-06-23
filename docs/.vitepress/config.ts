@@ -1,14 +1,19 @@
 import { defineConfig, type DefaultTheme } from "vitepress";
 import i18nMacroPlugin from "./plugins/i18n-macro";
 import fs from "fs";
+import { resolve } from "path";
+import { join } from "path/posix";
+
+const base = process.env.READTHEDOCS_CANONICAL_URL
+	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
+	: "";
+const withBase = (path: string) => join(base || "/", path);
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
 	// Use Canonical URL, but only the path and with no trailing /
 	// End result is like: `/en/latest`
-	base: process.env.READTHEDOCS_CANONICAL_URL
-		? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
-		: "",
+	base,
 	markdown: {
 		breaks: true,
 		cjkFriendlyEmphasis: true,
@@ -23,7 +28,7 @@ export default defineConfig({
 		resolve: {
 			alias: {
 				"@vp": import.meta.dirname,
-				"@assets": import.meta.resolve("../assets"),
+				"@assets": resolve(import.meta.dirname, "../assets"),
 			},
 		},
 	},
@@ -35,13 +40,16 @@ export default defineConfig({
 			"link",
 			{
 				rel: "icon",
-				href: "/favicon.ico",
+				href: withBase("favicon.ico"),
 				type: "image/vnd.microsoft.icon",
 				sizes: "16x16 24x24 32x32 48x48 64x64",
 			},
 		],
-		["link", { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" }],
-		["link", { rel: "apple-touch-icon", href: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" }],
+		["link", { rel: "icon", href: withBase("favicon.svg"), type: "image/svg+xml" }],
+		[
+			"link",
+			{ rel: "apple-touch-icon", href: withBase("apple-touch-icon.png"), type: "image/png", sizes: "180x180" },
+		],
 	],
 	locales: {
 		root: {
