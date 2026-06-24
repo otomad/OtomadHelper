@@ -13,8 +13,8 @@
 @en 3. Make sure that the DLL file `(DLL\NAudio.dll)` is not locked.
 @zhs 3. 请确保DLL文件 `(DLL\NAudio.dll)` 未锁定。
 
-@en ::: info Specific steps
-@zhs ::: info 具体步骤
+@en ::: tip Specific steps
+@zhs ::: tip 具体步骤
 @en 1. In the Vegas installation directory, enter folder `Script Menu\DLL`.
 @zhs 1. 在Vegas安装目录中，依次进入 `Script Menu\DLL` 文件夹。
 @en 2. Right-click the “NAudio.dll” file and select Properties.

@@ -15,8 +15,8 @@
 @en 3. Make sure that the DLL file is not locked.
 @zhs 3. 请确保 DLL 文件未锁定。
 
-@en ::: info Specific steps
-@zhs ::: info 具体步骤
+@en ::: tip Specific steps
+@zhs ::: tip 具体步骤
 @en 1. Enter folder `C:\ProgramData\VEGAS Pro\Application Extensions`.
 @zhs 1. 进入 `C:\ProgramData\VEGAS Pro\Application Extensions` 文件夹。
 @en 2. Right-click the “Otomad Helper.dll” file and select Properties.

@@ -102,7 +102,7 @@
 	animation-name: float-left-in;
 }
 
-.VPDocOutlineItem {
+.VPDocOutlineItem.root {
 	view-transition-name: doc-aside-outline-items;
 }
 

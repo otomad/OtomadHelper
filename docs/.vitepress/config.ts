@@ -1,6 +1,6 @@
 import { defineConfig, type DefaultTheme } from "vitepress";
-import i18nMacroPlugin from "./plugins/i18n-macro";
-import fs from "fs";
+import i18nMacroPlugin from "./plugins/markdown-it/i18n-macro";
+import underlinePlugin from "./plugins/markdown-it/underline";
 import { resolve } from "path";
 import { join } from "path/posix";
 
@@ -19,6 +19,7 @@ export default defineConfig({
 		cjkFriendlyEmphasis: true,
 		config: md => {
 			md.use(i18nMacroPlugin);
+			md.use(underlinePlugin);
 		},
 	},
 	vite: {
@@ -34,7 +35,6 @@ export default defineConfig({
 	},
 	lastUpdated: true,
 	title: "Otomad Helper",
-	description: "Helps to create YTPMVs in Vegas Pro",
 	head: [
 		[
 			"link",
@@ -55,6 +55,7 @@ export default defineConfig({
 		root: {
 			label: "English",
 			lang: "en",
+			description: "Helps to create YTPMVs in Vegas Pro",
 			themeConfig: {
 				nav: [
 					{ text: "Home", link: "/" },
@@ -67,6 +68,7 @@ export default defineConfig({
 		"zh-CN": {
 			label: "简体中文",
 			lang: "zh-CN",
+			description: "在Vegas Pro中生成音MAD",
 			themeConfig: {
 				darkModeSwitchLabel: "主题",
 				lightModeSwitchTitle: "切换到浅色模式",
@@ -87,6 +89,7 @@ export default defineConfig({
 		},
 	},
 	themeConfig: {
+		outline: { level: "deep" },
 		editLink: {
 			pattern: "https://github.com/otomad/OtomadHelper/tree/docs/docs/:path",
 		},
@@ -170,7 +173,7 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 			},
 			{
 				en: "Tabs",
-				zhs: "选项卡",
+				zhs: "分页",
 				items: [
 					{ en: "Source", zhs: "素材", link: "/source" },
 					{ en: "Score", zhs: "乐曲", link: "/score" },
@@ -180,7 +183,7 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 					{ en: "Sonar", zhs: "声呐", link: "/sonar" },
 					{ en: "YTP", zhs: "YTP", link: "/ytp" },
 					{ en: "Tools", zhs: "工具", link: "/tools" },
-					{ en: "Mosh", zhs: "抹失", link: "/mosh" },
+					{ en: "Moshes", zhs: "抹失", link: "/mosh" },
 				],
 			},
 		],

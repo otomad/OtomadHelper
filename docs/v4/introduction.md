@@ -4,8 +4,8 @@
 @en **Otomad Helper** is a YTPMV/otoMAD/YTP script for Vegas Pro that enables Vegas to accept MIDI sequence files as input and automatically generate YTPMV tracks.
 @zhs **音MAD助手**是Vegas Pro的音MAD/YTPMV/YTP脚本，旨在使Vegas能够接受MIDI序列文件作为输入并自动生成音MAD的轨道。
 
-@en ![Overview](/img/v4/overview.png){.overview}
-@zhs ![概览](/img/v4/overview_zh-CN.png){.overview}
+@en ![Overview](/img/v4/overview.png){.shadow-less}
+@zhs ![概览](/img/v4/overview_zh-CN.png){.shadow-less}
 
 @en The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code and uses the NAudio library.
 @zhs 本脚本基于原作者 [@Chaosinism](https://github.com/Chaosinism) 的开源代码二次开发，此外使用了NAudio库。
@@ -13,8 +13,8 @@
 @en Check out the [usage](usage.md) section for further information, including how to [install](usage.md#installation) the script.
 @zhs 查看[用法](usage.md)部分以了解更多信息，包括如何[安装](usage.md#安装)该脚本。
 
-@en *This documentation was originally written by [@Evauation](https://github.com/Evauation).*
-@zhs *本说明文档最初由 [@Evauation](https://github.com/Evauation) 编写。*
+@en _This documentation was originally written by [@Evauation](https://github.com/Evauation)._
+@zhs _本说明文档最初由 [@Evauation](https://github.com/Evauation) 编写。_
 
 @en ## Sub-Features
 @zhs ## 子功能
@@ -50,10 +50,10 @@
 @en ### Translators
 @zhs ### 翻译
 
-@en * Vietnamese translation provided by [@Cyahega](https://github.com/Cyahega).
-@zhs * 越南语翻译由 [@Cyahega](https://github.com/Cyahega) 提供。
-@en * Indonesian translation provided by [@AdeEdogawa](https://github.com/AdeEdogawa) and *@JujunG*.
-@zhs * 印尼语翻译由 [@AdeEdogawa](https://github.com/AdeEdogawa) 和 *@JujunG* 提供。
+@en _ Vietnamese translation provided by [@Cyahega](https://github.com/Cyahega).
+@zhs _ 越南语翻译由 [@Cyahega](https://github.com/Cyahega) 提供。
+@en _ Indonesian translation provided by [@AdeEdogawa](https://github.com/AdeEdogawa) and _@JujunG*.
+@zhs * 印尼语翻译由 [@AdeEdogawa](https://github.com/AdeEdogawa) 和 _@JujunG_ 提供。
 
 ---
 
