@@ -120,6 +120,14 @@
 	animation: page-jump-in cubic-bezier(0.19, 1, 0.22, 1) 500ms 150ms both;
 }
 
+readthedocs-flyout::part(flyout) {
+	view-transition-name: readthedocs-flyout;
+}
+
+::view-transition-group(readthedocs-flyout) {
+	z-index: 90;
+}
+
 @keyframes float-up-out {
 	to {
 		translate: 0 -2rem;

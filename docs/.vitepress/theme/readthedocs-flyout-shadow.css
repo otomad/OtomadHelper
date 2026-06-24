@@ -1,0 +1,31 @@
+:host > div {
+	border-radius: 6px;
+	view-transition-name: readthedocs-flyout;
+}
+
+:host > div:has(> main.closed) {
+	border-radius: 4px;
+}
+
+::view-transition-group(readthedocs-flyout) {
+	z-index: 90;
+}
+
+:host-context(html:not(.dark)) img.logo {
+	filter: invert(1);
+}
+
+.caret svg.icon {
+	color: var(--readthedocs-flyout-color);
+}
+
+#flyout-search-form input {
+	background-color: var(--vp-c-bg);
+	border: none;
+	color: var(--vp-c-text-2);
+	border-radius: 4px;
+}
+
+:host > div:has(> main:not(.closed)) .caret svg.icon {
+	transform: rotate(180deg) translateX(0.25em);
+}

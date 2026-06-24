@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useData } from "vitepress";
 import DefaultTheme from "vitepress/theme-without-fonts";
-import { nextTick, provide } from "vue";
+import { nextTick, provide, onMounted } from "vue";
+import flyoutShadowStyle from "./readthedocs-flyout-shadow.css?inline";
 
 const { isDark } = useData();
 
@@ -36,6 +37,40 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 			pseudoElement: `::view-transition-${isDark.value ? "old" : "new"}(root)`,
 		},
 	);
+});
+
+onMounted(async () => {
+	// Readthedocs flyout custom style.
+	if (!location.hostname.includes("readthedocs")) return;
+	const READTHEDOCS_FLYOUT = "readthedocs-flyout";
+	await new Promise(resolve => {
+		if (document.querySelector(READTHEDOCS_FLYOUT)?.shadowRoot) {
+			resolve();
+			return;
+		}
+		const observer = new MutationObserver(mutationsList => {
+			for (const mutation of mutationsList) {
+				if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+					for (const node of mutation.addedNodes)
+						if (
+							node instanceof HTMLElement &&
+							node.tagName.toLowerCase() === READTHEDOCS_FLYOUT &&
+							node.shadowRoot
+						) {
+							resolve();
+							observer.disconnect();
+							return;
+						}
+				}
+			}
+		});
+		observer.observe(document.body, { childList: true });
+	});
+	const flyout = document.querySelector(READTHEDOCS_FLYOUT).shadowRoot;
+	const stylesheet = new CSSStyleSheet();
+	stylesheet.replaceSync(flyoutShadowStyle);
+	flyout.shadowRoot.adoptedStyleSheets.push(stylesheet);
+	flyout.shadowRoot.firstElementChild.part = "flyout";
 });
 </script>
 
