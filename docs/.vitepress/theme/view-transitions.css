@@ -64,6 +64,10 @@
 
 .VPSidebar {
 	view-transition-name: side-bar;
+
+	@media (width < 960px) {
+		view-transition-class: toper;
+	}
 }
 
 ::view-transition-old(side-bar):only-child {
@@ -80,6 +84,10 @@
 
 ::view-transition-group(nav-bar-search-button) {
 	z-index: 21;
+}
+
+::view-transition-group(side-bar.toper) {
+	z-index: 22;
 }
 
 .VPDocAsideOutline {
@@ -124,8 +132,24 @@ readthedocs-flyout::part(flyout) {
 	view-transition-name: readthedocs-flyout;
 }
 
+:root:active-view-transition-type(instant) readthedocs-flyout::part(flyout) {
+	view-transition-name: none;
+}
+
 ::view-transition-group(readthedocs-flyout) {
 	z-index: 90;
+}
+
+.VPLocalNav {
+	view-transition-name: local-nav;
+}
+
+::view-transition-old(local-nav):only-child {
+	animation-name: float-up-slight-out;
+}
+
+::view-transition-new(local-nav):only-child {
+	animation-name: float-up-slight-in;
 }
 
 @keyframes float-up-out {
@@ -180,6 +204,20 @@ readthedocs-flyout::part(flyout) {
 @keyframes page-jump-in {
 	from {
 		translate: 0 5rem;
+		opacity: 0;
+	}
+}
+
+@keyframes float-up-slight-out {
+	to {
+		translate: 0 -1rem;
+		opacity: 0;
+	}
+}
+
+@keyframes float-up-slight-in {
+	from {
+		translate: 0 -1rem;
 		opacity: 0;
 	}
 }
