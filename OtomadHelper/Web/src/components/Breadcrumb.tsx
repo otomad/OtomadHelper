@@ -106,7 +106,7 @@ export default function Breadcrumb({ titles, large = true, ...htmlAttrs }: FCP<{
 					const result = [crumb];
 					if (!last) result.push(<BreadcrumbChevronRight key={i + "-chevron"} />);
 					return result.map((node, j) =>
-						<CssTransition key={`${i}-${j}`}>{node}</CssTransition>);
+						<CssTransition key={`${i}-${j}`} requestAnimationFrame>{node}</CssTransition>);
 				})}
 			</TransitionGroup>
 		</StyledBreadcrumb>

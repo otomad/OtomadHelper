@@ -681,7 +681,7 @@ export default {
 				roadmap: "Roadmap",
 				version: "Phiên bản",
 				author: "Tác giả",
-				__author__: "Lan Triệt Kì",
+				__author__: "Lan Âm",
 				originalAuthor: "Tác giả gốc",
 				__originalAuthor__: "Chaosinism",
 				translator: "Dịch giả",

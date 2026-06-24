@@ -185,6 +185,7 @@ export default function AnimatedIcon({
 	speed = 1,
 	filled = false,
 	showFallbackIcon = false,
+	reduceTwiceAnimation = false,
 	onInit,
 	onClick,
 	onPlayStateChange,
@@ -210,6 +211,8 @@ export default function AnimatedIcon({
 	 * You can also manually specify the fallback icon name.
 	 */
 	showFallbackIcon?: boolean | DeclaredIcons;
+	/** Reduce twice animation because of the async view transition. */
+	reduceTwiceAnimation?: boolean;
 	/** Initialization event. */
 	onInit?(anim?: AnimationItem): void;
 	/** Click event. */
@@ -322,7 +325,7 @@ export default function AnimatedIcon({
 
 	const previousAnimationName = useRef("Normal");
 	const onAnimationStart = useCallback<AnimationEventHandler>(e => {
-		if (pageContentViewTransitionStore.beginToTransition) return;
+		if (reduceTwiceAnimation && pageContentViewTransitionStore.beginToTransition) return;
 		let [previous, current] = [previousAnimationName.current, e.animationName];
 		if (!current.startsWith(STATUS_PREFIX)) return;
 		current = current.replace(STATUS_PREFIX, "");

@@ -342,7 +342,7 @@ export default {
 				roadmap: "Roadmap",
 				version: "Versi",
 				author: "Author",
-				__author__: "Rantetsu Inori",
+				__author__: "Ranne",
 				originalAuthor: "Author original",
 				translator: "Penerjemah",
 				troubleshooting: "Penyelesaian masalah",

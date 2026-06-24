@@ -1019,7 +1019,7 @@ export default {
 				version: "Version",
 				credits: "Credits",
 				author: "Author",
-				__author__: "Rantetsu Inori",
+				__author__: "Ranne",
 				originalAuthor: "Original author",
 				__originalAuthor__: "Chaosinism",
 				translator: "Translator",

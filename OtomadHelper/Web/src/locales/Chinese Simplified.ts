@@ -979,7 +979,7 @@ export default {
 				version: "版本",
 				credits: "开放源代码许可",
 				author: "作者",
-				__author__: "兰澈祈",
+				__author__: "兰音",
 				originalAuthor: "原作者",
 				__originalAuthor__: "Chaosinism",
 				translator: "翻译",

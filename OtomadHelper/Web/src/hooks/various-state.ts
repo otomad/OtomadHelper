@@ -68,16 +68,16 @@ export const computedSubStore: <T, TTuple extends readonly Any[]>(...args: Const
 export type VariousState<T> = StateProperty<T> /* | StateGetterProperty<T> */ | IStoreSubscribedProperty<T>;
 export type VariousStateWithSelf<T> = VariousState<T> | T;
 
-export function useVariousState<T>(value?: VariousState<T>): StatePropertyNonNull<T>;
-export function useVariousState<T>(value?: VariousStateWithSelf<T>, includeValueItself?: true): StatePropertyNonNull<T>;
-export function useVariousState<T>(value: VariousState<T> = [], includeValueItself = false): StatePropertyNonNull<T> {
+export function useVariousState<T>(value?: Readonly<VariousState<T>>): StatePropertyNonNull<T>;
+export function useVariousState<T>(value?: Readonly<VariousStateWithSelf<T>>, includeValueItself?: true): StatePropertyNonNull<T>;
+export function useVariousState<T>(value: Readonly<VariousState<T>> = [], includeValueItself = false): StatePropertyNonNull<T> {
 	"use no memo";
 	if (value instanceof StoreSubscribedProperty || value instanceof ComputedStoreSubscribeProperty)
 		return value.use();
 	else if (isReadonlyArray(value))
 		return [value[0] as T, value[1] ?? noop];
 	else if (includeValueItself)
-		return [value, noop];
+		return [value as T, noop];
 	else
 		throw new TypeError("The provided value is not supported by `useVariousState` function");
 }

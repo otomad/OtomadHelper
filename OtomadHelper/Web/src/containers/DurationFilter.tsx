@@ -220,7 +220,7 @@ function RangeFormula({ filter }: { filter: Config.DurationFilter }) {
 	})();
 
 	return (
-		<math>
+		<math displaystyle="true">
 			<mrow>
 				<mo form="prefix" stretchy="false">{"{"}</mo>
 				{variable}

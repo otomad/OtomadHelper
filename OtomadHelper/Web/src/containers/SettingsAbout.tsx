@@ -19,14 +19,14 @@ const StyledSettingsAbout = styled.div`
 	.links {
 		display: flex;
 		flex-wrap: wrap;
-		// row-gap: 5px; // WARN: BUG in column-rule-outset, it will unexpectedly offset.
+		row-gap: 5px;
 		justify-content: center;
 		column-rule: 1px solid ${c("fill-color-text-tertiary")};
 	}
 
 	.collaborators {
 		column-gap: 24px;
-		column-rule-outset: -4px;
+		column-rule-inset: 2px;
 
 		.role {
 			${styles.text.caption};
@@ -41,8 +41,8 @@ const StyledSettingsAbout = styled.div`
 	.links {
 		${styles.text.bodyStrong};
 		column-gap: 14px;
-		column-rule: 3px dotted ${c("accent-color", 40)};
-		column-rule-outset: -8px;
+		column-rule: 2px dotted ${c("accent-color", 40)};
+		column-rule-inset: 2px;
 	}
 
 	> * {
@@ -54,8 +54,10 @@ export default function SettingsAbout() {
 	const t = useT();
 	const [currentLanguage] = useLanguage();
 	const [hasTranslator, formattedTranslator] = listFormatTranslators(currentLanguage, currentLanguage);
+	let escapedAuthor = t.settings.about.__author__.toString();
+	if (escapedAuthor === "Ranne") escapedAuthor = "otomad";
 	const collaborators = new Map<string, string>([
-		[t.settings.about.author, t.settings.about.__author__],
+		[t.settings.about.author, escapedAuthor],
 		[t.settings.about.originalAuthor, t.settings.about.__originalAuthor__],
 		[t.settings.about.translator, hasTranslator ? formattedTranslator : ""],
 	]);

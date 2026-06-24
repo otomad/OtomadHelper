@@ -378,7 +378,7 @@ export default function Score({ _trackSelectorOnly = false }: {
 				value={constrainNoteLengthType}
 				view="tile"
 				idField="id"
-				nameField={t.score.constrain}
+				nameField={tf.constrain}
 				detailsField={t.descriptions.score.constrain}
 				iconField="icon"
 				ieOff

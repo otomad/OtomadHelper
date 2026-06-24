@@ -5,7 +5,7 @@ export { };
 declare module "react/jsx-runtime" {
 	namespace JSX {
 		interface IntrinsicElements {
-			// MathML
+			// Presentation MathML
 			/** @deprecated */
 			maction: React.MathMLProps<React.MathMLMActionAttributes>;
 			math: React.MathMLProps<React.MathMLMathAttributes>;
@@ -38,6 +38,17 @@ declare module "react/jsx-runtime" {
 			// MathML semantic annotations
 			annotation: React.MathMLProps<React.MathMLAnnotationAttributes>;
 			"annotation-xml": React.MathMLProps<React.MathMLAnnotationXmlAttributes>;
+			// Content MathML
+			apply: any;
+			plusminus: any;
+			divide: any;
+			cn: any;
+			log: any;
+			logbase: any;
+			in: any;
+			ci: any;
+			interval: any;
+			minus: any;
 		}
 	}
 
