@@ -69,8 +69,8 @@ onMounted(async () => {
 	const flyout = document.querySelector(READTHEDOCS_FLYOUT).shadowRoot;
 	const stylesheet = new CSSStyleSheet();
 	stylesheet.replaceSync(flyoutShadowStyle);
-	flyout.shadowRoot.adoptedStyleSheets.push(stylesheet);
-	flyout.shadowRoot.firstElementChild.part = "flyout";
+	flyout.adoptedStyleSheets.push(stylesheet);
+	flyout.firstElementChild.part = "flyout";
 });
 </script>
 

@@ -50,7 +50,6 @@ export default defineConfig({
 			"link",
 			{ rel: "apple-touch-icon", href: withBase("apple-touch-icon.png"), type: "image/png", sizes: "180x180" },
 		],
-		["script", { src: "/readthedocs-addons.js" }],
 	],
 	locales: {
 		root: {
