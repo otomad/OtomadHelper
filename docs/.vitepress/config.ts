@@ -34,6 +34,7 @@ export default defineConfig({
 		},
 	},
 	lastUpdated: true,
+	ignoreDeadLinks: true,
 	title: "Otomad Helper",
 	head: [
 		[
