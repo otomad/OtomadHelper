@@ -152,7 +152,7 @@ _Settings to assign gain values relative to the MIDI notes_
 * **Raise / Lower octaves**
   * Shifts by octaves to keep the note inside ±24 semitones (safest option).
 * **Raise / Lower octaves (Experimental)**
-  * Allows a much larger range, up to roughly ±40 semitones.
+  * Allows a much larger range, up to roughly ±39 $\pm\frac{12}{\lg{2}}\ \left(\approx\pm39.863137\right)$ semitones.
     ::: info
     If “Lock Stretch to Pitch” is on, it can go as low as -52 semitones (upper limit stays \+24).
     :::

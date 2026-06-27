@@ -1,6 +1,8 @@
+/// <reference types="vitepress/client" />
+
 // https://vitepress.dev/guide/custom-theme
 import { h } from "vue";
-import type { Theme } from "vitepress";
+import { inBrowser, type Theme } from "vitepress";
 import DefaultTheme from "vitepress/theme-without-fonts";
 import MyLayout from "./Layout.vue";
 import "./style.css";
@@ -10,6 +12,8 @@ export default {
 	extends: DefaultTheme,
 	Layout: MyLayout,
 	enhanceApp({ app, router, siteData }) {
+		if (!inBrowser) return;
+
 		// View Transition API
 		let resolver: PromiseWithResolvers<void> | undefined;
 		const locales = Object.keys(siteData.value.locales).filter(lang => lang !== "root");
@@ -27,18 +31,40 @@ export default {
 			});
 		};
 		router.onAfterRouteChange = () => {
-			if (!enableTransitions() || !resolver) return;
-			resolver.resolve();
+			// Handle View Transition API
+			(() => {
+				if (!enableTransitions() || !resolver) return;
+				resolver.resolve();
+			})();
+
+			// Handle details hash changed
+			(() => {
+				handleHashOpenAndScroll();
+			})();
 		};
 	},
 } satisfies Theme;
 
 const enableTransitions = () =>
-	globalThis.window &&
-	"startViewTransition" in document &&
-	!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	inBrowser && "startViewTransition" in document && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function isLocaleChanged(from: string, to: string, locales: string[]) {
 	const [fromLocale, toLocale] = [from, to].map(route => locales.find(locale => route.startsWith("/" + locale)));
 	return fromLocale !== toLocale;
 }
+
+// 自动展开与定位的核心函数
+const handleHashOpenAndScroll = () => {
+	const hash = location.hash.slice(1);
+	console.log(hash);
+	if (!hash) return;
+
+	// 找到对应 id 的元素
+	const targetId = decodeURIComponent(hash);
+	const heading = document.getElementById(targetId);
+	console.log(heading);
+
+	if (heading && heading.matches("details > summary > :is(h1, h2, h3, h4, h5, h6)")) {
+		heading.closest("details")!.open = true;
+	}
+};

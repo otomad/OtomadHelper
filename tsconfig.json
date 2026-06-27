@@ -11,6 +11,7 @@
 		"module": "esnext",
 		"target": "esnext",
 		"moduleResolution": "bundler",
+		"verbatimModuleSyntax": true,
 		"lib": [
 			"DOM",
 			"DOM.Iterable",

@@ -1,4 +1,4 @@
-import MarkdownIt from "markdown-it";
+import type MarkdownIt from "markdown-it";
 
 /**
  * VitePress / Markdown-it 宏预处理多语言插件 (支持所有复杂语法混写)

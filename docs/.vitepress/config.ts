@@ -1,6 +1,8 @@
 import { defineConfig, type DefaultTheme } from "vitepress";
 import i18nMacroPlugin from "./plugins/markdown-it/i18n-macro";
 import underlinePlugin from "./plugins/markdown-it/underline";
+import detailsHeadingPlugin from "./plugins/markdown-it/container-details-heading";
+import { katex } from "@mdit/plugin-katex";
 import { resolve } from "path";
 import { join } from "path/posix";
 
@@ -20,6 +22,10 @@ export default defineConfig({
 		config: md => {
 			md.use(i18nMacroPlugin);
 			md.use(underlinePlugin);
+			md.use(detailsHeadingPlugin);
+			// VitePress 的默认数学公式渲染器 markdown-it-mathjax3 居然懒得添加 MathML 输出选项，所以换一个。
+			// See: https://github.com/tani/markdown-it-mathjax3/issues/58
+			md.use(katex, { output: "mathml" });
 		},
 	},
 	vite: {
