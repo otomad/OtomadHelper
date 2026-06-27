@@ -2,8 +2,8 @@
 
 > Also known as **Video** or **PV**.
 
-_**This setting can be toggled.** (If your clip has visuals, this is enabled by default)_
-_**You can right-click or double-click any setting slider to reset it.**_
+**This setting can be toggled.** (If your clip has visuals, this is enabled by default)
+**You can right-click or double-click any setting slider to reset it.**
 
 ## Toggles
 

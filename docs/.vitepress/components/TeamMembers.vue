@@ -36,7 +36,7 @@ const coreMembers = [
 	{
 		avatar: "https://www.github.com/Evauation.png",
 		name: "Evauation",
-		title: get({ en: "Collaborator", zhs: "协助者" }),
+		title: get({ en: "Documentation Writer", zhs: "文档编写者" }),
 		links: [{ icon: "github", link: "https://github.com/Evauation" }],
 	},
 	{
@@ -56,6 +56,12 @@ const coreMembers = [
 		name: "Cyahega",
 		title: get({ en: "Vietnamese Translator", zhs: "越南语翻译" }),
 		links: [{ icon: "github", link: "https://github.com/cyahega" }],
+	},
+	{
+		avatar: "https://github.com/AdeGimank123.png",
+		name: "AdeGimank123",
+		title: get({ en: "Indonesian Translator", zhs: "印尼语翻译" }),
+		links: [{ icon: "github", link: "https://github.com/AdeGimank123" }],
 	},
 ];
 

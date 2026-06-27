@@ -7,7 +7,7 @@
 @en ![Overview](/img/v4/overview.png){.shadow-less}
 @zhs ![概览](/img/v4/overview_zh-CN.png){.shadow-less}
 
-@en The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code and uses the NAudio library.
+@en The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)’s open source code and uses the NAudio library.
 @zhs 本脚本基于原作者 [@Chaosinism](https://github.com/Chaosinism) 的开源代码二次开发，此外使用了NAudio库。
 
 @en Check out the [usage](usage.md) section for further information, including how to [install](usage.md#installation) the script.
@@ -52,8 +52,8 @@
 
 @en _ Vietnamese translation provided by [@Cyahega](https://github.com/Cyahega).
 @zhs _ 越南语翻译由 [@Cyahega](https://github.com/Cyahega) 提供。
-@en _ Indonesian translation provided by [@AdeEdogawa](https://github.com/AdeEdogawa) and _@JujunG*.
-@zhs * 印尼语翻译由 [@AdeEdogawa](https://github.com/AdeEdogawa) 和 _@JujunG_ 提供。
+@en _ Indonesian translation provided by [@AdeGimank123](https://github.com/AdeGimank123) and _@JujunG*.
+@zhs * 印尼语翻译由 [@AdeGimank123](https://github.com/AdeGimank123) 和 _@JujunG_ 提供。
 
 ---
 

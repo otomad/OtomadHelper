@@ -9,6 +9,7 @@
 	},
 	"dependencies": {
 		"@mdit/plugin-katex": "^0.25.2",
+		"markdown-it-bracketed-spans": "^1.0.1",
 		"markdown-it-container": "^4.0.0",
 		"vitepress": "2.0.0-alpha.17"
 	},

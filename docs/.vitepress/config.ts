@@ -3,6 +3,8 @@ import i18nMacroPlugin from "./plugins/markdown-it/i18n-macro";
 import underlinePlugin from "./plugins/markdown-it/underline";
 import detailsHeadingPlugin from "./plugins/markdown-it/container-details-heading";
 import containerImportantPlugin from "./plugins/markdown-it/container-important";
+// @ts-ignore
+import bracketedSpans from "markdown-it-bracketed-spans";
 import { katex } from "@mdit/plugin-katex";
 import { resolve } from "path";
 import { join } from "path/posix";
@@ -25,10 +27,12 @@ export default defineConfig({
 			md.use(underlinePlugin);
 			md.use(detailsHeadingPlugin);
 			md.use(containerImportantPlugin);
+			md.use(bracketedSpans);
 			// VitePress 的默认数学公式渲染器 markdown-it-mathjax3 居然懒得添加 MathML 输出选项，所以换一个。
 			// See: https://github.com/tani/markdown-it-mathjax3/issues/58
 			md.use(katex, { output: "mathml" });
 		},
+		attrs: {},
 	},
 	vite: {
 		server: {
@@ -66,6 +70,10 @@ export default defineConfig({
 			lang: "en",
 			description: "Helps to create YTPMVs in Vegas Pro",
 			themeConfig: {
+				footer: {
+					message: "Released under the GPL-3.0 License",
+					copyright: "Copyright © 2021–present",
+				},
 				nav: [
 					{ text: "Home", link: "/" },
 					{ text: "New Documentations (v8)", link: "/introduction", activeMatch: "^/[^/]+$" },
@@ -91,8 +99,8 @@ export default defineConfig({
 				sidebarMenuLabel: "菜单",
 				returnToTopLabel: "回到顶部",
 				footer: {
-					message: "基于 MIT 许可发布",
-					copyright: "版权所有 © 2019-至今 尤雨溪",
+					message: "基于 GPL-3.0 许可发布",
+					copyright: "版权所有 © 2021~至今 兰音",
 				},
 				notFound: {
 					title: "页面未找到",
@@ -180,6 +188,27 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 					{ en: "What is Otomad Helper?", zhs: "音MAD助手是什么？", link: "/introduction" },
 					{ en: "Usage", zhs: "用法", link: "/usage" },
 					{ en: "FAQ", zhs: "疑难解答", link: "/faq" },
+				],
+			},
+			{
+				en: "Pages",
+				zhs: "分页",
+				items: [
+					// { en: "Home", zhs: "主页", link: "/home" },
+					{ en: "Source", zhs: "素材", link: "/source" },
+					{ en: "Score", zhs: "乐曲", link: "/score" },
+					{ en: "Audio", zhs: "音频", link: "/audio" },
+					{ en: "Visual", zhs: "画面", link: "/visual" },
+					{ en: "Track", zhs: "轨道", link: "/track" },
+					{ en: "Sonar", zhs: "声呐", link: "/sonar" },
+					{ en: "Lyrics", zhs: "歌词", link: "/lyrics" },
+					{ en: "Shupeluner", zhs: "原音系", link: "/shupeluner" },
+					{ en: "YTP", zhs: "YTP", link: "/ytp" },
+					{ en: "Tools", zhs: "工具", link: "/tools" },
+					{ en: "Moshes", zhs: "抹失", link: "/mosh" },
+					{ en: "Management", zhs: "管理", link: "/management" },
+					{ en: "Wizard", zhs: "精简", link: "/wizard" },
+					{ en: "Settings", zhs: "设置", link: "/settings" },
 				],
 			},
 		],

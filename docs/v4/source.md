@@ -17,7 +17,7 @@ _Allows selecting a media file or a track event chosen to be used_
 
 ### Start and End Seconds
 
-_Controls the clip's starting time with start Seconds and ending time with end seconds_
+_Controls the clip’s starting time with start Seconds and ending time with end seconds_
 
 ### Generate at
 
@@ -70,6 +70,8 @@ _Creates groups for the tracks_
 * **Group by task session**
   * Creates a new group whenever a new generation is completed
 
+---
+
 - **Collapse track groups by default**
   * Toggles collapsing the track group list
 - **Reuse groups that have the same nonempty name**
@@ -85,6 +87,8 @@ _Routes audio tracks to audio buses (Mixing Console)_
   * Routes the audio track to the same bus based on the MIDI track used
 * **Route by task session**
   * Creates and routes the audio track to a new bus whenever a new generation is completed
+
+---
 
 - **Reuse audio bus tracks that have the same nonempty name**
   * Toggles the generation of newly added tracks to be added to existing audio buses with the same name

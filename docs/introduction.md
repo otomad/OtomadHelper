@@ -24,6 +24,18 @@ If you are looking for the documentation that for the old version of Otomad Help
 :::
 @@@
 
+@@@en
+::: important
+**Calling all developers who use Otomad Helper:**
+v8 is currently in development and needs your help. If you have the time and skills, consider contributing code or development support to help bring Otomad Helper v8 to completion.
+:::
+@@@zhs
+::: important
+**联系所有使用Otomad Helper的开发人员：**
+v8目前正在开发中，需要您的帮助。如果你有时间和技能，可以考虑贡献代码或开发支持来帮助完成Otomad Helper v8。
+:::
+@@@
+
 @en ## Languages
 @zhs ## 语言
 

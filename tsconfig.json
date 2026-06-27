@@ -12,6 +12,8 @@
 		"target": "esnext",
 		"moduleResolution": "bundler",
 		"verbatimModuleSyntax": true,
+		"skipLibCheck": true,
+		"noImplicitAny": false,
 		"lib": [
 			"DOM",
 			"DOM.Iterable",
@@ -23,7 +25,7 @@
 		]
 	},
 	"include": [
-		"docs/**/*.ts",
+		"**/*.ts",
 		"docs/**/*.vue",
 		"docs/**/*.md",
 	],
