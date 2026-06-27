@@ -17,7 +17,7 @@ This project is under active development.
 If you are looking for the documentation that for the old version of Otomad Helper, please refer to the [old documentation (v4)](v4/introduction).
 :::
 @@@zhs
-::: warning 警告
+::: warning
 该项目正在积极开发中。
 
 如果你正在寻求旧版Otomad Helper的文档，请参看[旧版文档 (v4)](v4/introduction)。

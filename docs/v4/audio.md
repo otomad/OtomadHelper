@@ -1,9 +1,9 @@
 # Audio
 
-_This setting can be toggled. (If your clip has audio, this is enabled by default)_
-_You can right-click or double-click any setting slider to reset it_
+_**This setting can be toggled.** (If your clip has visuals, this is enabled by default)_
+_**You can right-click or double-click any setting slider to reset it.**_
 
-## Settings
+## Toggles
 
 ![Toggles](/img/v4/audio/toggles.png)
 
@@ -23,8 +23,8 @@ _Normalize the audio._
 
 _Trims to the MIDI note instead of stretching._
 
-::: warning
-*This conflicts with Legato*
+::: important
+*This conflicts with [Legato](#legato)*
 :::
 
 ### Multitrack for Chords
@@ -43,7 +43,7 @@ _Groups the Video and Audio Clips represented by the MIDI note(s)._
 
 _Creates stacked audio clips on separate tracks when the MIDI contains multiple tracks_
 
-::: warning
+::: important
 *Only works when multiple MIDI tracks are selected.*
 :::
 
@@ -55,7 +55,7 @@ _Disables all forms of time mapping of the clip! The start time will NOT reset a
 
 _Pans the Audio using Envelope Automation._
 
-::: warning
+::: important
 *This is dependent on your pan automation from your MIDI, not the notes*
 :::
 
@@ -69,12 +69,12 @@ _Makes the clip stretch if applicable._
   * Stretches the clip completely
 - **Extending Only**
   * Stretches clip out
-    ::: warning
+    ::: important
     *This works best with MIDI Notes that are longer than the audio clip*
     :::
 - **Flexing Only**
   * Stretches clip in
-    ::: warning
+    ::: important
     *This works best with MIDI Notes that are shorter than the audio clip*
     :::
 
@@ -86,12 +86,12 @@ _Extends the audio outside the note’s length with any length chosen._
   * No Extension
 - **Up to 1 Beat**
   * Extends out 1 Beat
-    ::: warning
+    ::: important
     *This will only work if the next clip is less than 1 beat apart*
     :::
 - **Up to 1 Bar**
   * Extends out 1 Bar
-    ::: warning
+    ::: important
     *This will only work if the next clip is less than 1 bar apart*
     :::
 - **Unlimited**
@@ -107,7 +107,7 @@ _Settings to assign gain values relative to the MIDI notes_
 
 * **Mapping Velocity**
   * Assigns the Notes to the Velocity from the MIDI File
-* **Multiply current gain**
+* **Multiply Current Gain**
   * Toggling multiplies the existing gain instead
 * **Velocity**
   * The Value of Velocity from Minimum to Maximum
@@ -146,15 +146,15 @@ _Settings to assign gain values relative to the MIDI notes_
 
 * **Switch to pitch shift plugin**
   * Repeatedly uses the pitch shift plugin for exceeding limits
-    ::: warning
+    ::: important
     Out of range notes will slow down the generation
     :::
 * **Raise / Lower octaves**
   * Shifts by octaves to keep the note inside ±24 semitones (safest option).
 * **Raise / Lower octaves (Experimental)**
-  * Allows a much larger range, up to roughly ±39 $\pm\frac{12}{\lg{2}}\ \left(\approx\pm39.863137\right)$ semitones.
+  * Allows a much larger range, up to roughly $\pm\frac{12}{\lg{2}}\ \left(\approx\pm39.863137\right)$ semitones.
     ::: info
-    If “Lock Stretch to Pitch” is on, it can go as low as -52 semitones (upper limit stays \+24).
+    If “Lock Stretch to Pitch” is on, it can go as low as $-\frac{12}{\log_{20}{2}} \left(\approx-51.863137\right)$ semitones (upper limit stays +24).
     :::
     ::: danger
     _Use this at your risk! This method can CRASH Vegas Pro_
@@ -199,8 +199,8 @@ _Controls the base pitch for previewing and adjusting the Track Event Audio._
 
 _Tune generating methods for previewing the base pitch_
 
-::: warning
-*NAudio is the default method and is preferred*
+::: important
+*`NAudio` is the default method and is preferred*
 :::
 
 * **Adjust Audio to Base Pitch**
@@ -218,10 +218,9 @@ _Tune generating methods for previewing the base pitch_
 * **Set Fade by Timecode**
   * Sets the Value Measure to Timecode Value.
 
-### Fade in
+### Fade
 
+#### Fade in
 _Length and Fade Type of the Audio Fade in on the Track Event_
-
-### Fade out
-
+#### Fade out
 _Length and Fade Type of the Audio Fade out on the Track Event_

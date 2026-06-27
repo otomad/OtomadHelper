@@ -56,7 +56,6 @@ function isLocaleChanged(from: string, to: string, locales: string[]) {
 // 自动展开与定位的核心函数
 const handleHashOpenAndScroll = () => {
 	const hash = location.hash.slice(1);
-	console.log(hash);
 	if (!hash) return;
 
 	// 找到对应 id 的元素

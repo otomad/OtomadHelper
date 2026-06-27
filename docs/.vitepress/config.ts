@@ -2,6 +2,7 @@ import { defineConfig, type DefaultTheme } from "vitepress";
 import i18nMacroPlugin from "./plugins/markdown-it/i18n-macro";
 import underlinePlugin from "./plugins/markdown-it/underline";
 import detailsHeadingPlugin from "./plugins/markdown-it/container-details-heading";
+import containerImportantPlugin from "./plugins/markdown-it/container-important";
 import { katex } from "@mdit/plugin-katex";
 import { resolve } from "path";
 import { join } from "path/posix";
@@ -23,6 +24,7 @@ export default defineConfig({
 			md.use(i18nMacroPlugin);
 			md.use(underlinePlugin);
 			md.use(detailsHeadingPlugin);
+			md.use(containerImportantPlugin);
 			// VitePress 的默认数学公式渲染器 markdown-it-mathjax3 居然懒得添加 MathML 输出选项，所以换一个。
 			// See: https://github.com/tani/markdown-it-mathjax3/issues/58
 			md.use(katex, { output: "mathml" });
@@ -80,12 +82,24 @@ export default defineConfig({
 				darkModeSwitchLabel: "主题",
 				lightModeSwitchTitle: "切换到浅色模式",
 				darkModeSwitchTitle: "切换到深色模式",
+				skipToContentLabel: "跳转到内容",
+				langMenuLabel: "多语言",
 				editLink: { text: "编辑此页" },
 				docFooter: { prev: "上一页", next: "下一页" },
 				outline: { label: "页面导航" },
 				lastUpdated: { text: "最后更新于" },
 				sidebarMenuLabel: "菜单",
 				returnToTopLabel: "回到顶部",
+				footer: {
+					message: "基于 MIT 许可发布",
+					copyright: "版权所有 © 2019-至今 尤雨溪",
+				},
+				notFound: {
+					title: "页面未找到",
+					quote: "但如果你不改变方向，并且继续寻找，你可能最终会到达你所前往的地方。",
+					linkLabel: "前往首页",
+					linkText: "带我回首页",
+				},
 				nav: [
 					{ text: "主页", link: "/zh-CN/" },
 					{ text: "新版文档 (v8)", link: "/zh-CN/introduction", activeMatch: "^/zh-CN/[^/]+$" },

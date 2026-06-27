@@ -249,7 +249,7 @@ details.details.custom-block {
 			inset-inline-start: 0.8em;
 			background-color: currentColor;
 			line-height: normal;
-			mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m9 18l6-6l-6-6'/%3E%3C/svg%3E");
+			mask-image: url("./icons/chevron.svg?inline");
 			mask-position: 50%;
 			mask-size: 1em;
 			mask-repeat: no-repeat;
@@ -381,5 +381,84 @@ readthedocs-flyout {
 	}
 	ul ul ul ul ul ul {
 		list-style: square;
+	}
+}
+
+/**
+ * Component: Info Custom Block Color
+ */
+.custom-block.info a,
+.custom-block.info code {
+	color: var(--vp-c-tip-1);
+}
+
+.custom-block.info a:hover,
+.custom-block.info a:hover > code {
+	color: var(--vp-c-tip-2);
+}
+
+/**
+ * Component: I18n Custom Block
+ */
+.custom-block-title {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	&::before {
+		content: "️";
+		width: 18px;
+		height: 18px;
+		display: inline-block;
+		background-color: currentColor;
+		margin-inline-end: 5px;
+	}
+
+	&:is(.info.custom-block > *)::before {
+		mask-image: url(./icons/info.svg?inline);
+	}
+
+	&:is(:is(.warning, .important).custom-block > *)::before {
+		mask-image: url(./icons/warning.svg?inline);
+	}
+
+	&:is(.danger.custom-block > *)::before {
+		mask-image: url(./icons/danger.svg?inline);
+	}
+
+	&:is(.tip.custom-block > *)::before {
+		mask-image: url(./icons/lightbulb.svg?inline);
+	}
+}
+
+.custom-block-title-default {
+	&:not(:lang(en)) {
+		font-size: 0;
+
+		&::after {
+			font-size: var(--vp-custom-block-font-size);
+		}
+	}
+
+	&:is(:lang(zh-CN), :lang(zh-Hans)) {
+		&:is(.info.custom-block > *)::after {
+			content: "信息";
+		}
+
+		&:is(.important.custom-block > *)::after {
+			content: "重要";
+		}
+
+		&:is(.warning.custom-block > *)::after {
+			content: "警告";
+		}
+
+		&:is(.danger.custom-block > *)::after {
+			content: "危险";
+		}
+
+		&:is(.tip.custom-block > *)::after {
+			content: "提示";
+		}
 	}
 }

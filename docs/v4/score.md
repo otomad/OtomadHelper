@@ -35,7 +35,18 @@ _Controls the BPM the MIDI generates_
 * **Custom**
   * Uses the Custom Setting
 
-### Auto change project ruler properties
+**If the MIDI has changing tempos, the script will adapt and let you select what options you want to do with them.**
+
+* **Variable MIDI tempo**
+  * _Uses the changing tempo_
+  * **Hold**
+    * Notes Generated will stay held to their BPM
+  * **Linear**
+    * Notes Generated will be based linearly on their BPM
+* **MIDI Tempo**
+  * Uses the first tempo
+
+### Auto Change Project Ruler Properties
 
 _Adjusts the project’s measure properties based on the MIDI_
 
@@ -45,22 +56,11 @@ _Adjusts the project’s measure properties based on the MIDI_
   * Uses time signature as the setting
 
 - **Apply Now**
-  Automatically applies the MIDI’s tempo and time signature without generating the MIDI events
+  * Automatically applies the MIDI’s tempo and time signature without generating the MIDI events
 
 ::: info
 Unfortunately, you can not use MIDIs with changing tempos or time signatures, only the first tempo/time signature will be used. Use [VariableBPM](https://github.com/zzzzzz9125/VariableBPM) for variable tempo.
 :::
-
-**If the MIDI has changing tempos, the script will adapt and let you select what options you want to do with them.**
-
-* **Variable MIDI tempo**
-  * Uses the changing tempo
-* **Hold**
-  * Notes Generated will stay held to their BPM
-* **Linear**
-  * Notes Generated will be based linearly on their BPM
-* **MIDI Tempo**
-  * Uses the first tempo
 
 ### Restrict Note Length
 
@@ -73,8 +73,8 @@ _Controls the Note Output Length from the MIDI_
 * **Fixed Length**
   * Notes will attempt to generate to the length provided
 
-::: danger TRAP
-_*This will conflict with Legato if it is set to UNLIMITED in Audio / Visual Settings*_
+::: warning TRAP
+_*This will conflict with [Legato](./audio.md#legato) if it is set to UNLIMITED in Audio / Visual Settings*_
 :::
 
 ## Use MIDI track
@@ -83,14 +83,18 @@ _*This will conflict with Legato if it is set to UNLIMITED in Audio / Visual Set
 
 _This allows you to select what tracks you want to generate from your MIDI file_
 
-### Settings
+### Commands
 
-* Select all - Selects all channels
-* Invert Selection - Inverts your selection
-* Single - Toggles selecting a single channel
-* Multi - Toggles selecting multiple channels
+* **Select all**
+  * Selects all channels
+* **Invert Selection**
+  * Inverts your selection
+* **Single**
+  * Toggles selecting a single channel
+* **Multi**
+  * Toggles selecting multiple channels
 
-::: warning
+::: important
 *Starting Pan is shown, and the letter attributes go as follows:*
 
 Letter Attributes | Starting Pan

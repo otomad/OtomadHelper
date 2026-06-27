@@ -1,9 +1,9 @@
 import type MarkdownIt from "markdown-it";
 import container from "markdown-it-container";
 
-type Token = ReturnType<InstanceType<typeof MarkdownIt>["parseInline"]>[number];
+export type Token = ReturnType<InstanceType<typeof MarkdownIt>["parseInline"]>[number];
 
-export default function i18nMacroPlugin(md: MarkdownIt) {
+export default function containerDetailsHeadingPlugin(md: MarkdownIt) {
 	// 1. 渲染 HTML 标签
 	md.use(container, "details", {
 		render(tokens: Token[], index: number) {

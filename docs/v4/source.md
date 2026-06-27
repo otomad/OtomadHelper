@@ -53,7 +53,7 @@ _Positions the cursor to a specified location in the timeline_
 * **Original Position**
   * Retains the timeline cursor in the original position before you ran the script
 * **Where Generate at**
-  * Moves the cursor to the start of the MIDI file
+  * Moves the cursor to [the start of the MIDI file](#generate-at)
 * **Before the First Event**
   * Moves the cursor to before the first generated event in the timeline
 * **After the Last Event**
@@ -101,68 +101,68 @@ _Disables the multisource features_
 
 _Automatically picks from multiple selected sources in unpredictable ways_
 
-* **Limited to selected sources**
-  * Only uses the sources selected in the timeline/project media
-* **Make each track different**
-  * Each track will generate with a different clip
-* **Switch once per marker**
-  * Changes the source when a MIDI marker is reached
-* **Switch once per bar or beat**
-  * Changes the source when a beat or bar has passed
-* **Lotion Bath Tactics**
-  * Forces the source to sequentially change at your specified duration
-    ::: warning
-    If _limited to selected sources_ is enabled, Lotion Bath Tactics will use sources in sequential order
-    :::
+#### Limited to selected sources
+_Only uses the sources selected in the timeline/project media_
+#### Make each track different
+_Each track will generate with a different clip_
+#### Switch once per marker
+_Changes the source when a MIDI marker is reached_
+#### Switch once per bar or beat
+_Changes the source when a beat or bar has passed_
+#### Lotion Bath Tactics
+_Forces the source to sequentially change at your specified duration_
+::: important
+If [_limited to selected sources_](#limited-to-selected-sources) is enabled, Lotion Bath Tactics will use sources in sequential order
+:::
 
 ### Source Syncopator
 
 _Applies sources in a patterned, musical way_
 
-* Order
-  - **Sequential**
-    * Uses clips in the order they were selected.
-  - **Reversed**
-    * Uses clips in reverse order.
-  - **Shuffled**
-    * Shuffles the order of the generation
-* **Repetitions per clip**
-  * Specifies the amount of times a source can be used before switching to the next clip
-* **Total repetition rounds**
-  * Specifies the amount of times to loop
-    ::: info
-    Setting to 0 loops infinitely
-    :::
-* **Apply visual effects by rounds**
-  * Applies video effects in cycles rather than every clip
-* **Mystery Box**
-  * Combines the Mystery Box behavior to the generation
-* **Accumulate overtones of chords separately**
-  * Makes use of multiple sources when a chord is generated
-* **Sustain source at same pitch**
-  * Uses the same source for the next note with the same pitch
-    * **Pitch cache capacity**
-      * Specifics the amount of times it will repeat the source
-        ::: warning
-        Disables repetitions per clip
-        :::
+#### Order
+- **Sequential**
+  * Uses clips in the order they were selected.
+- **Reversed**
+  * Uses clips in reverse order.
+- **Shuffled**
+  * Shuffles the order of the generation
+#### Repetitions per clip
+_Specifies the amount of times a source can be used before switching to the next clip_
+#### Total repetition rounds
+_Specifies the amount of times to loop_
+::: info
+Setting to 0 loops infinitely
+:::
+#### Apply visual effects by rounds
+_Applies video effects in cycles rather than every clip_
+#### Mystery Box
+_Combines the [Mystery Box](#mystery-box) behavior to the generation_
+#### Accumulate overtones of chords separately
+_Makes use of multiple sources when a chord is generated_
+#### Sustain source at same pitch
+_Uses the same source for the next note with the same pitch_
+##### Pitch cache capacity
+_Specifics the amount of times it will repeat the source_
+::: important
+Disables repetitions per clip
+:::
 
 ### Source Orchestra
 
 _Assigns source clips to MIDI tracks, like assigning instruments to an orchestra_
 
-* Selection Mode
-  * **Mystery Box**
-    * Uses the Mystery Box behavior
-  * **Source Syncopator**
-    * Uses the Source Syncopator behavior
-* **Descending**
-  Reverses the order of sources used on each track
-* **Allow reuse**
-  * Allows the same clips to be used across different MIDI tracks multiple tracks
-    ::: info
-    *This is useful when you have fewer sources than tracks*
-    :::
+#### Selection Mode
+* **Mystery Box**
+  * Uses the [Mystery Box](#mystery-box) behavior
+* **Source Syncopator**
+  * Uses the [Source Syncopator](#source-syncopator) behavior
+#### Descending
+_Reverses the order of sources used on each track_
+#### Allow reuse
+_Allows the same clips to be used across different MIDI tracks multiple tracks_
+::: info
+*This is useful when you have fewer sources than tracks*
+:::
 
 ### Consonant Time
 > *COMING SOON (patience)*
