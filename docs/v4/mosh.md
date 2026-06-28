@@ -2,7 +2,7 @@
 
 ![Clips Folder](/img/v4/moshes/clips_folder.png)
 
-**Dataḁ̸̬͋ă̷͍ȧ̴͇͘͝ͅá̷̖̲͑ã̶̺̈́å̷͉̖͊̚ä̷̬̬â̷̡̱̑ Mo̴̞̜̯͋ȯ̴̪̏͂õ̷̧͚ͅȏ̸͇ö̵̟̻̹͌o̶͚͍̻̕ǒ̸̢͎̄o̵͔̘̓͘o̶͇̐o̸̬͒͗̎sh is a technique of damaging clips to create glitchy effects which frames that need to progress, don’t progress!**
+**<GlitchyText normal="Datamosh" glitchy="Dataḁ̸̬͋ă̷͍ȧ̴͇͘͝ͅá̷̖̲͑ã̶̺̈́å̷͉̖͊̚ä̷̬̬â̷̡̱̑ Mo̴̞̜̯͋ȯ̴̪̏͂õ̷̧͚ͅȏ̸͇ö̵̟̻̹͌o̶͚͍̻̕ǒ̸̢͎̄o̵͔̘̓͘o̶͇̐o̸̬͒͗̎sh" /> is a technique of damaging clips to create glitchy effects which frames that need to progress, don’t progress!**
 OH’s Datamosh was made possible with the use of [Vegas-Datamosh by delthas](https://github.com/delthas/vegas-datamosh)
 
 ### Datamosh

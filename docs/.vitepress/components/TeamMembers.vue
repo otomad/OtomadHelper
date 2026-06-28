@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VPTeamPage, VPTeamPageTitle, VPTeamMembers, VPTeamPageSection } from "vitepress/theme";
+import { VPTeamPage, VPTeamPageTitle, VPTeamMembers, VPTeamPageSection } from "vitepress/theme-without-fonts";
 
 const props = withDefaults(
 	defineProps<{

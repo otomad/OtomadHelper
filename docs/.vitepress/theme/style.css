@@ -418,8 +418,12 @@ readthedocs-flyout {
 		mask-image: url(./icons/info.svg?inline);
 	}
 
-	&:is(:is(.warning, .important).custom-block > *)::before {
+	&:is(.warning.custom-block > *)::before {
 		mask-image: url(./icons/warning.svg?inline);
+	}
+
+	&:is(.important.custom-block > *)::before {
+		mask-image: url(./icons/alert.svg?inline);
 	}
 
 	&:is(.danger.custom-block > *)::before {
@@ -463,6 +467,16 @@ readthedocs-flyout {
 	}
 }
 
+@font-face {
+	font-family: "Lucide Keyboard Icons";
+	src:
+		url("fonts/Lucide-Keyboard-Icons.woff2") format("woff2"),
+		url("fonts/Lucide-Keyboard-Icons.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+
 /**
  * Component: Kbd
  */
@@ -477,9 +491,138 @@ kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *) {
 	border: 1px solid rgba(128, 128, 128, 0.15);
 	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
 	line-height: 1.1;
+	text-transform: capitalize;
 
 	&:active {
 		background: rgba(128, 128, 128, 0.15);
 		box-shadow: inset 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+	}
+
+	&::before,
+	&::after {
+		font-family: "Lucide Keyboard Icons";
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		vertical-align: bottom;
+	}
+
+	&::before {
+		margin-inline-end: 0.5ch;
+	}
+
+	&::after {
+		margin-inline-start: 0.5ch;
+	}
+
+	&:is([aria-keyshortcuts="ctrl" i], [aria-keyshortcuts="control" i])::before {
+		content: "⌃";
+	}
+
+	&:is(
+			[aria-keyshortcuts="alt" i],
+			[aria-keyshortcuts="alt gr" i],
+			[aria-keyshortcuts="altGr" i],
+			[aria-keyshortcuts="opt" i],
+			[aria-keyshortcuts="option" i]
+		)::before {
+		content: "⌥";
+	}
+
+	&:is([aria-keyshortcuts="cmd" i], [aria-keyshortcuts="command" i], [aria-keyshortcuts="meta" i])::before {
+		content: "⌘";
+	}
+
+	&[aria-keyshortcuts="shift" i]::before {
+		content: "⇧";
+	}
+
+	&:is([aria-keyshortcuts="win" i], [aria-keyshortcuts="windows" i])::before {
+		content: "⊞";
+	}
+
+	&:is([aria-keyshortcuts$="enter" i], [aria-keyshortcuts="return" i], [aria-keyshortcuts="ret" i])::after {
+		content: "⏎";
+	}
+
+	&[aria-keyshortcuts="pageUp" i]::after {
+		content: "⇞";
+	}
+
+	&[aria-keyshortcuts="pageDown" i]::after {
+		content: "⇟";
+	}
+
+	&[aria-keyshortcuts="backSpace" i]::before {
+		content: "⌫";
+	}
+
+	&[aria-keyshortcuts="delete" i]::after {
+		content: "⌦";
+	}
+
+	&[aria-keyshortcuts="left" i]::before {
+		content: "←";
+	}
+
+	&[aria-keyshortcuts="right" i]::after {
+		content: "→";
+	}
+
+	&[aria-keyshortcuts="up" i]::after {
+		content: "↑";
+	}
+
+	&[aria-keyshortcuts="down" i]::after {
+		content: "↓";
+	}
+
+	&[aria-keyshortcuts="capsLock" i]::before {
+		content: "⇪";
+	}
+
+	&[aria-keyshortcuts="tab" i]::after {
+		content: "⇥";
+	}
+
+	&[aria-keyshortcuts="space" i]::after {
+		content: "␣";
+	}
+
+	&:is([aria-keyshortcuts="esc" i], [aria-keyshortcuts="escape" i])::before {
+		content: "⎋";
+	}
+
+	&[aria-keyshortcuts="home" i]::before {
+		content: "⤒";
+	}
+
+	&[aria-keyshortcuts="end" i]::before {
+		content: "⤓";
+	}
+
+	&[aria-keyshortcuts="scrollLock" i]::before {
+		content: "↕";
+	}
+
+	&[aria-keyshortcuts="insert" i]::before {
+		content: "⌶";
+	}
+
+	&:is([aria-keyshortcuts$="menu" i], [aria-keyshortcuts^="app" i])::before {
+		content: "⌸";
+	}
+
+	&:is([aria-keyshortcuts^="pause" i], [aria-keyshortcuts$="break" i])::before {
+		content: "⏸";
+	}
+
+	&[aria-keyshortcuts="printScreen" i]::before {
+		content: "📷";
+	}
+
+	&[aria-keyshortcuts^="num" i][aria-keyshortcuts$="lock" i]::before {
+		content: "🔢";
 	}
 }

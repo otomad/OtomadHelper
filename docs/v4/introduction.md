@@ -16,8 +16,6 @@
 @en _This documentation was originally written by [@Evauation](https://github.com/Evauation)._
 @zhs _本说明文档最初由 [@Evauation](https://github.com/Evauation) 编写。_
 
-[[Ctrl]] + [[Shift]] + [[Win]] + [[R]]
-
 @en ## Sub-Features
 @zhs ## 子功能
 
@@ -26,10 +24,6 @@
 
 @en The related features of YTP refer to [YTP+](https://github.com/YTP-Plus).
 @zhs YTP 的相关功能参考自[YTP+](https://github.com/YTP-Plus)。
-
-<script setup>
-  import GlitchyText from "@vp/components/GlitchyText.vue";
-</script>
 
 @en <GlitchyText glitchy="Ða̵̝̻͔͎͋̇͑̆ƭą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸̲͙͛̐̄̎̚͜a̢̨̝̟͎̾̔̊ǎ̤̞͈͑a͈̪̣̍₥o̻̪̬̘̲͆͂͠o̸͍̞͔̓̆̊̀o̗͊̇̇̈́̇ǫ͇͗̏̕͜ơ̬͍͚̦̯̓̊͌ò͈̦̫̈́̓o̦̣̲̊̀o̪̪͚̺̘͛̽̏̈́ƨλ ïƨ á ƭèçλñï9úè ôƒ δá₥áϱïñϱ çℓïƥƨ ƭô çřèáƭè ϱℓïƭçλ¥ èƒƒèçƭƨ." normal="Datamosh is a technique of damaging clips to create glitchy effects." /> The related features of Datamosh refer to [vegas-datamosh](https://github.com/delthas/vegas-datamosh).
 @zhs <GlitchyText glitchy="锘挎薮琚沬妷缇㊀種嗵過礳陨嫊豺姒浐泩诂瘴効淉菂攲朮。" normal="数据抹失是一种通过磨损素材以产生故障效果的技术。" />数据抹失的相关功能参考自[Vegas数据抹失](https://github.com/delthas/vegas-datamosh)。
@@ -54,7 +48,7 @@
 
 @en * Vietnamese translation provided by [@Cyahega](https://github.com/Cyahega).
 @zhs * 越南语翻译由 [@Cyahega](https://github.com/Cyahega) 提供。
-@en * Indonesian translation provided by [@AdeGimank123](https://github.com/AdeGimank123) and _@JujunG*.
+@en * Indonesian translation provided by [@AdeGimank123](https://github.com/AdeGimank123) and _@JujunG_.
 @zhs * 印尼语翻译由 [@AdeGimank123](https://github.com/AdeGimank123) 和 _@JujunG_ 提供。
 
 ---

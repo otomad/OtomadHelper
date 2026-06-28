@@ -8,10 +8,16 @@ import MyLayout from "./Layout.vue";
 import "./style.css";
 import "./view-transitions.css";
 
+const globalComponents = import.meta.glob<{}>("./*.vue", { base: "../components", import: "default", eager: true });
+
 export default {
 	extends: DefaultTheme,
 	Layout: MyLayout,
 	enhanceApp({ app, router, siteData }) {
+		// Register custom global components
+		for (const [tagName, component] of Object.entries(globalComponents))
+			app.component(tagName.slice(2, -4), component); // `tagName` is "./MyComponent.vue".
+
 		if (!inBrowser) return;
 
 		// View Transition API

@@ -31,8 +31,4 @@ features:
     details: YTP is also able to be generated.
 ---
 
-<script setup>
-import TeamMembers from "@vp/components/TeamMembers.vue";
-</script>
-
 <TeamMembers lang="en" />
