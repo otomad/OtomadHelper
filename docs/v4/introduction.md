@@ -16,6 +16,8 @@
 @en _This documentation was originally written by [@Evauation](https://github.com/Evauation)._
 @zhs _本说明文档最初由 [@Evauation](https://github.com/Evauation) 编写。_
 
+[[Ctrl]] + [[Shift]] + [[Win]] + [[R]]
+
 @en ## Sub-Features
 @zhs ## 子功能
 
@@ -50,9 +52,9 @@
 @en ### Translators
 @zhs ### 翻译
 
-@en _ Vietnamese translation provided by [@Cyahega](https://github.com/Cyahega).
-@zhs _ 越南语翻译由 [@Cyahega](https://github.com/Cyahega) 提供。
-@en _ Indonesian translation provided by [@AdeGimank123](https://github.com/AdeGimank123) and _@JujunG*.
+@en * Vietnamese translation provided by [@Cyahega](https://github.com/Cyahega).
+@zhs * 越南语翻译由 [@Cyahega](https://github.com/Cyahega) 提供。
+@en * Indonesian translation provided by [@AdeGimank123](https://github.com/AdeGimank123) and _@JujunG*.
 @zhs * 印尼语翻译由 [@AdeGimank123](https://github.com/AdeGimank123) 和 _@JujunG_ 提供。
 
 ---

@@ -5,6 +5,7 @@ import detailsHeadingPlugin from "./plugins/markdown-it/container-details-headin
 import containerImportantPlugin from "./plugins/markdown-it/container-important";
 // @ts-ignore
 import bracketedSpans from "markdown-it-bracketed-spans";
+import kbdPlugin from "markdown-it-kbd-better";
 import { katex } from "@mdit/plugin-katex";
 import { resolve } from "path";
 import { join } from "path/posix";
@@ -28,6 +29,7 @@ export default defineConfig({
 			md.use(detailsHeadingPlugin);
 			md.use(containerImportantPlugin);
 			md.use(bracketedSpans);
+			md.use(kbdPlugin, { keyMap: kbdIconKeyMap() });
 			// VitePress 的默认数学公式渲染器 markdown-it-mathjax3 居然懒得添加 MathML 输出选项，所以换一个。
 			// See: https://github.com/tani/markdown-it-mathjax3/issues/58
 			md.use(katex, { output: "mathml" });
@@ -254,4 +256,37 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 			return [base, nav] as const;
 		}),
 	) as SidebarItems;
+}
+
+function kbdIconKeyMap() {
+	const iconToKeys: Record<string, string | string[]> = {
+		"⌘ Command": ["cmd", "command"],
+		"⌥ Option": ["opt", "option"],
+		"⌥ Alt": ["alt", "alt gr"],
+		"⌃ Ctrl": "ctrl",
+		"⌃ Control": "control",
+		"⇧ Shift": "shift",
+		"Enter ⏎": ["enter", "return", "ret"],
+		"Numpad Enter ⏎": ["numpad enter", "num enter"],
+		"PageUp ⇞": "pageup",
+		"PageDown ⇟": "pagedown",
+		"⌫ BackSpace": "backspace",
+		"Delete ⌦": "delete",
+		"← Left": "left",
+		"Right →": "right",
+		"Up ↑": "up",
+		"Down ↓": "down",
+		"⇪ CapsLock": "capslock",
+		"Tab ⇥": "tab",
+		"Space ␣": "space",
+		"⊞ Win": ["win", "windows"],
+		"⎋ Esc": "esc",
+		"⎋ Escape": "escape",
+	};
+	return Object.fromEntries(
+		Object.entries(iconToKeys).flatMap(([icon, keys]) => {
+			if (!Array.isArray(keys)) keys = [keys];
+			return keys.map(key => [key, icon] as const);
+		}),
+	);
 }

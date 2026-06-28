@@ -316,7 +316,7 @@ _Exports Tracks or Track Events to a Score Sequence File_
 - ☑️ **Can export loop region only.**
 - ☑️ **Adjust events gain (Audio: Volume / Video: Opacity)<sup>[1](#footnote-1)</sup>**
 - ☑️ **Adjust tracks volume for audio tracks or opacity/composite level for video tracks1**
-- ☑️ **Adjust audio tracks pan1**
+- ☑️ **Adjust audio tracks pan<sup>[1](#footnote-1)</sup>**
 - ❎ **Use video tracks and events.**
 - ❎ **Using the "Pitch Shift" Audio FX instead of tuning with + and - key.**
 - ❎ **Using a version of Vegas Pro \< 16.**
