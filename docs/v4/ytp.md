@@ -1,7 +1,7 @@
 # YouTube Poop
 
 _**YTP is for creating YTPs using various effects known in the YTP Genre.**_
-_**(YTP supports multisource)**_
+**(YTP supports multisource)**
 
 ## Effects
 

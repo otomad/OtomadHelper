@@ -73,7 +73,7 @@ export default defineConfig({
 			description: "Helps to create YTPMVs in Vegas Pro",
 			themeConfig: {
 				footer: {
-					message: "Released under the GPL-3.0 License",
+					message: "Released under the GPL 3.0 License",
 					copyright: "Copyright © 2021–present",
 				},
 				nav: [
@@ -101,7 +101,7 @@ export default defineConfig({
 				sidebarMenuLabel: "菜单",
 				returnToTopLabel: "回到顶部",
 				footer: {
-					message: "基于 GPL-3.0 许可发布",
+					message: "基于 GPL 3.0 许可发布",
 					copyright: "版权所有 © 2021~至今 兰音",
 				},
 				notFound: {
@@ -115,12 +115,13 @@ export default defineConfig({
 					{ text: "新版文档 (v8)", link: "/zh-CN/introduction", activeMatch: "^/zh-CN/[^/]+$" },
 					{ text: "旧版文档 (v4)", link: "/zh-CN/v4/introduction", activeMatch: "/zh-CN/v4/" },
 				],
-				sidebar: sidebar("zhs"),
+				sidebar: sidebar("zh"),
 			},
 		},
 	},
 	themeConfig: {
 		outline: { level: "deep" },
+		lastUpdated: { formatOptions: { forceLocale: true, year: "numeric", month: "2-digit", day: "2-digit" } },
 		editLink: {
 			pattern: "https://github.com/otomad/OtomadHelper/tree/docs/docs/:path",
 		},
@@ -167,13 +168,13 @@ export default defineConfig({
 	},
 });
 
-type SidebarLocales = "en" | "zhs";
+type SidebarLocales = "en" | "zh";
 type SidebarItems = Record<string, DefaultTheme.SidebarItem[]>;
 type Override<TSource, TOverrider> = Omit<TSource, keyof TOverrider> & TOverrider;
 function sidebar(locale: SidebarLocales): SidebarItems {
 	type SidebarTemplate = Record<
 		string,
-		(Record<SidebarLocales, string> &
+		((Record<SidebarLocales, string> | {}) &
 			Override<
 				DefaultTheme.SidebarItem,
 				{
@@ -185,71 +186,81 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 		"/": [
 			{
 				en: "Introduction",
-				zhs: "简介",
+				zh: "简介",
 				items: [
-					{ en: "What is Otomad Helper?", zhs: "音MAD助手是什么？", link: "/introduction" },
-					{ en: "Usage", zhs: "用法", link: "/usage" },
-					{ en: "FAQ", zhs: "疑难解答", link: "/faq" },
+					{ en: "What is Otomad Helper?", zh: "音MAD助手是什么？", link: "/introduction" },
+					{ en: "Installation", zh: "安装", link: "/installation" },
+					{ en: "Usage", zh: "用法", link: "/usage" },
 				],
 			},
 			{
 				en: "Pages",
-				zhs: "分页",
+				zh: "分页",
 				items: [
-					// { en: "Home", zhs: "主页", link: "/home" },
-					{ en: "Source", zhs: "素材", link: "/source" },
-					{ en: "Score", zhs: "乐曲", link: "/score" },
-					{ en: "Audio", zhs: "音频", link: "/audio" },
-					{ en: "Visual", zhs: "画面", link: "/visual" },
-					{ en: "Track", zhs: "轨道", link: "/track" },
-					{ en: "Sonar", zhs: "声呐", link: "/sonar" },
-					{ en: "Lyrics", zhs: "歌词", link: "/lyrics" },
-					{ en: "Shupeluner", zhs: "原音系", link: "/shupeluner" },
-					{ en: "YTP", zhs: "YTP", link: "/ytp" },
-					{ en: "Tools", zhs: "工具", link: "/tools" },
-					{ en: "Moshes", zhs: "抹失", link: "/mosh" },
-					{ en: "Management", zhs: "管理", link: "/management" },
-					{ en: "Wizard", zhs: "精简", link: "/wizard" },
-					{ en: "Settings", zhs: "设置", link: "/settings" },
+					// { en: "Home", zh: "主页", link: "/home" },
+					{ en: "Source", zh: "素材", link: "/source" },
+					{ en: "Score", zh: "乐曲", link: "/score" },
+					{ en: "Audio", zh: "音频", link: "/audio" },
+					{ en: "Visual", zh: "画面", link: "/visual" },
+					{ en: "Track", zh: "轨道", link: "/track" },
+					{ en: "Sonar", zh: "声呐", link: "/sonar" },
+					{ en: "Lyrics", zh: "歌词", link: "/lyrics" },
+					{ en: "Shupeluner", zh: "原音系", link: "/shupeluner" },
+					{ en: "YTP", zh: "YTP", link: "/ytp" },
+					{ en: "Tools", zh: "工具", link: "/tools" },
+					{ en: "Moshes", zh: "抹失", link: "/mosh" },
+					{ en: "Management", zh: "管理", link: "/management" },
+					{ en: "Wizard", zh: "精简", link: "/wizard" },
+					{ en: "Settings", zh: "设置", link: "/settings" },
 				],
+			},
+			{
+				items: [{ en: "FAQ", zh: "疑难解答", link: "/faq" }],
 			},
 		],
 		"/v4/": [
 			{
 				en: "Introduction",
-				zhs: "简介",
+				zh: "简介",
 				items: [
-					{ en: "What is Otomad Helper?", zhs: "音MAD助手是什么？", link: "/introduction" },
-					{ en: "Usage", zhs: "用法", link: "/usage" },
+					{ en: "What is Otomad Helper?", zh: "音MAD助手是什么？", link: "/introduction" },
+					{ en: "Installation", zh: "安装", link: "/installation" },
+					{ en: "Usage", zh: "用法", link: "/usage" },
 				],
 			},
 			{
 				en: "Tabs",
-				zhs: "分页",
+				zh: "页签",
 				items: [
-					{ en: "Source", zhs: "素材", link: "/source" },
-					{ en: "Score", zhs: "乐曲", link: "/score" },
-					{ en: "Audio", zhs: "音频", link: "/audio" },
-					{ en: "Visual", zhs: "画面", link: "/visual" },
-					{ en: "Staff", zhs: "五线谱", link: "/staff" },
-					{ en: "Sonar", zhs: "声呐", link: "/sonar" },
-					{ en: "YTP", zhs: "YTP", link: "/ytp" },
-					{ en: "Tools", zhs: "工具", link: "/tools" },
-					{ en: "Moshes", zhs: "抹失", link: "/mosh" },
+					{ en: "Source", zh: "素材", link: "/source" },
+					{ en: "Score", zh: "乐曲", link: "/score" },
+					{ en: "Audio", zh: "音频", link: "/audio" },
+					{ en: "Visual", zh: "画面", link: "/visual" },
+					{ en: "Staff", zh: "五线谱", link: "/staff" },
+					{ en: "Sonar", zh: "声呐", link: "/sonar" },
+					{ en: "YTP", zh: "YTP", link: "/ytp" },
+					{ en: "Tools", zh: "工具", link: "/tools" },
+					{ en: "Moshes", zh: "抹失", link: "/mosh" },
+				],
+			},
+			{
+				items: [
+					{ en: "FAQ", zh: "疑难解答", link: "/faq" },
+					{ en: "References", zh: "参考", link: "/references" },
 				],
 			},
 		],
 	};
 	const lang = (() => {
 		if (locale === "en") return "";
-		else if (locale === "zhs") return "zh-CN";
+		else if (locale === "zh") return "zh-CN";
 		else return locale;
 	})();
 	return Object.fromEntries(
 		Object.entries(sidebar).map(([base, nav]) => {
 			if (lang) base = "/" + lang + base;
 			for (const section of nav) {
-				section.text = section[locale];
+				if ((locale as "en") in section) section.text = section[locale];
 				section.base = base;
 				for (const item of section.items) item.text = item[locale];
 			}

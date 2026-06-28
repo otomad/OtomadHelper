@@ -423,7 +423,7 @@ readthedocs-flyout {
 	}
 
 	&:is(.important.custom-block > *)::before {
-		mask-image: url(./icons/alert.svg?inline);
+		mask-image: url(./icons/important.svg?inline);
 	}
 
 	&:is(.danger.custom-block > *)::before {

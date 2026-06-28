@@ -314,20 +314,18 @@ _Exports Tracks or Track Events to a Score Sequence File_
 - ☑️ **Allows set track name.**
 - ☑️ **Allows setting base pitch.**
 - ☑️ **Can export loop region only.**
-- ☑️ **Adjust events gain (Audio: Volume / Video: Opacity)<sup>[1](#footnote-1)</sup>**
+- ☑️ **Adjust events gain (Audio: Volume / Video: Opacity) <sup>[1](#footnote-1)</sup>**
 - ☑️ **Adjust tracks volume for audio tracks or opacity/composite level for video tracks1**
-- ☑️ **Adjust audio tracks pan<sup>[1](#footnote-1)</sup>**
+- ☑️ **Adjust audio tracks pan <sup>[1](#footnote-1)</sup>**
 - ❎ **Use video tracks and events.**
-- ❎ **Using the "Pitch Shift" Audio FX instead of tuning with + and - key.**
+- ❎ **Using the "Pitch Shift" Audio FX instead of tuning with [[+]] and [[-]] key.**
 - ❎ **Using a version of Vegas Pro \< 16.**
 
 > **☑️ - Good to go**
 > **❎ - Not recommended - _This will generate notes with all base pitch._**
 :::
 
----
-1. These all support envelopes / automation control {#footnote-1}
----
+> 1. These all support envelopes / automation control {#footnote-1}
 
 **Settings**
 * **All Tracks**

@@ -10,8 +10,9 @@ export default function i18nMacroPlugin(md: MarkdownIt) {
 		const locale = parseLocale(currentLang);
 		// 中文的语言标签太复杂了，简化它们。
 		if (locale?.language === "zh") {
-			if (locale?.script === "Hans") currentLang = "zhs";
-			else if (locale?.script === "Hant") currentLang = "zht";
+			// if (locale?.script === "Hans") currentLang = "zhs";
+			// else if (locale?.script === "Hant") currentLang = "zht";
+			if (locale?.script === "Hans") currentLang = "zh";
 		}
 		let src = state.src;
 

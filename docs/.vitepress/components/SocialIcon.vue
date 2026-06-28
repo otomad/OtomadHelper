@@ -21,6 +21,9 @@ const props = defineProps<{
 		display: inline-block;
 		fill: inherit;
 		vertical-align: text-bottom;
+		width: 1.25em !important;
+		height: 1.25em !important;
+		margin-inline-end: 0.25em;
 	}
 }
 </style>
