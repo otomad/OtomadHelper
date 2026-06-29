@@ -34,7 +34,7 @@ export default function containerDetailsHeadingPlugin(md: MarkdownIt) {
 
 // 辅助函数：将中英文文本转换为合法的 URL hash / id
 function slugify(str: string) {
-	return encodeURIComponent(String(str).trim().toLowerCase().replace(/\s+/g, "-"));
+	return encodeURIComponent(String(str).trim().toLowerCase().replaceAll(/\p{P}/gu, "").replaceAll(/\s+/g, "-"));
 }
 
 // 解析带有井号的 info 字符串，例如 "### 我是三级标题" -> { level: 3, text: "我是三级标题" }

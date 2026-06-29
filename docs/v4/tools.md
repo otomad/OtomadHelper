@@ -207,7 +207,7 @@ _Replaces selected track events with specific preferences._
     :::
 * **Specify separately**
   * *Replaces specific clips in the track with any clip you select in any order you want.*
-  * [*Explanation in Extra Info*](#bookmark=kix.iat6xa2iq5ij)
+  * [*Explanation in Extra Info*](./faq.md#specify-separately-explanation)
 
 ### Options
 * **Replace other clips in the track group**

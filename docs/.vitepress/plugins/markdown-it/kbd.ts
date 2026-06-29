@@ -67,7 +67,7 @@ function tokenize(state: StateInline, silent: boolean) {
 	// start tag
 	const token = state.push("kbd_open", TAG, 1);
 	token.attrs ||= [];
-	token.attrs.push(["aria-keyshortcuts", innerText]);
+	token.attrs.push(["aria-keyshortcuts", innerText.replaceAll(/\s/g, "")]);
 	// parse inner
 	state.pos += 2;
 	state.posMax = end;

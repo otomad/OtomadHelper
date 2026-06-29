@@ -88,6 +88,12 @@ _Routes audio tracks to audio buses (Mixing Console)_
 * **Route by task session**
   * Creates and routes the audio track to a new bus whenever a new generation is completed
 
+::: danger
+There is currently an unknown bug that may prevent you from using the audio bus track feature. If you encounter such a problem, it is recommended to disable this feature or try changing another Vegas version.
+
+[View detailed explanation.](./faq.md#audio-bus-track-bugs-caused-by-vegas-pro)
+:::
+
 ---
 
 - **Reuse audio bus tracks that have the same nonempty name**

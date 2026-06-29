@@ -215,7 +215,7 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 				],
 			},
 			{
-				items: [{ en: "FAQ", zh: "疑难解答", link: "/faq" }],
+				items: [{ en: "FAQ", zh: "常见问题解答", link: "/faq" }],
 			},
 		],
 		"/v4/": [
@@ -245,7 +245,7 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 			},
 			{
 				items: [
-					{ en: "FAQ", zh: "疑难解答", link: "/faq" },
+					{ en: "FAQ", zh: "常见问题解答", link: "/faq" },
 					{ en: "References", zh: "参考", link: "/references" },
 				],
 			},

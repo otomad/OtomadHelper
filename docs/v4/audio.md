@@ -121,7 +121,7 @@ _Settings to assign gain values relative to the MIDI notes_
 * **Reset**
   * Resets the settings to default
 
-[*Mapping Velocity Explanation*](#bookmark=id.q5w06qf8h8y6)
+[*Mapping Velocity Explanation*](./faq.md#mapping-velocity-explanation)
 
 ## Tuning
 

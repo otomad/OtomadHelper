@@ -631,7 +631,7 @@ kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *) {
 		content: "⇱";
 	}
 
-	&[aria-keyshortcuts="end" i]::before {
+	&[aria-keyshortcuts="end" i]::after {
 		content: "⇲";
 	}
 
@@ -682,5 +682,28 @@ kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *) {
 
 	&[aria-keyshortcuts="copilot" i]::before {
 		content: "🤖";
+	}
+}
+
+/**
+ * Component: Bold List and Italic List
+ */
+.bold-list {
+	li {
+		font-weight: 600;
+	}
+
+	.custom-block {
+		font-weight: initial;
+	}
+}
+
+.italic-list:not(:lang(zh), :lang(ja), :lang(ko)) {
+	li {
+		font-style: italic;
+	}
+
+	.custom-block {
+		font-style: initial;
 	}
 }

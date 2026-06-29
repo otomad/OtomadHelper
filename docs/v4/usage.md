@@ -1,14 +1,19 @@
 @en # Using Otomad Helper
 @zh # 使用Otomad Helper
 
-## To make visuals insanely quickly with Otomad Helper
+@en ## To make visuals insanely quickly with Otomad Helper
+@zh ## 要借助Otomad Helper快速制作视觉效果
 
-* You will need **Vegas Pro (13+)**
+@en * You will need a **Vegas Pro (13+)**;
+@zh * 你需要一个**Vegas Pro (13+)**；
   ::: warning
-  *[If you have ANY other editor that you use for remixes](https://github.com/users/otomad/projects/2), you’re out of luck.*
+@en   *[If you have ANY other editor that you use for remixes](https://github.com/users/otomad/projects/2), you’re out of luck.*
+@zh   *[如果你有任何其它用于混音的编辑器](https://github.com/users/otomad/projects/2)，那么你就不那么走运了。*
   :::
-* **You will need the Otomad Helper Script**
-* You will need **FL Studio** *(or any other DAW, that you use for remixes)*
+@en * **You will need the Otomad Helper Script**;
+@zh * **你需要Otomad Helper脚本**；
+@en * You will need **FL Studio** *(or any other DAW, that you use for remixes)*.
+@zh * 你需要**FL Studio***（或用于混音的任何其它DAW）*。
 
 @en ## Using Otomad Helper is pretty straightforward from here.<br>Here’s how to use it.
 @zh ## 从这里开始，使用Otomad Helper非常简单。以下是使用方法。
@@ -24,55 +29,67 @@
 @en - There is also a variety of [tools](./tools.md) to help work on the most ludicrous of tasks for your projects, making the chore of editing certain clips to applying different effects easier said than done.
 @zh - 还有各种[工具](./tools.md)可以帮助你完成项目中最荒唐的任务，使编辑某些片段以应用不同效果的繁琐工作不再说起来容易做起来难。
 
-## To get started (with FL Studio)
+@en ## To get started (with FL Studio)
+@zh ## 要开始（与FL Studio协作）
 
 <div class="bold-list">
 
-1. When you have all your audio done in FL Studio.
+@en 1. When you have all your audio done in FL Studio.
+@zh 1. 当你在FL Studio中完成所有音频时。
    ::: info
-   * Make a copy of your project
-   * [[Ctrl]] + [[N]] to save a new version
+@en    * Make a copy of your project.
+@zh    * 将你的项目创建副本。
+@en    * Press [[Ctrl]] + [[N]] to save a new version
+@zh    * 按 [[Ctrl]] + [[N]] 键来另存为新版本
    :::
-2. Go to *Tools > Marcos > Prepare for MIDI Export*
+@en 2. Go to *Tools > Marcos > Prepare for MIDI Export*.
+@zh 2. 转到 *工具 > 宏 > 准备进行MIDI导出*。
    ::: danger
-   This will convert your entire copy of the project to a MIDI format. **No Undo**
+@en    This will convert your entire copy of the project to a MIDI format. **No Undo!**
+@zh    这会将你的整个项目副本转换为MIDI格式。**不可撤销！**
    :::
-3. Go to *File > Export > MIDI File*
+@en 3. Go to *File > Export > MIDI File*.
+@zh 3. 转到 *文件 > 导出 > MIDI文件*。
    ::: important
-   It’s also important to name your channels accordingly
+@en    It’s also important to name your tracks accordingly.
+@zh    相应地命名你的音轨也很重要。
    :::
-4. Export (Start Render)
-5. Go into Vegas
+@en 4. Export (Start Render).
+@zh 4. 导出（开始渲染）。
+@en 5. Go into Vegas.
+@zh 5. 切换到Vegas。
    ::: important
-   Before running the script, select the clip you’re going to generate visuals from
+@en    Before running the script, please select the clip you’re going to generate visuals from first.
+@zh    在运行脚本之前，请先选择要从中生成画面的剪辑。
    :::
-6. Run the Otomad Helper by going to *Tools > Scripting > Otomad Helper*
-7. Select your MIDI File
-8. Select the Channel that corresponds to the visual
+@en 6. Run the Otomad Helper by going to *Tools > Scripting > Otomad Helper*.
+@zh 6. 转到 *工具 > 脚本化 > Otomad Helper* 以运行Otomad Helper。
+@en 7. Select your MIDI File.
+@zh 7. 选择你的MIDI文件。
+@en 8. Select the Track that corresponds to the visual
+@zh 8. 选择与画面相对应的音轨。
    ::: tip
-   * Whatever your sample was, select what matches the clip’s sample
-   * [Turn off Audio if you don’t want audio in your generation](./audio.md)
-   * [You can customize your visuals in Visual Settings](./visual.md)
+@en    * Whatever your sample was, select what matches the clip’s sample.
+@zh    * 无论你的采样是什么，选择与剪辑采样相匹配的采样。
+@en    * [Turn off Audio if you don’t want audio in your generation.](./audio.md)
+@zh    * [如果你不希望生成音频，请关闭音频。](./audio.md).
+@en    * [You can customize your visuals in Visual Settings.](./visual.md)
+@zh    * [你可以在画面设置中自定义你的画面。](./visual.md)
    :::
-9. Click Generate
-10. Repeat the process until you have all your visuals <sup>[1](#footnote-1)</sup>
-11. Done!
+@en 9. Click Generate.
+@zh 9. 点击生成。
+@en 10. Repeat the process until you have all your visuals. <sup>[1](#footnote-1)</sup>
+@zh 10. 重复这个过程，直到你拥有了全部的画面。 <sup>[1](#footnote-1)</sup>
+@en 11. Done!
+@zh 11. 完成！
 
 </div>
 
-> 1. **You can also select advanced to select multiple channels to generate at the same time**
-     (This was merged to be in the score section as of Version 4.64.x) {#footnote-1}
+@en > 1. **You can also select multiple tracks in the score section to generate at the same time.**
+@zh > 1. **你还可以在乐曲部分同时选择多个音轨生成。**
 
-## There is now a feature where you can load the last configuration used instantly.
+@en ## There is now a feature where you can load the last configuration used instantly.
+@zh ## 现在有一个功能，你可以立即加载上次使用的配置。
 
-* *Hold [[Ctrl]] while running the script, it will load and generate the last configuration used in the script.*
-
-<style>
-  .bold-list li {
-    font-weight: 600;
-  }
-
-  .bold-list .custom-block {
-    font-weight: initial;
-  }
-</style>
+@en * *Hold [[Ctrl]] while running the script, it will load and generate the last configuration used in the script.*
+@zh * *运行脚本时按住 [[Ctrl]] 键，脚本将加载最后一次使用的配置并生成。*
