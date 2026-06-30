@@ -2,9 +2,10 @@
 @zh # 素材
 
 @en ## Source Configuration
-@zh ## 素材配置
+@zh ## 素材属性
 
-![Configuration](/img/v4/source/configuration.png)
+@en ![Configuration](/img/v4/source/configuration.png)
+@zh ![Configuration](/img/v4/source/configuration_zh-CN.png)
 
 @en ### Select source from
 @zh ### 选择素材来源
@@ -30,145 +31,139 @@
 @zh _使用开始时间和结束时间来修剪剪辑。_
 
 @en ### Generate at
-@zh ### Generate at
+@zh ### 设定生成开始位置
 
-@en _Controls where the MIDI can be generated_
-@zh _Controls where the MIDI can be generated_
+@en _Controls where the MIDI can be generated._
+@zh _控制要生成MIDI的位置。_
 
 @en * **Project Start**
-@zh * **Project Start**
+@zh * **项目开始处**
 @en   * Generates the MIDI at the Start.
-@zh   * Generates the MIDI at the Start.
+@zh   * 在开始时生成MIDI。
 @en * **Cursor**
-@zh * **Cursor**
+@zh * **光标处**
 @en   * Generates the MIDI at the Cursor Position.
-@zh   * Generates the MIDI at the Cursor Position.
+@zh   * 在光标位置生成MIDI。
 @en * **Custom**
-@zh * **Custom**
+@zh * **自定义**
 @en   * Generates the MIDI at any Time Position chosen.
-@zh   * Generates the MIDI at any Time Position chosen.
+@zh   * 在选择的任何时间位置生成MIDI。
 
 @en ### Below Top Adjustment Tracks
-@zh ### Below Top Adjustment Tracks
+@zh ### 生成在顶层调整轨道的下方
 
-@en _Places the Generated Tracks below the Adjustment Tracks_
-@zh _Places the Generated Tracks below the Adjustment Tracks_
+@en _Places the Generated Tracks below the Adjustment Tracks._
+@zh _将生成的轨道放置在调整轨道的下方。_
 
-@en ::: warning
-@zh ::: warning
+::: warning
 @en *This is available in Vegas Pro 19 and up.*
-@zh *This is available in Vegas Pro 19 and up.*
-@en :::
-@zh :::
+@zh *此功能仅在Vegas Pro 19及更高版本中可用。*
+:::
 
 @en ### Remove track events assigned as source material after the generation completes
-@zh ### Remove track events assigned as source material after the generation completes
+@zh ### 生成完成后移除作为源素材的轨道事件
 
-@en _Deletes the original source clip after the MIDI has been generated_
-@zh _Deletes the original source clip after the MIDI has been generated_
+@en _Deletes the original source clip after the MIDI has been generated._
+@zh _生成MIDI后删除源剪辑。_
 
 @en ### Select all generated events after the generation completes
-@zh ### Select all generated events after the generation completes
+@zh ### 生成完成后选中生成的所有事件
 
-@en _Selects all events generated after the MIDI has been generated_
-@zh _Selects all events generated after the MIDI has been generated_
+@en _Selects all events generated after the MIDI has been generated._
+@zh _MIDI生成后选中生成的所有事件。_
 
 @en ### Move the Cursor to
-@zh ### Move the Cursor to
+@zh ### 生成完成后将光标移动到
 
-@en _Positions the cursor to a specified location in the timeline_
-@zh _Positions the cursor to a specified location in the timeline_
+@en _Positions the cursor to a specified location in the timeline._
+@zh _将光标定位到时间线中的指定位置。_
 
 @en * **Original Position**
-@zh * **Original Position**
-@en   * Retains the timeline cursor in the original position before you ran the script
-@zh   * Retains the timeline cursor in the original position before you ran the script
+@zh * **原位置**
+@en   * Retains the timeline cursor in the original position before you ran the script.
+@zh   * 将时间线光标保留在运行脚本之前的原始位置。
 @en * **Where Generate at**
-@zh * **Where Generate at**
+@zh * **生成开始位置**
 @en   * Moves the cursor to [the start of the MIDI file](#generate-at)
-@zh   * Moves the cursor to [the start of the MIDI file](#generate-at)
+@zh   * 将光标移动到[MIDI文件的开头](#generate-at)。
 @en * **Before the First Event**
-@zh * **Before the First Event**
-@en   * Moves the cursor to before the first generated event in the timeline
-@zh   * Moves the cursor to before the first generated event in the timeline
+@zh * **第一个事件之前**
+@en   * Moves the cursor to before the first generated event in the timeline.
+@zh   * 将光标移动到时间线中第一个生成的事件之前。
 @en * **After the Last Event**
-@zh * **After the Last Event**
-@en   * Moves the cursor to after the last generated event in the timeline
-@zh   * Moves the cursor to after the last generated event in the timeline
+@zh * **最后一个事件之后**
+@en   * Moves the cursor to after the last generated event in the timeline.
+@zh   * 将光标移动到时间线中最后一个生成的事件之后。
 
 @en ### Grouping Tracks
-@zh ### Grouping Tracks
+@zh ### 轨道组
 
-@en _Creates groups for the tracks_
-@zh _Creates groups for the tracks_
+@en _Creates groups for the tracks._
+@zh _为轨道创建分组。_
 
 @en * **Ungrouped**
-@zh * **Ungrouped**
-@en   * Disables track grouping
-@zh   * Disables track grouping
+@zh * **不分组**
+@en   * Disables track grouping.
+@zh   * 禁用轨道组。
 @en * **Group by MIDI track**
-@zh * **Group by MIDI track**
-@en   * Groups tracks based on the MIDI track used and uses the MIDI track name
-@zh   * Groups tracks based on the MIDI track used and uses the MIDI track name
+@zh * **按MIDI音轨分组**
+@en   * Groups tracks based on the MIDI track used and uses the MIDI track name.
+@zh   * 根据使用的MIDI音轨对轨道进行分组并使用MIDI音轨名称。
 @en * **Group by task session**
-@zh * **Group by task session**
-@en   * Creates a new group whenever a new generation is completed
-@zh   * Creates a new group whenever a new generation is completed
+@zh * **按任务会话分组**
+@en   * Creates a new group whenever a new generation is completed.
+@zh   * 每当生成完成时就会创建一个新分组。
 
-@en ---
-@zh ---
+---
 
 @en - **Collapse track groups by default**
-@zh - **Collapse track groups by default**
-@en   * Toggles collapsing the track group list
-@zh   * Toggles collapsing the track group list
+@zh - **默认情况下折叠轨道组**
+@en   * Collapses the track group list
+@zh   * 折叠轨道组列表。
 @en - **Reuse groups that have the same nonempty name**
-@zh - **Reuse groups that have the same nonempty name**
-@en   * Toggles the generation of newly added tracks to be added to existing track groups with the same name
-@zh   * Toggles the generation of newly added tracks to be added to existing track groups with the same name
+@zh - **重用非空同名轨道组**
+@en   * The generation of newly added tracks to be added to existing track groups with the same name.
+@zh   * 生成时新添加的轨道，将添加到具有相同名称的现有轨道组中。
 
 @en ### Audio Bus Track
-@zh ### Audio Bus Track
+@zh ### 音频总线轨道
 
-@en _Routes audio tracks to audio buses (Mixing Console)_
-@zh _Routes audio tracks to audio buses (Mixing Console)_
+@en _Routes audio tracks to audio buses (Mixing Console)._
+@zh _将音轨路由到音频总线（混音控制台）。_
 
 @en * **Unrouted**
-@zh * **Unrouted**
-@en   * Disables routing to audio buses
-@zh   * Disables routing to audio buses
+@zh * **不路由**
+@en   * Disables routing to audio buses.
+@zh   * 禁用路由到音频总线。
 @en * **Route by MIDI track**
-@zh * **Route by MIDI track**
-@en   * Routes the audio track to the same bus based on the MIDI track used
-@zh   * Routes the audio track to the same bus based on the MIDI track used
+@zh * **按MIDI音轨路由**
+@en   * Routes the audio track to the same bus based on the MIDI track used.
+@zh   * 根据使用的MIDI轨道将音轨路由到同一总线。
 @en * **Route by task session**
-@zh * **Route by task session**
-@en   * Creates and routes the audio track to a new bus whenever a new generation is completed
-@zh   * Creates and routes the audio track to a new bus whenever a new generation is completed
+@zh * **按任务会话路由**
+@en   * Creates and routes the audio track to a new bus whenever a new generation is completed.
+@zh   * 每当生成完成时就会路由音轨到新建总线。
 
-@en ::: danger
-@zh ::: danger
+::: danger
 @en There is currently an unknown bug that may prevent you from using the audio bus track feature. If you encounter such a problem, it is recommended to disable this feature or try changing another Vegas version.
-@zh There is currently an unknown bug that may prevent you from using the audio bus track feature. If you encounter such a problem, it is recommended to disable this feature or try changing another Vegas version.
+@zh 目前存在一个未知错误，可能会阻止您使用音频总线轨道功能。如果遇到此类问题，建议禁用此功能或尝试更换其他Vegas版本。
 
-@en [View detailed explanation.](./faq.md#audio-bus-track-bugs-caused-by-vegas-pro)
-@zh [View detailed explanation.](./faq.md#audio-bus-track-bugs-caused-by-vegas-pro)
-@en :::
-@zh :::
+@en [View detailed explanation >](./faq.md#audio-bus-track-bugs-caused-by-vegas-pro)
+@zh [了解更多 >](./faq.md#audio-bus-track-bugs-caused-by-vegas-pro)
+:::
 
-@en ---
-@zh ---
+---
 
 @en - **Reuse audio bus tracks that have the same nonempty name**
-@zh - **Reuse audio bus tracks that have the same nonempty name**
-@en   * Toggles the generation of newly added tracks to be added to existing audio buses with the same name
-@zh   * Toggles the generation of newly added tracks to be added to existing audio buses with the same name
+@zh - **重用非空同名音频总线轨道**
+@en   * The generation of newly added tracks to be added to existing audio buses with the same name
+@zh   * 生成时新添加的轨道，将添加到具有相同音频总线的现有轨道组中。
 
 @en ## Multisource Combination
-@zh ## Multisource Combination
+@zh ## 多素材梳子
 
 @en ![Multisource Comb](/img/v4/source/comb.png)
-@zh ![Multisource Comb](/img/v4/source/comb.png)
+@zh ![Multisource Comb](/img/v4/source/comb_zh-CN.png)
 
 @en ### Off
 @zh ### Off
