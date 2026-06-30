@@ -3,8 +3,7 @@ import i18nMacroPlugin from "./plugins/markdown-it/i18n-macro";
 import underlinePlugin from "./plugins/markdown-it/underline";
 import detailsHeadingPlugin from "./plugins/markdown-it/container-details-heading";
 import containerImportantPlugin from "./plugins/markdown-it/container-important";
-// @ts-ignore
-import bracketedSpans from "markdown-it-bracketed-spans";
+import bracketedSpans from "./plugins/markdown-it/bracketed-spans";
 import kbdPlugin from "./plugins/markdown-it/kbd";
 import { katex } from "@mdit/plugin-katex";
 import { resolve } from "path";

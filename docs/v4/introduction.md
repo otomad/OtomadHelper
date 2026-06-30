@@ -20,7 +20,7 @@
 @zh ## 子功能
 
 @en It can also be used to make [**YTP**](https://en.wikipedia.org/wiki/YouTube_Poop), **Sonar Effect (Motion Graphics Generation Feature)**, [**Datamosh**](https://en.wikipedia.org/wiki/Compression_artifact#Artistic_use).
-@zh 它也可以用于制作[**YTP**](https://zh.wikipedia.org/wiki/YouTube_Poop)、**声呐效果（动态图形生成功能）**、[**数据抹失（幻术故障、<span lang="zh-TW">資料狂舞</span>）**](https://zh.wikipedia.org/wiki/壓縮失真#藝術上的應用)。
+@zh 它也可以用于制作[**YTP**](https://zh.wikipedia.org/wiki/YouTube_Poop)、**声呐效果（动态图形生成功能）**、[**数据抹失（幻术故障、[資料狂舞]{lang=zh-TW}）**](https://zh.wikipedia.org/wiki/壓縮失真#藝術上的應用)。
 
 @en The related features of YTP refer to [YTP+](https://github.com/YTP-Plus).
 @zh YTP 的相关功能参考自[YTP+](https://github.com/YTP-Plus)。
