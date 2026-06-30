@@ -76,4 +76,4 @@ Project | Authors | License | Notes
 [YTP+](https://github.com/YTP-Plus) | Ben Brown<br>Kiwifruitdev<br>Nuppington | GPL 3.0 | *YTP feature reference*
 [Alpha Color Dialog](https://sourceforge.net/projects/alpha-color-dialog/) | Opulos | BSD | *Color picker with alpha*
 [Ookii Dialogs WinForms](https://github.com/ookii-dialogs/ookii-dialogs-winforms) | C. Augusto Proiete | BSD 3-Clause | *Vista-style progress dialog<br>Vista-style folder dialog*
-[Vegas Shake Script](https://github.com/tmarplatt/VegasScripts) | Tmarplatt | None | *Camera shake effect*
+[Vegas Camera Shake Script](https://github.com/tmarplatt/VegasScripts) | Tommy Marplatt | None | *Camera shake effect*
