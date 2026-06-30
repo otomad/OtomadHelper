@@ -15,7 +15,6 @@ const standardDateString = computed(() => {
 
 const formattedDate = computed(() => {
 	const date = new Date(standardDateString.value);
-	console.log("​ ​ lang​", lang);
 	return new Intl.DateTimeFormat(lang.value, {
 		year: "numeric",
 		month: "2-digit",

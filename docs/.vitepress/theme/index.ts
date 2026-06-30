@@ -67,7 +67,6 @@ const handleHashOpenAndScroll = () => {
 	// 找到对应 id 的元素
 	const targetId = decodeURIComponent(hash);
 	const heading = document.getElementById(targetId);
-	console.log(heading);
 
 	if (heading && heading.matches("details > summary > :is(h1, h2, h3, h4, h5, h6)")) {
 		heading.closest("details")!.open = true;
