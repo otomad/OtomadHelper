@@ -85,8 +85,8 @@
 
 </div>
 
-@en > 1. **You can also select multiple tracks in the score section to generate at the same time.**
-@zh > 1. **你还可以在乐曲部分同时选择多个音轨生成。**
+@en > 1. **You can also select multiple tracks in the score section to generate at the same time.** {#footnote-1}
+@zh > 1. **你还可以在乐曲部分同时选择多个音轨生成。** {#footnote-1}
 
 @en ## There is now a feature where you can load the last configuration used instantly.
 @zh ## 现在有一个功能，你可以立即加载上次使用的配置。

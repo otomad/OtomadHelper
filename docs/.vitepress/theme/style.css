@@ -10,6 +10,7 @@ html,
 body {
 	interpolate-size: allow-keywords;
 	touch-action: manipulation;
+	font-feature-settings: "halt" on;
 	font-kerning: normal;
 	font-synthesis-style: none;
 	font-variant-ligatures: common-ligatures historical-ligatures contextual;
@@ -206,14 +207,16 @@ ins {
  * Component: Fonts
  */
 :root {
-	--vp-font-family-base: "Segoe UI Variable", "Segoe UI", var(--vp-cjk-font-family), "Microsoft YaHei UI", sans-serif;
+	--vp-font-family-base:
+		"Yozora Sans", "Segoe UI Variable", "Segoe UI", var(--vp-cjk-font-family), "Microsoft YaHei UI", sans-serif;
 	--vp-font-family-mono:
 		"Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
 	--vp-cjk-font-family: "Microsoft YaHei UI";
 }
 
 :root [lang] {
-	font-family: "Segoe UI Variable", "Segoe UI", var(--vp-cjk-font-family), "Microsoft YaHei UI", sans-serif;
+	font-family:
+		"Yozora Sans", "Segoe UI Variable", "Segoe UI", var(--vp-cjk-font-family), "Microsoft YaHei UI", sans-serif;
 }
 
 :is(:lang(zh-Hant), :lang(zh-TW), :lang(zh-HK), :lang(zh-MO)) {
@@ -226,6 +229,12 @@ ins {
 
 :lang(ko) {
 	--vp-cjk-font-family: "Malgun Gothic";
+}
+
+@font-face {
+	font-family: "Yozora Sans";
+	src: url("fonts/YozoraSans-VF.woff2") format("woff2");
+	font-weight: 250 900;
 }
 
 /**
