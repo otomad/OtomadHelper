@@ -19,6 +19,8 @@ OH’s Datamosh was made possible with the use of [Vegas-Datamosh by delthas](ht
 
 _Datamoshes the video with determined settings._
 
+![Datamosh](/img/v4/moshes/datamosh.png){.shadow-less}
+
 * **Frame Count**
   * Amount of frames to use.
 * **Frame Repeat**
@@ -63,6 +65,8 @@ Requires the selection to be set equal or greater than frame 1
 
 _Layers’ the selected clip for moshing_
 
+![Layer](/img/v4/moshes/layer.png){.shadow-less}
+
 * **Layer count**
   * Amount of layers to generate.
 * **Layering offset**
@@ -99,6 +103,8 @@ _Renders the clip within a timeline selection… (Yes that’s literally it.)_
 
 _Scrambles the clip with random time placements dependent on the size._
 
+![Scramble](/img/v4/moshes/scramble.png){.shadow-less}
+
 * **Scramble Size**
   * The value of the size for the clips to be generated.
 
@@ -114,6 +120,8 @@ _Scrambles the clip with random time placements dependent on the size._
 ### Automator
 
 _Automates and Randomizes the values of Visual effects in the clip_
+
+![Automator](/img/v4/moshes/automator.png){.shadow-less}
 
 ::: important
 This requires Visual effects to have automation on to work
@@ -135,6 +143,8 @@ This requires Visual effects to have automation on to work
 
 _Stutters clips by Forwarding and Reversing them in randomized intervals_
 
+![Stutter](/img/v4/moshes/stutter.png){.shadow-less}
+
 * **Length in Seconds**
   * Duration of clips to be generated.
 * **Stutter Window Bias**
@@ -143,6 +153,8 @@ _Stutters clips by Forwarding and Reversing them in randomized intervals_
 ### Shake
 
 _Shakes the clips_
+
+![Shake](/img/v4/moshes/shake.png){.shadow-less}
 
 * **Speed**
   * The frequency value of the shaking effect

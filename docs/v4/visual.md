@@ -146,6 +146,8 @@ _The Value Setting for the visuals_
 
 ### Advanced - PV Rhythm Visual Effect
 
+![Advanced](/img/v4/visual/prve.png){.shadow-less}
+
 * **Flip Class**
   * Selects a Visual type from the Flip Class
 * **Rotation Class**

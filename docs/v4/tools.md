@@ -17,6 +17,8 @@ _Layout controls for visuals_
 
 ### Grid Layout
 
+![Auto Layout Tracks - Grid Layout](/img/v4/tools/grid_layout.png){.shadow-less}
+
 #### Array
 
 * **Square**
@@ -73,6 +75,8 @@ _Adjust the track boxes to be less cluttered with other boxes._
 
 _This will create a cube with the tracks you select._
 
+![Auto Layout Tracks - 3D Box Layout](/img/v4/tools/3d_box_layout.png){.shadow-less}
+
 **The Layout goes as follows.**
 
 * **Front**
@@ -99,6 +103,8 @@ _This makes the cube more natural._
 
 _This makes the video tracks have a gradient style color effect in your layout._
 
+![Gradient Tracks](/img/v4/tools/gradient_tracks.png){.shadow-less}
+
 * **Gradient Effect**
   * The Effect Presets
 * **Descending**
@@ -110,6 +116,8 @@ _Resets the Track Motion Box_
 _Removes all the Track Effects_
 
 ### Track Legato
+
+![Track Legato](/img/v4/tools/legato.png)
 
 ::: warning
 *This affects all the track events on the select track(s)*
@@ -143,9 +151,11 @@ _Removes all the Track Effects_
 *Make sure there are no clips beyond your final visual*
 :::
 
-## Quickly Select Interval
+## Quick Select Interval
 
 _This can select specific clips in the track that are selected_
+
+![Quick Select Interval](/img/v4/tools/quick_select_interval.png){.shadow-less}
 
 * **Select one for every few**
   * Selects every other clip based on the interval value.
@@ -159,6 +169,8 @@ _This can select specific clips in the track that are selected_
 ## Quick Config Properties
 
 _Set the properties of the event clips selected_
+
+![Quick Config Properties](/img/v4/tools/quick_config_properties.png){.shadow-less}
 
 ### Video clips
 * Hide
@@ -200,14 +212,22 @@ _Set the properties of the event clips selected_
 
 _Replaces selected track events with specific preferences._
 
-* **Specify simultaneously**
-  * *The Selected Track Events can be replaced with whatever you have selected at the end of the selection, you can choose a clip from another track and use that as the replacement and all the track clips that you have set before it will be replaced with that clip.*
-    ::: important
-    *It’s recommended not to put the replacement clip in the same track*
-    :::
-* **Specify separately**
-  * *Replaces specific clips in the track with any clip you select in any order you want.*
-  * [*Explanation in Extra Info*](./faq.md#specify-separately-explanation)
+### Specify simultaneously
+
+![Replace Track Events Simultaneously](/img/v4/tools/replace_track_events_simultaneously.png){.shadow-less}
+
+* *The Selected Track Events can be replaced with whatever you have selected at the end of the selection, you can choose a clip from another track and use that as the replacement and all the track clips that you have set before it will be replaced with that clip.*
+
+::: important
+*It’s recommended not to put the replacement clip in the same track*
+:::
+
+### Specify separately
+
+![Replace Track Events Separately](/img/v4/tools/replace_track_events_separately.png){.shadow-less}
+
+* *Replaces specific clips in the track with any clip you select in any order you want.*
+* [*Explanation in Extra Info*](./faq.md#specify-separately-explanation)
 
 ### Options
 * **Replace other clips in the track group**
@@ -220,9 +240,11 @@ _Replaces selected track events with specific preferences._
 * **Reserve original clip offset**
   * Reserves the original offset of the clip used in the timeline.
 
-### Change Tuning Method
+## Change Tuning Method
 
 _Changes the Tuning Method to the selected track events_
+
+![Change Tuning Method](/img/v4/tools/change_tuning_method.png){.shadow-less}
 
 *Refer to [Audio](./audio.md) on details about the Audio Tuning Methods*
 
@@ -234,9 +256,11 @@ _Changes the Tuning Method to the selected track events_
 * **Formant Shift \> Reserve Formant**
   * Locks Formant
 
-### Batch Subtitle Generation
+## Batch Subtitle Generation
 
 _Creates batches of text using the Title Media Generator with any duration._
+
+![Batch Subtitle Generation](/img/v4/tools/batch_subtitle_generation.png){.shadow-less}
 
 - **Import from File**
   * Import a text file to be used for subtitles
@@ -250,7 +274,9 @@ _Creates batches of text using the Title Media Generator with any duration._
 * **Duration**
   * Duration of each line
 
-### Find Track Events
+## Find Track Events
+
+![Find Track Events](/img/v4/tools/find_track_events.png){.shadow-less}
 
 _Find and Select all the track events that match the specified_
 
@@ -258,12 +284,12 @@ _Find and Select all the track events that match the specified_
 *This is helpful for selecting clips for layout replacement, making template layouts easier*
 :::
 
-#### Options
+### Options
 * *Matching Same Source*
 * *Matching Same Source with Same Starting Offset*
 * *Matching Specified Name*
 
-#### Search Text Box
+### Search Text Box
 
 _Search for any video, audio or both track events in your project_
 
@@ -274,32 +300,40 @@ _Search for any video, audio or both track events in your project_
 * **Audio events**
   * Searches for only audio events
 
-### Apply Visual Effect
+## Apply Visual Effect
 
 _Apply Visual Effects to selected Track Events_
 
+![Apply Visual Effect](/img/v4/tools/apply_visual_effect.png){.shadow-less}
+
 *Refer to [Visual](./visual.md) for details on the Visual effects you can use*
 
-### Convert Music Beats
+## Convert Music Beats
 
 _Converts Music Beats to a Different Time Signature_
+
+![Convert Music Beats](/img/v4/tools/convert_music_beats.png){.shadow-less}
 
 ::: info
 Useful for changing specific beats to a different time signature
 :::
 
-### Custom Fade Gain
+## Custom Fade Gain
 
 _Adjusts Gain/Volume Range for Selected Track Events_
+
+![Custom Fade Gain](/img/v4/tools/custom_fade_gain.png){.shadow-less}
 
 * **From Value**
   * The Value of the Starting Fade Effect
 * **To Value**
   * The Value of the Ending Fade Effect
 
-### Export MIDI File
+## Export MIDI File
 
 _Exports Tracks or Track Events to a Score Sequence File_
+
+![Export MIDI File](/img/v4/tools/export_midi_file.png){.shadow-less}
 
 ::: info
 *Naming your tracks beforehand will make the creation process smoother and help identify your tracks for future use*
@@ -339,7 +373,7 @@ _Exports Tracks or Track Events to a Score Sequence File_
 * **Export loop region only**
   * Exports the MIDI with only the selected loop region track events
 
-#### Vegas Track List
+### Vegas Track List
 
 _Select the tracks to be added to the MIDI File_
 
@@ -357,7 +391,7 @@ _Select the tracks to be added to the MIDI File_
 * **Preview**
   * Previews the track(s) selected
 
-#### MIDI Track List
+### MIDI Track List
 
 _Manage the track list for the MIDI being prepared. Displays how many created tracks in the preparation list and how many Vegas tracks and notes in each MIDI Track_
 
@@ -379,7 +413,7 @@ _Manage the track list for the MIDI being prepared. Displays how many created tr
 - **Name**
   * Input a name for the track
 
-#### MIDI Channel List
+### MIDI Channel List
 
 _Manage the channel list from the select track in the track list. Displays how many Vegas tracks and notes created in the selected MIDI track._
 
@@ -395,7 +429,7 @@ _Manage the channel list from the select track in the track list. Displays how m
 
 * Instrument - Displays used MIDI instrument for the channel
 
-#### MIDI Instrument list
+### MIDI Instrument list
 
 _List of instruments selected to their according MIDI channel that can be changed_
 
