@@ -45,6 +45,9 @@ export default defineConfig({
 				"@assets": resolve(import.meta.dirname, "../assets"),
 			},
 		},
+		build: {
+			assetsInlineLimit: 200,
+		},
 	},
 	lastUpdated: true,
 	ignoreDeadLinks: true,
