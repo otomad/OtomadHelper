@@ -7,7 +7,9 @@ const props = defineProps<{
 </script>
 
 <template>
-	<VPSocialLink :icon="props.icon" link="" :me="false" class="social-icon-only" />
+	<object>
+		<VPSocialLink :icon="props.icon" link="" :me="false" class="social-icon-only" />
+	</object>
 </template>
 
 <style scoped>
@@ -25,5 +27,9 @@ const props = defineProps<{
 		height: 1.25em !important;
 		margin-inline-end: 0.25em;
 	}
+}
+
+object {
+	display: inline;
 }
 </style>

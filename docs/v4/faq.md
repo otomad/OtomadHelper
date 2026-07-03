@@ -196,11 +196,11 @@ System.Reflection.TargetInvocationException:调用的目标发生了异常。 --
 **解决方法：**确保你的Vegas含有“移调”插件，并且名称已改为“Pitch Shift”。
 
 **补充说明：**具体可见之前专栏中对于安装方法的说明。如果仍然不能解决，另一种方式是找到脚本中的所有的
-```csharp
+```CSharp
 vegas.AudioFX.FindChildByName("Pitch Shift");
 ```
 字样（一共4处），并将它替换为
-```csharp
+```CSharp
 vegas.AudioFX.FindChildByUniqueID("{ED1B4100-93BE-11D0-AEBC-00A0C9053912}");
 ```
 但这个办法也不保证能成功。这类错误留有一些疑点，我还没有完全解决。

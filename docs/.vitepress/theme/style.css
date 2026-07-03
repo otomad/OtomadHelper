@@ -108,7 +108,7 @@ ins {
 	--vp-c-brand-1: color-mix(in oklab, var(--vp-c-brand-3), #fff 20%);
 	--vp-c-brand-2: color-mix(in oklab, var(--vp-c-brand-3), #fff 10%);
 	--vp-c-brand-3: #f06e8e;
-	--vp-c-brand-soft: rgb(from color-mix(in oklab, var(--accent-50), #eee 93%) r g b / 14%);
+	--vp-c-brand-soft: rgb(from color-mix(in oklab, var(--vp-c-brand-3), #eee 93%) r g b / 14%);
 
 	--vp-c-tip-1: var(--vp-c-indigo-1);
 	--vp-c-tip-2: var(--vp-c-indigo-2);

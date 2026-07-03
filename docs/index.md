@@ -31,4 +31,6 @@ features:
     details: YTP is also able to be generated.
 ---
 
-<TeamMembers lang="en" />
+<TeamMembers />
+<ProjectsView />
+<PoweredBy />

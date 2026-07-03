@@ -31,4 +31,6 @@ features:
     details: YTP也可以被生成。
 ---
 
-<TeamMembers lang="zh-CN" />
+<TeamMembers />
+<ProjectsView />
+<PoweredBy />
