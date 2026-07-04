@@ -133,9 +133,6 @@ _Settings to assign opacity values relative to the MIDI notes_
 
 _Make your visuals whatever you want. The default is Horizontal Flip._
 
-<!-- * Demonstration of all the visual effects here
-  [**https://youtu.be/cY2Qa3Owetw**](https://youtu.be/cY2Qa3Owetw) -->
-
 ### Initial Step
 
 _The Value Setting for the visuals_

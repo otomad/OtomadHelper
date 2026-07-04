@@ -3,6 +3,7 @@ import { useData } from "vitepress";
 import DefaultTheme from "vitepress/theme-without-fonts";
 import { nextTick, provide, onMounted } from "vue";
 import flyoutShadowStyle from "./readthedocs-flyout-shadow.css?inline";
+import VersionBadge from "@vp/components/VersionBadge.vue";
 
 const { isDark } = useData();
 
@@ -75,7 +76,9 @@ onMounted(async () => {
 </script>
 
 <template>
-	<DefaultTheme.Layout />
+	<DefaultTheme.Layout>
+		<template #home-hero-info-before><VersionBadge /></template>
+	</DefaultTheme.Layout>
 </template>
 
 <style>
@@ -111,5 +114,10 @@ onMounted(async () => {
 
 :root.locale-changing * {
 	view-transition-name: none !important;
+}
+
+.version-badge {
+	margin-block: -8px 8px;
+	display: block;
 }
 </style>

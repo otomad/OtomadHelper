@@ -25,7 +25,7 @@
 ::: details ### My MIDI File isn’t working.
 Make sure you have exported the MIDI file with a compatible program (e.g. FL Studio) and it has MIDI Channels/Tracks. A MIDI file that has no channels or tracks in it will not load or not correctly work with the script. If the MIDI is the MIDI file itself, try re-exporting the MIDI by re-importing it into the same program it was exported from and exporting it again.
 
-If the MIDI file is from FL Studio. Make sure you go to *Tools > Macros > Prepare for MIDI Export*, then Export as a .mid file.
+If the MIDI file is from FL Studio. Make sure you go to [[Tools > Macros > Prepare for MIDI Export]], then Export as a .mid file.
 
 If the MIDI file is from Reaper. When you’re done with the project, go to Export Project MIDI, select your input tracks to Entire Project and All Tracks. Set the output to Multitrack MIDI file (type 1) and hit OK
 

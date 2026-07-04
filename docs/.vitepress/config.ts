@@ -5,7 +5,6 @@ import detailsHeadingPlugin from "./plugins/markdown-it/container-details-headin
 import containerImportantPlugin from "./plugins/markdown-it/container-important";
 import bracketedSpans from "./plugins/markdown-it/bracketed-spans";
 import kbdPlugin from "./plugins/markdown-it/kbd";
-import menuPathPlugin from "./plugins/markdown-it/menu-path";
 import { katex } from "@mdit/plugin-katex";
 import { resolve } from "path";
 import { join } from "path/posix";
@@ -30,7 +29,6 @@ export default defineConfig({
 			md.use(containerImportantPlugin);
 			md.use(bracketedSpans);
 			md.use(kbdPlugin);
-			md.use(menuPathPlugin);
 			// VitePress 的默认数学公式渲染器 markdown-it-mathjax3 居然懒得添加 MathML 输出选项，所以换一个。
 			// See: https://github.com/tani/markdown-it-mathjax3/issues/58
 			md.use(katex, { output: "mathml" });
@@ -82,8 +80,8 @@ export default defineConfig({
 				},
 				nav: [
 					{ text: "Home", link: "/" },
-					{ text: "New Documentations (v8)", link: "/introduction", activeMatch: "^/[^/]+$" },
-					{ text: "Old Documentations (v4)", link: "/v4/introduction", activeMatch: "/v4/" },
+					{ text: "New Docs (v8)", link: "/introduction", activeMatch: "^/[^/]+$" },
+					{ text: "Old Docs (v4)", link: "/v4/introduction", activeMatch: "/v4/" },
 				],
 				sidebar: sidebar("en"),
 			},

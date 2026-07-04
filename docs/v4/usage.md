@@ -39,8 +39,8 @@
    ::: info
 @en    * Make a copy of your project.
 @zh    * 将你的项目创建副本。
-@en    * Press [[Ctrl]] + [[N]] to save a new version
-@zh    * 按 [[Ctrl]] + [[N]] 键来另存为新版本
+@en    * Press [[Ctrl + N]] to save a new version
+@zh    * 按 [[Ctrl + N]] 键来另存为新版本
    :::
 @en 2. Go to *Tools > Marcos > Prepare for MIDI Export*.
 @zh 2. 转到 *工具 > 宏 > 准备进行MIDI导出*。

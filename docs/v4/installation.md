@@ -4,10 +4,33 @@
 @en ## Core Script
 @zh ## 脚本本体
 
-@en 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the latest version of this script.
-@zh 1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)最新版脚本。
-@en 2. Unzip **ALL** the files in the zip file you’ve just downloaded to the `Script Menu` folder in the Vegas installation directory, or the `Vegas Script Menu` folder in the `Documents` (formerly `My Documents`) folder. Specifically:
-@zh 2. 将你刚刚下载到的ZIP文件中的**所有**文件解压缩到Vegas安装目录中的 `Script Menu` 文件夹，或 `文档`（原 `我的文档`）文件夹下的 `Vegas Script Menu` 文件夹中。具体来说：
+@en 1. <Button href="https://github.com/otomad/OtomadHelper/releases/latest"><b>Download</b> the latest version of this script</Button>
+@zh 1. <Button href="https://github.com/otomad/OtomadHelper/releases/latest"><b>下载</b>最新版脚本</Button>
+
+@en ::: tip Release Assets Description
+@zh ::: tip 发行资源说明
+@en > **Note:** The asset with word `.dll` is a precompiled script, which can start up twice as fast as the source code `.cs` script. You can choose to download according to your needs.
+@zh > **注：**带有 `.dll` 字样的资源是预编译的脚本，它的启动速度可以比普通源代码 `.cs` 脚本快一倍。你可根据需要自行选择下载。
+
+0. **`0_otomad_helper_v4.x.x.x_vegas16-2026.cs.zip`**
+@en    * The source code script for *MAGIX VEGAS Pro 16*, *MAGIX VEGAS Pro 17*, *MAGIX VEGAS Pro 18*, *MAGIX VEGAS Pro 19*, *MAGIX VEGAS Pro 20*, *MAGIX VEGAS Pro 21*, *MAGIX VEGAS Pro 22*, *MAGIX VEGAS Pro 23*, *BorisFX Vegas Pro 2026* and later versions (if possible).
+@zh    * 适用于 *MAGIX VEGAS Pro 16*、*MAGIX VEGAS Pro 17*、*MAGIX VEGAS Pro 18*、*MAGIX VEGAS Pro 19*、*MAGIX VEGAS Pro 20*、*MAGIX VEGAS Pro 21*、*MAGIX VEGAS Pro 22*、*MAGIX VEGAS Pro 23*、*BorisFX Vegas Pro 2026* 及更新版本（如果可能）的普通源代码脚本。
+1. **`1_otomad_helper_v4.x.x.x_vegas1415.cs.zip`**
+@en    * The source code script for *MAGIX VEGAS Pro 14*, *MAGIX VEGAS Pro 15*.
+@zh    * 适用于 *MAGIX VEGAS Pro 14*、*MAGIX VEGAS Pro 15* 的普通源代码脚本。
+2. **`2_otomad_helper_v4.x.x.x_vegas13.cs.zip`**
+@en    * The source code script for *Sony Vegas Pro 13*.
+@zh    * 适用于 *Sony Vegas Pro 13* 的普通源代码脚本。
+3. **`3_otomad_helper_v4.x.x.x_vegas16-2026.dll.zip`**
+@en    * The precompiled script for *MAGIX VEGAS Pro 16*, *MAGIX VEGAS Pro 17*, *MAGIX VEGAS Pro 18*, *MAGIX VEGAS Pro 19*, *MAGIX VEGAS Pro 20*, *MAGIX VEGAS Pro 21*, *MAGIX VEGAS Pro 22*, *MAGIX VEGAS Pro 23*, *BorisFX Vegas Pro 2026* and later versions (if possible).
+@zh    * 适用于 *MAGIX VEGAS Pro 16*、*MAGIX VEGAS Pro 17*、*MAGIX VEGAS Pro 18*、*MAGIX VEGAS Pro 19*、*MAGIX VEGAS Pro 20*、*MAGIX VEGAS Pro 21*、*MAGIX VEGAS Pro 22*、*MAGIX VEGAS Pro 23*、*BorisFX Vegas Pro 2026* 及更新版本（如果可能）的预编译脚本。
+4. **`4_otomad_helper_v4.x.x.x_vegas1415.dll.zip`**
+@en    * The precompiled script for *MAGIX VEGAS Pro 14*, *MAGIX VEGAS Pro 15*
+@zh    * 适用于 *MAGIX VEGAS Pro 14*、*MAGIX VEGAS Pro 15* 的预编译脚本。
+:::
+
+@en 2. Unzip **ALL** the files in the ZIP file you’ve just downloaded to the `Script Menu` folder in the Vegas installation directory, or the `Vegas Script Menu` folder in the `Documents` (formerly `My Documents`) folder. Specifically:
+@zh 2. 将你刚刚下载到的zip文件中的**所有**文件解压缩到Vegas安装目录中的 `Script Menu` 文件夹，或 `文档`（原 `我的文档`）文件夹下的 `Vegas Script Menu` 文件夹中。具体来说：
 
 ---
 
@@ -119,10 +142,10 @@ C:\Program Files\Sony\Vegas Pro 13.0\Script Menu
 
 ![Expected Files in Folder](/img/v4/expected_files_in_folder.png)
 
-@en 4. Open Vegas Pro to launch it. Select menu [[[Tools > Scripting > Rescan Script Menu Folder]]].
-@zh 4. 打开 Vegas Pro 来启动。选择菜单 [[[工具 > 脚本化 > 重新扫描脚本菜单文件夹]]]。
-@en 5. Select menu [[[Tools > Scripting > Otomad Helper]]] to open.
-@zh 5. 选择菜单 [[[工具 > 脚本化 > Otomad Helper]]] 打开。
+@en 4. Open Vegas Pro to launch it. Select menu [[Tools > Scripting > Rescan Script Menu Folder]].
+@zh 4. 打开 Vegas Pro 来启动。选择菜单 [[工具 > 脚本化 > 重新扫描脚本菜单文件夹]]。
+@en 5. Select menu [[Tools > Scripting > Otomad Helper]] to open.
+@zh 5. 选择菜单 [[工具 > 脚本化 > Otomad Helper]] 打开。
 
 
 @en ## Datamosh Extension Pack
@@ -131,16 +154,16 @@ C:\Program Files\Sony\Vegas Pro 13.0\Script Menu
 @en If you want to use the full features of [Datamosh](./mosh.md), you have to install the Datamosh extension pack.
 @zh 如果需要使用[数据抹失](./mosh.md)的全部功能，需要安装数据抹失扩展包方可使用。
 
-@en 1. [Download](https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh) the Datamosh extension pack.
-@zh 1. [下载](https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh)数据抹失扩展包。
-@en 2. Unzip the 7z file and move the `_internal` folder to the same directory as the script `Otomad Helper.cs/dll`.
+@en 1. <Button href="https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh"><b>Download</b> the Datamosh extension pack</Button>
+@zh 1. <Button href="https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh"><b>下载</b>数据抹失扩展包</Button>
+@en 2. Unzip the 7Z file and move the `_internal` folder to the same directory as the script `Otomad Helper.cs/dll`.
 @zh 2. 解压7z文件并将 `_internal` 文件夹移动到脚本 `Otomad Helper.cs/dll` 所在的相同目录下。
 
 @en ## Quick Launch
 @zh ## 快速启动
 
-@en You can add scripts as toolbar buttons rather than having to click inside the *Tools > Scripting* submenu, by adding them to the toolbar using the *Options > Customize Toolbar* menu.
-@zh 你可以选择菜单 *选项 > 自定义工具栏*，将脚本添加到工具栏中以便操作。
+@en You can add scripts as toolbar buttons rather than having to click inside the [[Tools > Scripting]] submenu, by adding them to the toolbar using the [[Options > Customize Toolbar]] menu.
+@zh 你可以选择菜单 [[选项 > 自定义工具栏]]，将脚本添加到工具栏中以便操作。
 
 @en ## **Compatibility**
 @zh ## **兼容性**

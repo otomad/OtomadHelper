@@ -108,12 +108,8 @@ ins {
 	--vp-c-brand-1: color-mix(in oklab, var(--vp-c-brand-3), #fff 20%);
 	--vp-c-brand-2: color-mix(in oklab, var(--vp-c-brand-3), #fff 10%);
 	--vp-c-brand-3: #f06e8e;
-	--vp-c-brand-soft: rgb(from color-mix(in oklab, var(--vp-c-brand-3), #eee 93%) r g b / 14%);
-
-	--vp-c-tip-1: var(--vp-c-indigo-1);
-	--vp-c-tip-2: var(--vp-c-indigo-2);
-	--vp-c-tip-3: var(--vp-c-indigo-3);
-	--vp-c-tip-soft: var(--vp-c-indigo-soft);
+	--vp-c-brand-soft: light-dark(oklch(0.61 0.21 6.8 / 0.08), oklch(0.61 0.21 6.8 / 0.14));
+	accent-color: var(--vp-c-brand-3);
 
 	--vp-c-warning-1: var(--vp-c-yellow-1);
 	--vp-c-warning-2: var(--vp-c-yellow-2);
@@ -167,6 +163,14 @@ ins {
 	--vp-custom-block-tip-text: var(--vp-c-text-1);
 	--vp-custom-block-tip-bg: var(--vp-c-indigo-soft);
 	--vp-custom-block-tip-code-bg: var(--vp-c-indigo-soft);
+	--vp-code-bg: oklch(0.67 0.03 6.8 / 0.14);
+}
+
+.custom-block.tip {
+	--vp-c-tip-1: var(--vp-c-indigo-1);
+	--vp-c-tip-2: var(--vp-c-indigo-2);
+	--vp-c-tip-3: var(--vp-c-indigo-3);
+	--vp-c-tip-soft: var(--vp-c-indigo-soft);
 }
 
 /**
@@ -509,9 +513,7 @@ readthedocs-flyout {
 
 @font-face {
 	font-family: "Lucide Keyboard Icons";
-	src:
-		url("fonts/Lucide-Keyboard-Icons.woff2") format("woff2"),
-		url("fonts/Lucide-Keyboard-Icons.woff") format("woff");
+	src: url("fonts/Lucide-Keyboard-Icons.woff2") format("woff2");
 	font-weight: normal;
 	font-style: normal;
 	font-display: block;
@@ -520,8 +522,12 @@ readthedocs-flyout {
 /**
  * Component: Kbd
  */
-kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *),
-.menu-path .menu-item {
+kbd,
+code {
+	box-decoration-break: clone;
+}
+
+kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *, .wrapped) {
 	background: rgba(128, 128, 128, 0.1);
 	border-radius: 4px;
 	padding-inline: 0.5em;
@@ -548,12 +554,7 @@ kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *),
 	}
 }
 
-kbd,
-code {
-	white-space: nowrap;
-}
-
-kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *) {
+kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *, .wrapped, .menu-path > .item) {
 	&::before,
 	&::after {
 		font-family: "Lucide Keyboard Icons";
@@ -729,4 +730,31 @@ kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *) {
 	.custom-block {
 		font-style: initial;
 	}
+}
+
+/**
+ * Component: Button in Document
+ */
+.vp-doc .VPButton {
+	text-decoration: none;
+}
+
+button,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.custom-block-title,
+summary {
+	strong,
+	b {
+		font-weight: bolder;
+	}
+}
+
+.vp-doc p {
+	line-height: 24px;
 }

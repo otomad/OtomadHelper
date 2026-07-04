@@ -3,7 +3,8 @@ import type MarkdownIt from "markdown-it";
 const MARKER_OPEN = "[";
 const MARKER_CLOSE = "]";
 const ESCAPE_CHARACTER = "\\";
-const TAG = "kbd";
+const SINGLE_TAG = "kbd";
+const WRAPPED_TAG = "KeyShortcuts";
 
 type StateInline = InstanceType<InstanceType<typeof MarkdownIt>["inline"]["State"]>;
 
@@ -63,18 +64,24 @@ function tokenize(state: StateInline, silent: boolean) {
 
 	// Extract inner text for data-key attribute
 	const innerText = state.src.slice(start + 2, end).trim();
+	const isWrapped = /\s[+>]\s/.test(innerText);
 
+	const tag = !isWrapped ? SINGLE_TAG : WRAPPED_TAG;
 	// start tag
-	const token = state.push("kbd_open", TAG, 1);
-	token.attrSet("aria-keyshortcuts", innerText.replaceAll(/\s/g, ""));
-	// parse inner
-	state.pos += 2;
-	state.posMax = end;
-	state.md.inline.tokenize(state);
+	const token = state.push("kbd_open", tag, 1);
+	if (!isWrapped) {
+		token.attrSet("aria-keyshortcuts", innerText.replaceAll(/\s/g, ""));
+		// parse inner
+		state.pos += 2;
+		state.posMax = end;
+		state.md.inline.tokenize(state);
+	} else {
+		token.attrSet("path", innerText);
+	}
 	state.pos = end + 2;
 	state.posMax = max;
 	// end tag
-	state.push("kbd_close", TAG, -1);
+	state.push("kbd_close", tag, -1);
 
 	return true;
 }
