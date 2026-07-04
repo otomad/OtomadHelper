@@ -7,8 +7,12 @@
 @zh 2. 将你刚刚下载到的压缩文件中的**所有**文件解压缩到“Application Extensions”文件夹中。
 @en     If this folder does not exist, please create a new one.
 @zh    如果该文件夹不存在，请新建。
-@en    > (ie. C:\\ProgramData\\VEGAS Pro\\Application Extensions)
-@zh    > （例：C:\\ProgramData\\VEGAS Pro\\Application Extensions）
+   ::: code-group
+@en    ```[Path]
+@zh    ```[路径]
+   C:\ProgramData\VEGAS Pro\Application Extensions
+   ```
+   :::
 @en 3. Make sure that the DLL file is not locked.
 @zh 3. 请确保 DLL 文件未锁定。
 

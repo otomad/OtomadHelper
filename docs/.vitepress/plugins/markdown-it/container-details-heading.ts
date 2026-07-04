@@ -31,17 +31,22 @@ export default function containerDetailsHeadingPlugin(md: MarkdownIt) {
 
 				if (parsed) {
 					// 【情况 A】带井号：自定义标题行为
-					id ||= slugify(parsed.text);
+					id ||= slugify(parsed.rawText);
 					const { level } = parsed;
 					if (idIndex !== -1) token.attrs.splice(idIndex, 1);
 					const detailsAttrsStr = renderAttrs();
+					// 关键点：使用 md.renderInline() 渲染 HTML 行内标签，让删除线、加粗完美生效
+					const renderedSummary = md.renderInline(parsed.rawText);
 					// 注入自定义 class 和 动态 id，并为内部的 summary 添加对应的 h 标签样式或结构（可选）
-					return `<details ${detailsAttrsStr}>\n<summary><h${level} id="${id}">${parsed.text}</h${level}></summary>\n`;
+					return `<details ${detailsAttrsStr}>\n<summary><h${level} id="${id}">${renderedSummary}</h${level}></summary>\n`;
 				} else {
 					// 【情况 B】不带井号：保持 VitePress 原生默认行为
 					const detailsAttrsStr = renderAttrs();
 					let result = `<details ${detailsAttrsStr}>\n`;
-					if (rawInfo) result += `<summary>${rawInfo}</summary>\n`;
+					if (rawInfo) {
+						const renderedSummary = md.renderInline(rawInfo);
+						result += `<summary>${renderedSummary}</summary>\n`;
+					}
 					return result;
 				}
 			} else {
@@ -53,7 +58,11 @@ export default function containerDetailsHeadingPlugin(md: MarkdownIt) {
 
 // 辅助函数：将中英文文本转换为合法的 URL hash / id
 function slugify(str: string) {
-	return String(str).toLowerCase().replaceAll(/\p{P}/gu, " ").trim().replaceAll(/\s+/g, "-");
+	return String(str)
+		.toLowerCase()
+		.replaceAll(/[\p{P}\p{S}]/gu, " ")
+		.trim()
+		.replaceAll(/\s+/g, "-");
 }
 
 // 解析带有井号的 info 字符串，例如 "### 我是三级标题" -> { level: 3, text: "我是三级标题" }
@@ -62,7 +71,7 @@ function parseTitleInfo(infoStr: string) {
 	if (match) {
 		return {
 			level: match[1].length, // 井号的数量代表 H1 - H6
-			text: match[2].trim(),
+			rawText: match[2].trim(),
 		};
 	}
 	return null; // 如果没有井号，返回 null 保持原始行为

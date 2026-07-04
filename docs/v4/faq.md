@@ -74,7 +74,7 @@ Your MIDI file has a note that has a velocity of 0. Check to make sure there isn
 [How to find the offending note?](#got-an-off-without-an-on-0-noteon-how-to-find-the-offending-note)
 :::
 
-:::: details ### Specified argument was out of the range of valid values.
+:::: details ### ~~Specified argument was out of the range of valid values.~~
 ::: important
 *This is fixed in Version 4.64.17.0, so it should not be reproduced in the latest version.*
 :::
@@ -171,7 +171,7 @@ System.Reflection. TargetInvocationException: Exception has been thrown by the t
 **补充说明：**MIDI文件有多种格式，脚本不保证都能够正确读取。所幸主流宿主软件在默认设置下导出的MIDI文件一般是可以读取的。（目前测试过FL Studio、LMMS与Music Studio for iPad）
 ::::
 
-:::: details ### 无法调用移调插件
+:::: details ### ~~无法调用移调插件~~
 ::: important
 *该错误已过时，仅在Otomad Helper v0.1中出现，最新版不应发生该错误。*
 :::
@@ -206,7 +206,7 @@ vegas.AudioFX.FindChildByUniqueID("{ED1B4100-93BE-11D0-AEBC-00A0C9053912}");
 但这个办法也不保证能成功。这类错误留有一些疑点，我还没有完全解决。
 ::::
 
-:::: details ### 无法调用移调插件的预设效果
+:::: details ### ~~无法调用移调插件的预设效果~~
 ::: important
 *该错误已过时，仅在Otomad Helper v0.1中出现，最新版不应发生该错误。*
 :::

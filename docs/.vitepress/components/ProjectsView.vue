@@ -33,12 +33,14 @@ const projects = [
 		linkText: "Visit",
 	},
 ];
+
+const title = get({ en: "Projects", zh: "项目" });
 </script>
 
 <template>
 	<VPTeamPage>
 		<VPTeamPageTitle>
-			<template #title>Projects</template>
+			<template #title>{{ title }}</template>
 		</VPTeamPageTitle>
 		<VPFeatures :features="projects" class="projects" />
 	</VPTeamPage>

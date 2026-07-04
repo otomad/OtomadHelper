@@ -369,13 +369,13 @@ details.details.custom-block {
 /**
  * Component: Overview Image
  */
-.vp-doc img {
+.vp-doc img:not(.VPTeamPage *, VPLink *) {
 	max-height: 600px;
 	margin-inline: auto !important;
 	border-radius: 6px;
 
 	&:not(.shadow-less) {
-		box-shadow: 0 4px 6px 0px #0003;
+		box-shadow: var(--vp-shadow-3);
 	}
 
 	&.light:is(html.dark *),
@@ -430,6 +430,10 @@ readthedocs-flyout {
 	}
 	ul ul ul ul ul ul {
 		list-style: square;
+	}
+
+	ol ol {
+		list-style: lower-alpha;
 	}
 }
 
@@ -516,22 +520,25 @@ readthedocs-flyout {
 /**
  * Component: Kbd
  */
-kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *) {
+kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *),
+.menu-path .menu-item {
 	background: rgba(128, 128, 128, 0.1);
 	border-radius: 4px;
-	padding: 0.25em 0.5em;
-	min-width: 2em;
+	padding-inline: 0.5em;
+	min-inline-size: 2em;
 	display: inline-block;
 	text-align: center;
-	vertical-align: middle;
+	vertical-align: top;
 	border: 1px solid rgba(128, 128, 128, 0.15);
 	box-shadow:
 		0 2px 2px 0 rgba(0, 0, 0, 0.1),
 		inset 0 0 0 0 transparent;
-	line-height: 1.1;
+	font-size: var(--vp-code-font-size);
+	line-height: var(--vp-code-line-height);
 	text-transform: capitalize;
 	transition: all 250ms;
 	cursor: pointer;
+	font-family: var(--vp-font-family-mono);
 
 	&:active {
 		background: rgba(128, 128, 128, 0.15);
@@ -539,7 +546,14 @@ kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *) {
 			0 0 0 0 transparent,
 			inset 0 2px 2px 0 rgba(0, 0, 0, 0.05);
 	}
+}
 
+kbd,
+code {
+	white-space: nowrap;
+}
+
+kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *) {
 	&::before,
 	&::after {
 		font-family: "Lucide Keyboard Icons";

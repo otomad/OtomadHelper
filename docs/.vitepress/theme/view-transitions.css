@@ -38,7 +38,7 @@
 }
 
 .VPHomeHero,
-.VPFeatures {
+.VPHomeFeatures {
 	view-transition-class: home-hero;
 }
 
@@ -46,7 +46,7 @@
 	view-transition-name: home-hero;
 }
 
-.VPFeatures {
+.VPHomeFeatures {
 	view-transition-name: home-features;
 }
 

@@ -1,5 +1,5 @@
-@en # Using Otomad Helper
-@zh # 使用Otomad Helper
+@en # Getting Started with Otomad Helper
+@zh # Otomad Helper入门指南
 
 @en ## To make visuals insanely quickly with Otomad Helper
 @zh ## 要借助Otomad Helper快速制作视觉效果
@@ -72,7 +72,7 @@
 @en    * Whatever your sample was, select what matches the clip’s sample.
 @zh    * 无论你的采样是什么，选择与剪辑采样相匹配的采样。
 @en    * [Turn off Audio if you don’t want audio in your generation.](./audio.md)
-@zh    * [如果你不希望生成音频，请关闭音频。](./audio.md).
+@zh    * [如果你不希望生成音频，请关闭音频。](./audio.md)
 @en    * [You can customize your visuals in Visual Settings.](./visual.md)
 @zh    * [你可以在画面设置中自定义你的画面。](./visual.md)
    :::

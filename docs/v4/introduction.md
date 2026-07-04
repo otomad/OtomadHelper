@@ -19,8 +19,8 @@
 @en ## Sub-Features
 @zh ## 子功能
 
-@en It can also be used to make [**YTP**](https://en.wikipedia.org/wiki/YouTube_Poop), **Sonar Effect (Motion Graphics Generation Feature)**, [**Datamosh**](https://en.wikipedia.org/wiki/Compression_artifact#Artistic_use).
-@zh 它也可以用于制作[**YTP**](https://zh.wikipedia.org/wiki/YouTube_Poop)、**声呐效果（动态图形生成功能）**、[**数据抹失（幻术故障、[資料狂舞]{lang=zh-TW}）**](https://zh.wikipedia.org/wiki/壓縮失真#藝術上的應用)。
+@en It can also be used to make [**YTP**](https://en.wikipedia.org/wiki/YouTube_Poop), [**Sonar Effect (Motion Graphics Generation Feature)**](https://en.wikipedia.org/wiki/Motion_graphics), [**Datamosh**](https://en.wikipedia.org/wiki/Compression_artifact#Artistic_use).
+@zh 它也可以用于制作[**YTP**](https://zh.wikipedia.org/wiki/YouTube_Poop)、[**声呐效果（动态图形生成功能）**](https://zh.wikipedia.org/wiki/动态图形)、[**数据抹失（幻术故障、[資料狂舞]{lang=zh-TW}）**](https://zh.wikipedia.org/wiki/壓縮失真#藝術上的應用)。
 
 @en The related features of YTP refer to [YTP+](https://github.com/YTP-Plus).
 @zh YTP 的相关功能参考自[YTP+](https://github.com/YTP-Plus)。
@@ -48,8 +48,8 @@
 
 @en * Vietnamese translation provided by [@Cyahega](https://github.com/Cyahega).
 @zh * 越南语翻译由 [@Cyahega](https://github.com/Cyahega) 提供。
-@en * Indonesian translation provided by [@AdeGimank123](https://github.com/AdeGimank123) and _@JujunG_.
-@zh * 印尼语翻译由 [@AdeGimank123](https://github.com/AdeGimank123) 和 _@JujunG_ 提供。
+@en * Indonesian translation provided by [@AdeGimank123](https://github.com/AdeGimank123) and [@JujunG](https://youtube.com/@jujungamers).
+@zh * 印尼语翻译由 [@AdeGimank123](https://github.com/AdeGimank123) 和 [@JujunG](https://youtube.com/@jujungamers) 提供。
 
 ---
 

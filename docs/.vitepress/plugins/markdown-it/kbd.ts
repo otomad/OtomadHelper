@@ -38,7 +38,7 @@ function tokenize(state: StateInline, silent: boolean) {
 		}
 		if (momChar === MARKER_CLOSE && nextChar === MARKER_CLOSE) {
 			openTagCount -= 1;
-			if (openTagCount == 0) {
+			if (openTagCount === 0) {
 				// Found the end!
 				end = i;
 			}
@@ -66,8 +66,7 @@ function tokenize(state: StateInline, silent: boolean) {
 
 	// start tag
 	const token = state.push("kbd_open", TAG, 1);
-	token.attrs ||= [];
-	token.attrs.push(["aria-keyshortcuts", innerText.replaceAll(/\s/g, "")]);
+	token.attrSet("aria-keyshortcuts", innerText.replaceAll(/\s/g, ""));
 	// parse inner
 	state.pos += 2;
 	state.posMax = end;
