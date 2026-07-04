@@ -745,3 +745,40 @@ summary {
 		font-weight: bolder;
 	}
 }
+
+/**
+ * Fix Component: Algolia Search (PageFind)
+ */
+@media (width <= 560px) {
+	.algolia [command-dialog-wrapper] {
+		height: 100dvh;
+		border-radius: 0;
+	}
+}
+
+.nav-search-btn-wait {
+	color: var(--vp-c-text-2);
+	border-radius: 8px !important;
+
+	svg {
+		stroke-width: 2px;
+		width: 12.5px;
+		height: 12.5px;
+
+		@media (width <= 759px) {
+			width: 18px;
+			height: 18px;
+			color: var(--vp-c-text-1);
+		}
+	}
+
+	.search-tip {
+		font-size: 13px !important;
+		color: inherit !important;
+		padding-right: 0 !important;
+	}
+
+	.metaKey {
+		line-height: 20px;
+	}
+}

@@ -6,9 +6,9 @@ import containerImportantPlugin from "./plugins/markdown-it/container-important"
 import bracketedSpans from "./plugins/markdown-it/bracketed-spans";
 import kbdPlugin from "./plugins/markdown-it/kbd";
 import { katex } from "@mdit/plugin-katex";
-import fs from "fs";
 import { resolve } from "path";
 import { join } from "path/posix";
+import { pagefindPlugin, chineseSearchOptimize } from "vitepress-plugin-pagefind";
 
 const base = process.env.READTHEDOCS_CANONICAL_URL
 	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
@@ -37,6 +37,23 @@ export default defineConfig({
 		attrs: {},
 	},
 	vite: {
+		plugins: [
+			pagefindPlugin({
+				customSearchQuery: chineseSearchOptimize,
+				locales: {
+					"zh-CN": {
+						btnPlaceholder: "搜索",
+						placeholder: "搜索文档",
+						emptyText: "空空如也",
+						heading: "共{{searchResult}}条结果",
+						toSelect: "选择",
+						toNavigate: "导航",
+						toClose: "关闭",
+						searchBy: "搜索提供",
+					},
+				},
+			}),
+		],
 		server: {
 			port: 7000,
 		},

@@ -10,7 +10,9 @@
 	"dependencies": {
 		"@mdit/plugin-katex": "^0.25.2",
 		"markdown-it-container": "^4.0.0",
-		"vitepress": "2.0.0-alpha.17"
+		"pagefind": "^1.5.2",
+		"vitepress": "2.0.0-alpha.17",
+		"vitepress-plugin-pagefind": "^0.4.20"
 	},
 	"devDependencies": {
 		"@types/node": "^26.0.0",

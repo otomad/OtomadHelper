@@ -1,11 +1,13 @@
-.VPLocalSearchBox > * {
+.VPLocalSearchBox > *,
+.algolia [command-dialog-mask],
+.algolia [command-dialog-wrapper] {
 	transition: all 250ms allow-discrete;
 	transition-property: translate, opacity;
 
 	@starting-style {
 		opacity: 0;
 
-		&:is(.shell) {
+		&:is(.shell, [command-dialog-wrapper]) {
 			translate: 0 -1rem;
 		}
 	}
@@ -33,7 +35,8 @@
 	}
 }
 
-.VPNavBarSearchButton {
+.VPNavBarSearchButton,
+.nav-search-btn-wait {
 	view-transition-name: nav-bar-search-button;
 }
 
