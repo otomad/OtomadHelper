@@ -4,6 +4,7 @@
 import { inBrowser, type Theme } from "vitepress";
 import DefaultTheme, { VPButton } from "vitepress/theme-without-fonts";
 import MyLayout from "./Layout.vue";
+import "./fonts.css";
 import "./style.css";
 import "./view-transitions.css";
 

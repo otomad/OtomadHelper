@@ -6,6 +6,7 @@ import containerImportantPlugin from "./plugins/markdown-it/container-important"
 import bracketedSpans from "./plugins/markdown-it/bracketed-spans";
 import kbdPlugin from "./plugins/markdown-it/kbd";
 import { katex } from "@mdit/plugin-katex";
+import fs from "fs";
 import { resolve } from "path";
 import { join } from "path/posix";
 
@@ -125,7 +126,11 @@ export default defineConfig({
 		outline: { level: "deep" },
 		lastUpdated: { formatOptions: { forceLocale: true, year: "numeric", month: "2-digit", day: "2-digit" } },
 		editLink: {
-			pattern: "https://github.com/otomad/OtomadHelper/tree/docs/docs/:path",
+			pattern({ relativePath, filePath }) {
+				const githubPath = "https://github.com/otomad/OtomadHelper/tree/docs/docs/";
+				if (!filePath.includes("[")) return githubPath + relativePath;
+				else return githubPath + relativePath.replace(/^.*?\//, "");
+			},
 		},
 		logo: {
 			light: "/favicon.svg",
@@ -246,6 +251,8 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 				],
 			},
 			{
+				en: "Extra Info",
+				zh: "额外信息",
 				items: [
 					{ en: "FAQ", zh: "常见问题解答", link: "/faq" },
 					{ en: "References", zh: "参考", link: "/references" },

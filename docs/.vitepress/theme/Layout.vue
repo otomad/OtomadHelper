@@ -73,6 +73,15 @@ onMounted(async () => {
 	flyout.adoptedStyleSheets.push(stylesheet);
 	flyout.firstElementChild.part = "flyout";
 });
+
+onMounted(() => {
+	// 阻止连续点按 <kbd> 元素时浏览器自动选择文本。
+	document.addEventListener("mousedown", e => {
+		const kbd = e.target.closest("kbd");
+		// 仅屏蔽双击及连击。
+		if (kbd && e.detail > 1) e.preventDefault();
+	});
+});
 </script>
 
 <template>

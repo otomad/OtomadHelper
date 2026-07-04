@@ -123,18 +123,18 @@ C:\Program Files\Sony\Vegas Pro 13.0\Script Menu
 
 @en ::: tip Specific steps
 @zh ::: tip 具体步骤
-@en 1. Enter folder `DLL` from the same directory where `Otomad Helper.cs/dll` file is located. That is:
-@zh 1. 从 `Otomad Helper.cs/dll` 文件所在的相同目录下，进入 `DLL` 文件夹。也就是说：
+@en 1. Enter folder `DLL` from the same directory where `Otomad Helper.{cs,dll}` file is located. That is:
+@zh 1. 从 `Otomad Helper.{cs,dll}` 文件所在的相同目录下，进入 `DLL` 文件夹。也就是说：
 @en    1. In the Vegas installation directory, enter folder `Script Menu\DLL`.
 @zh    1. 在Vegas安装目录中，依次进入 `Script Menu\DLL` 文件夹。
 @en    2. In the `Documents` folder, enter folder `Vegas Script Menu\DLL`.
 @zh    2. 在`文档`文件夹下，依次进入 `Vegas Script Menu\DLL` 文件夹。
-@en 2. Right-click the “NAudio.dll” file and select Properties.
-@zh 2. 右键单击“NAudio.dll”文件，然后选择“属性”。
-@en 3. If you see the “Unblock” button (Windows 7/8.x) or checkbox (Windows 10+), click or check it.
-@zh 3. 如果你看到了“解除锁定”按钮 (Windows 7/8.x) 或复选框 (Windows 10+)，请单击或选中它。
-@en 4. Click OK button and you’re done.
-@zh 4. 单击“确定”按钮即可。
+@en 2. Right-click the `NAudio.dll` file and select Properties.
+@zh 2. 右键单击 `NAudio.dll` 文件，然后选择“属性”。
+@en 3. If you see the [[Unblock]] button (Windows 7/8.x) or checkbox (Windows 10+), click or check it.
+@zh 3. 如果你看到了 [[解除锁定]] 按钮 (Windows 7/8.x) 或复选框 (Windows 10+)，请单击或选中它。
+@en 4. Click [[OK]] button and you’re done.
+@zh 4. 单击 [[确定]] 按钮即可。
 :::
 
 @en At this point, your folder should look like this:
@@ -156,14 +156,14 @@ C:\Program Files\Sony\Vegas Pro 13.0\Script Menu
 
 @en 1. <Button href="https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh"><b>Download</b> the Datamosh extension pack</Button>
 @zh 1. <Button href="https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh"><b>下载</b>数据抹失扩展包</Button>
-@en 2. Unzip the 7Z file and move the `_internal` folder to the same directory as the script `Otomad Helper.cs/dll`.
-@zh 2. 解压7z文件并将 `_internal` 文件夹移动到脚本 `Otomad Helper.cs/dll` 所在的相同目录下。
+@en 2. Unzip the 7Z file and move the `_internal` folder to the same directory as the script `Otomad Helper.{cs,dll}`.
+@zh 2. 解压7z文件并将 `_internal` 文件夹移动到脚本 `Otomad Helper.{cs,dll}` 所在的相同目录下。
 
 @en ## Quick Launch
 @zh ## 快速启动
 
-@en You can add scripts as toolbar buttons rather than having to click inside the [[Tools > Scripting]] submenu, by adding them to the toolbar using the [[Options > Customize Toolbar]] menu.
-@zh 你可以选择菜单 [[选项 > 自定义工具栏]]，将脚本添加到工具栏中以便操作。
+@en You can add the script as a toolbar button for quick access rather than having to click troublesomely inside the [[Tools > Scripting]] submenu every times, by adding them to the toolbar using the [[Options > Customize Toolbar]] menu.
+@zh 你可以选择菜单 [[选项 > 自定义工具栏]]，将脚本添加到工具栏中以便快捷操作。从而无需麻烦地每次到 [[工具 > 脚本化]] 子菜单中单击。
 
 @en ## **Compatibility**
 @zh ## **兼容性**

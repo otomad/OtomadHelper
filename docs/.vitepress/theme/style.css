@@ -47,7 +47,6 @@ body {
 	}
 }
 
-em:is(:lang(zh), :lang(ja), :lang(ko)),
 u,
 ins {
 	text-decoration: underline;
@@ -212,15 +211,15 @@ ins {
  */
 :root {
 	--vp-font-family-base:
-		"Yozora Sans", "Segoe UI Variable", "Segoe UI", var(--vp-cjk-font-family), "Microsoft YaHei UI", sans-serif;
+		"Yozora Sans", "Segoe UI Variable", "Segoe UI", var(--vp-cjk-font-family), "Microsoft YaHei", sans-serif;
 	--vp-font-family-mono:
 		"Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
-	--vp-cjk-font-family: "Microsoft YaHei UI";
+	--vp-cjk-font-family: "Microsoft YaHei";
 }
 
 :root [lang] {
 	font-family:
-		"Yozora Sans", "Segoe UI Variable", "Segoe UI", var(--vp-cjk-font-family), "Microsoft YaHei UI", sans-serif;
+		"Yozora Sans", "Segoe UI Variable", "Segoe UI", var(--vp-cjk-font-family), "Microsoft YaHei", sans-serif;
 }
 
 :is(:lang(zh-Hant), :lang(zh-TW), :lang(zh-HK), :lang(zh-MO)) {
@@ -235,10 +234,10 @@ ins {
 	--vp-cjk-font-family: "Malgun Gothic";
 }
 
-@font-face {
-	font-family: "Yozora Sans";
-	src: url("fonts/YozoraSans-VF.woff2") format("woff2");
-	font-weight: 250 900;
+em:is(:lang(zh), :lang(ja), :lang(ko)) {
+	font-family:
+		"Yozora Sans", "Segoe UI Variable", "Segoe UI", "仓耳今楷01", "仓耳今楷", "LXGW WenKai", "霞鹜文楷",
+		"LXGW WenKai GB", "LXGW WenKai GB Lite", "STKaiti", "SimKai", "DFKai-SB", "Microsoft YaHei", cursive;
 }
 
 /**
@@ -511,14 +510,6 @@ readthedocs-flyout {
 	}
 }
 
-@font-face {
-	font-family: "Lucide Keyboard Icons";
-	src: url("fonts/Lucide-Keyboard-Icons.woff2") format("woff2");
-	font-weight: normal;
-	font-style: normal;
-	font-display: block;
-}
-
 /**
  * Component: Kbd
  */
@@ -534,7 +525,7 @@ kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *, .wrapped) {
 	min-inline-size: 2em;
 	display: inline-block;
 	text-align: center;
-	vertical-align: top;
+	vertical-align: 3%;
 	border: 1px solid rgba(128, 128, 128, 0.15);
 	box-shadow:
 		0 2px 2px 0 rgba(0, 0, 0, 0.1),
@@ -753,8 +744,4 @@ summary {
 	b {
 		font-weight: bolder;
 	}
-}
-
-.vp-doc p {
-	line-height: 24px;
 }

@@ -4,16 +4,16 @@
 @en ## To make visuals insanely quickly with Otomad Helper
 @zh ## 要借助Otomad Helper快速制作视觉效果
 
-@en * You will need a **Vegas Pro (13+)**;
-@zh * 你需要一个**Vegas Pro (13+)**；
+@en * You will need a **[Vegas Pro](https://www.vegascreativesoftware.com/vegas-pro/) (13+)**;
+@zh * 你需要一个**[Vegas Pro](https://www.vegascreativesoftware.com/vegas-pro/) (13+)**；
   ::: warning
 @en   *[If you have ANY other editor that you use for remixes](https://github.com/users/otomad/projects/2), you’re out of luck.*
-@zh   *[如果你有任何其它用于混音的编辑器](https://github.com/users/otomad/projects/2)，那么你就不那么走运了。*
+@zh   *[如果你有任何其它用于剪辑的编辑器](https://github.com/users/otomad/projects/2)，那么你就不那么走运了。*
   :::
-@en * **You will need the Otomad Helper Script**;
-@zh * **你需要Otomad Helper脚本**；
-@en * You will need **FL Studio** *(or any other DAW, that you use for remixes)*.
-@zh * 你需要**FL Studio***（或用于混音的任何其它DAW）*。
+@en * **You will need the [Otomad Helper](https://github.com/otomad/OtomadHelper/releases/latest) Script**;
+@zh * **你需要[Otomad Helper](https://github.com/otomad/OtomadHelper/releases/latest)脚本**；
+@en * You will need **[FL Studio](https://www.image-line.com/)** *(or any other DAW, that you use for remixes)*.
+@zh * 你需要**[FL Studio](https://www.image-line.com/)***（或用于混音的任何其它DAW）*。
 
 @en ## Using Otomad Helper is pretty straightforward from here.<br>Here’s how to use it.
 @zh ## 从这里开始，使用Otomad Helper非常简单。以下是使用方法。
@@ -42,14 +42,14 @@
 @en    * Press [[Ctrl + N]] to save a new version
 @zh    * 按 [[Ctrl + N]] 键来另存为新版本
    :::
-@en 2. Go to *Tools > Marcos > Prepare for MIDI Export*.
-@zh 2. 转到 *工具 > 宏 > 准备进行MIDI导出*。
+@en 2. Go to [[Tools > Marcos > Prepare for MIDI Export]].
+@zh 2. 转到 [[工具 > 宏 > 准备进行MIDI导出]]。
    ::: danger
 @en    This will convert your entire copy of the project to a MIDI format. **No Undo!**
 @zh    这会将你的整个项目副本转换为MIDI格式。**不可撤销！**
    :::
-@en 3. Go to *File > Export > MIDI File*.
-@zh 3. 转到 *文件 > 导出 > MIDI文件*。
+@en 3. Go to [[File > Export > MIDI File]].
+@zh 3. 转到 [[文件 > 导出 > MIDI文件]]。
    ::: important
 @en    It’s also important to name your tracks accordingly.
 @zh    相应地命名你的音轨也很重要。
@@ -62,8 +62,8 @@
 @en    Before running the script, please select the clip you’re going to generate visuals from first.
 @zh    在运行脚本之前，请先选择要从中生成画面的剪辑。
    :::
-@en 6. Run the Otomad Helper by going to *Tools > Scripting > Otomad Helper*.
-@zh 6. 转到 *工具 > 脚本化 > Otomad Helper* 以运行Otomad Helper。
+@en 6. Run the Otomad Helper by going to [[Tools > Scripting > Otomad Helper]].
+@zh 6. 转到 [[工具 > 脚本化 > Otomad Helper]] 以运行Otomad Helper。
 @en 7. Select your MIDI File.
 @zh 7. 选择你的MIDI文件。
 @en 8. Select the Track that corresponds to the visual

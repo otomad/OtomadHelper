@@ -44,4 +44,9 @@ const items = computed(() => props.path.split(/\s+[+>]\s+/));
 		color: var(--vp-c-text-2);
 	}
 }
+
+kbd.menu-path,
+.menu-path kbd {
+	text-autospace: normal;
+}
 </style>
