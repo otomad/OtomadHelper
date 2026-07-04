@@ -20,6 +20,12 @@ importers:
       vitepress:
         specifier: 2.0.0-alpha.17
         version: 2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3)
+      vitepress-plugin-back2top:
+        specifier: ^0.1.2
+        version: 0.1.2(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3))
+      vitepress-plugin-image-preview:
+        specifier: ^0.1.3
+        version: 0.1.3(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3))
       vitepress-plugin-pagefind:
         specifier: ^0.4.20
         version: 0.4.20(pagefind@1.5.2)(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3))
@@ -1196,6 +1202,16 @@ packages:
       yaml:
         optional: true
 
+  vitepress-plugin-back2top@0.1.2:
+    resolution: {integrity: sha512-ijQYiDrtUwhpGHY2DAgzZkhuOpGO7pvS8eeQq2vPPIgPXArxjEdxNVEawlpkdz9BgvZxZYJnkMCsTiK3DYl9fQ==}
+    peerDependencies:
+      vitepress: ^1.0.0-0 || ^2.0.0-0
+
+  vitepress-plugin-image-preview@0.1.3:
+    resolution: {integrity: sha512-X2hzNWDh/lj4d88ITRZzcNtqMnxEpPOaKQk7jZwK9A13Ii4jhtRJBXsjJpvK7fyt7+UBEuQduTHZsBmD0f0r5Q==}
+    peerDependencies:
+      vitepress: ^1.0.0-0 || ^2.0.0-0
+
   vitepress-plugin-pagefind@0.4.20:
     resolution: {integrity: sha512-O6mfkPzRV7V2igs51Qll31ptqJnHlNx9bmfo5JRsf6b4QuSVHjTDgtqM73rrCxRNeOSzFygPmJvSbmn7K4jd1A==}
     peerDependencies:
@@ -2272,6 +2288,22 @@ snapshots:
     optionalDependencies:
       '@types/node': 26.0.0
       fsevents: 2.3.3
+
+  vitepress-plugin-back2top@0.1.2(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3)):
+    dependencies:
+      '@vueuse/core': 14.3.0(vue@3.5.39(typescript@6.0.3))
+      javascript-stringify: 2.1.0
+      vitepress: 2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3)
+    transitivePeerDependencies:
+      - vue
+
+  vitepress-plugin-image-preview@0.1.3(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3)):
+    dependencies:
+      '@vueuse/core': 14.3.0(vue@3.5.39(typescript@6.0.3))
+      javascript-stringify: 2.1.0
+      vitepress: 2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3)
+    transitivePeerDependencies:
+      - vue
 
   vitepress-plugin-pagefind@0.4.20(pagefind@1.5.2)(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3)):
     dependencies:

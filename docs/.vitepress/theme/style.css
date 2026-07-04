@@ -772,13 +772,59 @@ summary {
 		}
 	}
 
-	.search-tip {
-		font-size: 13px !important;
-		color: inherit !important;
-		padding-right: 0 !important;
+	.search-tip:not(#\#) {
+		font-size: 13px;
+		color: inherit;
+		padding-right: 0;
 	}
 
 	.metaKey {
 		line-height: 20px;
 	}
+}
+
+/**
+ * Fix Component: Back to Top
+ */
+.back-to-top:not(#\#) {
+	pointer-events: none;
+	bottom: 100px;
+
+	&,
+	.icon-wrapper {
+		transition:
+			opacity,
+			scale cubic-bezier(0, 0, 0, 1),
+			display allow-discrete;
+		transition-duration: 250ms;
+	}
+
+	.icon-wrapper {
+		pointer-events: auto;
+
+		&:active {
+			scale: 0.9;
+		}
+
+		@starting-style {
+			scale: 0;
+		}
+	}
+
+	&[style*="display: none"] .icon-wrapper {
+		scale: 0;
+	}
+}
+
+/**
+ * Fix Component: Image Preview
+ */
+.vitepress-image-viewer__img:not(#\#) {
+	transition: none;
+}
+
+.vitepress-image-viewer__prev:not(#\#),
+.vitepress-image-viewer__next:not(#\#) {
+	top: unset;
+	transform: unset;
 }

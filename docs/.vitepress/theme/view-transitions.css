@@ -155,6 +155,32 @@ readthedocs-flyout::part(flyout) {
 	animation-name: float-up-slight-in;
 }
 
+.vitepress-image-viewer__wrapper {
+	> * {
+		animation: zoom-in cubic-bezier(0, 0, 0, 1) 250ms;
+	}
+
+	.vitepress-image-viewer__mask,
+	.vitepress-image-viewer__actions,
+	.vitepress-image-viewer__progress {
+		animation: none;
+		transition:
+			opacity 250ms,
+			translate 250ms;
+	}
+
+	@starting-style {
+		.vitepress-image-viewer__mask {
+			opacity: 0;
+		}
+
+		.vitepress-image-viewer__actions,
+		.vitepress-image-viewer__progress {
+			translate: 0 80px;
+		}
+	}
+}
+
 @keyframes float-up-out {
 	to {
 		translate: 0 -2rem;
@@ -222,5 +248,11 @@ readthedocs-flyout::part(flyout) {
 	from {
 		translate: 0 -1rem;
 		opacity: 0;
+	}
+}
+
+@keyframes zoom-in {
+	from {
+		scale: 0;
 	}
 }

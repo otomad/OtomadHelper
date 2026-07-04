@@ -9,6 +9,8 @@ import { katex } from "@mdit/plugin-katex";
 import { resolve } from "path";
 import { join } from "path/posix";
 import { pagefindPlugin, chineseSearchOptimize } from "vitepress-plugin-pagefind";
+import { ImagePreviewPlugin } from "vitepress-plugin-image-preview";
+import { back2topPlugin } from "vitepress-plugin-back2top";
 
 const base = process.env.READTHEDOCS_CANONICAL_URL
 	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
@@ -38,6 +40,8 @@ export default defineConfig({
 	},
 	vite: {
 		plugins: [
+			ImagePreviewPlugin({ hideOnClickModal: true }),
+			back2topPlugin(),
 			pagefindPlugin({
 				customSearchQuery: chineseSearchOptimize,
 				locales: {
