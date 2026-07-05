@@ -2,8 +2,7 @@
 import { VPTeamPage, VPTeamPageTitle, VPLink } from "vitepress/theme-without-fonts";
 import { useData } from "vitepress";
 import { useLangGet } from "./TeamMembers.vue";
-const { lang } = useData();
-const get = useLangGet(lang);
+const get = useLangGet();
 const title = get({ en: "The Documentation is Powered By", zh: "文档搭载于" });
 const vitePressLink = get({ en: "https://vitepress.dev/", zh: "https://vitepress.dev/zh/" });
 </script>

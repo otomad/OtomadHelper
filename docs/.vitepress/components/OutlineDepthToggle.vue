@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ref, watch, useId, onMounted, onUnmounted } from "vue";
+import { ref, computed, watch, useId, onMounted, onUnmounted } from "vue";
 
 const depth = ref(2);
 const autoExpand = ref(true);
@@ -17,10 +17,12 @@ watch(
 <script setup lang="ts">
 import VPSwitch from "./Switch.vue";
 import Slider from "./Slider.vue";
+import { useLangGet } from "./TeamMembers.vue";
 
 const id = useId();
-const depthLabel = "目录层级";
-const autoExpandLabel = "自动展开";
+const get = useLangGet();
+const depthLabel = computed(() => get({ en: "Outline depth", zh: "目录层级" }));
+const autoExpandLabel = computed(() => get({ en: "Auto expand", zh: "自动展开" }));
 
 const outlineMarker = ref<HTMLDivElement>();
 const observer = ref<MutationObserver>();

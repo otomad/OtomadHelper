@@ -1,5 +1,7 @@
 <script lang="ts">
-export function useLangGet(lang: Ref<string>) {
+import { useData } from "vitepress";
+export function useLangGet() {
+	const { lang } = useData();
 	return function get(object) {
 		let key = lang.value;
 		if (key === "zh-CN") key = "zh";
@@ -10,9 +12,7 @@ export function useLangGet(lang: Ref<string>) {
 
 <script setup lang="ts">
 import { VPTeamPage, VPTeamPageTitle, VPTeamMembers, VPTeamPageSection } from "vitepress/theme-without-fonts";
-import { useData } from "vitepress";
-const { lang } = useData();
-const get = useLangGet(lang);
+const get = useLangGet();
 
 const coreMembers = [
 	{

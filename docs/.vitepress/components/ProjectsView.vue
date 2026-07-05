@@ -2,8 +2,7 @@
 import { VPTeamPage, VPTeamPageTitle, VPFeatures } from "vitepress/theme-without-fonts";
 import { useData } from "vitepress";
 import { useLangGet } from "./TeamMembers.vue";
-const { lang } = useData();
-const get = useLangGet(lang);
+const get = useLangGet();
 
 const img = (src: string) => ({
 	src,
@@ -16,21 +15,21 @@ const projects = [
 		details: get({ en: "Create YTPMVs in Vegas Pro", zh: "在Vegas Pro中生成音MAD" }),
 		// link: "https://otomadhelper.readthedocs.io/",
 		icon: img("/img/projects/otomad_helper.avif"),
-		linkText: "Current",
+		linkText: get({ en: "Current Project", zh: "当前项目" }),
 	},
 	{
 		title: "om midi",
 		details: get({ en: "Create YTPMVs in After Effects", zh: "在After Effects中生成音MAD" }),
 		link: get({ en: "https://ommidi.readthedocs.io/", zh: "https://ommidi.readthedocs.io/zh-cn/" }),
 		icon: img("/img/projects/om_midi.avif"),
-		linkText: "Visit",
+		linkText: get({ en: "Visit", zh: "访问" }),
 	},
 	{
 		title: "VegTips",
 		details: get({ en: "Some Practical Tips for Vegas Pro", zh: "Vegas Pro的一些实用小技巧" }),
 		link: get({ en: "https://vegtips.readthedocs.io/", zh: "https://vegtips.readthedocs.io/zh/" }),
 		icon: img(get({ en: "/img/projects/vegtips.avif", zh: "/img/projects/vegtips_zh-CN.avif" })),
-		linkText: "Visit",
+		linkText: get({ en: "Visit", zh: "访问" }),
 	},
 ];
 
