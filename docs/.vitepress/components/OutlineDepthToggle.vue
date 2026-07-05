@@ -22,18 +22,16 @@ const id = useId();
 const depthLabel = "目录层级";
 const autoExpandLabel = "自动展开";
 
-const outlineRoot = ref<HTMLUListElement>();
 const outlineMarker = ref<HTMLDivElement>();
 const observer = ref<MutationObserver>();
-const pauseObserve = ref(false);
+const navHeight = 64;
 
 onMounted(() => {
-	outlineRoot.value = document.querySelector<HTMLUListElement>(".VPDocOutlineItem.root")!;
 	outlineMarker.value = document.querySelector<HTMLDivElement>(".outline-marker")!;
 	observer.value = new MutationObserver(([mutation]) => {
-		if (pauseObserve.value) return;
-		if (mutation.type === "attributes" && mutation.attributeName === "style") updateOutlineMarker();
-		outlineMarker.value?.scrollIntoView({ behavior: "smooth", block: "center", container: "nearest" });
+		if (mutation.type === "attributes" && mutation.attributeName === "style") {
+			outlineMarker.value?.scrollIntoView({ behavior: "smooth", block: "center", container: "nearest" });
+		}
 	});
 	observer.value.observe(outlineMarker.value, { attributes: true });
 });
@@ -41,25 +39,6 @@ onMounted(() => {
 onUnmounted(() => {
 	observer.value?.disconnect();
 });
-
-watch([depth, autoExpand], () => updateOutlineMarker(), { immediate: true });
-
-function updateOutlineMarker() {
-	if (!outlineRoot.value || !outlineMarker.value) return;
-	let activeLink = outlineRoot.value.querySelector<HTMLAnchorElement>(".outline-link.active");
-	if (!activeLink) return;
-	pauseObserve.value = true;
-	try {
-		while (activeLink && !activeLink.checkVisibility({ visibilityProperty: true })) {
-			const ul = activeLink?.parentElement?.parentElement;
-			if (!ul.classList.contains("VPDocOutlineItem") || ul.classList.contains("root")) return;
-			activeLink = ul.previousElementSibling;
-		}
-		outlineMarker.value.style.top = activeLink.offsetTop + outlineRoot.value.offsetTop + 7 + "px";
-	} finally {
-		pauseObserve.value = false;
-	}
-}
 </script>
 
 <template>
@@ -112,36 +91,44 @@ label {
 	.VPDocOutlineItem.root > li > ul > li > ul > li > ul > li > ul {
 		visibility: collapse;
 		block-size: 0;
+		--collapse: true;
 	}
 	.VPDocOutlineItem.root > li > ul > li > ul > li > ul > li:has(.outline-link.active) > a {
 		color: var(--vp-c-text-1);
+		anchor-name: --outline-link-active;
 	}
 }
 @container style(--outline-depth < 5) {
 	.VPDocOutlineItem.root > li > ul > li > ul > li > ul {
 		visibility: collapse;
 		block-size: 0;
+		--collapse: true;
 	}
 	.VPDocOutlineItem.root > li > ul > li > ul > li:has(.outline-link.active) > a {
 		color: var(--vp-c-text-1);
+		anchor-name: --outline-link-active;
 	}
 }
 @container style(--outline-depth < 4) {
 	.VPDocOutlineItem.root > li > ul > li > ul {
 		visibility: collapse;
 		block-size: 0;
+		--collapse: true;
 	}
 	.VPDocOutlineItem.root > li > ul > li:has(.outline-link.active) > a {
 		color: var(--vp-c-text-1);
+		anchor-name: --outline-link-active;
 	}
 }
 @container style(--outline-depth < 3) {
 	.VPDocOutlineItem.root > li > ul {
 		visibility: collapse;
 		block-size: 0;
+		--collapse: true;
 	}
 	.VPDocOutlineItem.root > li:has(.outline-link.active) > a {
 		color: var(--vp-c-text-1);
+		anchor-name: --outline-link-active;
 	}
 }
 @container style(--outline-auto-expand: true) {
@@ -149,9 +136,25 @@ label {
 	.VPDocOutlineItem.root ul:has(.outline-link.active) {
 		visibility: visible;
 		block-size: auto;
+		--collapse: false;
 	}
 	.VPDocOutlineItem.root a:not(.active, :hover, #\#) {
 		color: var(--vp-c-text-2);
+		anchor-name: none !important;
+	}
+}
+.outline-link.active {
+	anchor-name: --outline-link-active;
+
+	@container style(--collapse: true) {
+		anchor-name: none !important;
+	}
+}
+
+.VPDocAsideOutline > .content {
+	.outline-marker:not([style*="opacity: 0"]) {
+		position-anchor: --outline-link-active;
+		top: calc((anchor(top) + anchor(bottom) - 18px) / 2) !important;
 	}
 }
 </style>
