@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ref, watch, useId, onMounted, onUnmounted } from "vue";
 
-const depth = ref(6);
+const depth = ref(2);
 const autoExpand = ref(true);
 
 watch(
@@ -145,8 +145,9 @@ label {
 }
 .outline-link.active {
 	anchor-name: --outline-link-active;
-
-	@container style(--collapse: true) {
+}
+@container style(--collapse: true) {
+	.outline-link {
 		anchor-name: none !important;
 	}
 }
