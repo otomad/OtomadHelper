@@ -4,6 +4,7 @@ import DefaultTheme from "vitepress/theme-without-fonts";
 import { nextTick, provide, onMounted } from "vue";
 import flyoutShadowStyle from "./readthedocs-flyout-shadow.css?inline";
 import VersionBadge from "@vp/components/VersionBadge.vue";
+import OutlineDepthToggle from "@vp/components/OutlineDepthToggle.vue";
 
 const { isDark } = useData();
 
@@ -87,6 +88,7 @@ onMounted(() => {
 <template>
 	<DefaultTheme.Layout>
 		<template #home-hero-info-before><VersionBadge /></template>
+		<template #aside-outline-before><OutlineDepthToggle /></template>
 	</DefaultTheme.Layout>
 </template>
 

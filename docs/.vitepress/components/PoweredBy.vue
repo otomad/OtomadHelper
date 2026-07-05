@@ -5,6 +5,7 @@ import { useLangGet } from "./TeamMembers.vue";
 const { lang } = useData();
 const get = useLangGet(lang);
 const title = get({ en: "The Documentation is Powered By", zh: "文档搭载于" });
+const vitePressLink = get({ en: "https://vitepress.dev/", zh: "https://vitepress.dev/zh/" });
 </script>
 
 <template>
@@ -13,7 +14,7 @@ const title = get({ en: "The Documentation is Powered By", zh: "文档搭载于"
 			<template #title>{{ title }}</template>
 		</VPTeamPageTitle>
 		<div class="container">
-			<VPLink href="https://vitepress.dev/"><SocialIcon icon="vitepress" />VitePress</VPLink>
+			<VPLink :href="vitePressLink"><SocialIcon icon="vitepress" />VitePress</VPLink>
 			<VPLink href="https://app.readthedocs.org/projects/otomadhelper/">
 				<SocialIcon icon="readthedocs" />Read the Docs
 			</VPLink>

@@ -59,6 +59,14 @@ ins {
 	color: contrast-color(var(--selection-background-color));
 }
 
+html.dark {
+	color-scheme: dark;
+}
+
+html:not(.dark) {
+	color-scheme: light only;
+}
+
 /**
  * Colors
  *
@@ -827,4 +835,11 @@ summary {
 .vitepress-image-viewer__next:not(#\#) {
 	top: unset;
 	transform: unset;
+}
+
+/**
+ * Fix Component: Mouse Wheel Overscroll the Outline will Unexpectedly Trigger Page Scroll
+ */
+.aside-container {
+	overscroll-behavior: contain;
 }

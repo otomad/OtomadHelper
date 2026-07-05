@@ -95,13 +95,19 @@
 
 .VPDocAsideOutline {
 	view-transition-name: doc-aside;
+	view-transition-class: doc-aside;
 }
 
-::view-transition-old(doc-aside):only-child {
+.outline-depth-toggle {
+	view-transition-name: outline-depth;
+	view-transition-class: doc-aside;
+}
+
+::view-transition-old(.doc-aside):only-child {
 	animation-name: float-left-out;
 }
 
-::view-transition-new(doc-aside):only-child {
+::view-transition-new(.doc-aside):only-child {
 	animation-name: float-left-in;
 }
 
