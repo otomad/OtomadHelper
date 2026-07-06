@@ -5,6 +5,7 @@ import { nextTick, provide, onMounted } from "vue";
 import flyoutShadowStyle from "./readthedocs-flyout-shadow.css?inline";
 import VersionBadge from "@vp/components/VersionBadge.vue";
 import OutlineDepthToggle from "@vp/components/OutlineDepthToggle.vue";
+import SavePdfButton from "@vp/components/SavePdfButton.vue";
 
 const { isDark } = useData();
 
@@ -22,6 +23,8 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 		`circle(${Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))}px at ${x}px ${y}px)`,
 	];
 
+	document.documentElement.classList.add("locale-changing");
+
 	await document.startViewTransition({
 		update: async () => {
 			isDark.value = !isDark.value;
@@ -30,7 +33,7 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 		types: ["instant"],
 	}).ready;
 
-	document.documentElement.animate(
+	await document.documentElement.animate(
 		{ clipPath: isDark.value ? clipPath.reverse() : clipPath },
 		{
 			duration: 300,
@@ -38,7 +41,9 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 			fill: "forwards",
 			pseudoElement: `::view-transition-${isDark.value ? "old" : "new"}(root)`,
 		},
-	);
+	).finished;
+
+	document.documentElement.classList.remove("locale-changing");
 });
 
 onMounted(async () => {
@@ -89,6 +94,8 @@ onMounted(() => {
 	<DefaultTheme.Layout>
 		<template #home-hero-info-before><VersionBadge /></template>
 		<template #aside-outline-before><OutlineDepthToggle /></template>
+		<template #nav-bar-content-before><SavePdfButton /></template>
+		<!-- <template #nav-screen-content-before><SavePdfButton /></template> -->
 	</DefaultTheme.Layout>
 </template>
 
@@ -127,8 +134,16 @@ onMounted(() => {
 	view-transition-name: none !important;
 }
 
+:root.locale-changing {
+	scroll-behavior: auto !important;
+}
+
 .version-badge {
 	margin-block: -8px 8px;
 	display: block;
+
+	@media (width < 960px) {
+		margin-inline: auto;
+	}
 }
 </style>

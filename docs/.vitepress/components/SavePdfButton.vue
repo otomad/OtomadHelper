@@ -1,0 +1,53 @@
+<script setup lang="ts">
+import icon from "@vp/theme/icons/print.svg?raw";
+import { useLangGet } from "./TeamMembers.vue";
+const get = useLangGet();
+
+const label = get({ en: "Print/Save as PDF", zh: "打印/保存为PDF" });
+
+function print() {
+	const { classList } = document.documentElement;
+	const isDark = classList.contains("dark");
+	classList.remove("dark");
+	window.print();
+	if (isDark) classList.add("dark");
+}
+</script>
+
+<template>
+	<button type="button" class="save-pdf-button" v-html="icon" @click="print()" />
+</template>
+
+<style scoped>
+.save-pdf-button {
+	width: 36px;
+	height: 36px;
+	color: var(--vp-c-text-1);
+	display: grid;
+	place-items: center;
+	border-radius: 8px;
+	margin-right: -22px;
+	margin-left: 12px;
+	z-index: 2;
+	transition: color 250ms;
+
+	&:hover {
+		color: var(--vp-c-text-2);
+	}
+
+	& :deep(svg) {
+		width: 20px;
+		height: 20px;
+	}
+
+	@media (width < 768px) {
+		margin-right: -26px;
+		margin-left: 0;
+	}
+
+	.VPNavBar:not(.has-sidebar) & {
+		opacity: 0;
+		display: none;
+	}
+}
+</style>

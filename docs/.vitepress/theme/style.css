@@ -822,6 +822,10 @@ summary {
 	&[style*="display: none"] .icon-wrapper {
 		scale: 0;
 	}
+
+	@media print {
+		display: none;
+	}
 }
 
 /**
@@ -842,4 +846,53 @@ summary {
  */
 .aside-container {
 	overscroll-behavior: contain;
+}
+
+/**
+ * Component: Print
+ */
+@media print {
+	html {
+		pointer-events: none !important;
+		interactivity: inert !important;
+		print-color-adjust: exact;
+	}
+
+	.VPSidebar,
+	.VPNav,
+	.VPDoc .aside,
+	.VPDocFooter,
+	.VPFooter,
+	.VPLocalNav {
+		display: none !important;
+	}
+
+	.VPContent {
+		padding: 0 !important;
+	}
+
+	.VPDoc {
+		padding-bottom: 0 !important;
+
+		.content {
+			padding-bottom: 32px !important;
+
+			@media (width >= 768px) {
+				padding-bottom: 48px !important;
+			}
+
+			.content-container {
+				max-width: none !important;
+			}
+		}
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		break-after: avoid;
+	}
 }
