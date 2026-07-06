@@ -896,3 +896,29 @@ summary {
 		break-after: avoid;
 	}
 }
+
+/**
+ * Component: Table
+ */
+.vp-doc table {
+	border-radius: 8px;
+	width: fit-content;
+	border: 1px solid var(--vp-c-divider);
+
+	thead tr:first-child,
+	thead tr:first-child th {
+		border-top-width: 0;
+	}
+
+	tbody tr:last-child td {
+		border-bottom-width: 0;
+	}
+
+	:is(tbody td, thead th):first-child {
+		border-left-width: 0;
+	}
+
+	:is(tbody td, thead th):last-child {
+		border-right-width: 0;
+	}
+}

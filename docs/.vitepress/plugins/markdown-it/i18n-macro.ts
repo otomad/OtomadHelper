@@ -20,22 +20,50 @@ export default function i18nMacroPlugin(md: MarkdownIt) {
 		// 1. 宏处理：【块多语言】 (@@@)
 		// ==========================================
 		if (src.includes("@@@")) {
-			const blockClusterRegex = /(?:@@@[\w-]+\n[\s\S]*?\n)+@@@/g;
+			// 匹配连续的多语言块，直到遇到独立的 \n@@@ 结束符
+			// ⚠️ 关键修改：正则外侧加上了 (?:\n)?，用来顺手捕获多语言块后面紧跟的那一个换行符
+			const blockClusterRegex = /(?:@@@[a-zA-Z0-9_-]+[\s\S]*?\n)+@@@(?:\n)?/g;
 
 			src = src.replace(blockClusterRegex, cluster => {
-				const blockRegex = /@@@([\w-]+)\n([\s\S]*?)(?=\n@@@|\n@@@[\w-]+)/g;
-				const languagesData = {} as any;
-				let match;
+				// 判定捕获到的块是否以换行符结尾（如果是，说明抹除内容时需要把这个换行一并干掉）
+				const endsWithNewline = cluster.endsWith("\n");
 
-				while ((match = blockRegex.exec(cluster)) !== null) {
-					languagesData[match[1]] = match[2];
+				const languagesData = {} as any;
+				// 1. 先用精准的行切分方式，把各个语言块提取出来
+				// 把最后的 @@@ 结尾去掉，只留下 @@@en... @@@zh...
+				// 去掉末尾可能存在的换行符以及最后的 @@@ 结束符，保持纯净切分
+				const cleanCluster = cluster.replace(/\n?$/, "").replace(/\n\s*@@@$/, "");
+				// 根据 @@@lang 进行切分
+				const parts = cleanCluster.split(/(?=^@@@[a-zA-Z0-9_-]+)/m);
+
+				for (const part of parts) {
+					const match = part.match(/^@@@([a-zA-Z0-9_-]+)(?:\n|$)([\s\S]*)$/);
+					if (match) {
+						const lang = match[1];
+						const text = match[2] || "";
+						languagesData[lang] = !text.trim()
+							? // 显式赋值为空字符串，代表该语言故意不展示任何内容
+								""
+							: // 移除首尾多余的单个换行，防止撑开间距
+								text.replace(/^\n|\n$/g, "");
+					}
 				}
 
-				return languagesData[currentLang] !== undefined
-					? languagesData[currentLang]
-					: languagesData["en"] !== undefined
-						? languagesData["en"]
-						: Object.values(languagesData)[0] || "";
+				// 2. 严谨的 Fallback 策略 (注意："" 也是有效值，不能用 !languagesData[currentLang] 判定)
+				const finalBlockContent =
+					languagesData[currentLang] !== undefined
+						? // 如果当前语言存在（哪怕是空字符串 ""），也严格采用，不回退
+							languagesData[currentLang]
+						: languagesData["en"] !== undefined
+							? // 当前语言完全没写（缺失），才回退到英文
+								languagesData["en"]
+							: // 保底策略
+								Object.values(languagesData)[0] || "";
+				return finalBlockContent === ""
+					? // 如果内容完全为空，直接返回空串（因为正则已经把后面的换行捕获了，返回空串等于把换行也消灭了）
+						""
+					: // 如果内容不为空，需要把刚刚正则误吞的那个外侧换行符再补回来，保证后面内容的排版正常
+						finalBlockContent + (endsWithNewline ? "\n" : "");
 			});
 		}
 

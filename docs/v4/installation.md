@@ -109,8 +109,8 @@ C:\Program Files\Sony\Vegas Pro 13.0\Script Menu
 :::
 
 ::: danger
-@en Vegas Pro 13、VEGAS Pro 14~15、VEGAS Pro 16+ use different kinds of script. If install it for all installed Vegas versions, non corresponding Vegas versions will not recognize the correct script, which will still raise an error.
-@zh Vegas Pro 13、VEGAS Pro 14~15、VEGAS Pro 16+ 分别使用不同的脚本。将其为已安装的所有Vegas版本安装，则不相对应的Vegas版本不会识别正确的脚本，此时依旧会导致报错。
+@en Vegas Pro 13, VEGAS Pro 14~15, VEGAS Pro 16+ each use different kinds of script. If install it for all installed Vegas versions, non corresponding Vegas versions will not recognize the correct script, which will still raise an error.
+@zh Vegas Pro 13、VEGAS Pro 14~15、VEGAS Pro 16+ 各自分别使用不同的脚本。将其为已安装的所有Vegas版本安装，则不相对应的Vegas版本不会识别正确的脚本，此时依旧会导致报错。
 
 @en If you have installed multiple versions of Vegas Pro simultaneously, please try to use other solutions, such as renaming the script.
 @zh 如果你同时安装了多个版本的Vegas Pro，请尝试使用其它解决办法，例如重命名脚本。

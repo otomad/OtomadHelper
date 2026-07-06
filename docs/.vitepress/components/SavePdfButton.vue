@@ -12,6 +12,23 @@ function print() {
 	window.print();
 	if (isDark) classList.add("dark");
 }
+/* function print() {
+	const iframe = document.createElement("iframe");
+	iframe.onload = () => {
+		const doc = iframe.contentWindow.document;
+		document.head.querySelectorAll("link[rel~=stylesheet], style").forEach(styleNode => {
+			doc.head.appendChild(styleNode.cloneNode(true));
+		});
+		const bodyClone = document.body.cloneNode(true);
+		doc.body.append(...bodyClone.childNodes);
+		const closePrint = () => document.body.removeChild(iframe);
+		iframe.contentWindow.onbeforeunload = closePrint;
+		iframe.contentWindow.onafterprint = closePrint;
+		iframe.contentWindow.print();
+	};
+	iframe.style.display = "none";
+	document.body.appendChild(iframe);
+} */
 </script>
 
 <template>
