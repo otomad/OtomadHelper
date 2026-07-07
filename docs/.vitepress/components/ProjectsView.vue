@@ -91,7 +91,7 @@ const title = t({ en: "Projects", zh: "项目" });
 	}
 
 	& :deep(.VPLink:not(a) .title) {
-		font-weight: 700;
+		font-weight: 750;
 	}
 
 	& :deep(.VPLink:not(a) .link-text-value) {
@@ -100,6 +100,19 @@ const title = t({ en: "Projects", zh: "项目" });
 
 	& :deep(.VPLink:not(a) .link-text-icon) {
 		display: none;
+	}
+
+	& :deep(a.VPLink .link-text) {
+		transition: translate, color, opacity;
+		transition-duration: 250ms;
+	}
+
+	& :deep(a.VPLink:hover .link-text) {
+		translate: 8px;
+	}
+
+	& :deep(a.VPLink:active .link-text) {
+		translate: 2px;
 	}
 }
 </style>
