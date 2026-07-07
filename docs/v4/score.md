@@ -16,7 +16,7 @@
 
 ::: info
 @en * This also works with other DAWs that support MIDI exporting.
-@zh * 这也适用于其他支持MIDI导出的DAW*（数字音频工作站）*。
+@zh * 这也适用于其它支持MIDI导出的DAW*（数字音频工作站）*。
 @en * In FL Studio, make a copy of your project before you convert it to MIDI.
 @zh * 在FL Studio中，先将你的项目创建副本，然后再将其转换为MIDI。
 :::
@@ -132,7 +132,7 @@
 @zh ![音轨列表视图](/img/v4/score/track_list_view_zh-CN.png)
 
 @en _This allows you to select what tracks you want to generate from your MIDI file._
-@zh _这允许您选择要从 MIDI 文件生成的轨道。_
+@zh _这允许你选择要从 MIDI 文件生成的轨道。_
 
 @en ### Commands
 @zh ### 命令
@@ -178,4 +178,4 @@
 @zh ![自动布局轨道](/img/v4/score/auto_layout_tracks_zh-CN.png)
 
 @en [Refer to Tools >](./tools.md#auto-layout-tracks)
-@zh [参见工具 >](./tools.md#自动布局轨道)
+@zh [参阅工具 >](./tools.md#自动布局轨道)

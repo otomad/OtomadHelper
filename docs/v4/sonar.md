@@ -7,7 +7,7 @@
 <!-- Reference: [NOMA - Brain Power - LYRICS!](https://youtu.be/h-mUGj41hWA) -->
 
 @en Reference:
-@zh 参见：
+@zh 参阅：
 [<SocialIcon icon="youtube" />『図形素材』](https://www.youtube.com/watch?v=EbF-O3DpJDE){lang=ja}、[<SocialIcon icon="bilibili" />《图形练习》](https://www.bilibili.com/video/BV17f4y1y7sB/){lang=zh-CN}
 
 @en **This setting can be toggled.**

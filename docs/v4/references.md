@@ -29,7 +29,7 @@
 @en 1. File read and write.
 @zh 1. 文件读写。
 @en    1. The script reads and writes an INI user profile in your disk memory to save your user data.
-@zh    1. 脚本会在磁盘中创建一个ini文件用来保存您的用户配置设置。
+@zh    1. 脚本会在磁盘中创建一个ini文件用来保存你的用户配置设置。
        ::: code-group
 @en       ```[Path]
 @zh       ```[路径]

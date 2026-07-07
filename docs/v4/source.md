@@ -47,7 +47,7 @@
 @en * **Custom**
 @zh * **自定义**
 @en   * Generates the MIDI at any Time Position chosen.
-@zh   * 在选择的任何时间位置生成MIDI。
+@zh   * 在所选的任何时间位置生成MIDI。
 
 @en ### Below Top Adjustment Tracks
 @zh ### 生成在顶层调整轨道的下方
@@ -146,7 +146,7 @@
 
 ::: danger
 @en There is currently an unknown bug that may prevent you from using the audio bus track feature. If you encounter such a problem, it is recommended to disable this feature or try changing another Vegas version.
-@zh 目前存在一个未知错误，可能会阻止您使用音频总线轨道功能。如果遇到此类问题，建议禁用此功能或尝试更换其他Vegas版本。
+@zh 目前存在一个未知错误，可能会阻止你使用音频总线轨道功能。如果遇到此类问题，建议禁用此功能或尝试更换其它Vegas版本。
 
 @en [View detailed explanation >](./faq.md#audio-bus-track-bugs-caused-by-vegas-pro)
 @zh [了解更多 >](./faq.md#audio-bus-track-bugs-caused-by-vegas-pro)
@@ -180,7 +180,7 @@
 @en #### Limited to selected sources
 @zh #### 限制在所选素材
 @en _Only uses the sources selected in the timeline/project media._
-@zh _仅使用在时间线/项目媒体中选中的素材。_
+@zh _仅使用在时间线/项目媒体中的所选素材。_
 @en #### Make each track different
 @zh #### 使每条音轨不同
 @en _Each track will generate with a different clip._
@@ -213,7 +213,7 @@
 @en - **Sequential**
 @zh - **顺序**
 @en   * Uses clips in the order they were selected.
-@zh   * 按选择的顺序使用剪辑。
+@zh   * 按所选顺序使用剪辑。
 @en - **Reversed**
 @zh - **逆序**
 @en   * Uses clips in reverse order.

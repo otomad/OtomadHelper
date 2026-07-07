@@ -156,7 +156,7 @@
 @zh ### 首选轨道
 
 @en _Creates a new track(s) or uses the track selected for generation._
-@zh _创建新轨道或使用选中的轨道来生成。_
+@zh _创建新轨道或使用所选轨道来生成。_
 
 @en ## Velocity
 @zh ## 力度

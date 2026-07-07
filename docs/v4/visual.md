@@ -2,7 +2,7 @@
 @zh # 画面
 
 @en > Also known as **Video** or **PV**.
-@zh > 也被称为：**视频**、**视觉**、**映像**、或**PV**。
+@zh > 也被称为：**视频**、**视觉**、**映像**、**PV**。
 
 @en **This setting can be toggled.** (If your clip has visuals, this is enabled by default.)
 @zh **该设置可开关。**（如果你的片段有画面，那么它将默认开启。）
@@ -154,7 +154,7 @@
 @zh ### 首选轨道
 
 @en _Creates a new track(s) or uses the track selected for generation._
-@zh _创建新轨道或使用选中的轨道来生成。_
+@zh _创建新轨道或使用所选轨道来生成。_
 
 @en ## Velocity
 @zh ## 力度
@@ -212,7 +212,7 @@
 
 ::: important
 @en *This will differ based on the visual you selected.*
-@zh *这将根据你选择的视觉效果而有所不同。*
+@zh *这将根据你所选视觉效果而有所不同。*
 :::
 
 @en ### Advanced - PV Rhythm & Cadence Dynamic Pulsing Visual Effect

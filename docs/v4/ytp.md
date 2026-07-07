@@ -3,7 +3,7 @@
 @en _**YTP is for creating YTPs using various effects known in the YTP Genre.**_
 @zh _**YTP用于使用YTP中典型的各种效果来创建YTP。**_
 @en **(YTP supports multisource)**
-@zh ****
+@zh **（YTP支持多素材）**
 
 @en ## Effects
 @zh ## 效果

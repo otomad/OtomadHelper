@@ -25,9 +25,19 @@ onMounted(async () => {
 .VPBadge {
 	min-block-size: 24px;
 	inline-size: min-content;
+	transition: scale, opacity;
+	transition-duration: 250ms;
 
 	&:empty {
 		visibility: hidden;
+		transition: none;
+		scale: 0.8;
+		opacity: 0;
+	}
+
+	@starting-style {
+		scale: 0.8;
+		opacity: 0;
 	}
 }
 </style>

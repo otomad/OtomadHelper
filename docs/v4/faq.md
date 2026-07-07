@@ -133,7 +133,7 @@ C:\Program Files\VEGAS\VEGAS Pro 15.0\Script Menu\otomad_helper.cs:未能找到�
 
 **解决方法：**确保将NAudio.dll放置到正确的位置；确保此文件已被解除保护。
 
-**补充说明：**请参见[安装](./installation.md)方法的说明。[NAudio](https://github.com/naudio/NAudio)是一个用于处理音频文件的库，我调用它来读取MIDI文件，因此NAudio.dll这个文件是必不可少的。
+**补充说明：**请参阅[安装](./installation.md)方法的说明。[NAudio](https://github.com/naudio/NAudio)是一个用于处理音频文件的库，我调用它来读取MIDI文件，因此NAudio.dll这个文件是必不可少的。
 :::
 
 :::: details ### 无法读取MIDI文件
@@ -261,7 +261,7 @@ System.Reflection.TargetInvocationException:调用的目标发生了异常。 --
 
 ## Deep Exploration
 
-::: details ### Specify Separately Explanation {.italic-list}
+::: details ### Replace Track Events Separately Explanation {.italic-list}
 1. Select a clip that you want to use as the replacement and set it as the replacement…
 2. Click the top “Back to Vegas”…
 3. Select the Clips you want to replace…
