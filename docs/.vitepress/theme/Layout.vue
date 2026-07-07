@@ -23,8 +23,6 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 		`circle(${Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))}px at ${x}px ${y}px)`,
 	];
 
-	document.documentElement.classList.add("locale-changing");
-
 	await document.startViewTransition({
 		update: async () => {
 			isDark.value = !isDark.value;
@@ -38,12 +36,12 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 		{
 			duration: 300,
 			easing: "ease-in",
-			fill: "forwards",
+			fill: "both",
 			pseudoElement: `::view-transition-${isDark.value ? "old" : "new"}(root)`,
 		},
 	).finished;
 
-	document.documentElement.classList.remove("locale-changing");
+	// WARN: 自 Chromium 150 开始该过渡动画会发生异常，但 Chromium 149 却没事。
 });
 
 onMounted(async () => {
@@ -103,6 +101,9 @@ onMounted(() => {
 :root:active-view-transition-type(instant) {
 	* {
 		view-transition-name: none !important;
+		view-transition-class: none !important;
+		transition: none !important;
+		animation: none !important;
 	}
 
 	&::view-transition-old(root),
@@ -122,13 +123,13 @@ onMounted(() => {
 	}
 }
 
-.VPSwitchAppearance {
+/* .VPSwitchAppearance {
 	width: 22px !important;
 }
 
 .VPSwitchAppearance .check {
 	transform: none !important;
-}
+} */
 
 :root.locale-changing * {
 	view-transition-name: none !important;

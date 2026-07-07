@@ -5,6 +5,7 @@ import detailsHeadingPlugin from "./plugins/markdown-it/container-details-headin
 import containerImportantPlugin from "./plugins/markdown-it/container-important";
 import bracketedSpans from "./plugins/markdown-it/bracketed-spans";
 import kbdPlugin from "./plugins/markdown-it/kbd";
+import fixCodeCopyI18n from "./plugins/markdown-it/fix-code-copy-i18n";
 import { katex } from "@mdit/plugin-katex";
 import { resolve } from "path";
 import { join } from "path/posix";
@@ -35,12 +36,16 @@ export default defineConfig({
 			// VitePress 的默认数学公式渲染器 markdown-it-mathjax3 居然懒得添加 MathML 输出选项，所以换一个。
 			// See: https://github.com/tani/markdown-it-mathjax3/issues/58
 			md.use(katex, { output: "mathml" });
+			md.use(fixCodeCopyI18n);
 		},
 		attrs: {},
 	},
 	vite: {
 		plugins: [
-			ImagePreviewPlugin({ hideOnClickModal: true }),
+			ImagePreviewPlugin({
+				hideOnClickModal: true,
+				toolbar: ["zoomOut", "zoomIn", "reset", "rotateLeft", "rotateRight"],
+			}),
 			back2topPlugin(),
 			pagefindPlugin({
 				customSearchQuery: chineseSearchOptimize,

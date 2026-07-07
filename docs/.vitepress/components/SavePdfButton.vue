@@ -1,16 +1,18 @@
 <script setup lang="ts">
+import { useData } from "vitepress";
 import icon from "@vp/theme/icons/print.svg?raw";
 import { useLangGet } from "./TeamMembers.vue";
+import { computed } from "vue";
 const get = useLangGet();
+const { isDark } = useData();
 
-const label = get({ en: "Print/Save as PDF", zh: "打印/保存为PDF" });
+const label = computed(() => get({ en: "Print/Save as PDF", zh: "打印/保存为PDF" }));
 
 function print() {
 	const { classList } = document.documentElement;
-	const isDark = classList.contains("dark");
 	classList.remove("dark");
 	window.print();
-	if (isDark) classList.add("dark");
+	if (isDark.value) classList.add("dark");
 }
 /* function print() {
 	const iframe = document.createElement("iframe");
@@ -32,7 +34,7 @@ function print() {
 </script>
 
 <template>
-	<button type="button" class="save-pdf-button" v-html="icon" @click="print()" />
+	<button type="button" class="save-pdf-button" :title="label" v-html="icon" @click="print()" />
 </template>
 
 <style scoped>

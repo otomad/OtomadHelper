@@ -14,13 +14,12 @@ const valueString = computed({
 
 <style lang="css" scoped>
 input {
-	--active-color: var(--vp-c-brand-3);
 	--gap: 0.001px;
 	--line-thickness: 2px;
 	--thumb-size: 20px;
 
-	height: var(--thumb-size); /* needed for Firefox*/
-	--_c: color-mix(in srgb, var(--active-color), #000 var(--p, 0%));
+	height: var(--thumb-size); /* needed for Firefox */
+	--active-color: var(--vp-c-brand-3);
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
@@ -28,22 +27,24 @@ input {
 	cursor: pointer;
 	overflow: hidden;
 	border-radius: calc(infinity * 1px);
+	margin: 1px;
 }
 input:focus-visible,
 input:hover {
-	--p: 25%;
+	--active-color: var(--vp-c-brand-1);
 }
 input:active,
 input:focus-visible {
-	--_b: var(--thumb-size);
+	--spread-radius: var(--thumb-size);
 }
-/* chromium */
+/* Chromium */
 input[type="range" i]::-webkit-slider-thumb {
 	height: var(--thumb-size);
 	aspect-ratio: 1;
 	border-radius: 50%;
-	box-shadow: 0 0 0 var(--_b, var(--line-thickness)) inset var(--_c);
-	border-image: linear-gradient(90deg, var(--_c) 50%, var(--vp-c-border) 0) 1/0 100vw/0 calc(100vw + var(--gap));
+	box-shadow: 0 0 0 var(--spread-radius, var(--line-thickness)) inset var(--active-color);
+	border-image: linear-gradient(90deg, var(--active-color) 50%, var(--vp-c-border) 0) 1/0 100vw/0
+		calc(100vw + var(--gap));
 	clip-path: polygon(
 		0 calc(50% + var(--line-thickness) / 2),
 		-100vw calc(50% + var(--line-thickness) / 2),
@@ -67,8 +68,9 @@ input[type="range"]::-moz-range-thumb {
 	width: var(--thumb-size);
 	background: none;
 	border-radius: 50%;
-	box-shadow: 0 0 0 var(--_b, var(--line-thickness)) inset var(--_c);
-	border-image: linear-gradient(90deg, var(--_c) 50%, var(--vp-c-border) 0) 1/0 100vw/0 calc(100vw + var(--gap));
+	box-shadow: 0 0 0 var(--spread-radius, var(--line-thickness)) inset var(--active-color);
+	border-image: linear-gradient(90deg, var(--active-color) 50%, var(--vp-c-border) 0) 1/0 100vw/0
+		calc(100vw + var(--gap));
 	clip-path: polygon(
 		0 calc(50% + var(--line-thickness) / 2),
 		-100vw calc(50% + var(--line-thickness) / 2),
@@ -85,10 +87,5 @@ input[type="range"]::-moz-range-thumb {
 	);
 	appearance: none;
 	transition: 0.3s;
-}
-@supports not (color: color-mix(in srgb, red, red)) {
-	input {
-		--_c: var(--active-color);
-	}
 }
 </style>

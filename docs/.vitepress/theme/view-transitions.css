@@ -90,7 +90,7 @@
 }
 
 ::view-transition-group(side-bar.toper) {
-	z-index: 22;
+	z-index: 27;
 }
 
 .VPDocAsideOutline {
@@ -146,7 +146,7 @@ readthedocs-flyout::part(flyout) {
 }
 
 ::view-transition-group(readthedocs-flyout) {
-	z-index: 90;
+	z-index: 25;
 }
 
 .VPLocalNav {
@@ -162,13 +162,16 @@ readthedocs-flyout::part(flyout) {
 }
 
 .vitepress-image-viewer__wrapper {
-	> * {
+	.vitepress-image-viewer__canvas,
+	.vitepress-image-viewer__close {
 		animation: zoom-in cubic-bezier(0, 0, 0, 1) 250ms;
 	}
 
 	.vitepress-image-viewer__mask,
 	.vitepress-image-viewer__actions,
-	.vitepress-image-viewer__progress {
+	.vitepress-image-viewer__progress,
+	.vitepress-image-viewer__prev,
+	.vitepress-image-viewer__next {
 		animation: none;
 		transition:
 			opacity 250ms,
@@ -184,7 +187,29 @@ readthedocs-flyout::part(flyout) {
 		.vitepress-image-viewer__progress {
 			translate: 0 80px;
 		}
+
+		.vitepress-image-viewer__prev {
+			translate: -80px;
+		}
+
+		.vitepress-image-viewer__next {
+			translate: 80px;
+		}
 	}
+}
+
+.VPBackdrop {
+	view-transition-name: backdrop;
+
+	&.fade-leave-active:not(#\#) {
+		transition-timing-function: cubic-bezier(0, 0, 0, 1);
+		transition-duration: 650ms;
+	}
+}
+
+::view-transition-group(backdrop) {
+	animation-duration: 150ms;
+	z-index: 26;
 }
 
 @keyframes float-up-out {

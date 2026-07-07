@@ -21,7 +21,7 @@ onMounted(async () => {
 	<VPBadge type="tip" class="version-badge">{{ version }}</VPBadge>
 </template>
 
-<style lang="css" scoped>
+<style scoped>
 .VPBadge {
 	min-block-size: 24px;
 	inline-size: min-content;

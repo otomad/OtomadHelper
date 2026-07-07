@@ -24,11 +24,11 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3))
       vitepress-plugin-image-preview:
-        specifier: ^0.1.3
-        version: 0.1.3(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3))
+        specifier: ^0.1.4
+        version: 0.1.4(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3))
       vitepress-plugin-pagefind:
-        specifier: ^0.4.20
-        version: 0.4.20(pagefind@1.5.2)(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3))
+        specifier: ^0.4.22
+        version: 0.4.22(pagefind@1.5.2)(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3))
     devDependencies:
       '@types/node':
         specifier: ^26.0.0
@@ -860,10 +860,6 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  fuse.js@6.6.2:
-    resolution: {integrity: sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==}
-    engines: {node: '>=10'}
-
   gray-matter@4.0.3:
     resolution: {integrity: sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==}
     engines: {node: '>=6.0'}
@@ -971,20 +967,12 @@ packages:
   minisearch@7.2.0:
     resolution: {integrity: sha512-dqT2XBYUOZOiC5t2HRnwADjhNS2cecp9u+TJRiJ1Qp/f5qjkeT5APcGPjHw+bz89Ms8Jp+cG4AlE+QZ/QnDglg==}
 
-  mitt@3.0.1:
-    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
-
   mj-context-menu@0.6.1:
     resolution: {integrity: sha512-7NO5s6n10TIV96d4g2uDpG7ZDpIhMh0QNfGdJw/W47JswFcosz457wqz/b5sAKvl12sxINGFCn80NZHKwxQEXA==}
 
   nanoid@3.3.14:
     resolution: {integrity: sha512-U9kYi5bpVMEI31yC8iw4bJJp0avcHXA0W8/wNfLfnvJYzihQo2ZRPYPvpAAd570HAcCBjCTN7vnr+v4StKl1IQ==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
-    hasBin: true
-
-  nanoid@4.0.2:
-    resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
-    engines: {node: ^14 || ^16 || >=18}
     hasBin: true
 
   node-fetch@2.7.0:
@@ -1207,13 +1195,13 @@ packages:
     peerDependencies:
       vitepress: ^1.0.0-0 || ^2.0.0-0
 
-  vitepress-plugin-image-preview@0.1.3:
-    resolution: {integrity: sha512-X2hzNWDh/lj4d88ITRZzcNtqMnxEpPOaKQk7jZwK9A13Ii4jhtRJBXsjJpvK7fyt7+UBEuQduTHZsBmD0f0r5Q==}
+  vitepress-plugin-image-preview@0.1.4:
+    resolution: {integrity: sha512-v7VU1OBRjuldMplo3VBZ5+pib1cSwWCYTB1m8YELI80z4Hbg36Sqx3q2Di/cvSlEE/EVVYE818a4+Ex7oeFD2Q==}
     peerDependencies:
       vitepress: ^1.0.0-0 || ^2.0.0-0
 
-  vitepress-plugin-pagefind@0.4.20:
-    resolution: {integrity: sha512-O6mfkPzRV7V2igs51Qll31ptqJnHlNx9bmfo5JRsf6b4QuSVHjTDgtqM73rrCxRNeOSzFygPmJvSbmn7K4jd1A==}
+  vitepress-plugin-pagefind@0.4.22:
+    resolution: {integrity: sha512-/5CUTdDPWZHqT/4jzZRXSN9XlOzg85KjlsjdE1zxqzEgKVsj1fXuRa6qcsvxKZGWlO13Eno8p7k5vyDpw4FPKA==}
     peerDependencies:
       pagefind: ^1.1.0
       vitepress: ^1.0.0-0 || ^2.0.0-0
@@ -1232,9 +1220,6 @@ packages:
         optional: true
       postcss:
         optional: true
-
-  vue-command-palette@0.1.4:
-    resolution: {integrity: sha512-v9wGV5RG/Qe/GLLP3dJGYEvBOHQAH1kTdfzv7/uDj4v51g9uB0J3dQSaREgsrAvAT7tSj/cSbVrGpaalr8z7tg==}
 
   vue@3.5.39:
     resolution: {integrity: sha512-xmZCYabFGcirU8r0fTuvl/LICc1OU620rnqepaJDL/a141ZigkG7AyaxQLdqJ02ZRYzWe6YPaDHeQx7MfknQfA==}
@@ -1885,8 +1870,6 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
-  fuse.js@6.6.2: {}
-
   gray-matter@4.0.3:
     dependencies:
       js-yaml: 3.15.0
@@ -2042,14 +2025,10 @@ snapshots:
 
   minisearch@7.2.0: {}
 
-  mitt@3.0.1: {}
-
   mj-context-menu@0.6.1:
     optional: true
 
   nanoid@3.3.14: {}
-
-  nanoid@4.0.2: {}
 
   node-fetch@2.7.0:
     dependencies:
@@ -2297,7 +2276,7 @@ snapshots:
     transitivePeerDependencies:
       - vue
 
-  vitepress-plugin-image-preview@0.1.3(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3)):
+  vitepress-plugin-image-preview@0.1.4(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3)):
     dependencies:
       '@vueuse/core': 14.3.0(vue@3.5.39(typescript@6.0.3))
       javascript-stringify: 2.1.0
@@ -2305,14 +2284,13 @@ snapshots:
     transitivePeerDependencies:
       - vue
 
-  vitepress-plugin-pagefind@0.4.20(pagefind@1.5.2)(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3)):
+  vitepress-plugin-pagefind@0.4.22(pagefind@1.5.2)(vitepress@2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3)):
     dependencies:
       '@sugarat/theme-shared': 0.0.7
       '@vueuse/core': 14.3.0(vue@3.5.39(typescript@6.0.3))
       javascript-stringify: 2.1.0
       pagefind: 1.5.2
       vitepress: 2.0.0-alpha.17(@types/node@26.0.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(typescript@6.0.3)
-      vue-command-palette: 0.1.4
     transitivePeerDependencies:
       - vue
 
@@ -2364,12 +2342,6 @@ snapshots:
       - typescript
       - universal-cookie
       - yaml
-
-  vue-command-palette@0.1.4:
-    dependencies:
-      fuse.js: 6.6.2
-      mitt: 3.0.1
-      nanoid: 4.0.2
 
   vue@3.5.39(typescript@6.0.3):
     dependencies:

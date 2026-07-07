@@ -1,6 +1,7 @@
 :host > div {
 	border-radius: 6px;
 	view-transition-name: readthedocs-flyout;
+	z-index: calc(var(--vp-z-index-backdrop) - 1) !important;
 }
 
 :host > div:has(> main.closed) {

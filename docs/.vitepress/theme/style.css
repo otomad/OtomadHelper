@@ -757,38 +757,12 @@ summary {
 /**
  * Fix Component: Algolia Search (PageFind)
  */
-@media (width <= 560px) {
-	.algolia [command-dialog-wrapper] {
-		height: 100dvh;
-		border-radius: 0;
-	}
+.nav-search-btn-wait {
+	border-radius: 8px !important;
 }
 
-.nav-search-btn-wait {
-	color: var(--vp-c-text-2);
-	border-radius: 8px !important;
-
-	svg {
-		stroke-width: 2px;
-		width: 12.5px;
-		height: 12.5px;
-
-		@media (width <= 759px) {
-			width: 18px;
-			height: 18px;
-			color: var(--vp-c-text-1);
-		}
-	}
-
-	.search-tip:not(#\#) {
-		font-size: 13px;
-		color: inherit;
-		padding-right: 0;
-	}
-
-	.metaKey {
-		line-height: 20px;
-	}
+.algolia [command-dialog-mask] {
+	background-color: var(--vp-backdrop-bg-color);
 }
 
 /**
@@ -826,19 +800,6 @@ summary {
 	@media print {
 		display: none;
 	}
-}
-
-/**
- * Fix Component: Image Preview
- */
-.vitepress-image-viewer__img:not(#\#) {
-	transition: none;
-}
-
-.vitepress-image-viewer__prev:not(#\#),
-.vitepress-image-viewer__next:not(#\#) {
-	top: unset;
-	transform: unset;
 }
 
 /**
