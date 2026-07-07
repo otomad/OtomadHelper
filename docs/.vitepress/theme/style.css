@@ -521,8 +521,7 @@ readthedocs-flyout {
 /**
  * Component: Kbd
  */
-kbd,
-code {
+* {
 	box-decoration-break: clone;
 }
 
@@ -813,48 +812,91 @@ summary {
  * Component: Print
  */
 @media print {
-	html {
-		pointer-events: none !important;
-		interactivity: inert !important;
-		print-color-adjust: exact;
+	:root {
+		--print-margin: 64px; /* 64px ≈ 1.69333cm */
+		--vp-nav-height: 56px; /* = 64 / 16 * 14 */
+		--vp-nav-logo-height: 20px; /* ≈ 24 / 16 * 14 */
 	}
 
-	.VPSidebar,
-	.VPNav,
-	.VPDoc .aside,
-	.VPDocFooter,
-	.VPFooter,
-	.VPLocalNav {
-		display: none !important;
-	}
+	@page {
+		margin: calc(var(--print-margin) - var(--vp-nav-height)) calc(var(--print-margin) / 2) var(--print-margin);
+		font-family: var(--vp-font-family-base);
+		font-size: 14px;
+		color: var(--vp-c-text-2);
 
-	.VPContent {
-		padding: 0 !important;
-	}
+		@bottom-center {
+			content: "- " counter(page) " -";
+			font-variant-numeric: tabular-nums;
+		}
 
-	.VPDoc {
-		padding-bottom: 0 !important;
-
-		.content {
-			padding-bottom: 32px !important;
-
-			@media (width >= 768px) {
-				padding-bottom: 48px !important;
-			}
-
-			.content-container {
-				max-width: none !important;
-			}
+		@top-left {
+			content: "";
 		}
 	}
 
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6 {
-		break-after: avoid;
+	html:not(#\#) {
+		pointer-events: none;
+		interactivity: inert;
+		print-color-adjust: exact;
+
+		.VPSidebar,
+		.VPNav .content,
+		.VPNav .divider,
+		.VPDoc .aside,
+		.VPDocFooter,
+		.VPFooter,
+		.VPLocalNav {
+			display: none;
+		}
+
+		.VPContent {
+			padding: 0;
+		}
+
+		.VPDoc {
+			padding: var(--vp-nav-height) calc(var(--print-margin) / 2) 0;
+
+			.content {
+				padding: 0;
+
+				.content-container {
+					max-width: none;
+				}
+			}
+		}
+
+		.VPNav {
+			position: fixed;
+
+			.title {
+				border: none;
+				color: var(--vp-c-text-2);
+				font-size: 14px;
+				height: calc(2 * var(--vp-nav-height) - var(--print-margin));
+
+				.logo {
+					margin-right: 6px;
+				}
+			}
+
+			.wrapper,
+			.title {
+				padding: 0;
+			}
+		}
+
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			break-after: avoid;
+		}
+
+		h1 {
+			break-before: always;
+		}
 	}
 }
 
