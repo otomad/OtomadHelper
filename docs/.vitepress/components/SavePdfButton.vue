@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useData } from "vitepress";
 import icon from "@vp/theme/icons/print.svg?raw";
-import { useLangGet } from "./TeamMembers.vue";
+import useI18n from "@vp/use-i18n";
 import { computed } from "vue";
-const get = useLangGet();
+const t = useI18n();
 const { isDark } = useData();
 
-const label = computed(() => get({ en: "Print/Save as PDF", zh: "打印/保存为PDF" }));
+const label = t({ en: "Print/Save as PDF", zh: "打印/保存为PDF" });
 
 function print() {
 	const { classList } = document.documentElement;

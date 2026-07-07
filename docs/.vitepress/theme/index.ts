@@ -6,7 +6,7 @@ import DefaultTheme, { VPButton } from "vitepress/theme-without-fonts";
 import MyLayout from "./Layout.vue";
 import "./fonts.css";
 import "./style.css";
-// import "./view-transitions.css";
+import "./view-transitions.css";
 
 const globalComponents = import.meta.glob<{}>("./*.vue", { base: "../components", import: "default", eager: true });
 

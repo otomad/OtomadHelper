@@ -17,12 +17,12 @@ watch(
 <script setup lang="ts">
 import VPSwitch from "./Switch.vue";
 import Slider from "./Slider.vue";
-import { useLangGet } from "./TeamMembers.vue";
+import useI18n from "@vp/use-i18n";
 
+const t = useI18n();
 const id = useId();
-const get = useLangGet();
-const depthLabel = computed(() => get({ en: "Outline depth", zh: "目录层级" }));
-const autoExpandLabel = computed(() => get({ en: "Auto expand", zh: "自动展开" }));
+const depthLabel = t({ en: "Outline depth", zh: "目录层级" });
+const autoExpandLabel = t({ en: "Auto expand", zh: "自动展开" });
 
 const outlineMarker = ref<HTMLDivElement>();
 const observer = ref<MutationObserver>();

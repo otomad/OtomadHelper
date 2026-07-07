@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { VPTeamPage, VPTeamPageTitle, VPLink } from "vitepress/theme-without-fonts";
 import { useData } from "vitepress";
-import { useLangGet } from "./TeamMembers.vue";
-const get = useLangGet();
-const title = get({ en: "The Documentation is Powered By", zh: "文档搭载于" });
-const vitePressLink = get({ en: "https://vitepress.dev/", zh: "https://vitepress.dev/zh/" });
+import useI18n from "@vp/use-i18n";
+const t = useI18n();
+const title = t({ en: "The Documentation is Powered By", zh: "文档搭载于" });
+const vitePressLink = t({ en: "https://vitepress.dev/", zh: "https://vitepress.dev/zh/" });
 </script>
 
 <template>

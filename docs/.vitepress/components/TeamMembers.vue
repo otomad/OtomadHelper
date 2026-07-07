@@ -1,24 +1,13 @@
-<script lang="ts">
-import { useData } from "vitepress";
-export function useLangGet() {
-	const { lang } = useData();
-	return function get(object) {
-		let key = lang.value;
-		if (key === "zh-CN") key = "zh";
-		return key in object ? object[key] : object.en;
-	};
-}
-</script>
-
 <script setup lang="ts">
 import { VPTeamPage, VPTeamPageTitle, VPTeamMembers, VPTeamPageSection } from "vitepress/theme-without-fonts";
-const get = useLangGet();
+import useI18n from "@vp/use-i18n";
+const t = useI18n();
 
 const coreMembers = [
 	{
 		avatar: "https://www.github.com/otomad.png",
-		name: get({ en: "otomad", zh: "兰音" }),
-		title: get({ en: "Author", zh: "作者" }),
+		name: t({ en: "otomad", zh: "兰音" }),
+		title: t({ en: "Author", zh: "作者" }),
 		links: [
 			{ icon: "github", link: "https://github.com/otomad" },
 			{ icon: "youtube", link: "https://youtube.com/@cmosekil" },
@@ -30,7 +19,7 @@ const coreMembers = [
 	{
 		avatar: "https://www.github.com/Chaosinism.png",
 		name: "Chaosinism",
-		title: get({ en: "Original Author", zh: "原作者" }),
+		title: t({ en: "Original Author", zh: "原作者" }),
 		links: [
 			{ icon: "github", link: "https://github.com/chsh2/" }, // https://github.com/Chaosinism
 			{ icon: "youtube", link: "https://youtube.com/@chaosinism9491" },
@@ -44,7 +33,7 @@ const coreMembers = [
 	{
 		avatar: "https://www.github.com/Evauation.png",
 		name: "Evauation",
-		title: get({ en: "Documentation Writer", zh: "文档撰写者" }),
+		title: t({ en: "Documentation Writer", zh: "文档撰写者" }),
 		links: [
 			{ icon: "github", link: "https://github.com/Evauation" },
 			{ icon: "youtube", link: "https://youtube.com/@Evauation" },
@@ -56,7 +45,7 @@ const coreMembers = [
 	{
 		avatar: "https://www.github.com/zzzzzz9125.png",
 		name: "zzzzzz9125",
-		title: get({ en: "Collaborator", zh: "协助者" }),
+		title: t({ en: "Collaborator", zh: "协助者" }),
 		links: [
 			{ icon: "github", link: "https://github.com/zzzzzz9125" },
 			{ icon: "youtube", link: "https://youtube.com/@zzzzzz9125" },
@@ -66,8 +55,8 @@ const coreMembers = [
 	},
 	{
 		avatar: "https://www.github.com/wcz123694578.png",
-		name: get({ en: "wcz", zh: "吴从周" }),
-		title: get({ en: "Collaborator", zh: "协助者" }),
+		name: t({ en: "wcz", zh: "吴从周" }),
+		title: t({ en: "Collaborator", zh: "协助者" }),
 		links: [
 			{ icon: "github", link: "https://github.com/wcz123694578" },
 			{ icon: "bilibili", link: "https://space.bilibili.com/34747251" },
@@ -76,7 +65,7 @@ const coreMembers = [
 	{
 		avatar: "https://www.github.com/cyahega.png",
 		name: "Cyahega",
-		title: get({ en: "Vietnamese Translator", zh: "越南语翻译" }),
+		title: t({ en: "Vietnamese Translator", zh: "越南语翻译" }),
 		links: [
 			{ icon: "github", link: "https://github.com/cyahega" },
 			{ icon: "youtube", link: "https://youtube.com/@Cyahegaotomad" },
@@ -89,13 +78,13 @@ const coreMembers = [
 	{
 		avatar: "https://github.com/AdeGimank123.png",
 		name: "AdeGimank123",
-		title: get({ en: "Indonesian Translator", zh: "印尼语翻译" }),
+		title: t({ en: "Indonesian Translator", zh: "印尼语翻译" }),
 		links: [{ icon: "github", link: "https://github.com/AdeGimank123" }],
 	},
 	{
 		avatar: "https://github.com/JuJunG.png",
 		name: "JuJunG",
-		title: get({ en: "Indonesian Translator", zh: "印尼语翻译" }),
+		title: t({ en: "Indonesian Translator", zh: "印尼语翻译" }),
 		links: [
 			{ icon: "youtube", link: "https://youtube.com/@jujungamers" },
 			{ icon: "niconico", link: "https://nicovideo.jp/user/126633391" },
@@ -104,7 +93,7 @@ const coreMembers = [
 	},
 ];
 
-const title = get({ en: "Contributors", zh: "贡献者" });
+const title = t({ en: "Contributors", zh: "贡献者" });
 </script>
 
 <template>

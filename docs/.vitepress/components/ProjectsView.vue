@@ -1,39 +1,40 @@
 <script setup lang="ts">
 import { VPTeamPage, VPTeamPageTitle, VPFeatures } from "vitepress/theme-without-fonts";
 import { useData } from "vitepress";
-import { useLangGet } from "./TeamMembers.vue";
-const get = useLangGet();
+import { reactive } from "vue";
+import useI18n from "@vp/use-i18n";
+const t = useI18n();
 
 const img = (src: string) => ({
 	src,
 	width: "100%",
 });
 
-const projects = [
+const projects = reactive([
 	{
 		title: "Otomad Helper",
-		details: get({ en: "Create YTPMVs in Vegas Pro", zh: "在Vegas Pro中生成音MAD" }),
+		details: t({ en: "Create YTPMVs in Vegas Pro", zh: "在Vegas Pro中生成音MAD" }),
 		// link: "https://otomadhelper.readthedocs.io/",
 		icon: img("/img/projects/otomad_helper.avif"),
-		linkText: get({ en: "Current Project", zh: "当前项目" }),
+		linkText: t({ en: "Current Project", zh: "当前项目" }),
 	},
 	{
 		title: "om midi",
-		details: get({ en: "Create YTPMVs in After Effects", zh: "在After Effects中生成音MAD" }),
-		link: get({ en: "https://ommidi.readthedocs.io/", zh: "https://ommidi.readthedocs.io/zh-cn/" }),
+		details: t({ en: "Create YTPMVs in After Effects", zh: "在After Effects中生成音MAD" }),
+		link: t({ en: "https://ommidi.readthedocs.io/", zh: "https://ommidi.readthedocs.io/zh-cn/" }),
 		icon: img("/img/projects/om_midi.avif"),
-		linkText: get({ en: "Visit", zh: "访问" }),
+		linkText: t({ en: "Visit", zh: "访问" }),
 	},
 	{
 		title: "VegTips",
-		details: get({ en: "Some Practical Tips for Vegas Pro", zh: "Vegas Pro的一些实用小技巧" }),
-		link: get({ en: "https://vegtips.readthedocs.io/", zh: "https://vegtips.readthedocs.io/zh/" }),
-		icon: img(get({ en: "/img/projects/vegtips.avif", zh: "/img/projects/vegtips_zh-CN.avif" })),
-		linkText: get({ en: "Visit", zh: "访问" }),
+		details: t({ en: "Some Practical Tips for Vegas Pro", zh: "Vegas Pro的一些实用小技巧" }),
+		link: t({ en: "https://vegtips.readthedocs.io/", zh: "https://vegtips.readthedocs.io/zh/" }),
+		icon: img(t({ en: "/img/projects/vegtips.avif", zh: "/img/projects/vegtips_zh-CN.avif" })),
+		linkText: t({ en: "Visit", zh: "访问" }),
 	},
-];
+]);
 
-const title = get({ en: "Projects", zh: "项目" });
+const title = t({ en: "Projects", zh: "项目" });
 </script>
 
 <template>
