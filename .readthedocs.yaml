@@ -2,8 +2,8 @@ version: 2
 
 build:
   os: ubuntu-24.04
-    tools:
-        nodejs: "20"
+  tools:
+    nodejs: "20"
   jobs:
     install:
       - npm install --omit=dev
