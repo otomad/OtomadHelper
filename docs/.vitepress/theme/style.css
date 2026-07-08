@@ -56,6 +56,7 @@ ins {
 ::selection {
 	--selection-background-color: var(--vp-c-brand-3);
 	background-color: var(--selection-background-color);
+	color: white;
 	color: contrast-color(var(--selection-background-color));
 }
 
@@ -762,6 +763,31 @@ summary {
 
 .algolia [command-dialog-mask] {
 	background-color: var(--vp-backdrop-bg-color);
+}
+
+.vitepress-image-viewer__mask {
+	opacity: 1 !important;
+	background-color: var(--vp-backdrop-bg-color) !important;
+}
+
+.vitepress-image-viewer__actions,
+.vitepress-image-viewer__btn {
+	opacity: 1 !important;
+	background-color: hsla(0, 0%, 0%, 0.22) !important; /* var(--grayA9) in light theme */
+	backdrop-filter: blur(3px);
+}
+
+.vitepress-image-viewer__btn:hover:not(.is-disabled) {
+	background-color: hsla(0, 0%, 0%, 0.141) !important; /* var(--grayA8) in light theme */
+}
+
+.vitepress-image-viewer__btn.is-disabled {
+	opacity: 0.4 !important;
+}
+
+.vitepress-image-viewer__progress {
+	-webkit-text-stroke: 1.5px black;
+	paint-order: stroke fill;
 }
 
 /**

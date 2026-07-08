@@ -8,10 +8,6 @@
 	border-radius: 4px;
 }
 
-::view-transition-group(readthedocs-flyout) {
-	z-index: 90;
-}
-
 :host-context(html:not(.dark)) img.logo {
 	filter: invert(1);
 }

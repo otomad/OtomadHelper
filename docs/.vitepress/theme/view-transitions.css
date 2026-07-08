@@ -180,12 +180,12 @@ readthedocs-flyout::part(flyout) {
 
 	@starting-style {
 		.vitepress-image-viewer__mask {
-			opacity: 0;
+			opacity: 0 !important;
 		}
 
 		.vitepress-image-viewer__actions,
 		.vitepress-image-viewer__progress {
-			translate: 0 80px;
+			translate: 0 100px;
 		}
 
 		.vitepress-image-viewer__prev {

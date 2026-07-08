@@ -48,7 +48,9 @@ onUnmounted(() => {
 		<label :for="`${id}-depth`">{{ depthLabel }}</label>
 		<Slider :id="`${id}-depth`" min="2" max="6" step="1" v-model="depth" />
 		<label :for="`${id}-auto-expand`">{{ autoExpandLabel }}</label>
-		<VPSwitch :id="`${id}-auto-expand`" v-model="autoExpand" />
+		<label>
+			<VPSwitch :id="`${id}-auto-expand`" v-model="autoExpand" />
+		</label>
 	</div>
 </template>
 
@@ -58,8 +60,12 @@ onUnmounted(() => {
 	grid-template-columns: auto 1fr;
 	gap: 8px 6.4px;
 	align-items: center;
-	padding: 4px 0 8px 17px;
-	margin-bottom: 8px;
+	padding: 4px 0 6px 16px;
+	border-left: 1px solid var(--vp-c-divider);
+
+	&:has(~ .VPDocAsideOutline:not(.has-outline)) {
+		display: none;
+	}
 }
 
 label {

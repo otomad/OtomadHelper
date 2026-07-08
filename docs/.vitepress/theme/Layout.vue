@@ -135,6 +135,8 @@ onMounted(() => {
 
 :root.locale-changing * {
 	view-transition-name: none !important;
+	transition: none !important;
+	animation: none !important;
 }
 
 :root.locale-changing {

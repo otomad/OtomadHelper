@@ -2,18 +2,27 @@
 import { useData } from "vitepress";
 import icon from "@vp/theme/icons/print.svg?raw";
 import useI18n from "@vp/use-i18n";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 const t = useI18n();
 const { isDark } = useData();
 
 const label = t({ en: "Print/Save as PDF", zh: "打印/保存为PDF" });
 
-function print() {
+const print = () => window.print();
+
+onMounted(() => {
 	const { classList } = document.documentElement;
-	classList.remove("dark");
-	window.print();
-	if (isDark.value) classList.add("dark");
-}
+	window.onbeforeprint = event => {
+		classList.add("locale-changing");
+		classList.remove("dark");
+	};
+	window.onafterprint = async event => {
+		if (isDark.value) classList.add("dark");
+		await new Promise(resolve => requestAnimationFrame(resolve));
+		classList.remove("locale-changing");
+	};
+});
+
 /* function print() {
 	const iframe = document.createElement("iframe");
 	iframe.onload = () => {

@@ -42,10 +42,7 @@ export default defineConfig({
 	},
 	vite: {
 		plugins: [
-			ImagePreviewPlugin({
-				hideOnClickModal: true,
-				toolbar: ["zoomOut", "zoomIn", "reset", "rotateLeft", "rotateRight"],
-			}),
+			ImagePreviewPlugin({ hideOnClickModal: true }),
 			back2topPlugin(),
 			pagefindPlugin({
 				customSearchQuery: chineseSearchOptimize,
