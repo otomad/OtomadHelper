@@ -19,7 +19,7 @@ const links = reactive([
 			<template #title>{{ title }}</template>
 		</VPTeamPageTitle>
 		<div class="container">
-			<VPLink v-for="link in links" class="vp-external-link-icon" :href="link.href">
+			<VPLink v-for="link in links" class="vp-external-link-icon" :key="link.name" :href="link.href">
 				<SocialIcon :icon="link.icon" />{{ link.name }}
 			</VPLink>
 		</div>
