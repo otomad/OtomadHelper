@@ -8,7 +8,7 @@
 
 @en Reference:
 @zh 参阅：
-[<SocialIcon icon="youtube" />『図形素材』](https://www.youtube.com/watch?v=EbF-O3DpJDE){lang=ja}、[<SocialIcon icon="bilibili" />《图形练习》](https://www.bilibili.com/video/BV17f4y1y7sB/){lang=zh-CN}
+[<SocialIcon icon="youtube" />『図形素材』](https://www.youtube.com/watch?v=EbF-O3DpJDE){lang=ja .vp-external-link-icon}、[<SocialIcon icon="bilibili" />《图形练习》](https://www.bilibili.com/video/BV17f4y1y7sB/){lang=zh-CN .vp-external-link-icon}
 
 @en **This setting can be toggled.**
 @zh **该设置可开关。**

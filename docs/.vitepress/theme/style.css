@@ -222,7 +222,8 @@ html:not(.dark) {
 	--vp-font-family-base:
 		"Yozora Sans", "Segoe UI Variable", "Segoe UI", var(--vp-cjk-font-family), "Microsoft YaHei", sans-serif;
 	--vp-font-family-mono:
-		"Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+		"Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono",
+		var(--vp-cjk-font-family), "Microsoft YaHei", monospace;
 	--vp-cjk-font-family: "Microsoft YaHei";
 }
 

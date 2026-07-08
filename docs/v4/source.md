@@ -145,11 +145,11 @@
 @zh   * 每当生成完成时就会路由音轨到新建总线。
 
 ::: danger
-@en There is currently an unknown bug that may prevent you from using the audio bus track feature. If you encounter such a problem, it is recommended to disable this feature or try changing another Vegas version.
-@zh 目前存在一个未知错误，可能会阻止你使用音频总线轨道功能。如果遇到此类问题，建议禁用此功能或尝试更换其它Vegas版本。
+@en There is an error. If you find that you cannot render the project properly when using audio bus track feature, please click the link below to fix it now.
+@zh 目前存在错误。如果你在使用音频总线轨道功能时发现无法正常渲染项目，请立即点击下方链接以修复。
 
-@en [View detailed explanation >](./faq.md#audio-bus-track-bugs-caused-by-vegas-pro)
-@zh [了解更多 >](./faq.md#audio-bus-track-bugs-caused-by-vegas-pro)
+@en [How to Fix](./faq.md#audio-bus-track-bug-caused-by-vegas-pro){.vp-external-link-icon}
+@zh [如何修复](./faq.md#vegas-pro引起的音频总线轨道错误){.vp-external-link-icon}
 :::
 
 ---

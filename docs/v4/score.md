@@ -177,5 +177,5 @@
 @en ![Auto Layout Tracks](/img/v4/score/auto_layout_tracks.png)
 @zh ![自动布局轨道](/img/v4/score/auto_layout_tracks_zh-CN.png)
 
-@en [Refer to Tools >](./tools.md#auto-layout-tracks)
-@zh [参阅工具 >](./tools.md#自动布局轨道)
+@en [Refer to Tools](./tools.md#auto-layout-tracks){.vp-external-link-icon}
+@zh [参阅工具](./tools.md#自动布局轨道){.vp-external-link-icon}
