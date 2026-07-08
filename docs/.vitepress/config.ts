@@ -158,7 +158,7 @@ export default defineConfig({
 		lastUpdated: { formatOptions: { forceLocale: true, year: "numeric", month: "2-digit", day: "2-digit" } },
 		editLink: {
 			pattern({ relativePath, filePath }) {
-				const githubPath = "https://github.com/otomad/OtomadHelper/tree/docs/docs/";
+				const githubPath = "https://github.com/otomad/OtomadHelper/blob/docs/docs/";
 				const showPlainCodeQuery = "?plain=1";
 				if (!filePath.includes("[")) return githubPath + relativePath + showPlainCodeQuery;
 				else return githubPath + relativePath.replace(/^.*?\//, "") + showPlainCodeQuery;
