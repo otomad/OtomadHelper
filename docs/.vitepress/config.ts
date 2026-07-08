@@ -12,6 +12,7 @@ import { join } from "path/posix";
 import { pagefindPlugin, chineseSearchOptimize } from "vitepress-plugin-pagefind";
 import { ImagePreviewPlugin } from "vitepress-plugin-image-preview";
 import { back2topPlugin } from "vitepress-plugin-back2top";
+// import llmstxt from "vitepress-plugin-llms"; // 目前需要支持 Markdown 构建时渲染，否则多语言插件语法也会被放进去。See: https://github.com/okineadev/vitepress-plugin-llms/issues/37
 
 const base = process.env.READTHEDOCS_CANONICAL_URL
 	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
@@ -75,6 +76,9 @@ export default defineConfig({
 	},
 	lastUpdated: true,
 	ignoreDeadLinks: true,
+	sitemap: {
+		hostname: "https://otomadhelper.readthedocs.io",
+	},
 	title: "Otomad Helper",
 	head: [
 		[
@@ -245,6 +249,8 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 				],
 			},
 			{
+				en: "Extra Info",
+				zh: "额外信息",
 				items: [{ en: "FAQ", zh: "常见问题解答", link: "/faq" }],
 			},
 		],
@@ -294,6 +300,7 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 			for (const section of nav) {
 				if ((locale as "en") in section) section.text = section[locale];
 				section.base = base;
+				section.collapsed = false;
 				for (const item of section.items) item.text = item[locale];
 			}
 			return [base, nav] as const;

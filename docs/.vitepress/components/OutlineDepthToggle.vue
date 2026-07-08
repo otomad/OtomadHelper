@@ -83,7 +83,8 @@ label {
 .VPDocOutlineItem.root ul {
 	transition:
 		block-size cubic-bezier(0, 0, 0, 1) 250ms,
-		visibility 250ms allow-discrete;
+		visibility 250ms;
+	transition-behavior: allow-discrete;
 	overflow: clip;
 
 	@starting-style {

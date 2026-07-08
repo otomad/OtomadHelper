@@ -1,7 +1,8 @@
 .VPLocalSearchBox > *,
 .algolia [command-dialog-mask],
 .algolia [command-dialog-wrapper] {
-	transition: all 250ms allow-discrete;
+	transition: 250ms;
+	transition-behavior: allow-discrete;
 	transition-property: translate, opacity;
 
 	@starting-style {
@@ -210,6 +211,26 @@ readthedocs-flyout::part(flyout) {
 ::view-transition-group(backdrop) {
 	animation-duration: 150ms;
 	z-index: 26;
+}
+
+.VPSidebarItem .items {
+	transition: block-size, display;
+	transition-behavior: allow-discrete;
+	transition-duration: 250ms;
+	overflow: clip;
+
+	@starting-style {
+		block-size: 0;
+	}
+
+	:active-view-transition &,
+	&:is(.no-transition *) {
+		transition: none;
+	}
+}
+
+.VPSidebarItem.collapsed .items {
+	block-size: 0;
 }
 
 @keyframes float-up-out {

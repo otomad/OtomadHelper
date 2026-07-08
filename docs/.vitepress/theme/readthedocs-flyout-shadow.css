@@ -6,6 +6,8 @@
 
 :host > div:has(> main.closed) {
 	border-radius: 4px;
+	backdrop-filter: blur(3px);
+	--readthedocs-flyout-background-color: rgb(from var(--vp-c-bg-soft) r g b / 60%);
 }
 
 :host-context(html:not(.dark)) img.logo {

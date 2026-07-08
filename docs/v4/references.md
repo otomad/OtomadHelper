@@ -62,12 +62,12 @@
 @en This project references the following open source code:
 @zh 此项目参考了以下开源代码：
 @en We would like to thank their authors and contributors for their contributions to the open source cause!
-@zh 感谢作者和贡献者对开源事业的贡献！
+@zh 感谢作者和贡献者们对开源事业的贡献！
 
 @@@en
 Project | Authors | License | Notes
 ---- | ---- | ---- | ----
-[**Otomad Helper**][this-repo] | *N/A* | GPL 3.0 | *Current project*
+[**Otomad Helper**][this-repo] | | GPL 3.0 | *Current project*
 [otomad_helper][chaosinism-scripts] | Chaosinism | LGPL 3.0 | *The original project this is based on*
 [VegasScripts][evankale-scripts] | Evan Kale | GPL 3.0 | *The project Chaosinism’s referenced*
 [NAudio][naudio] | Mark Heath | MIT | *MIDI read/write<br>Waveform sound*
@@ -117,13 +117,13 @@ Project | Authors | License | Notes
 Post | Author | Language | Kind | Last Updated
 ---- | ---- | ---- | ---- | ----
 [<SocialIcon icon="google" />Otomad Helper Features and Details][documentation_evauation] | Evauation | English | Article
-[<SocialIcon icon="bilibili" />Release Notes (v4.10.17.0)][releaseNotes_v4_10_17_0] | *N/A* | Chinese | Article | <Date value="2021/10/17" />
-[<SocialIcon icon="bilibili" />Release Notes (v4.9.25.0)][releaseNotes_v4_9_25_0] | *N/A* | Chinese | Article | <Date value="2021/09/26" />
+[<SocialIcon icon="bilibili" />Release Notes (v4.10.17.0)][releaseNotes_v4_10_17_0] | | Chinese | Article | <Date value="2021/10/17" />
+[<SocialIcon icon="bilibili" />Release Notes (v4.9.25.0)][releaseNotes_v4_9_25_0] | | Chinese | Article | <Date value="2021/09/26" />
 [<SocialIcon icon="bilibili" />Documentation (v0.1)][documentation_chaosinism]<br>[<SocialIcon icon="bowlroll" />Documentation (v0.1)][documentation_chaosinism_ja] | Chaosinism | Chinese<br>Japanese | Article | <Date value="2019/09/01" />
 [<SocialIcon icon="bilibili" />Documentation for Staff Visualizer (v0.1)][documentation_staffVisualizer_chaosinism] | Chaosinism | Chinese | Article | <Date value="2018/08/24" />
 [<SocialIcon icon="bilibili" />Troubleshooting (v0.1)][troubleshooting_chaosinism] | Chaosinism | Chinese | Article | <Date value="2018/05/19" />
-[<SocialIcon icon="youtube" />Tutorial Video (v4.26.14.0)][tutorialVideo]<br>[<SocialIcon icon="bilibili" />Tutorial Video (v4.26.14.0)][tutorialVideo_v4_26_14_0] | *N/A* | English<br>Chinese | Video | <Date value="2023/04/27" />
-[<SocialIcon icon="youtube" />Explore Visual Effects][exploreVisualEffects] | *N/A* | English | Video | <Date value="2022/11/19" />
+[<SocialIcon icon="youtube" />Tutorial Video (v4.26.14.0)][tutorialVideo]<br>[<SocialIcon icon="bilibili" />Tutorial Video (v4.26.14.0)][tutorialVideo_v4_26_14_0] | | English<br>Chinese | Video | <Date value="2023/04/27" />
+[<SocialIcon icon="youtube" />Explore Visual Effects][exploreVisualEffects] | | English | Video | <Date value="2022/11/19" />
 [<SocialIcon icon="youtube" />Tutorial Video (v4.16.4.0)][tutorialVideo_greenBean] | GreenBean | English | Video | <Date value="2022/05/09" />
 [<SocialIcon icon="youtube" />Tutorial Video (v4.26.14.0)][tutorialVideo_cyahega] | Cyahega | Vietnamese | Video | <Date value="2023/03/11" />
 [<SocialIcon icon="bilibili" />Tutorial Video (v0.1)][tutorialVideo_chaosinism] | Chaosinism | Chinese | Video | <Date value="2018/04/17" />

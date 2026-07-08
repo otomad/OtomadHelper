@@ -7,6 +7,7 @@ import VersionBadge from "@vp/components/VersionBadge.vue";
 import OutlineDepthToggle from "@vp/components/OutlineDepthToggle.vue";
 import SavePdfButton from "@vp/components/SavePdfButton.vue";
 import PrintHeaderTitle from "@vp/components/PrintHeaderTitle.vue";
+// import CopyOrDownloadAsMarkdownButtons from "vitepress-plugin-llms/vitepress-components/CopyOrDownloadAsMarkdownButtons.vue";
 
 const { isDark } = useData();
 
@@ -96,6 +97,7 @@ onMounted(() => {
 		<template #nav-bar-content-before><SavePdfButton /></template>
 		<!-- <template #nav-screen-content-before><SavePdfButton /></template> -->
 		<template #nav-bar-title-after><PrintHeaderTitle /></template>
+		<!-- <template #doc-top><CopyOrDownloadAsMarkdownButtons /></template> -->
 	</DefaultTheme.Layout>
 </template>
 
