@@ -1,5 +1,6 @@
 <script lang="ts">
 import { ref, computed, watch, useId, onMounted, onUnmounted } from "vue";
+import { inBrowser } from "vitepress";
 
 const depth = ref(2);
 const autoExpand = ref(true);
@@ -7,6 +8,7 @@ const autoExpand = ref(true);
 watch(
 	[depth, autoExpand],
 	([depth, autoExpand]) => {
+		if (!inBrowser) return;
 		document.body.style.setProperty("--outline-depth", depth);
 		document.body.style.setProperty("--outline-auto-expand", autoExpand);
 	},
