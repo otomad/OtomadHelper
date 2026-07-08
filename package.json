@@ -12,7 +12,7 @@
 		"markdown-it-container": "^4.0.0",
 		"pagefind": "^1.5.2",
 		"typescript": "^6.0.3",
-		"vitepress": "^2.0.0-alpha.17",
+		"vitepress": "^2.0.0-alpha.18",
 		"vitepress-plugin-back2top": "^0.1.2",
 		"vitepress-plugin-image-preview": "^0.1.4",
 		"vitepress-plugin-pagefind": "^0.4.22"

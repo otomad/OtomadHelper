@@ -72,6 +72,10 @@ export default defineConfig({
 		},
 		build: {
 			assetsInlineLimit: 200,
+			cssMinify: "esbuild",
+			// LightningCSS doesn't support "range syntax" in container style queries now.
+			// `@container style(--outline-depth < 6)`
+			// See: https://github.com/parcel-bundler/lightningcss/issues/1069
 		},
 	},
 	lastUpdated: true,
