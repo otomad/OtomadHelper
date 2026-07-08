@@ -159,8 +159,9 @@ export default defineConfig({
 		editLink: {
 			pattern({ relativePath, filePath }) {
 				const githubPath = "https://github.com/otomad/OtomadHelper/tree/docs/docs/";
-				if (!filePath.includes("[")) return githubPath + relativePath;
-				else return githubPath + relativePath.replace(/^.*?\//, "");
+				const showPlainCodeQuery = "?plain=1";
+				if (!filePath.includes("[")) return githubPath + relativePath + showPlainCodeQuery;
+				else return githubPath + relativePath.replace(/^.*?\//, "") + showPlainCodeQuery;
 			},
 		},
 		logo: {
