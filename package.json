@@ -9,6 +9,7 @@
 	},
 	"dependencies": {
 		"@mdit/plugin-katex": "^0.25.2",
+		"esbuild": "^0.28.1",
 		"markdown-it-container": "^4.0.0",
 		"pagefind": "^1.5.2",
 		"typescript": "^6.0.3",
