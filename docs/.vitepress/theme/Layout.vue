@@ -5,9 +5,7 @@ import { nextTick, provide, onMounted } from "vue";
 import flyoutShadowStyle from "./readthedocs-flyout-shadow.css?inline";
 import VersionBadge from "@vp/components/VersionBadge.vue";
 import OutlineDepthToggle from "@vp/components/OutlineDepthToggle.vue";
-import SavePdfButton from "@vp/components/SavePdfButton.vue";
 import PrintHeaderTitle from "@vp/components/PrintHeaderTitle.vue";
-// import CopyOrDownloadAsMarkdownButtons from "vitepress-plugin-llms/vitepress-components/CopyOrDownloadAsMarkdownButtons.vue";
 import AccessArticleButtons from "@vp/components/AccessArticleButtons.vue";
 
 const { isDark } = useData();
@@ -95,10 +93,7 @@ onMounted(() => {
 	<DefaultTheme.Layout>
 		<template #home-hero-info-before><VersionBadge /></template>
 		<template #aside-outline-before><OutlineDepthToggle /></template>
-		<template #nav-bar-content-before><SavePdfButton /></template>
-		<!-- <template #nav-screen-content-before><SavePdfButton /></template> -->
 		<template #nav-bar-title-after><PrintHeaderTitle /></template>
-		<!-- <template #doc-top><CopyOrDownloadAsMarkdownButtons /></template> -->
 		<template #doc-top><AccessArticleButtons /></template>
 	</DefaultTheme.Layout>
 </template>

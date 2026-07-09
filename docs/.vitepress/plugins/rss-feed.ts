@@ -7,8 +7,6 @@ import { join as localJoin } from "path";
 import { parseHTML, NodeFilter } from "linkedom";
 
 export async function createRssFeeds(config: SiteConfig) {
-	// const file = await extractHtmlContent(localJoin(config.outDir, "zh-CN/v4/sonar.html"));
-	// console.log(file);
 	const locales = Object.entries(config.site.locales).map(([subdirectory, locale]) => {
 		const isRoot = subdirectory === "root";
 		return {

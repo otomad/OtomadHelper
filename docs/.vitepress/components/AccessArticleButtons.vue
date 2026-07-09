@@ -12,82 +12,144 @@ import iconShare from "@vp/theme/icons/share.svg?raw";
 import iconPlay from "@vp/theme/icons/play.svg?raw";
 import iconPause from "@vp/theme/icons/pause.svg?raw";
 import iconStop from "@vp/theme/icons/stop.svg?raw";
+import iconEllipsis from "@vp/theme/icons/ellipsis.svg?raw";
 
-const aiProviders = {};
+import { useData } from "vitepress";
+import icon from "@vp/theme/icons/print.svg?raw";
+import useI18n from "@vp/use-i18n";
+import { computed, reactive, onMounted, ref, useTemplateRef } from "vue";
+import { getRssFeedLink } from "@vp/plugins/rss-feed_get-link";
+const t = useI18n();
+const data = useData();
 
-// const isOpen = ref(false);
-// const dropdownContainer = ref<HTMLElement>();
-// const isRendered = ref(false);
-// const dropdownMenu = ref<HTMLElement>();
+const labels = reactive({
+	print: t({ en: "Print/Save as PDF", zh: "打印/保存为PDF" }),
+	viewMd: t({ en: "View as Markdown", zh: "查看Markdown" }),
+	copyMd: t({ en: "Copy page as Markdown", zh: "复制全文为Markdown" }),
+	copying: t({ en: "Copying…", zh: "复制中⋯⋯" }),
+	copied: t({ en: "Copied!", zh: "已复制！" }),
+	downloadMd: t({ en: "Download Markdown", zh: "下载Markdown" }),
+	chatGpt: t({ en: "Open in ChatGPT", zh: "在ChatGPT中打开" }),
+	claude: t({ en: "Open in Claude", zh: "在Claude中打开" }),
+	rss: t({ en: "RSS Feed", zh: "RSS订阅" }),
+	share: t({ en: "Share", zh: "分享" }),
+	read: t({ en: "Read Aloud", zh: "大声朗读" }),
+	pauseRead: t({ en: "Pause Reading", zh: "暂停朗读" }),
+	resumeRead: t({ en: "Resume Reading", zh: "继续朗读" }),
+	stopRead: t({ en: "Stop Reading", zh: "停止朗读" }),
+});
 
-// // const { aiProviders, copied, copyAsMarkdown, downloadMarkdown, downloaded, openInAI, viewAsMarkdown } =
-// // 	useCopyOrDownloadAsMarkdownButtons();
+const dropdownMenu = useTemplateRef("dropdown-menu");
+const closeDropdownMenu = () => dropdownMenu.value?.hidePopover?.();
 
-// const aiProviderIcons: Record<string, string> = {
-// 	ChatGPT: iconChatGPT,
-// 	Claude: iconClaude,
-// };
+const print = () => window.print();
 
-// function closeDropdown(): void {
-// 	if (!isOpen.value) {
-// 		isRendered.value = false;
-// 		return;
-// 	}
+onMounted(() => {
+	const { classList } = document.documentElement;
+	window.onbeforeprint = event => {
+		classList.add("locale-changing");
+		classList.remove("dark");
+	};
+	window.onafterprint = async event => {
+		if (data.isDark.value) classList.add("dark");
+		await new Promise(resolve => requestAnimationFrame(resolve));
+		classList.remove("locale-changing");
+	};
+});
 
-// 	isOpen.value = false;
+function getMarkdownLink() {
+	const { href } = location;
+	if (href.endsWith(".html")) return href.slice(0, -5) + ".md";
+	else if (href.endsWith("/")) return href + "index.md";
+	else return;
+}
 
-// 	const el = dropdownMenu.value;
-// 	if (!el) {
-// 		isRendered.value = false;
-// 		return;
-// 	}
+const viewAsMarkdown = () => {
+	const markdown = getMarkdownLink();
+	if (markdown) window.open(markdown);
+};
 
-// 	const onEnd = (): void => {
-// 		isRendered.value = false;
-// 		el.removeEventListener("transitionend", onEnd);
-// 	};
+const isCopyingMarkdown = ref<false | null | true>(false);
+const copiedMarkdownTimeoutId = ref<number>();
+const copyAsMarkdown = async () => {
+	if (isCopyingMarkdown.value) return;
+	clearTimeout(copiedMarkdownTimeoutId.value);
+	isCopyingMarkdown.value = false;
+	const markdown = getMarkdownLink();
+	if (!markdown) return;
+	isCopyingMarkdown.value = true;
+	const content = await fetch(markdown).then(response => response.text());
+	await navigator.clipboard.writeText(content);
+	isCopyingMarkdown.value = null;
+	copiedMarkdownTimeoutId.value = setTimeout(() => {
+		isCopyingMarkdown.value = false;
+		closeDropdownMenu();
+	}, 2000);
+};
 
-// 	el.addEventListener("transitionend", onEnd);
-// }
+const downloadMarkdown = () => {
+	closeDropdownMenu();
+	const markdown = getMarkdownLink();
+	if (!markdown) return;
+	const a = document.createElement("a");
+	a.download = document.title.replaceAll("|", "-");
+	a.href = markdown;
+	document.body.append(a);
+	a.click();
+	a.remove();
+};
 
-// function toggleDropdown(): void {
-// 	if (isOpen.value) {
-// 		closeDropdown();
-// 	} else {
-// 		isRendered.value = true;
-// 		requestAnimationFrame(() => {
-// 			isOpen.value = true;
-// 		});
-// 	}
-// }
+const openInAi = (provider: string) => {
+	closeDropdownMenu();
+	const markdown = getMarkdownLink();
+	const defaultAiProviders = {
+		ChatGPT: "https://chatgpt.com/?hints=search&prompt=",
+		Claude: "https://claude.ai/new?q=",
+	} as const;
+	if (!markdown || !(provider in defaultAiProviders)) return;
+	const prompt = `Read from ${markdown} so I can ask questions about it.`;
+	window.open(defaultAiProviders[provider] + encodeURIComponent(prompt), "_blank");
+};
 
-// function resolveProviderIcon(provider: MarkdownAiProvider): string {
-// 	return aiProviderIcons[provider.name] ?? iconExternal;
-// }
+const rssFeed = () => {
+	const lang = data.lang.value;
+	const link = getRssFeedLink(lang);
+	if (link) window.open(link);
+};
 
-// async function handleCopyAsMarkdown(): Promise<void> {
-// 	await copyAsMarkdown();
-// 	closeDropdown();
-// }
+const share = () => {
+	navigator.share?.({
+		title: document.title,
+		url: location.href,
+	});
+};
 
-// function handleViewAsMarkdown(): void {
-// 	viewAsMarkdown();
-// 	closeDropdown();
-// }
-
-// function handleOpenInAI(provider: MarkdownAiProvider): void {
-// 	openInAI(provider);
-// 	closeDropdown();
-// }
-
-// function handleClickOutside(event: MouseEvent): void {
-// 	if (dropdownContainer.value && !dropdownContainer.value.contains(event.target as Node)) {
-// 		closeDropdown();
-// 	}
-// }
-
-// onMounted(() => document.addEventListener("click", handleClickOutside));
-// onUnmounted(() => document.removeEventListener("click", handleClickOutside));
+const isSpeaking = ref<false | null | true>(false);
+const speak = () => {
+	const post = document.querySelector(".vp-doc > div");
+	const utterance = new SpeechSynthesisUtterance(post.innerText);
+	const voices = speechSynthesis.getVoices();
+	const locale = new Intl.Locale(document.documentElement.lang).maximize();
+	const getLocale = (lang: string) => new Intl.Locale(lang).maximize();
+	const availableVoices = voices.filter(({ lang }) => getLocale(lang).language === locale.language);
+	const preferredVoice =
+		voices.find(({ lang, localService }) => getLocale(lang).toString() === locale.toString() && !localService) ??
+		voices.find(({ lang, localService }) => getLocale(lang).language === locale.language && !localService) ??
+		voices.find(({ lang, localService }) => getLocale(lang).toString() === locale.toString()) ??
+		voices.find(({ lang, localService }) => getLocale(lang).language === locale.language);
+	if (preferredVoice) utterance.voice = preferredVoice;
+	speechSynthesis.speak(utterance);
+	isSpeaking.value = true;
+};
+const pauseSpeak = () => {
+	if (isSpeaking.value) speechSynthesis.pause();
+	else speechSynthesis.resume();
+	isSpeaking.value = isSpeaking.value ? null : true;
+};
+const stopSpeak = () => {
+	speechSynthesis.cancel();
+	isSpeaking.value = false;
+};
 </script>
 
 <script lang="ts">
@@ -106,17 +168,11 @@ function InnerButton(_props, { attrs: { icon: _icon, name, ...attrs } }) {
 	<div class="markdown-copy-buttons">
 		<div class="markdown-copy-buttons-pretend-content">
 			<div class="markdown-copy-buttons-inner">
-				<InnerButton name="Print/Save as PDF" :icon="{ iconPrint }" />
+				<InnerButton :name="labels.print" :icon="{ iconPrint }" @click="print()" />
 
 				<!-- Markdown button -->
 				<div class="button-group dropdown-trigger">
-					<!-- <button class="copy-page">
-						<span v-html="copied ? iconCheck : iconCopy" class="icon"></span>
-						<span class="label">
-							{{ copied ? "Copied" : "Copy page" }}
-						</span>
-					</button> -->
-					<InnerButton name="View as Markdown" :icon="{ iconMarkdown }" />
+					<InnerButton :name="labels.viewMd" :icon="{ iconMarkdown }" @click="viewAsMarkdown()" />
 
 					<span class="divider"></span>
 
@@ -126,40 +182,45 @@ function InnerButton(_props, { attrs: { icon: _icon, name, ...attrs } }) {
 					</button>
 				</div>
 
-				<InnerButton name="RSS Feed" :icon="{ iconRss }" />
+				<InnerButton :name="labels.rss" :icon="{ iconRss }" @click="rssFeed()" />
 
-				<InnerButton name="Share" :icon="{ iconShare }" />
+				<InnerButton :name="labels.share" :icon="{ iconShare }" @click="share()" />
 
-				<InnerButton name="Read Aloud" :icon="{ iconPlay }" />
+				<InnerButton v-if="isSpeaking === false" :name="labels.read" :icon="{ iconPlay }" @click="speak()" />
 
-				<div class="button-group">
-					<InnerButton name="Pause Reading" :icon="{ iconPause }" />
+				<div v-else class="button-group">
+					<InnerButton
+						:name="isSpeaking ? labels.pauseRead : labels.resumeRead"
+						:icon="{ iconPause: isSpeaking ? iconPause : iconPlay }"
+						@click="pauseSpeak()"
+					/>
 					<span class="divider"></span>
-					<InnerButton name="Stop Reading" :icon="{ iconStop }" />
+					<InnerButton :name="labels.stopRead" :icon="{ iconStop }" @click="stopSpeak()" />
 				</div>
 			</div>
 		</div>
 
 		<!-- Markdown Dropdown -->
-		<div class="dropdown-menu" popover="auto" id="markdown-copy-menu">
-			<button class="dropdown-item">
-				<span v-html="iconCopy" class="icon"></span>
-				Copy page as Markdown
-				<!-- <span v-html="iconExternal" class="icon external"></span> -->
+		<div class="dropdown-menu" popover="auto" id="markdown-copy-menu" ref="dropdown-menu">
+			<button class="dropdown-item" @click="copyAsMarkdown()">
+				<span
+					v-html="isCopyingMarkdown ? iconEllipsis : isCopyingMarkdown === null ? iconCheck : iconCopy"
+					class="icon"
+				></span>
+				{{ isCopyingMarkdown ? labels.copying : isCopyingMarkdown === null ? labels.copied : labels.copyMd }}
 			</button>
-			<button class="dropdown-item">
+			<button class="dropdown-item" @click="downloadMarkdown()">
 				<span v-html="iconDownload" class="icon"></span>
-				Download Markdown
-				<!-- <span v-html="iconExternal" class="icon external"></span> -->
+				{{ labels.downloadMd }}
 			</button>
-			<button class="dropdown-item">
+			<button class="dropdown-item" @click="openInAi('ChatGPT')">
 				<span class="icon"><SocialIcon icon="openai" /></span>
-				Open in ChatGPT
+				{{ labels.chatGpt }}
 				<span v-html="iconExternal" class="icon external"></span>
 			</button>
-			<button class="dropdown-item">
+			<button class="dropdown-item" @click="openInAi('Claude')">
 				<span class="icon"><SocialIcon icon="claude" /></span>
-				Open in Claude
+				{{ labels.claude }}
 				<span v-html="iconExternal" class="icon external"></span>
 			</button>
 
@@ -263,20 +324,6 @@ function InnerButton(_props, { attrs: { icon: _icon, name, ...attrs } }) {
 	}
 }
 
-:global(.access-article-button-tooltip) {
-	position: fixed;
-	position-area: block-end;
-	position-try-fallbacks: flip-block;
-	display: block;
-	padding: 4px 8px;
-	margin-block: 8px;
-	background-color: var(--vp-c-bg-soft);
-	pointer-events: none;
-	border-radius: 4px;
-	font-size: 14px;
-	z-index: 101;
-}
-
 .label {
 	white-space: nowrap;
 }
@@ -353,7 +400,7 @@ function InnerButton(_props, { attrs: { icon: _icon, name, ...attrs } }) {
 	}
 }
 
-.icon,
+.icon:deep,
 .button :deep(.icon) {
 	&,
 	& :deep(object),

@@ -16,6 +16,7 @@ import { back2topPlugin } from "vitepress-plugin-back2top";
 import { llmstxtPlugin } from "vitepress-plugin-llmstxt";
 import hostname from "./plugins/hostname";
 import { createRssFeeds } from "./plugins/rss-feed";
+import { getRssFeedLink } from "./plugins/rss-feed_get-link";
 import llmsTransform from "./plugins/llms-transform";
 
 const base = process.env.READTHEDOCS_CANONICAL_URL
@@ -95,7 +96,7 @@ export default defineConfig({
 	},
 	async transformHead({ pageData, siteData }) {
 		const lang = siteData.lang;
-		const langSubdirectory = lang === "en-US" ? "" : `/${lang}`;
+		const rssLink = getRssFeedLink(lang);
 		const head: HeadConfig[] = [];
 		head.push(["meta", { property: "og:title", content: pageData.title }]);
 		head.push([
@@ -104,7 +105,7 @@ export default defineConfig({
 				rel: "alternate",
 				type: "application/rss+xml",
 				title: { "zh-CN": "RSS 订阅" }[lang] ?? "RSS Feed",
-				href: `${langSubdirectory}/feed.xml`,
+				href: rssLink,
 			},
 		]);
 		return head;
