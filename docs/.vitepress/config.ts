@@ -1,4 +1,4 @@
-import { defineConfig, type DefaultTheme } from "vitepress";
+import { defineConfig, type DefaultTheme, type HeadConfig } from "vitepress";
 import i18nMacroPlugin from "./plugins/markdown-it/i18n-macro";
 import underlinePlugin from "./plugins/markdown-it/underline";
 import detailsHeadingPlugin from "./plugins/markdown-it/container-details-heading";
@@ -13,6 +13,10 @@ import { pagefindPlugin, chineseSearchOptimize } from "vitepress-plugin-pagefind
 import { ImagePreviewPlugin } from "vitepress-plugin-image-preview";
 import { back2topPlugin } from "vitepress-plugin-back2top";
 // import llmstxt from "vitepress-plugin-llms"; // 目前需要支持 Markdown 构建时渲染，否则多语言插件语法也会被放进去。See: https://github.com/okineadev/vitepress-plugin-llms/issues/37
+import { llmstxtPlugin } from "vitepress-plugin-llmstxt";
+import hostname from "./plugins/hostname";
+import { createRssFeeds } from "./plugins/rss-feed";
+import llmsTransform from "./plugins/llms-transform";
 
 const base = process.env.READTHEDOCS_CANONICAL_URL
 	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
@@ -60,6 +64,11 @@ export default defineConfig({
 					},
 				},
 			}),
+			llmstxtPlugin({
+				hostname,
+				llmsFullFile: false,
+				transform: llmsTransform,
+			}),
 		],
 		server: {
 			port: 7000,
@@ -80,16 +89,35 @@ export default defineConfig({
 	},
 	lastUpdated: true,
 	ignoreDeadLinks: true,
-	sitemap: {
-		hostname: "https://otomadhelper.readthedocs.io",
+	sitemap: { hostname },
+	async buildEnd(config) {
+		await createRssFeeds(config);
+	},
+	async transformHead({ pageData, siteData }) {
+		const lang = siteData.lang;
+		const langSubdirectory = lang === "en-US" ? "" : `/${lang}`;
+		const head: HeadConfig[] = [];
+		head.push(["meta", { property: "og:title", content: pageData.title }]);
+		head.push([
+			"link",
+			{
+				rel: "alternate",
+				type: "application/rss+xml",
+				title: { "zh-CN": "RSS 订阅" }[lang] ?? "RSS Feed",
+				href: `${langSubdirectory}/feed.xml`,
+			},
+		]);
+		return head;
 	},
 	title: "Otomad Helper",
+	description: "Helps to create YTPMVs in Vegas Pro",
 	head: [
 		[
 			"link",
 			{
 				rel: "icon",
-				href: withBase("favicon.ico"),
+				// Read the Docs 会强制替换掉 favicon.ico 为自己的图标，因此只好更名。
+				href: withBase("favicon_1.ico"),
 				type: "image/vnd.microsoft.icon",
 				sizes: "16x16 24x24 32x32 48x48 64x64",
 			},
@@ -99,12 +127,12 @@ export default defineConfig({
 			"link",
 			{ rel: "apple-touch-icon", href: withBase("apple-touch-icon.png"), type: "image/png", sizes: "180x180" },
 		],
+		["meta", { property: "og:type", content: "article" }],
 	],
 	locales: {
 		root: {
 			label: "English",
-			lang: "en",
-			description: "Helps to create YTPMVs in Vegas Pro",
+			lang: "en-US",
 			themeConfig: {
 				footer: {
 					message: "Released under the GPL 3.0 License",

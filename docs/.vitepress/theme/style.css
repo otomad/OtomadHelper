@@ -954,15 +954,3 @@ summary {
 		border-right-width: 0;
 	}
 }
-
-/**
- * Component: Copy or Download as Markdown Buttons
- */
-.markdown-copy-buttons:not(#\#) {
-	margin-block: -28px 8px;
-	margin-inline-start: 80px;
-
-	@media print {
-		display: none;
-	}
-}

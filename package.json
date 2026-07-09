@@ -10,12 +10,15 @@
 	"dependencies": {
 		"@mdit/plugin-katex": "^0.25.2",
 		"esbuild": "^0.28.1",
+		"feed": "^6.0.0",
+		"linkedom": "^0.18.13",
 		"markdown-it-container": "^4.0.0",
 		"pagefind": "^1.5.2",
 		"typescript": "^6.0.3",
 		"vitepress": "^2.0.0-alpha.18",
 		"vitepress-plugin-back2top": "^0.1.2",
 		"vitepress-plugin-image-preview": "^0.1.4",
+		"vitepress-plugin-llmstxt": "^0.5.1",
 		"vitepress-plugin-pagefind": "^0.4.22"
 	},
 	"devDependencies": {
