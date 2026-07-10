@@ -130,10 +130,12 @@
 	view-transition-class: doc-content;
 }
 
+::view-transition-old(access-article-buttons):only-child,
 ::view-transition-old(.doc-content) {
 	animation: page-jump-out cubic-bezier(0.95, 0.05, 0.795, 0.035) 150ms both;
 }
 
+::view-transition-new(access-article-buttons):only-child,
 ::view-transition-new(.doc-content) {
 	animation: page-jump-in cubic-bezier(0.19, 1, 0.22, 1) 500ms 150ms both;
 }

@@ -94,11 +94,11 @@ export default defineConfig({
 	async buildEnd(config) {
 		await createRssFeeds(config);
 	},
-	async transformHead({ pageData, siteData }) {
+	async transformHead({ siteData, pageData, title: webPageTitleWithTitleTemplate }) {
 		const lang = siteData.lang;
 		const rssLink = getRssFeedLink(lang);
 		const head: HeadConfig[] = [];
-		head.push(["meta", { property: "og:title", content: pageData.title }]);
+		head.push(["meta", { property: "og:title", content: pageData.title || webPageTitleWithTitleTemplate }]);
 		head.push([
 			"link",
 			{

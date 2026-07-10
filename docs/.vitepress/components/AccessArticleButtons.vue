@@ -242,6 +242,7 @@ function InnerButton(_props, { attrs: { icon: _icon, name, ...attrs } }) {
 .markdown-copy-buttons {
 	display: flex;
 	margin-block: -28px 8px;
+	view-transition-name: access-article-buttons;
 
 	@media print {
 		display: none;
