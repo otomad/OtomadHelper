@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 // See: https://github.com/okineadev/vitepress-plugin-llms/blob/main/src/vitepress-components/CopyOrDownloadAsMarkdownButtons.vue
 import iconCheck from "@vp/theme/icons/check.svg?raw";
 import iconChevron from "@vp/theme/icons/chevron.svg?raw";
@@ -40,6 +40,7 @@ const labels = reactive({
 });
 
 const dropdownMenu = useTemplateRef("dropdown-menu");
+const buttonsInner = useTemplateRef("markdown-copy-buttons-inner");
 const closeDropdownMenu = () => dropdownMenu.value?.hidePopover?.();
 
 const print = () => window.print();
@@ -71,9 +72,11 @@ const viewAsMarkdown = () => {
 
 const isCopyingMarkdown = ref<false | null | true>(false);
 const copiedMarkdownTimeoutId = ref<number>();
+const copiedMarkdownCloseDropdownTimeoutId = ref<number>();
 const copyAsMarkdown = async () => {
 	if (isCopyingMarkdown.value) return;
 	clearTimeout(copiedMarkdownTimeoutId.value);
+	clearTimeout(copiedMarkdownCloseDropdownTimeoutId.value);
 	isCopyingMarkdown.value = false;
 	const markdown = getMarkdownLink();
 	if (!markdown) return;
@@ -83,8 +86,10 @@ const copyAsMarkdown = async () => {
 	isCopyingMarkdown.value = null;
 	copiedMarkdownTimeoutId.value = setTimeout(() => {
 		isCopyingMarkdown.value = false;
-		closeDropdownMenu();
 	}, 2000);
+	copiedMarkdownCloseDropdownTimeoutId.value = setTimeout(() => {
+		closeDropdownMenu();
+	}, 1500);
 };
 
 const downloadMarkdown = () => {
@@ -107,7 +112,10 @@ const openInAi = (provider: string) => {
 		Claude: "https://claude.ai/new?q=",
 	} as const;
 	if (!markdown || !(provider in defaultAiProviders)) return;
-	const prompt = `Read from ${markdown} so I can ask questions about it.`;
+	const prompt = t({
+		en: `Read from ${markdown} so I can ask questions about it.`,
+		zh: `请阅读 ${markdown} ，以便我可以提出相关问题。`,
+	});
 	window.open(defaultAiProviders[provider] + encodeURIComponent(prompt), "_blank");
 };
 
@@ -131,15 +139,23 @@ const speak = () => {
 	const voices = speechSynthesis.getVoices();
 	const locale = new Intl.Locale(document.documentElement.lang).maximize();
 	const getLocale = (lang: string) => new Intl.Locale(lang).maximize();
-	const availableVoices = voices.filter(({ lang }) => getLocale(lang).language === locale.language);
 	const preferredVoice =
 		voices.find(({ lang, localService }) => getLocale(lang).toString() === locale.toString() && !localService) ??
 		voices.find(({ lang, localService }) => getLocale(lang).language === locale.language && !localService) ??
 		voices.find(({ lang, localService }) => getLocale(lang).toString() === locale.toString()) ??
 		voices.find(({ lang, localService }) => getLocale(lang).language === locale.language);
 	if (preferredVoice) utterance.voice = preferredVoice;
+	// 本来想用随机语音，但容易随机到会失败的语音，建议还是用首选语音了。
+	// let preferredVoices = voices.filter(({ lang, localService }) => getLocale(lang).toString() === locale.toString() && !localService);
+	// if (!preferredVoices.length) preferredVoices = voices.filter(({ lang, localService }) => getLocale(lang).language === locale.language && !localService);
+	// if (!preferredVoices.length) preferredVoices = voices.filter(({ lang }) => getLocale(lang).toString() === locale.toString());
+	// if (!preferredVoices.length) preferredVoices = voices.filter(({ lang }) => getLocale(lang).language === locale.language);
+	// if (preferredVoices.length)
+	// 	utterance.voice = preferredVoices[Math.random() * preferredVoices.length | 0];
+	utterance.onend = () => stopSpeak();
+	utterance.onerror = e => console.error(e);
 	speechSynthesis.speak(utterance);
-	isSpeaking.value = true;
+	buttonsInner.value?.startViewTransition(() => (isSpeaking.value = true));
 };
 const pauseSpeak = () => {
 	if (isSpeaking.value) speechSynthesis.pause();
@@ -148,31 +164,42 @@ const pauseSpeak = () => {
 };
 const stopSpeak = () => {
 	speechSynthesis.cancel();
-	isSpeaking.value = false;
+	buttonsInner.value?.startViewTransition(() => (isSpeaking.value = false));
 };
 </script>
 
-<script lang="ts">
-import { h } from "vue";
+<script lang="tsx">
+import { h, Teleport, defineComponent, useId, type PropType } from "vue";
 
-function InnerButton(_props, { attrs: { icon: _icon, name, ...attrs } }) {
-	const [iconName, icon] = Object.entries(_icon)[0];
-	const id = "--access-article-button-" + iconName.replace(/^icon/i, "").toLowerCase();
-	return h("button", { ...attrs, class: "button", title: name, style: { "--anchor-name": id } }, [
-		h("span", { class: "icon", innerHTML: icon }),
-	]);
-}
+// Polyfill start view transition.
+Node.prototype.startViewTransition ??= fn => { fn?.(); return {}; };
+
+const InnerButton = defineComponent({
+	props: {
+		icon: String,
+		name: String,
+	},
+	setup(props) {
+		const id = useId();
+		return () => (
+			<button type="button" class="button" aria-label={props.name} interestfor={id}>
+				<span class="icon" innerHTML={props.icon}></span>
+				<div role="tooltip" class="tooltip" popover="hint" id={id}>{props.name}</div>
+			</button>
+		);
+	}
+});
 </script>
 
 <template>
 	<div class="markdown-copy-buttons">
 		<div class="markdown-copy-buttons-pretend-content">
-			<div class="markdown-copy-buttons-inner">
-				<InnerButton :name="labels.print" :icon="{ iconPrint }" @click="print()" />
+			<div class="markdown-copy-buttons-inner" ref="markdown-copy-buttons-inner">
+				<InnerButton :name="labels.print" :icon="iconPrint" @click="print()" />
 
 				<!-- Markdown button -->
 				<div class="button-group dropdown-trigger">
-					<InnerButton :name="labels.viewMd" :icon="{ iconMarkdown }" @click="viewAsMarkdown()" />
+					<InnerButton :name="labels.viewMd" :icon="iconMarkdown" @click="viewAsMarkdown()" />
 
 					<span class="divider"></span>
 
@@ -182,27 +209,33 @@ function InnerButton(_props, { attrs: { icon: _icon, name, ...attrs } }) {
 					</button>
 				</div>
 
-				<InnerButton :name="labels.rss" :icon="{ iconRss }" @click="rssFeed()" />
+				<InnerButton :name="labels.rss" :icon="iconRss" @click="rssFeed()" />
 
-				<InnerButton :name="labels.share" :icon="{ iconShare }" @click="share()" />
+				<InnerButton :name="labels.share" :icon="iconShare" @click="share()" />
 
-				<InnerButton v-if="isSpeaking === false" :name="labels.read" :icon="{ iconPlay }" @click="speak()" />
+				<InnerButton
+					v-if="isSpeaking === false"
+					:name="labels.read"
+					:icon="iconPlay"
+					class="speak-button"
+					@click="speak()"
+				/>
 
-				<div v-else class="button-group">
+				<div v-else class="button-group speak-button">
 					<InnerButton
 						:name="isSpeaking ? labels.pauseRead : labels.resumeRead"
-						:icon="{ iconPause: isSpeaking ? iconPause : iconPlay }"
+						:icon="isSpeaking ? iconPause : iconPlay"
 						@click="pauseSpeak()"
 					/>
 					<span class="divider"></span>
-					<InnerButton :name="labels.stopRead" :icon="{ iconStop }" @click="stopSpeak()" />
+					<InnerButton :name="labels.stopRead" :icon="iconStop" @click="stopSpeak()" />
 				</div>
 			</div>
 		</div>
 
 		<!-- Markdown Dropdown -->
 		<div class="dropdown-menu" popover="auto" id="markdown-copy-menu" ref="dropdown-menu">
-			<button class="dropdown-item" @click="copyAsMarkdown()">
+			<button class="dropdown-item" @click="copyAsMarkdown()" :disabled="isCopyingMarkdown">
 				<span
 					v-html="isCopyingMarkdown ? iconEllipsis : isCopyingMarkdown === null ? iconCheck : iconCopy"
 					class="icon"
@@ -223,17 +256,6 @@ function InnerButton(_props, { attrs: { icon: _icon, name, ...attrs } }) {
 				{{ labels.claude }}
 				<span v-html="iconExternal" class="icon external"></span>
 			</button>
-
-			<!-- <button
-						v-for="provider in aiProviders"
-						:key="provider.name"
-						class="dropdown-item"
-						@click="handleOpenInAI(provider)"
-					>
-						<span v-html="resolveProviderIcon(provider)" class="icon"></span>
-						Open in {{ provider.name }}
-						<span v-html="iconExternal" class="icon external"></span>
-					</button> -->
 		</div>
 	</div>
 </template>
@@ -309,7 +331,7 @@ function InnerButton(_props, { attrs: { icon: _icon, name, ...attrs } }) {
 	color: var(--vp-c-text-1);
 	cursor: pointer;
 	white-space: nowrap;
-	anchor-name: var(--anchor-name);
+	interest-delay: 0s normal;
 
 	@media (width >= 768px) {
 		padding: 11px 14px;
@@ -322,6 +344,34 @@ function InnerButton(_props, { attrs: { icon: _icon, name, ...attrs } }) {
 
 	* {
 		flex-shrink: 0;
+	}
+}
+
+.button :deep(.tooltip) {
+	position: fixed;
+	position-area: bottom;
+	position-try-fallbacks: flip-block;
+	z-index: var(--vp-z-index-layout-top);
+	color: var(--vp-c-text-1);
+	border: 1px solid var(--vp-c-divider);
+	border-radius: 6px;
+	background: var(--vp-c-bg-soft);
+	margin-block: 5px;
+	padding: 3px 8px;
+	transition: margin, opacity, display, overlay;
+	transition-behavior: allow-discrete;
+	transition-duration: 250ms;
+	pointer-events: none;
+	box-shadow: var(--vp-shadow-3);
+
+	@starting-style {
+		opacity: 0;
+		margin: 0;
+	}
+
+	&:not(:popover-open) {
+		opacity: 0;
+		margin: 0;
 	}
 }
 
@@ -431,7 +481,8 @@ function InnerButton(_props, { attrs: { icon: _icon, name, ...attrs } }) {
 		transition:
 			opacity cubic-bezier(0.4, 0, 0.2, 1),
 			transform cubic-bezier(0.4, 0, 0.2, 1),
-			display;
+			display,
+			overlay;
 		transition-duration: 0.18s;
 		transition-behavior: allow-discrete;
 		transform-origin: top;
@@ -495,6 +546,16 @@ function InnerButton(_props, { attrs: { icon: _icon, name, ...attrs } }) {
 
 	.divider {
 		transition: opacity 250ms;
+	}
+
+	.speak-button {
+		view-transition-name: speak-button;
+	}
+
+	:global(::view-transition-old(speak-button)),
+	:global(::view-transition-new(speak-button)) {
+		width: 100%;
+		height: 100%;
 	}
 }
 </style>

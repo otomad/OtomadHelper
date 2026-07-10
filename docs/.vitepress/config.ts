@@ -18,6 +18,7 @@ import hostname from "./plugins/hostname";
 import { createRssFeeds } from "./plugins/rss-feed";
 import { getRssFeedLink } from "./plugins/rss-feed_get-link";
 import llmsTransform from "./plugins/llms-transform";
+import vueJsx from "@vitejs/plugin-vue-jsx";
 
 const base = process.env.READTHEDOCS_CANONICAL_URL
 	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
@@ -48,6 +49,7 @@ export default defineConfig({
 	},
 	vite: {
 		plugins: [
+			vueJsx(),
 			ImagePreviewPlugin({ hideOnClickModal: true }),
 			back2topPlugin(),
 			pagefindPlugin({
