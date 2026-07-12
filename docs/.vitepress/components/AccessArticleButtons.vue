@@ -16,7 +16,7 @@ import iconEllipsis from "@vp/theme/icons/ellipsis.svg?raw";
 
 import { useData } from "vitepress";
 import icon from "@vp/theme/icons/print.svg?raw";
-import useI18n from "@vp/use-i18n";
+import { useI18n } from "@vp/use-i18n";
 import { computed, reactive, onMounted, ref, useTemplateRef } from "vue";
 import { getRssFeedLink } from "@vp/plugins/rss-feed_get-link";
 const t = useI18n();

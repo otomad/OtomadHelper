@@ -1,10 +1,11 @@
 import type { LlmsConfig } from "vitepress-plugin-llmstxt";
 import { parseI18nMacro } from "./markdown-it/i18n-macro";
-import { createContentLoader, type DefaultTheme, type LocaleConfig as _LocaleConfig } from "vitepress";
+import type { DefaultTheme, LocaleConfig as _LocaleConfig } from "vitepress";
 import { join } from "path/posix";
+import { useI18nThemeConfig } from "../use-i18n";
 
 type LocaleConfig = _LocaleConfig<DefaultTheme.Config> &
-	Record<string, { themeConfig: { tableOfContentsLabel: string } }>;
+	Record<string, { themeConfig: {} }>;
 
 let nonRootLanguages: string[] | undefined;
 
@@ -18,12 +19,12 @@ const llmsTransform: LlmsConfig["transform"] = async ({ page, vpConfig }) => {
 		const { title: neutralTitle, description: neutralDescription } = vpConfig!.userConfig;
 		const document: string[] = [];
 		Object.values(vpConfig!.userConfig.locales as LocaleConfig).forEach(
-			({ label, lang, title, description, themeConfig: { nav, sidebar, tableOfContentsLabel } }, i) => {
+			({ label, lang, title, description, themeConfig: { nav, sidebar } }, i) => {
 				if (i > 0) document.push(`----`);
 				document.push(`<main lang="${lang}">`);
 				title ||= neutralTitle;
 				description ||= neutralDescription;
-				tableOfContentsLabel ||= "Table of Contents";
+				const { tableOfContentsLabel } = useI18nThemeConfig(lang!).llmsTxt;
 				document.push(`> ${label}`);
 				if (title) document.push(`# ${title}`);
 				if (description) document.push(description);

@@ -573,12 +573,12 @@
 @zh - ☑️ **允许设置原始音高。**
 @en - ☑️ **Can export loop region only.**
 @zh - ☑️ **可以仅导出循环区域。**
-@en - ☑️ **Adjust events gain (Audio: Volume; Video: Opacity.) <sup>[1](#footnote-1)</sup>**
-@zh - ☑️ **调整事件增益（音频：音量；视频：不透明度。）<sup>[1](#footnote-1)</sup>**
-@en - ☑️ **Adjust tracks volume for audio tracks or opacity/composite level for video tracks. <sup>[1](#footnote-1)</sup>**
-@zh - ☑️ **调整音频轨道的轨道音量或视频轨道的不透明度/合成级别。<sup>[1](#footnote-1)</sup>**
-@en - ☑️ **Adjust audio tracks pan. <sup>[1](#footnote-1)</sup>**
-@zh - ☑️ **调整音频轨道的声像。<sup>[1](#footnote-1)</sup>**
+@en - ☑️ **Adjust events gain (Audio: Volume; Video: Opacity.)** [^1]
+@zh - ☑️ **调整事件增益（音频：音量；视频：不透明度。）**[^1]
+@en - ☑️ **Adjust tracks volume for audio tracks or opacity/composite level for video tracks.** [^1]
+@zh - ☑️ **调整音频轨道的轨道音量或视频轨道的不透明度/合成级别。**[^1]
+@en - ☑️ **Adjust audio tracks pan.** [^1]
+@zh - ☑️ **调整音频轨道的声像。**[^1]
 @en - ❎ **Use video tracks and events.**
 @zh - ❎ **使用视频轨道和事件。**
 @en - ❎ **Using the "Pitch Shift" Audio FX instead of tuning with [[+]] and [[-]] key.**
@@ -592,8 +592,8 @@
 @zh > **❎ - 不建议 - _这将生成全部具有原始音高的音符。_**
 :::
 
-@en > 1. These all support envelopes / automation control. {#footnote-1}
-@zh > 1. 这些都支持包络/自动化控制。 {#footnote-1}
+@en [^1]: These all support envelopes / automation control.
+@zh [^1]: 这些都支持包络/自动化控制。
 
 @en **Settings**
 @zh **设置**

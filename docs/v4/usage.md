@@ -78,15 +78,15 @@
    :::
 @en 9. Click Generate.
 @zh 9. 点击生成。
-@en 10. Repeat the process until you have all your visuals. <sup>[1](#footnote-1)</sup>
-@zh 10. 重复这个过程，直到你拥有了全部的画面。 <sup>[1](#footnote-1)</sup>
+@en 10. Repeat the process until you have all your visuals. [^1]
+@zh 10. 重复这个过程，直到你拥有了全部的画面。 [^1]
 @en 11. Done!
 @zh 11. 完成！
 
 </div>
 
-@en > 1. **You can also select multiple tracks in the score section to generate at the same time.** {#footnote-1}
-@zh > 1. **你还可以在乐曲部分同时选择多个音轨生成。** {#footnote-1}
+@en [^1]: **You can also select multiple tracks in the score section to generate at the same time.**
+@zh [^1]: **你还可以在乐曲部分同时选择多个音轨生成。**
 
 @en ## There is now a feature where you can load the last configuration used instantly.
 @zh ## 现在有一个功能，你可以立即加载上次使用的配置。

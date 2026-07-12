@@ -2,7 +2,7 @@
 import { VPTeamPage, VPTeamPageTitle, VPFeatures } from "vitepress/theme-without-fonts";
 import { useData } from "vitepress";
 import { reactive } from "vue";
-import useI18n from "@vp/use-i18n";
+import { useI18n } from "@vp/use-i18n";
 const t = useI18n();
 
 const img = (src: string) => ({

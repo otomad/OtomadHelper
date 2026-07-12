@@ -19,7 +19,7 @@ watch(
 <script setup lang="ts">
 import VPSwitch from "./Switch.vue";
 import Slider from "./Slider.vue";
-import useI18n from "@vp/use-i18n";
+import { useI18n } from "@vp/use-i18n";
 
 const t = useI18n();
 const id = useId();

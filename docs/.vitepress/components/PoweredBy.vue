@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { VPTeamPage, VPTeamPageTitle, VPLink } from "vitepress/theme-without-fonts";
 import { useData } from "vitepress";
-import useI18n from "@vp/use-i18n";
+import { useI18n } from "@vp/use-i18n";
 import { reactive } from "vue";
 const t = useI18n();
 const title = t({ en: "The Documentation is Powered By", zh: "文档搭载于" });

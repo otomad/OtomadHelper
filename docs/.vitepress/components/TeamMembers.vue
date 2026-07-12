@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VPTeamPage, VPTeamPageTitle, VPTeamMembers, VPTeamPageSection } from "vitepress/theme-without-fonts";
-import useI18n from "@vp/use-i18n";
+import { useI18n } from "@vp/use-i18n";
 const t = useI18n();
 
 const coreMembers = [

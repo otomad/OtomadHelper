@@ -959,3 +959,20 @@ summary {
 		border-right-width: 0;
 	}
 }
+
+/**
+ * Component: Footnotes
+ */
+.vp-doc {
+	.footnotes-heading {
+		border-block-start: 1px solid var(--vp-c-divider);
+		padding-block-start: 24px;
+		margin-block: 4rem -4px;
+		font-size: medium;
+		line-height: 1em;
+	}
+
+	.footnotes {
+		font-size: small;
+	}
+}
