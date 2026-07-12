@@ -19,6 +19,7 @@ export function compileTypeScript(source: string, target: keyof typeof ts.Script
 		compilerOptions: {
 			module: ts.ModuleKind.ESNext,
 			target: ts.ScriptTarget[target],
+			alwaysStrict: false, // Prevent auto prepending "use strict" to code which will cause to crash.
 		},
 	}).outputText;
 }

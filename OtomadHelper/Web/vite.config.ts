@@ -213,7 +213,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 		},
 		assetsInclude: [
 			"**/*.ani",
-			// "**/*.mid", // Rolldown vite require this or crush at build, might be a bug.
+			// "**/*.mid", // Rolldown vite require this or crash at build, might be a bug.
 		],
 		define: {
 			// SC_DISABLE_SPEEDY: false, // Enable to speed up styled component, but make debugging more difficult.

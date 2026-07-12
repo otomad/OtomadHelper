@@ -1,4 +1,5 @@
 /* eslint-disable jsdoc/require-returns */
+import { easingGradient } from "./easing-gradients";
 import { type BorderRadiusPosition, setBorderRadius } from "./internal";
 
 type ResponsiveUnit = "v" | "dv" | "lv" | "sv" | "cq";
@@ -193,12 +194,11 @@ export default {
 	 */
 	overflowGradient: (axis: "x" | "y", scrollMaskThickness: "1em" | "1.25lh" | string & {}, staticEffect: boolean = false) => css`
 		--scroll-mask-thickness: ${scrollMaskThickness};
-		mask: linear-gradient(
-			to ${axis === "x" ? "right" : "bottom"},
-			rgb(0 0 0 / var(--scroll-start-mask-transparency)) 0%,
-			black var(--scroll-mask-thickness) calc(100% - var(--scroll-mask-thickness)),
-			rgb(0 0 0 / var(--scroll-end-mask-transparency)) 100%
-		);
+		mask: ${easingGradient("linear", `to ${axis === "x" ? "right" : "bottom"}`, [
+			["rgb(0 0 0 / var(--scroll-start-mask-transparency))", "0%", eases.easeOutSine],
+			["black", ["var(--scroll-mask-thickness)", "calc(100% - var(--scroll-mask-thickness))"], eases.easeInSine],
+			["rgb(0 0 0 / var(--scroll-end-mask-transparency))", "100%"],
+		])};
 
 		${staticEffect ? css`
 			--scroll-start-mask-transparency: 0;

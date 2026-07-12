@@ -9,7 +9,7 @@ export default {
 			0 0 0 var(--focus-ring-length-inner) ${c("stroke-color-focus-stroke-inner")} ${inset && "inset"},
 			0 0 0 var(--focus-ring-length-outer) ${c("stroke-color-focus-stroke-outer")} ${inset && "inset"}
 			${important && "!important"};
-		transition: ${fallbackTransitions}, ${focusRingTransitions};
+		transition: ${fallbackTransitions}, ${focusRingTransitions}, right 0s;
 	`,
 	focusRingTransitions,
 	flyout: css`
@@ -36,7 +36,7 @@ export default {
 	textAlignCenterCjk: css`
 		text-align: center;
 		text-align-last: center;
-		
+
 		&:is(:lang(zh), :lang(ja), :lang(ko), :lang(th), :lang(lo), :lang(km), :lang(my)) {
 			text-align: justify;
 		}
