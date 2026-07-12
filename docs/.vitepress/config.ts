@@ -21,6 +21,7 @@ import llmsTransform from "./plugins/llms-transform";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import footnotePlugin from "./plugins/markdown-it/footnote";
 import { useI18nThemeConfig } from "./use-i18n";
+import smartypantsPlugin from "./plugins/markdown-it/smartypants";
 
 const base = process.env.READTHEDOCS_CANONICAL_URL
 	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
@@ -47,6 +48,7 @@ export default defineConfig({
 			md.use(katex, { output: "mathml" });
 			md.use(fixCodeCopyI18n);
 			md.use(footnotePlugin);
+			md.use(smartypantsPlugin);
 		},
 		attrs: {},
 	},
