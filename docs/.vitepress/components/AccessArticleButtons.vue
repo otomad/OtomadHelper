@@ -170,9 +170,10 @@ const stopSpeak = () => {
 
 <script lang="tsx">
 import { h, Teleport, defineComponent, useId, type PropType } from "vue";
+import { inBrowser } from "vitepress";
 
 // Polyfill start view transition.
-Node.prototype.startViewTransition ??= fn => { fn?.(); return {}; };
+if (inBrowser) Node.prototype.startViewTransition ??= fn => { fn?.(); return {}; };
 
 const InnerButton = defineComponent({
 	props: {
