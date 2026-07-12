@@ -10,7 +10,6 @@
 	"dependencies": {
 		"@mdit/plugin-katex": "^0.25.2",
 		"@vitejs/plugin-vue-jsx": "^5.1.6",
-		"esbuild": "^0.28.1",
 		"feed": "^6.0.0",
 		"linkedom": "^0.18.13",
 		"markdown-it-container": "^4.0.0",

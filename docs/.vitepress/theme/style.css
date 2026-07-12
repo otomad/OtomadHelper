@@ -421,6 +421,11 @@ readthedocs-flyout {
 	--readthedocs-flyout-divider-color: var(--vp-c-divider);
 	--readthedocs-flyout-link-color: var(--vp-c-brand-1);
 	--readthedocs-flyout-line-height: 1.5em;
+	--color-scheme: light;
+
+	html.dark {
+		--color-scheme: dark;
+	}
 }
 
 /**

@@ -98,7 +98,14 @@ label {
 	}
 }
 
-@container style(--outline-depth < 6) {
+/*
+ * 原计划直接写 `@container style(--outline-depth < 6)` 等，但截至目前（2026年）只有 Chromium，而且 LightningCSS 编译时还会报错。参见：
+ * https://caniuse.com/wf-style-query-range-syntax
+ * https://github.com/parcel-bundler/lightningcss/issues/1069
+ */
+
+/* @container style(--outline-depth < 6) { */
+@container style(--outline-depth: 2) or style(--outline-depth: 3) or style(--outline-depth: 4) or style(--outline-depth: 5) {
 	.VPDocOutlineItem.root > li > ul > li > ul > li > ul > li > ul {
 		visibility: collapse;
 		block-size: 0;
@@ -109,7 +116,8 @@ label {
 		anchor-name: --outline-link-active;
 	}
 }
-@container style(--outline-depth < 5) {
+/* @container style(--outline-depth < 5) { */
+@container style(--outline-depth: 2) or style(--outline-depth: 3) or style(--outline-depth: 4) {
 	.VPDocOutlineItem.root > li > ul > li > ul > li > ul {
 		visibility: collapse;
 		block-size: 0;
@@ -120,7 +128,8 @@ label {
 		anchor-name: --outline-link-active;
 	}
 }
-@container style(--outline-depth < 4) {
+/* @container style(--outline-depth < 4) { */
+@container style(--outline-depth: 2) or style(--outline-depth: 3) {
 	.VPDocOutlineItem.root > li > ul > li > ul {
 		visibility: collapse;
 		block-size: 0;
@@ -131,7 +140,8 @@ label {
 		anchor-name: --outline-link-active;
 	}
 }
-@container style(--outline-depth < 3) {
+/* @container style(--outline-depth < 3) { */
+@container style(--outline-depth: 2) {
 	.VPDocOutlineItem.root > li > ul {
 		visibility: collapse;
 		block-size: 0;

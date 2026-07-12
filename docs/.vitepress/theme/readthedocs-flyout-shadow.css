@@ -10,8 +10,10 @@
 	--readthedocs-flyout-background-color: rgb(from var(--vp-c-bg-soft) r g b / 60%);
 }
 
-:host-context(html:not(.dark)) img.logo {
-	filter: invert(1);
+@container style(--color-scheme: light) {
+	img.logo {
+		filter: invert(1);
+	}
 }
 
 .caret svg.icon {

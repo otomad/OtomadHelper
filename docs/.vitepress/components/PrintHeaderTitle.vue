@@ -20,10 +20,4 @@ const { page } = useData();
 		display: block;
 	}
 }
-
-@page :first {
-	.print-header-title {
-		display: none;
-	}
-}
 </style>
