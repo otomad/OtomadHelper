@@ -141,6 +141,7 @@ export default defineConfig({
 			label: "English",
 			lang: "en-US",
 			themeConfig: {
+				["tableOfContentsLabel" as never]: "Table of Contents", // Used for llms.txt plugin.
 				footer: {
 					message: "Released under the GPL 3.0 License",
 					copyright: "Copyright © 2021–present",
@@ -169,6 +170,7 @@ export default defineConfig({
 				lastUpdated: { text: "最后更新于" },
 				sidebarMenuLabel: "菜单",
 				returnToTopLabel: "回到顶部",
+				["tableOfContentsLabel" as never]: "目录",
 				footer: {
 					message: "基于 GPL 3.0 许可发布",
 					copyright: "版权所有 © 2021~至今 兰音",
