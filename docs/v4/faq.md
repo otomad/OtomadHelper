@@ -68,7 +68,7 @@
 :::
 
 @en ::: details ### Could not load file or assembly "NAudio" / Operation is not supported.
-@zh ::: details ### 无法加载文件或程序集“NAudio” / 操作不支持。
+@zh ::: details ### 无法加载文件或程序集 “NAudio” / 操作不支持。
 @en Make sure you have unblocked the NAudio DLLs. Go to the `dll` Folder, right-click the `dll`, go to properties. if you see it says it's blocked, unblock it.
 @zh 请确保已解锁 `NAudio` 的DLL。转到 `dll` 文件夹，右键单击 `dll`，选择属性。如果你看到它说它被锁定了，就请解除锁定它。
 :::
@@ -120,8 +120,8 @@ at ScriptPortal.Vegas.Fade.set_Gain(Single value)
 @en ## Installation Related
 @zh ## 安装相关
 
-@en ::: details ### A new expression requires () or [] after type
-@zh ::: details ### new 表达式要求在类型后有 () 或 []
+@en ::: details ### A `new` expression requires `()` or `[]` after type
+@zh ::: details ### `new` 表达式要求在类型后有 `()` 或 `[]`
 @en **Error Type:** The Vegas version is too old, like a problem with Vegas 12.
 @zh **错误类型：**Vegas版本过旧，例如Vegas 12出现的问题。
 
@@ -156,18 +156,28 @@ public Dictionary<string, int> pitchMap = new Dictionary<string, int> {
 };
 ```
 
-@en Notice that there are no parentheses after code `new Dictionary<string, int>`. The standard syntax should be `new Dictionary<string, int>()`. The syntax feature that allows the omission of parentheses `()` for no-argument constructors in object creation expressions with collection initializers is supported starting from **C# 3.0** and **.NET Framework 3.5**.
-@zh 注意到代码 `new Dictionary<string, int>` 处没有加括号，标准的写法应该是 `new Dictionary<string, int>()`。而在带有集合初始化器的对象创建表达式中，允许省略无参构造函数的括号 `()` 这一语法特性，是从 **C# 3.0** 和 **.NET Framework 3.5** 开始支持的。
+@en Notice that there are no parentheses after code:
+@zh 注意到代码
+```CSharp
+new Dictionary<string, int>
+```
+@en The standard syntax should be:
+@zh 处没有加括号，标准的写法应该是：
+```CSharp
+new Dictionary<string, int>()
+```
+@en The syntax feature that allows the omission of parentheses `()` for no-argument constructors in object creation expressions with collection initializers is supported starting from **C# 3.0** and **.NET Framework 3.5**.
+@zh 而在带有集合初始化器的对象创建表达式中，允许省略无参构造函数的括号 `()` 这一语法特性，是从 **C# 3.0** 和 **.NET Framework 3.5** 开始支持的。
 
 @en When Microsoft introduced *LINQ*, it also introduced the "Object and Collection Initializers" syntax. It is clearly stated in the language specification of C# 3.0: **When using an initializer (braces `{}`), if a parameterless constructor is called, the parentheses `()` after the type name can be omitted.**
-@zh 微软在引入LINQ的同时推出了“对象和集合初始化器”（Object and Collection Initializers）语法。在 C# 3.0 的语言规范中明确规定：**当使用初始化器（大括号 `{}`）时，如果调用的是无参数构造函数，则类型名后面的圆括号 `()` 是可以省略的。**
+@zh 微软在引入*LINQ*的同时推出了“对象和集合初始化器”（Object and Collection Initializers）语法。在 C# 3.0 的语言规范中明确规定：**当使用初始化器（大括号 `{}`）时，如果调用的是无参数构造函数，则类型名后面的圆括号 `()` 是可以省略的。**
 
 @en This is enough to show that Vegas Pro 12 should use C# 1.0/2.0 and .NET Framework 1.0/2.0 as the scripting framework.
 @zh 这足以说明Vegas Pro 12应该采用了C# 1.0/2.0和.NET Framework 1.0/2.0作为脚本框架。
 :::
 
 @en ::: details ### The type or namespace name "Sony" does not exist
-@zh ::: details ### 未能找到类型或命名空间名称“Sony”
+@zh ::: details ### 未能找到类型或命名空间名称 “Sony”
 @en **Error Type:** Vegas version does not match.
 @zh **错误类型：**Vegas版本不符，版本不符的报错。
 
@@ -191,7 +201,7 @@ public Dictionary<string, int> pitchMap = new Dictionary<string, int> {
 :::
 
 @en ::: details ### Cannot find metadata file "NAudio.dll"
-@zh ::: details ### 未能找到元数据文件“NAudio.dll”
+@zh ::: details ### 未能找到元数据文件 “NAudio.dll”
 @en **Error Type:** Cannot find `NAudio.dll`.
 @zh **错误类型：**找不到 `NAudio.dll`，找不到DLL的报错。
 
@@ -388,18 +398,18 @@ System.ArgumentException: Media stream not specified.
 
 @en ::: details ### Replace Track Events Separately Explanation {.italic-list}
 @zh ::: details ### 替换轨道剪辑 - 分别指定 解释 {.italic-list}
-@en 1. Select a clip that you want to use as the replacement and set it as the replacement…
-@zh 1. 选择要用作替换的剪辑，并将其设置为替换项⋯⋯
-@en 2. Click the top "Back to Vegas"…
-@zh 2. 点击顶部“返回Vegas”⋯⋯
-@en 3. Select the Clips you want to replace…
-@zh 3. 选择要被替换的剪辑⋯⋯
-@en 4. Run the Script Again…
-@zh 4. 再次运行脚本⋯⋯
-@en 5. Set the Replaced Selected…
-@zh 5. 设置被替换项为所选内容⋯⋯
-@en 6. Click Replace…
-@zh 6. 单击“替换”⋯⋯
+@en 1. Select a clip that you want to use as the replacement and set it as the replacement...
+@zh 1. 选择要用作替换的剪辑，并将其设置为替换项……
+@en 2. Click the top "Back to Vegas"...
+@zh 2. 点击顶部“返回Vegas”……
+@en 3. Select the Clips you want to replace...
+@zh 3. 选择要被替换的剪辑……
+@en 4. Run the Script Again...
+@zh 4. 再次运行脚本……
+@en 5. Set the Replaced Selected...
+@zh 5. 设置被替换项为所选内容……
+@en 6. Click Replace...
+@zh 6. 单击“替换”……
 
 @en This will replace the clips with what you selected for the replacement.
 @zh 这将用你选择的替换片段进行替换。

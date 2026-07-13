@@ -104,7 +104,7 @@
 @zh   * 渲染生成图层后所选剪辑。
 
 @en This does multilayering, by copying the select video clip/event N times, each time offsetting the clip by M frames. N is the `Layer count`, M is the `Layering offset`. You can also choose to automatically render the multilayered clip by checking the `Render` hitbox, otherwise the copies clips will simply be added to the timeline.
-@zh 这将通过复制所选视频剪辑/事件N次来执行*layering*，每次将剪辑偏移M帧。N是`层数`，M是`层叠偏移`。你还可以通过选中`“预渲染”`复选框来选择自动渲染*layering*剪辑，否则复制的剪辑只会添加到时间轴上。
+@zh 这将通过复制所选视频剪辑/事件N次来执行*layering*，每次将剪辑偏移M帧。N是`层数`，M是`层叠偏移`。你还可以通过选中`预渲染`复选框来选择自动渲染*layering*剪辑，否则复制的剪辑只会添加到时间轴上。
 
 @en To use, select a single video clip/event, then it will be multilayered automatically, and rendered transparently if specified.
 @zh 使用时，请选择单个视频剪辑/事件，然后它将自动多层叠化，并在指定的情况下进行透明渲染。
@@ -118,8 +118,8 @@
 @en ### Render
 @zh ### 预渲染化
 
-@en _Renders the clip within a timeline selection… (Yes that's literally it.)_
-@zh _在时间轴选区内渲染剪辑⋯⋯（是的，就只是这样。）_
+@en _Renders the clip within a timeline selection... (Yes that's literally it.)_
+@zh _在时间轴选区内渲染剪辑……（是的，就只是这样。）_
 
 @en This simply renders a part of the timeline and places it into the timeline in a single click.
 @zh 简便地渲染时间轴的一部分，并一键将其放入时间轴中。
