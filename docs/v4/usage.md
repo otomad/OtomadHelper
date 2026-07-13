@@ -7,7 +7,7 @@
 @en * You will need a **[Vegas Pro](https://www.vegascreativesoftware.com/vegas-pro/) (13+)**;
 @zh * 你需要一个**[Vegas Pro](https://www.vegascreativesoftware.com/vegas-pro/) (13+)**；
   ::: warning
-@en   *[If you have ANY other editor that you use for remixes](https://github.com/users/otomad/projects/2), you’re out of luck.*
+@en   *[If you have ANY other editor that you use for remixes](https://github.com/users/otomad/projects/2), you're out of luck.*
 @zh   *[如果你有任何其它用于剪辑的编辑器](https://github.com/users/otomad/projects/2)，那么你就不那么走运了。*
   :::
 @en * **You will need the [Otomad Helper](https://github.com/otomad/OtomadHelper/releases/latest) Script**;
@@ -15,10 +15,10 @@
 @en * You will need **[FL Studio](https://www.image-line.com/)** *(or any other DAW, that you use for remixes)*.
 @zh * 你需要**[FL Studio](https://www.image-line.com/)***（或用于混音的任何其它DAW）*。
 
-@en ## Using Otomad Helper is pretty straightforward from here.<br>Here’s how to use it.
+@en ## Using Otomad Helper is pretty straightforward from here.<br>Here's how to use it.
 @zh ## 从这里开始，使用Otomad Helper非常简单。以下是使用方法。
 
-@en - You *import and use a [MIDI](./score.md) file to configure and generate the clips you want*. You should use a MIDI which **created by yourself** and not someone else. It’s discourteous. Don’t create YTPMIDIs or any form of remix you didn’t create.
+@en - You *import and use a [MIDI](./score.md) file to configure and generate the clips you want*. You should use a MIDI which **created by yourself** and not someone else. It's discourteous. Don't create YTPMIDIs or any form of remix you didn't create.
 @zh - 你可以*导入并使用[MIDI](./score.md)文件来配置和生成所需的剪辑*。你应该使用**你自己创建的**MIDI，而不是其他人的。这太不礼貌了。不要做音MIDI或者不是你创造的任何形式的混音。
 @en - You need to *have a clip **selected** in the **timeline** or **media pool*** in order to generate anything from the MIDI onto Vegas Pro.
 @zh - 你需要*在**时间轴**或**媒体柜**中**挑取**一段剪辑*，以便在Vegas Pro中生成MIDI中的任何内容。
@@ -51,7 +51,7 @@
 @en 3. Go to [[File > Export > MIDI File]].
 @zh 3. 转到 [[文件 > 导出 > MIDI文件]]。
    ::: important
-@en    It’s also important to name your tracks accordingly.
+@en    It's also important to name your tracks accordingly.
 @zh    相应地命名你的音轨也很重要。
    :::
 @en 4. Export (Start Render).
@@ -59,7 +59,7 @@
 @en 5. Go into Vegas.
 @zh 5. 切换到Vegas。
    ::: important
-@en    Before running the script, please select the clip you’re going to generate visuals from first.
+@en    Before running the script, please select the clip you're going to generate visuals from first.
 @zh    在运行脚本之前，请先选择要从中生成画面的剪辑。
    :::
 @en 6. Run the Otomad Helper by going to [[Tools > Scripting > Otomad Helper]].
@@ -69,9 +69,9 @@
 @en 8. Select the Track that corresponds to the visual
 @zh 8. 选择与画面相对应的音轨。
    ::: tip
-@en    * Whatever your sample was, select what matches the clip’s sample.
+@en    * Whatever your sample was, select what matches the clip's sample.
 @zh    * 无论你的采样是什么，选择与剪辑采样相匹配的采样。
-@en    * [Turn off Audio if you don’t want audio in your generation.](./audio.md)
+@en    * [Turn off Audio if you don't want audio in your generation.](./audio.md)
 @zh    * [如果你不希望生成音频，请关闭音频。](./audio.md)
 @en    * [You can customize your visuals in Visual Settings.](./visual.md)
 @zh    * [你可以在画面设置中自定义你的画面。](./visual.md)

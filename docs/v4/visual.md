@@ -122,7 +122,7 @@
 @en ### Legato
 @zh ### 填补间隙
 
-@en _Extends the clip beyond the note’s duration._
+@en _Extends the clip beyond the note's duration._
 @zh _将剪辑延长到音符持续时间之外。_
 
 @en - **Staccato**
@@ -313,7 +313,7 @@
 @zh ### 发光
 @en #### Glow
 @zh #### 发光
-@en _Value of the “Glow” Effect that adds a glow to your visual!_
+@en _Value of the "Glow" Effect that adds a glow to your visual!_
 @zh _“发光”效果的值可为你的画面增添光彩！_
 @en #### Glow Brightness
 @zh #### 发光亮度
@@ -429,7 +429,7 @@
 @en _Value of the Starting Contrast Threshold._
 @zh _起始对比度阈值的值。_
 ::: important
-@en *This makes the contrast’s depth higher or lower.*
+@en *This makes the contrast's depth higher or lower.*
 @zh *这使得对比度的深度更高或更低。*
 :::
 @en #### End Threshold
@@ -437,6 +437,6 @@
 @en _Value of the Ending Contrast Threshold._
 @zh _终止对比度阈值的值。_
 ::: important
-@en *This makes the contrast’s depth higher or lower.*
+@en *This makes the contrast's depth higher or lower.*
 @zh *这使得对比度的深度更高或更低。*
 :::

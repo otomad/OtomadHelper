@@ -1,7 +1,7 @@
 @en # Tools
 @zh # 工具
 
-@en ***These QoL Functions within the script make creating YTPMVs and otoMADs a little less painful for setting up or working with. These don’t require any adjustments to any of the previous parameters.***
+@en ***These QoL Functions within the script make creating YTPMVs and otoMADs a little less painful for setting up or working with. These don't require any adjustments to any of the previous parameters.***
 @zh ***脚本中的这些效率工具可略微简化音MAD的创作流程及相关设置，且无需对原先参数进行任何调整。***
 
 @en * **Close this dialog after the operation completes**
@@ -75,7 +75,7 @@
     :::
 @en * **Contain**
 @zh * **遮幅**
-@en   * Keep the boxes’ original size and adapt them to the layout.
+@en   * Keep the boxes' original size and adapt them to the layout.
 @zh   * 保持盒子的原始尺寸并使其适应布局。
 @en * **Overlay**
 @zh * **叠加**
@@ -203,7 +203,7 @@
 @zh   * 将每个轨道上的所有剪辑堆叠在一起。
 @en * **Stretch Clips (within stretch limits)**
 @zh * **拉伸剪辑（限制在拉伸极限范围之内）**
-@en   * Stretch Clips without Extending the clips’ length.
+@en   * Stretch Clips without Extending the clips' length.
 @zh   * 拉伸剪辑而不延长剪辑的长度。
 @en * **Stretch Clips (lengthen when outside stretch limit)**
 @zh * **拉伸剪辑（超出拉伸极限范围之后再延长剪辑）**
@@ -364,7 +364,7 @@
 @zh * *所选轨道事件可以替换为你在选择结束时所选的任何内容，你可以从另一个轨道中选择一个剪辑并将其用作替换，并且你之前设置的所有轨道剪辑都将被该剪辑替换。*
 
 ::: important
-@en *It’s recommended not to put the replacement clip in the same track.*
+@en *It's recommended not to put the replacement clip in the same track.*
 @zh *建议不要将替换剪辑放在同一轨道中。*
 :::
 
@@ -386,7 +386,7 @@
 @en   * Replaces Other Clips from the Same Track Event Group.
 @zh   * 替换同一轨道事件组中的其它剪辑。
     ::: important
-@en     *Doesn’t apply if the clip is not in a group.*
+@en     *Doesn't apply if the clip is not in a group.*
 @zh     *若剪辑不在组中则不应用。*
     :::
 @en * **Reserve original clip name**
@@ -407,7 +407,7 @@
 @en ![Change Tuning Method](/img/v4/tools/change_tuning_method.png){.shadow-less}
 @zh ![更改调音算法](/img/v4/tools/change_tuning_method_zh-CN.png){.shadow-less}
 
-@en *Refer to [“Audio”](./audio.md#tuning) on details about the Audio Tuning Methods*
+@en *Refer to ["Audio"](./audio.md#tuning) on details about the Audio Tuning Methods*
 @zh *有关音频调音方法的详细信息，请参阅[“音频”](./audio.md#调音)部分。*
 
 @en ### Pitch Semitones
@@ -508,7 +508,7 @@
 @en ![Apply Visual Effect](/img/v4/tools/apply_visual_effect.png){.shadow-less}
 @zh ![应用视觉效果](/img/v4/tools/apply_visual_effect_zh-CN.png){.shadow-less}
 
-@en *Refer to [“Visual”](./visual.md#effects) for details on the Visual effects you can use.*
+@en *Refer to ["Visual"](./visual.md#effects) for details on the Visual effects you can use.*
 @zh *有关你可以使用的视觉效果的详细信息，请参阅[“画面”](./visual.md#效果)部分。*
 
 @en ## Convert Music Beats

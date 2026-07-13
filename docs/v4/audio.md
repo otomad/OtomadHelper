@@ -119,7 +119,7 @@
 @en ### Legato
 @zh ### 填补间隙
 
-@en _Extends the audio outside the note’s length with any length chosen._
+@en _Extends the audio outside the note's length with any length chosen._
 @zh _以特定的长度将音频延伸到音符长度之外。_
 
 @en - **Staccato**
@@ -209,7 +209,7 @@
 @zh   * 无变调效果。
 @en * **Pitch Shift Audio Effect**
 @zh * **移调音效插件**
-@en   * Uses the “Pitch Shift” Plugin (default for Vegas 13–15).
+@en   * Uses the "Pitch Shift" Plugin (default for Vegas 13–15).
 @zh   * 使用“移调”插件（Vegas 13~15的默认值）。
 @en * **Elastic Pitch Effect**
 @zh * **弹性音调更改**
@@ -248,7 +248,7 @@
 @en   * Allows a much larger range, up to roughly $\pm\frac{12}{\lg{2}}\ \left(\approx\pm39.863137\right)$ semitones.
 @zh   * 允许一个非常大的范围，约高达 $\pm\frac{12}{\lg{2}}\ \left(\approx\pm39.863137\right)$ 个半音。
     ::: info
-@en     If “Lock Stretch to Pitch” is on, it can go as low as $-\frac{12}{\log_{20}{2}} \left(\approx-51.863137\right)$ semitones (upper limit stays +24).
+@en     If "Lock Stretch to Pitch" is on, it can go as low as $-\frac{12}{\log_{20}{2}} \left(\approx-51.863137\right)$ semitones (upper limit stays +24).
 @zh     如果“锁定伸缩与音调”已开启，则可低至 $-\frac{12}{\log_{20}{2}} \left(\approx-51.863137\right)$ 个半音（上限仍为 +24）。
     :::
     ::: danger
@@ -273,10 +273,10 @@
 @zh   * 调整伸缩以改变音调（重采样）。
 @en * **Reserve Formant**
 @zh * **保持共振峰**
-@en   * Locks Formant, works only with “Mono” and “Professional”
+@en   * Locks Formant, works only with "Mono" and "Professional"
 @zh   * 锁定共振峰，仅限“单声道”和“专业”有效。
     ::: info
-@en     *This locks formant so you get that “monophonic” effect.*
+@en     *This locks formant so you get that "monophonic" effect.*
 @zh     *这锁定了共振峰因此你可以得到所谓的“单声道”效果。*
     :::
 @en * **Vocal Fry**
@@ -328,7 +328,7 @@
 
 @en * **Adjust Audio to Base Pitch**
 @zh * **调整音频到主音高**
-@en   * Adjusts the clip track event’s audio to the base pitch.
+@en   * Adjusts the clip track event's audio to the base pitch.
 @zh   * 调整剪辑轨道事件的音频到主音高。
   ::: info
 @en   *This is useful for older styles of remixes.*

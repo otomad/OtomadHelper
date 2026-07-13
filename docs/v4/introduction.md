@@ -7,7 +7,7 @@
 @en ![Overview](/img/v4/overview.png){.shadow-less}
 @zh ![概览](/img/v4/overview_zh-CN.png){.shadow-less}
 
-@en The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)’s open source code and uses the NAudio library.
+@en The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code and uses the NAudio library.
 @zh 本脚本基于原作者 [@Chaosinism](https://github.com/Chaosinism) 的开源代码二次开发，此外使用了NAudio库。
 
 @en Check out the [usage](./usage.md) section for further information, including how to [install](./installation.md) the script.

@@ -28,7 +28,7 @@
 @zh _控制MIDI生成开始到结尾的范围。_
 
 ::: tip
-@en *If the start has been set at `0:05.000`. The MIDI would generate all notes from the 5th second, and the clips will be generated from the 5th second after where [“generate at”](./source.md#generate-at).*
+@en *If the start has been set at `0:05.000`. The MIDI would generate all notes from the 5th second, and the clips will be generated from the 5th second after where ["generate at"](./source.md#generate-at).*
 @zh *如果起始时间设置为 `0:05.000`，则MIDI将从第5秒后生成所有音符，并且剪辑也将从[“生成开始位置”](./source.md#设定生成开始位置)之后的第5秒开始生成。*
 :::
 ::: info
@@ -44,11 +44,11 @@
 
 @en * **MIDI Tempo**
 @zh * **MIDI速度**
-@en   * Uses the MIDI’s Tempo.
+@en   * Uses the MIDI's Tempo.
 @zh   * 使用MIDI的速度。
 @en * **Project Tempo**
 @zh * **Project Tempo**
-@en   * Uses the current Vegas Project’s Tempo.
+@en   * Uses the current Vegas Project's Tempo.
 @zh   * 使用当前Vegas项目的速度。
 @en * **Custom**
 @zh * **自定义**
@@ -78,7 +78,7 @@
 @en ### Auto Change Project Ruler Properties
 @zh ### 自动更改项目标尺属性
 
-@en _Adjusts the project’s measure properties based on the MIDI._
+@en _Adjusts the project's measure properties based on the MIDI._
 @zh _根据MIDI调整项目的小节属性。_
 
 @en * **Tempo**
@@ -92,7 +92,7 @@
 
 @en - **Apply Now**
 @zh - **立即应用**
-@en   * Automatically applies the MIDI’s tempo and time signature without generating the MIDI events.
+@en   * Automatically applies the MIDI's tempo and time signature without generating the MIDI events.
 @zh   * 自动应用MIDI的速度和拍号，无需生成MIDI事件。
 
 ::: info
@@ -121,7 +121,7 @@
 
 @en ::: warning TRAP
 @zh ::: warning 陷阱
-@en _*This may conflict with [Legato](./audio.md#legato) even if it is set to “Unlimited” in Audio/Visual Settings.*_
+@en _*This may conflict with [Legato](./audio.md#legato) even if it is set to "Unlimited" in Audio/Visual Settings.*_
 @zh _*当音频/画面设置中的[填补间隙](./audio.md#填补间隙)设置为“无限填补”时则可能和本设置冲突。*_
 :::
 

@@ -15,7 +15,7 @@
 
 @en 1. Respect the rights and interests of authors when creating with non-self-made MIDI/sources/materials.
 @zh 1. 若使用非自制MIDI / 素材进行创作，请尊重其作者的权益。
-@en 2. Using this script requires some creative abilities from the users. This script should and should only be used to assist in creations. Do not rely solely on this script to generate productions nor learn to creating YTPMV/otoMAD as a beginner. Listen, don’t make **YTPMIDI/otoMIDI**!
+@en 2. Using this script requires some creative abilities from the users. This script should and should only be used to assist in creations. Do not rely solely on this script to generate productions nor learn to creating YTPMV/otoMAD as a beginner. Listen, don't make **YTPMIDI/otoMIDI**!
 @zh 2. 使用此脚本需要用户具备一定的创作能力，此脚本应当且仅应当用于辅助进行创作。不得纯依靠此脚本生成作品，也不应作为初学者学习创作音MAD/YTPMV使用。听话，不要做**音MIDI**！
 @en 3. After using this script to create a video and posting it to media platforms, please do not mention the name or website link of this script anywhere—such as video description and comments—to claim that this script was participated in the creation.
 @zh 3. 使用此脚本制作视频并投稿到各大媒体平台后，请勿在任何地方（如视频简介和评论区）提及此脚本的名称或网址链接以声称使用此脚本参与了创作。

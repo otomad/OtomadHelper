@@ -1,10 +1,10 @@
 @en # Using Otomad Helper
 @zh # 使用Otomad Helper
 
-@en Using Otomad Helper is pretty straightforward from here. Here’s how to use it.
+@en Using Otomad Helper is pretty straightforward from here. Here's how to use it.
 @zh 从这里开始，使用Otomad Helper非常简单。以下是使用方法。
 
-@en - You *import and use a MIDI file to configure and generate the clips you want*. You should use a MIDI which **created by yourself** and not someone else. It’s discourteous. Don’t create YTPMIDIs or any form of remix you didn’t create.
+@en - You *import and use a MIDI file to configure and generate the clips you want*. You should use a MIDI which **created by yourself** and not someone else. It's discourteous. Don't create YTPMIDIs or any form of remix you didn't create.
 @zh - 你可以*导入并使用MIDI文件来配置和生成所需的剪辑*。你应该使用**你自己创建的**MIDI，而不是其他人的。这太不礼貌了。不要做音MIDI或者不是你创造的任何形式的混音。
 @en - You need to *have a clip selected in the timeline* in order to generate anything from the MIDI onto Vegas Pro.
 @zh - 你需要*在时间轴中选取一段剪辑*，以便在Vegas Pro中生成MIDI中的任何内容。

@@ -29,7 +29,7 @@
 @zh    * 适用于 *MAGIX VEGAS Pro 14*、*MAGIX VEGAS Pro 15* 的预编译脚本。
 :::
 
-@en 2. Unzip **ALL** the files in the ZIP file you’ve just downloaded to the `Script Menu` folder in the Vegas installation directory, or the `Vegas Script Menu` folder in the `Documents` (formerly `My Documents`) folder. Specifically:
+@en 2. Unzip **ALL** the files in the ZIP file you've just downloaded to the `Script Menu` folder in the Vegas installation directory, or the `Vegas Script Menu` folder in the `Documents` (formerly `My Documents`) folder. Specifically:
 @zh 2. 将你刚刚下载到的zip文件中的**所有**文件解压缩到Vegas安装目录中的 `Script Menu` 文件夹，或 `文档`（原 `我的文档`）文件夹下的 `Vegas Script Menu` 文件夹中。具体来说：
 
 ---
@@ -100,7 +100,7 @@ C:\Program Files\Sony\Vegas Pro 13.0\Script Menu
 @zh 如果该文件夹并不存在，请按以下步骤操作：
 
 ::: tip
-@en 1. Go to `Documents` (Windows 8+) or `My Documents` (Windows 7) folder in User’s Personal Folder.
+@en 1. Go to `Documents` (Windows 8+) or `My Documents` (Windows 7) folder in User's Personal Folder.
 @zh 1. 进入用户个人文件夹下的 `文档` (Windows 8+) 或 `我的文档` (Windows 7) 文件夹。
 @en 2. Create a new folder and name it `Vegas Script Menu`.
 @zh 2. 新建文件夹并命名为 `Vegas Script Menu`。
@@ -133,7 +133,7 @@ C:\Program Files\Sony\Vegas Pro 13.0\Script Menu
 @zh 2. 右键单击 `NAudio.dll` 文件，然后选择“属性”。
 @en 3. If you see the [[Unblock]] button (Windows 7/8.x) or checkbox (Windows 10+), click or check it.
 @zh 3. 如果你看到了 [[解除锁定]] 按钮 (Windows 7/8.x) 或复选框 (Windows 10+)，请单击或选中它。
-@en 4. Click [[OK]] button and you’re done.
+@en 4. Click [[OK]] button and you're done.
 @zh 4. 单击 [[确定]] 按钮即可。
 :::
 

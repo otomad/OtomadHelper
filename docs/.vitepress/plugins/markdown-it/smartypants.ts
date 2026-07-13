@@ -1,6 +1,5 @@
 import type MarkdownIt from "markdown-it";
-
-const FULL_WIDTH_RE = /[\u3000-\u303F\uFF00-\uFFEF\u4E00-\u9FFF\u2000-\u206F]/;
+import { enableSvsQuotes } from "fullwidth-quotes";
 
 export default function smartypantsPlugin(md: MarkdownIt) {
 	// 1. 必须禁用内置的替换规则，防止直引号提前被切碎成引号 Token
@@ -122,9 +121,12 @@ function parseText(text: string) {
 	// 2个右大于号 → 右尖引号（法式引号）
 	if (text.includes(">>")) text = text.replaceAll(">>", chars.rightAngleQuotes);
 
-	// 直引号 → 弯引号
+	// 直引号 → 弯引号（识别）
 	if (text.includes('"') || text.includes("'")) {
-		text.replaceAll(regexes.singleQuoteStart, chars.rightSingleQuotesAmbiguous)
+		// Convert from Python version:
+		// https://github.com/Python-Markdown/markdown/blob/8453df010daf9547efcc20a05bb12c0e2fd2016a/markdown/extensions/smarty.py
+		text = text
+			.replaceAll(regexes.singleQuoteStart, chars.rightSingleQuotesAmbiguous)
 			.replaceAll(regexes.doubleQuoteStart, chars.rightDoubleQuotesAmbiguous)
 			.replaceAll(regexes.doubleQuoteSets, chars.leftDoubleQuotesAmbiguous + chars.leftSingleQuotesAmbiguous)
 			.replaceAll(regexes.singleQuoteSets, chars.leftSingleQuotesAmbiguous + chars.leftDoubleQuotesAmbiguous)
@@ -139,6 +141,11 @@ function parseText(text: string) {
 			.replaceAll(regexes.closingDoubleQuotes, chars.rightDoubleQuotesAmbiguous)
 			.replaceAll(regexes.closingDoubleQuotes2, chars.rightDoubleQuotesAmbiguous)
 			.replaceAll(regexes.remainingDoubleQuotes, chars.rightDoubleQuotesAmbiguous);
+	}
+
+	// 半角弯引号 → 全角弯引号（识别）
+	if (text.includes("“") || text.includes("”") || text.includes("‘") || text.includes("’")) {
+		text = enableSvsQuotes(text);
 	}
 
 	return text;

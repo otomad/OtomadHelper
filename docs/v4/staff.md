@@ -31,7 +31,7 @@
 @zh   * 使用旧方法放置画面，使用轨道运动表示音符和谱线。
 @en - **Freeze at note off**
 @zh - **冻结在音符结尾处**
-@en   * Freezes the note upon MIDI note’s end.
+@en   * Freezes the note upon MIDI note's end.
 @zh   * 冻结MIDI音符末尾的音符。
 @en - **Lengthen to bar end**
 @zh - **持续到小节结尾**

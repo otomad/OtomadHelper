@@ -13,7 +13,7 @@
 @en **This setting can be toggled.**
 @zh **该设置可开关。**
 ::: warning
-@en **This requires a Drum Kit in the MIDI, you can’t use this with samples.**
+@en **This requires a Drum Kit in the MIDI, you can't use this with samples.**
 @zh **这需要MIDI中有鼓组，你不能将其与采样一起使用。**
 :::
 
@@ -25,7 +25,7 @@
 
 @en - **Separate Drums**
 @zh - **分离不同鼓声**
-@en   - Makes the drums’ visuals generate on multiple layers.
+@en   - Makes the drums' visuals generate on multiple layers.
 @zh   - 使鼓的视觉对象在多个图层上生成。
 @en - **Different Composite Mode**
 @zh - **差值轨道合成模式**

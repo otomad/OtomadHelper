@@ -10,9 +10,9 @@
 @en ![Clips Folder](/img/v4/moshes/clips_folder.png)
 @zh ![片段目录](/img/v4/moshes/clips_folder_zh-CN.png)
 
-@en **<GlitchyText normal="Datamosh" glitchy="Dataḁ̸̬͋ă̷͍ȧ̴͇͘͝ͅá̷̖̲͑ã̶̺̈́å̷͉̖͊̚ä̷̬̬â̷̡̱̑ Mo̴̞̜̯͋ȯ̴̪̏͂õ̷̧͚ͅȏ̸͇ö̵̟̻̹͌o̶͚͍̻̕ǒ̸̢͎̄o̵͔̘̓͘o̶͇̐o̸̬͒͗̎sh" /> is a technique of damaging clips to create glitchy effects which frames that need to progress, don’t progress!**
+@en **<GlitchyText normal="Datamosh" glitchy="Dataḁ̸̬͋ă̷͍ȧ̴͇͘͝ͅá̷̖̲͑ã̶̺̈́å̷͉̖͊̚ä̷̬̬â̷̡̱̑ Mo̴̞̜̯͋ȯ̴̪̏͂õ̷̧͚ͅȏ̸͇ö̵̟̻̹͌o̶͚͍̻̕ǒ̸̢͎̄o̵͔̘̓͘o̶͇̐o̸̬͒͗̎sh" /> is a technique of damaging clips to create glitchy effects which frames that need to progress, don't progress!**
 @zh **<GlitchyText normal="数据抹失" glitchy="锘挎薮琚沬妷" />是一种通过磨损素材以产生故障效果的技术，其中需要进展的帧却无法进展！**
-@en OH’s Datamosh was made possible with the use of [Vegas-Datamosh by delthas](https://github.com/delthas/vegas-datamosh)
+@en OH's Datamosh was made possible with the use of [Vegas-Datamosh by delthas](https://github.com/delthas/vegas-datamosh)
 @zh 噢！数据抹失功能得益于[delthas开发的Vegas-Datamosh](https://github.com/delthas/vegas-datamosh)工具。
 
 @en ::: info Note
@@ -84,7 +84,7 @@
 @en ### Layer
 @zh ### 多层叠化
 
-@en _Layers’ the selected clip for moshing._
+@en _Layers' the selected clip for moshing._
 @zh _将所选剪辑分层以进行*mosh*。_
 
 @en ![Layer](/img/v4/moshes/layer.png){.shadow-less}
@@ -112,13 +112,13 @@
 @en *You can use a negative offset (eg -2 instead of 2), in which case the newest clips/events will be added at the back, instead of the front of the previous events.*
 @zh *你可以使用一个负的偏移量（例如-2而不是2），在这种情况下，新的剪辑/事件将添加在后面，而不是在前面。*
 
-@en **If you choose to render automatically, the rendered file will support alpha/transparency, meaning you don’t need to add a green screen and remove it after, the alpha is handled automatically.**
+@en **If you choose to render automatically, the rendered file will support alpha/transparency, meaning you don't need to add a green screen and remove it after, the alpha is handled automatically.**
 @zh **如果选择自动渲染，渲染后的文件将支持阿尔法/透明度，这意味着你不需要添加绿幕并在之后删除它，阿尔法将自动处理。**
 
 @en ### Render
 @zh ### 预渲染化
 
-@en _Renders the clip within a timeline selection… (Yes that’s literally it.)_
+@en _Renders the clip within a timeline selection… (Yes that's literally it.)_
 @zh _在时间轴选区内渲染剪辑⋯⋯（是的，就只是这样。）_
 
 @en This simply renders a part of the timeline and places it into the timeline in a single click.
@@ -127,7 +127,7 @@
 @en To use, make a selection in the timeline using [[I]] and [[O]], then it will be rendered and added to your project, all in one click.
 @zh 要使用，请使用 [[I]] 和 [[O]] 在时间轴中选区，然后它将被预渲染并添加到你的项目中，所有操作只需单击一次。
 
-@en **The rendered file will support alpha/transparency, meaning you don’t need to add a green screen and remove it after, the alpha is handled automatically.**
+@en **The rendered file will support alpha/transparency, meaning you don't need to add a green screen and remove it after, the alpha is handled automatically.**
 @zh **渲染后的文件将支持阿尔法/透明度，这意味着你不需要添加绿幕并在之后删除它，阿尔法将自动处理。**
 
 @en ### Scramble
@@ -178,7 +178,7 @@
 @en To use, select several clips/events which have video effects on them (they must be actually selected, not only in group-selected), then start the script. For each type of video effect parameter on any of the clips, you will be prompted for whether you want the script to *scramble* the parameter (replace all the current keyframes of the parameter with random keyframes), or not (leave the keyframes as is).
 @zh 要使用，请选择几个具有视频效果的剪辑/事件（它们必须被实际选中，而不仅仅是在所选组中），然后启动脚本。对于任何剪辑上的每种类型的视频效果参数，系统都会提示你是否希望脚本对参数进行*扰乱*（用随机关键帧替换参数的所有关键帧），或不扰乱（保持关键帧不变）。
 
-@en **Only *OFX* video effects are supported (newsprint, mirror, ...); they all have the same look, it’t easy to identify which effects are OFX. Other effects are ignored.**
+@en **Only *OFX* video effects are supported (newsprint, mirror, ...); they all have the same look, it't easy to identify which effects are OFX. Other effects are ignored.**
 @zh **仅支持*OFX*视频效果（新闻用纸、镜像……）；它们都有相同的外观，很容易辨识哪些是OFX效果。其它效果将被忽略。**
 
 @en ### Stutter

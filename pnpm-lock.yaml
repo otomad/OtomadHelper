@@ -17,6 +17,9 @@ importers:
       feed:
         specifier: ^6.0.0
         version: 6.0.0
+      fullwidth-quotes:
+        specifier: ^1.0.1
+        version: 1.0.1
       linkedom:
         specifier: ^0.18.13
         version: 0.18.13
@@ -1082,9 +1085,16 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
+  fullwidth-quotes@1.0.1:
+    resolution: {integrity: sha512-+iokRk0aCygTmsWmru1CSX9GIT1TfZIotBqkuWNvGY1srjWj75jhRa8xAaa/ZyimepdYAXWTlW9KOt970PAXug==}
+
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
+
+  get-east-asian-width@1.6.0:
+    resolution: {integrity: sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA==}
+    engines: {node: '>=18'}
 
   gray-matter@4.0.3:
     resolution: {integrity: sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==}
@@ -2546,7 +2556,13 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
+  fullwidth-quotes@1.0.1:
+    dependencies:
+      get-east-asian-width: 1.6.0
+
   gensync@1.0.0-beta.2: {}
+
+  get-east-asian-width@1.6.0: {}
 
   gray-matter@4.0.3:
     dependencies:
