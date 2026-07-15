@@ -557,7 +557,8 @@
 @zh *预先命名你的音轨将使创建过程更加顺利，并有助于识别你的音轨以供将来使用。*
 :::
 
-::: important
+@en ::: important
+@zh ::: important 重要通知
 @en **The MIDI being created can support the following:**
 @zh **要创建的MIDI可支持以下条目：**
 
