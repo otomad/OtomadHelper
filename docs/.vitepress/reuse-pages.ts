@@ -8,18 +8,16 @@ const rootDir = path.resolve(import.meta.dirname, "..");
 export default function reusePages(dirname: string): RouteModule {
 	const rootLangDirname = getRootLangPath(dirname);
 	return defineRoutes({
-		watch: [`${rootLangDirname}/*.md`, "./*.md"],
+		watch: [`${rootLangDirname}/*.md`],
 		paths: watchedFiles =>
-			[
-				...new Map(
-					watchedFiles
-						.filter(filePath => !filePath.includes("[")) // 本函数假定当前项目所在文件夹路径中一定不含带有方括号的文件夹，否则会产生异常。
-						.map(filePath => [path.parse(filePath).name, filePath]),
-				),
-			].map(([pageName, filePath]) => ({
-				params: { page: pageName },
-				content: fs.readFileSync(path.resolve(rootLangDirname, filePath), "utf-8"),
-			})),
+			watchedFiles
+				.map(filePath => [path.parse(filePath).name, filePath])
+				.map(([pageName, filePath]) => ({
+					params: { page: pageName },
+					content: fs.readFileSync(path.resolve(rootLangDirname, filePath), "utf-8"),
+				})),
+		// See: https://github.com/angelespejo/vitepress-plugin-llmstxt/issues/8#issuecomment-4973106751
+		options: { globOptions: { ignore: ["**/index.md"] } },
 	});
 }
 

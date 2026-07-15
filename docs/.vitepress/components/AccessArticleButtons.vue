@@ -551,6 +551,10 @@ const InnerButton = defineComponent({
 
 	.speak-button {
 		view-transition-name: speak-button;
+
+		:root:active-view-transition & {
+			view-transition-name: none;
+		}
 	}
 
 	:global(::view-transition-old(speak-button)),
