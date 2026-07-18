@@ -1,6 +1,5 @@
 import type MarkdownIt from "markdown-it";
-
-type RenderRule = NonNullable<InstanceType<typeof MarkdownIt>["renderer"]["rules"]["text"]>;
+import type { RenderRule } from "markdown-it/lib/renderer.mjs";
 
 export default function markdownItUnderline(md: MarkdownIt) {
 	const renderEm: RenderRule = (tokens, index, options, _, self) => {

@@ -1,12 +1,11 @@
 import type MarkdownIt from "markdown-it";
+import type StateInline from "markdown-it/lib/rules_inline/state_inline.mjs";
 
 const MARKER_OPEN = "[";
 const MARKER_CLOSE = "]";
 const ESCAPE_CHARACTER = "\\";
 const SINGLE_TAG = "kbd";
 const WRAPPED_TAG = "KeyShortcuts";
-
-type StateInline = InstanceType<InstanceType<typeof MarkdownIt>["inline"]["State"]>;
 
 /*
  * Add delimiters for double occurrences of MARKER_SYMBOL.

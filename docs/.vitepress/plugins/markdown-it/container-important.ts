@@ -1,6 +1,6 @@
 import type MarkdownIt from "markdown-it";
 import container from "markdown-it-container";
-import type { Token } from "./container-details-heading";
+import type Token from "markdown-it/lib/token.mjs";
 
 export default function containerImportantPlugin(md: MarkdownIt) {
 	md.use(container, "important", {

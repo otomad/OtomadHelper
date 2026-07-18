@@ -1,7 +1,6 @@
 import type MarkdownIt from "markdown-it";
+import type Token from "markdown-it/lib/token.mjs";
 import container from "markdown-it-container";
-
-export type Token = ReturnType<InstanceType<typeof MarkdownIt>["parseInline"]>[number];
 
 export default function containerDetailsHeadingPlugin(md: MarkdownIt) {
 	// 1. 渲染 HTML 标签
