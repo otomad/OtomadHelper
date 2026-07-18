@@ -21,7 +21,7 @@ export default function containerDetailsHeadingPlugin(md: MarkdownIt) {
 				const detailsClasses = `details custom-block`;
 				token.attrJoin("class", detailsClasses);
 
-				// 如果已经手动限时指定了 id 名，就不用自动从标题中转换了。
+				// 如果已经手动显式指定了 id 名，就不用自动从标题中转换了。
 				// 将 id 从 details 的属性中剥离出来，移植到内部 h 标签上。
 				const idIndex = token.attrIndex("id");
 				let id = token.attrGet("id");
