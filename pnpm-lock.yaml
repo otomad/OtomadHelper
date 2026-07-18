@@ -51,12 +51,12 @@ importers:
         specifier: ^0.4.22
         version: 0.4.22(pagefind@1.5.2)(vitepress@2.0.0-alpha.18(@types/node@26.0.0)(esbuild@0.28.1)(markdown-it-mathjax3@4.3.2)(postcss@8.5.16)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3))
     devDependencies:
+      '@types/markdown-it':
+        specifier: ^14.1.2
+        version: 14.1.2
       '@types/node':
         specifier: ^26.0.0
         version: 26.0.0
-      markdown-it:
-        specifier: ^14.3.0
-        version: 14.3.0
       oxfmt:
         specifier: ^0.55.0
         version: 0.55.0
@@ -2323,7 +2323,8 @@ snapshots:
     dependencies:
       sprintf-js: 1.0.3
 
-  argparse@2.0.1: {}
+  argparse@2.0.1:
+    optional: true
 
   baseline-browser-mapping@2.10.42: {}
 
@@ -2714,6 +2715,7 @@ snapshots:
   linkify-it@5.0.2:
     dependencies:
       uc.micro: 2.1.0
+    optional: true
 
   lru-cache@5.1.1:
     dependencies:
@@ -2745,6 +2747,7 @@ snapshots:
       mdurl: 2.0.0
       punycode.js: 2.3.1
       uc.micro: 2.1.0
+    optional: true
 
   mathjax-full@3.2.2:
     dependencies:
@@ -2766,7 +2769,8 @@ snapshots:
       unist-util-visit: 5.1.0
       vfile: 6.0.3
 
-  mdurl@2.0.0: {}
+  mdurl@2.0.0:
+    optional: true
 
   mensch@0.3.4:
     optional: true
@@ -2891,7 +2895,8 @@ snapshots:
 
   property-information@7.2.0: {}
 
-  punycode.js@2.3.1: {}
+  punycode.js@2.3.1:
+    optional: true
 
   regex-recursion@6.0.2:
     dependencies:
@@ -2992,7 +2997,8 @@ snapshots:
 
   typescript@6.0.3: {}
 
-  uc.micro@2.1.0: {}
+  uc.micro@2.1.0:
+    optional: true
 
   uhyphen@0.2.0: {}
 
