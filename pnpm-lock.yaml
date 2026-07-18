@@ -18,8 +18,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       fullwidth-quotes:
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^2.0.0
+        version: 2.0.0
       linkedom:
         specifier: ^0.18.13
         version: 0.18.13
@@ -1085,8 +1085,8 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  fullwidth-quotes@1.0.1:
-    resolution: {integrity: sha512-+iokRk0aCygTmsWmru1CSX9GIT1TfZIotBqkuWNvGY1srjWj75jhRa8xAaa/ZyimepdYAXWTlW9KOt970PAXug==}
+  fullwidth-quotes@2.0.0:
+    resolution: {integrity: sha512-YXiYU/WOlpRRCRfDFBfRqFD6J2CmH90HPnzAC5Mrt2U/842lANm+0Q0cN4wrapJx8LrfsG4Q3dZgeqCZOZDgPA==}
 
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
@@ -2556,7 +2556,7 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
-  fullwidth-quotes@1.0.1:
+  fullwidth-quotes@2.0.0:
     dependencies:
       get-east-asian-width: 1.6.0
 
