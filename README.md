@@ -25,3 +25,29 @@ git merge origin/其它分支名 -s ours --allow-unrelated-histories
 > 创建一个合并提交，告诉 Git “我已经把旧版合并了，但保留我现在的（新版）代码，完全忽略旧版代码的变化”。
 
 其它分支的文件关我 `gh-pages` 分支啥事。
+
+## 新：自动化合并脚本
+
+现在已新增自动化合并，可以一键执行合并操作了。
+
+### Windows
+
+#### PowerShell
+
+```powershell
+powershell scripts\merge.ps1
+```
+
+#### Command Prompt
+
+```bat
+scripts\merge.bat
+```
+
+### macOS/Linux/Unix
+
+#### Bash
+
+```bash
+./scripts/merge.sh
+```
