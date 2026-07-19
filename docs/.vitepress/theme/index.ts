@@ -7,6 +7,7 @@ import MyLayout from "./Layout.vue";
 import "./fonts.css";
 import "./style.css";
 import "./view-transitions.css";
+import "markdown-it-container-details-heading/vitepress-theme.css";
 
 const globalComponents = import.meta.glob<{}>("./*.vue", { base: "../components", import: "default", eager: true });
 

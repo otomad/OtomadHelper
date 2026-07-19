@@ -10,10 +10,12 @@
 	"dependencies": {
 		"@mdit/plugin-katex": "^0.25.2",
 		"@vitejs/plugin-vue-jsx": "^5.1.6",
+		"esbuild": "^0.28.1",
 		"feed": "^6.0.0",
 		"fullwidth-quotes": "^2.0.0",
 		"linkedom": "^0.18.13",
 		"markdown-it-container": "^4.0.0",
+		"markdown-it-container-details-heading": "^1.0.0",
 		"markdown-it-footnote": "^4.0.0",
 		"pagefind": "^1.5.2",
 		"typescript": "^6.0.3",

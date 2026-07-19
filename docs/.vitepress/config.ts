@@ -1,7 +1,7 @@
 import { defineConfig, type DefaultTheme, type HeadConfig } from "vitepress";
 import i18nMacroPlugin from "./plugins/markdown-it/i18n-macro";
 import underlinePlugin from "./plugins/markdown-it/underline";
-import detailsHeadingPlugin from "./plugins/markdown-it/container-details-heading";
+import detailsHeadingPlugin from "markdown-it-container-details-heading";
 import containerImportantPlugin from "./plugins/markdown-it/container-important";
 import bracketedSpans from "./plugins/markdown-it/bracketed-spans";
 import kbdPlugin from "./plugins/markdown-it/kbd";
@@ -12,7 +12,6 @@ import { join } from "path/posix";
 import { pagefindPlugin, chineseSearchOptimize } from "vitepress-plugin-pagefind";
 import { ImagePreviewPlugin } from "vitepress-plugin-image-preview";
 import { back2topPlugin } from "vitepress-plugin-back2top";
-// import llmstxt from "vitepress-plugin-llms"; // 目前需要支持 Markdown 构建时渲染，否则多语言插件语法也会被放进去。See: https://github.com/okineadev/vitepress-plugin-llms/issues/37
 import { llmstxtPlugin } from "vitepress-plugin-llmstxt";
 import hostname from "./plugins/hostname";
 import { createRssFeeds } from "./plugins/rss-feed";
@@ -83,11 +82,9 @@ export default defineConfig({
 			// LightningCSS doesn't support "range syntax" in container style queries now.
 			// `@container style(--outline-depth < 6)`
 			// See: https://github.com/parcel-bundler/lightningcss/issues/1069
-		},
-		css: {
-			lightningcss: {
-				errorRecovery: false,
-			},
+			// LightningCSS even messes property declaration order! It will break the CSS behavior!.
+			// See: https://github.com/parcel-bundler/lightningcss/issues/1084
+			cssMinify: "esbuild",
 		},
 	},
 	lastUpdated: true,
