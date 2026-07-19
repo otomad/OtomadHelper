@@ -2,11 +2,11 @@
 	border-radius: 6px;
 	view-transition-name: readthedocs-flyout;
 	z-index: calc(var(--vp-z-index-backdrop) - 1) !important;
+	backdrop-filter: blur(3px);
 }
 
 :host > div:has(> main.closed) {
 	border-radius: 4px;
-	backdrop-filter: blur(3px);
 	--readthedocs-flyout-background-color: rgb(from var(--vp-c-bg-soft) r g b / 60%);
 }
 
@@ -29,4 +29,8 @@
 
 :host > div:has(> main:not(.closed)) .caret svg.icon {
 	transform: rotate(180deg) translateX(0.25em);
+}
+
+header {
+	background-color: transparent;
 }

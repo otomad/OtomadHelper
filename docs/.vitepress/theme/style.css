@@ -326,7 +326,7 @@ readthedocs-flyout {
 	--readthedocs-flyout-line-height: 1.5em;
 	--color-scheme: light;
 
-	html.dark {
+	html.dark & {
 		--color-scheme: dark;
 	}
 }
