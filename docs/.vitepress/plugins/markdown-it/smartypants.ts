@@ -1,7 +1,7 @@
-import type MarkdownIt from "markdown-it";
+import type { PluginSimple } from "markdown-it";
 import { enableSvsQuotes } from "fullwidth-quotes";
 
-export default function smartypantsPlugin(md: MarkdownIt) {
+const smartypantsPlugin: PluginSimple = md => {
 	// 1. 必须禁用内置的替换规则，防止直引号提前被切碎成引号 Token
 	md.core.ruler.disable("replacements");
 
@@ -21,7 +21,9 @@ export default function smartypantsPlugin(md: MarkdownIt) {
 		token.content = text;
 		return defaultRender(tokens, index, options, env, self);
 	};
-}
+};
+
+export default smartypantsPlugin;
 
 const chars = {
 	leftDoubleQuotesAmbiguous: "“",

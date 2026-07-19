@@ -1,4 +1,4 @@
-import type MarkdownIt from "markdown-it";
+import type { PluginSimple } from "markdown-it";
 import type StateInline from "markdown-it/lib/rules_inline/state_inline.mjs";
 
 const MARKER_OPEN = "[";
@@ -85,6 +85,8 @@ function tokenize(state: StateInline, silent: boolean) {
 	return true;
 }
 
-export default function kbdPlugin(md: MarkdownIt): void {
+const kbdPlugin: PluginSimple = md => {
 	md.inline.ruler.before("link", "kbd", tokenize);
-}
+};
+
+export default kbdPlugin;

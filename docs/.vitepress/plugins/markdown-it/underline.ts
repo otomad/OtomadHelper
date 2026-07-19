@@ -1,7 +1,7 @@
-import type MarkdownIt from "markdown-it";
+import type { PluginSimple } from "markdown-it";
 import type { RenderRule } from "markdown-it/lib/renderer.mjs";
 
-export default function markdownItUnderline(md: MarkdownIt) {
+const markdownItUnderline: PluginSimple = md => {
 	const renderEm: RenderRule = (tokens, index, options, _, self) => {
 		var token = tokens[index];
 		if (token.markup === "_") token.tag = "u";
@@ -10,4 +10,6 @@ export default function markdownItUnderline(md: MarkdownIt) {
 
 	md.renderer.rules.em_open = renderEm;
 	md.renderer.rules.em_close = renderEm;
-}
+};
+
+export default markdownItUnderline;

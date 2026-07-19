@@ -1,9 +1,9 @@
-import type MarkdownIt from "markdown-it";
+import type { PluginSimple } from "markdown-it";
 import footnotePlugin from "markdown-it-footnote";
 import { useI18nThemeConfig } from "../../use-i18n";
 
 // See: https://github.com/markdown-it/markdown-it-footnote#customize
-export default function footnotePluginWithCustomized(md: MarkdownIt) {
+const footnotePluginWithCustomized: PluginSimple = md => {
 	md.use(footnotePlugin);
 	md.renderer.rules.footnote_block_open = (_1, _2, _3, env) => {
 		const { localeIndex } = env;
@@ -14,4 +14,6 @@ export default function footnotePluginWithCustomized(md: MarkdownIt) {
 			<ol class="footnotes-list">
 		`;
 	};
-}
+};
+
+export default footnotePluginWithCustomized;

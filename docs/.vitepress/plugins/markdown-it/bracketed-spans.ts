@@ -1,8 +1,8 @@
 // See: https://github.com/mb21/markdown-it-bracketed-spans/issues/4
 
-import type MarkdownIt from "markdown-it";
+import type { PluginSimple } from "markdown-it";
 
-export default function bracketedSpansPlugin(md: MarkdownIt) {
+const bracketedSpansPlugin: PluginSimple = md => {
 	md.inline.ruler.push("bracketed-spans", state => {
 		const max = state.posMax;
 
@@ -50,4 +50,6 @@ export default function bracketedSpansPlugin(md: MarkdownIt) {
 			return false;
 		}
 	});
-}
+};
+
+export default bracketedSpansPlugin;

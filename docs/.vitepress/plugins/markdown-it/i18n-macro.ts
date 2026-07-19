@@ -1,15 +1,17 @@
-import type MarkdownIt from "markdown-it";
+import type { PluginSimple } from "markdown-it";
 
 /**
  * VitePress / Markdown-it 宏预处理多语言插件 (支持所有复杂语法混写)
  */
-export default function i18nMacroPlugin(md: MarkdownIt) {
+const i18nMacroPlugin: PluginSimple = md => {
 	// 注册在 core 流程的最开始（block 之前），此时 state.src 还是纯字符串
 	md.core.ruler.before("block", "i18n_macro_preprocessor", state => {
 		const currentLang = state.env.localeIndex;
 		state.src = parseI18nMacro(state.src, currentLang);
 	});
-}
+};
+
+export default i18nMacroPlugin;
 
 export function parseI18nMacro(src: string, currentLang: string) {
 	// 简化语言标签。

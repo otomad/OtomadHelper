@@ -1,8 +1,8 @@
-import type MarkdownIt from "markdown-it";
+import type { PluginSimple } from "markdown-it";
 import type Token from "markdown-it/lib/token.mjs";
 import container from "markdown-it-container";
 
-export default function containerDetailsHeadingPlugin(md: MarkdownIt) {
+const containerDetailsHeadingPlugin: PluginSimple = md => {
 	// 1. 渲染 HTML 标签
 	md.use(container, "details", {
 		render(tokens: Token[], index: number) {
@@ -53,7 +53,9 @@ export default function containerDetailsHeadingPlugin(md: MarkdownIt) {
 			}
 		},
 	});
-}
+};
+
+export default containerDetailsHeadingPlugin;
 
 // 辅助函数：将中英文文本转换为合法的 URL hash / id
 function slugify(str: string) {

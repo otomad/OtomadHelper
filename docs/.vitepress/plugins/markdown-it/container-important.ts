@@ -1,8 +1,8 @@
-import type MarkdownIt from "markdown-it";
+import type { PluginSimple } from "markdown-it";
 import container from "markdown-it-container";
 import type Token from "markdown-it/lib/token.mjs";
 
-export default function containerImportantPlugin(md: MarkdownIt) {
+const containerImportantPlugin: PluginSimple = md => {
 	md.use(container, "important", {
 		render(tokens: Token[], index: number) {
 			const token = tokens[index];
@@ -14,4 +14,6 @@ export default function containerImportantPlugin(md: MarkdownIt) {
 			}
 		},
 	});
-}
+};
+
+export default containerImportantPlugin;
