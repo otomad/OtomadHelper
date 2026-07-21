@@ -16,7 +16,7 @@
 ::: info {.italic-list}
 @en * You must have a track event selected before you run the script.
 @zh * 在运行脚本之前，你必须选择一个轨道事件。
-@en * You also can choose a media file that has the visual ready to go for you when you browse.
+@en * You can also choose a media file that has the visual ready to go for you when you browse.
 @zh * 你还可以选择或浏览一个早已准备好了画面的媒体文件。
 @en * You can select a video clip and audio clip separately, and the script will combine them to generate.
 @zh * 你可以分别选择视频剪辑和音频剪辑，脚本会将它们组合起来一起生成。
@@ -27,7 +27,7 @@
 @en ### Start and End Time
 @zh ### 起始和终止时间
 
-@en _Trim clips with start time and end time._
+@en _Trim the start time and end time of the clip used._
 @zh _使用开始时间和结束时间来修剪剪辑。_
 
 @en ### Generate at
@@ -145,7 +145,7 @@
 @zh   * 每当生成完成时就会路由音轨到新建总线。
 
 ::: danger
-@en There is an error. If you find that you cannot render the project properly when using audio bus track feature, please click the link below to fix it now.
+@en There is a bug. If you find that you cannot render the project properly when using audio bus track feature, please click the link below to fix it now.
 @zh 目前存在错误。如果你在使用音频总线轨道功能时发现无法正常渲染项目，请立即点击下方链接以修复。
 
 @en [How to Fix](./faq.md#audio-bus-track-bug-caused-by-vegas-pro){.vp-external-link-icon}
