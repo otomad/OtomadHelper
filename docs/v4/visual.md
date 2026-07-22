@@ -343,7 +343,7 @@
 @zh ### 变换
 @en #### Start Size
 @zh #### 起始尺寸
-@en _Value of the Starting Size for Crop/Pan._
+@en _Value of the Starting Size for Pan/Crop._
 @zh _平移/裁切的起始尺寸值。_
 ::: info
 @en *Anything over 100% will reduce the video clip size.*
@@ -351,7 +351,7 @@
 :::
 @en #### End Size
 @zh #### 终止尺寸
-@en _Value of the Ending Size for Crop/Pan._
+@en _Value of the Ending Size for Pan/Crop._
 @zh _平移/裁切的终止尺寸值。_
 ::: info
 @en *Anything over 100% will reduce the video clip size.*
@@ -359,15 +359,15 @@
 :::
 @en #### Start Rotation
 @zh #### 起始旋转
-@en _Value of the Starting Rotation for Crop/Pan._
+@en _Value of the Starting Rotation for Pan/Crop._
 @zh _平移/裁切的起始旋转值。_
 @en #### End Rotation
 @zh #### 终止旋转
-@en _Value of the Ending Rotation for Crop/Pan._
+@en _Value of the Ending Rotation for Pan/Crop._
 @zh _平移/裁切的终止旋转值。_
 @en #### Start X Shift
 @zh #### 起始平移
-@en _Value of the Starting X Shift Position for Crop/Pan._
+@en _Value of the Starting X Shift Position for Pan/Crop._
 @zh _平移/裁切的起始水平位置值。_
 ::: important
 @en *This will make the visual position shift horizontally, depending on the other parameters.*
@@ -375,7 +375,7 @@
 :::
 @en #### End X Shift
 @zh #### 终止平移
-@en _Value of the Ending X Shift Position for Crop/Pan._
+@en _Value of the Ending X Shift Position for Pan/Crop._
 @zh _平移/裁切的终止水平位置值。_
 ::: important
 @en *This will make the visual position shift horizontally, depending on the other parameters.*
@@ -383,7 +383,7 @@
 :::
 @en #### Start Y Shift
 @zh #### 起始直移
-@en _Value of the Starting Y Shift Position for Crop/Pan._
+@en _Value of the Starting Y Shift Position for Pan/Crop._
 @zh _平移/裁切的起始垂直位置值。_
 ::: important
 @en *This will make the visual position shift vertically, depending on the other parameters.*
@@ -391,7 +391,7 @@
 :::
 @en #### End Y Shift
 @zh #### 终止直移
-@en _Value of the Ending Y Shift Position for Crop/Pan._
+@en _Value of the Ending Y Shift Position for Pan/Crop._
 @zh _平移/裁切的终止垂直位置值。_
 ::: important
 @en *This will make the visual position shift vertically, depending on the other parameters.*

@@ -119,7 +119,7 @@
 @en   * Notes will attempt to generate to the length provided.
 @zh   * 音符将尝试生成所提供的长度。
 
-@en ::: warning TRAP
+@en ::: warning 
 @zh ::: warning 陷阱
 @en _*This may conflict with [Legato](./audio.md#legato) even if it is set to "Unlimited" in Audio/Visual Settings.*_
 @zh _*当音频/画面设置中的[填补间隙](./audio.md#填补间隙)设置为“无限填补”时则可能和本设置冲突。*_
