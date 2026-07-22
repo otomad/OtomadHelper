@@ -19,7 +19,13 @@ const links = reactive([
 			<template #title>{{ title }}</template>
 		</VPTeamPageTitle>
 		<div class="container">
-			<VPLink v-for="link in links" class="vp-external-link-icon" :key="link.name" :href="link.href">
+			<VPLink
+				v-for="link in links"
+				class="vp-external-link-icon"
+				:key="link.name"
+				:href="link.href"
+				target="_blank"
+			>
 				<SocialIcon :icon="link.icon" />{{ link.name }}
 			</VPLink>
 		</div>
@@ -32,7 +38,8 @@ const links = reactive([
 	max-width: 1152px;
 	display: flex;
 	flex-wrap: wrap;
-	gap: 8px 16px;
+	gap: 10px 16px;
 	justify-content: center;
+	padding-inline: 24px;
 }
 </style>

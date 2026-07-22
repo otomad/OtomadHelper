@@ -34,6 +34,8 @@ const projects = reactive([
 	},
 ]);
 
+projects.forEach(project => (project.target = "_blank"));
+
 const title = t({ en: "Projects", zh: "项目" });
 </script>
 
@@ -113,6 +115,15 @@ const title = t({ en: "Projects", zh: "项目" });
 
 	& :deep(a.VPLink:active .link-text) {
 		translate: 2px;
+	}
+
+	& :deep(a.VPLink .vpi-arrow-right) {
+		transition: opacity;
+		transition-duration: 250ms;
+	}
+
+	& :deep(a.VPLink:not(:hover, :active) .vpi-arrow-right) {
+		opacity: 0.5;
 	}
 }
 </style>

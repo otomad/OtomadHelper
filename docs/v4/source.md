@@ -84,7 +84,7 @@
 @zh   * 将时间线光标保留在运行脚本之前的原始位置。
 @en * **Where Generate at**
 @zh * **生成开始位置**
-@en   * Moves the cursor to [the start of the MIDI file](#generate-at)
+@en   * Moves the cursor to [the start of the MIDI file](#generate-at).
 @zh   * 将光标移动到[MIDI文件的开头](#generate-at)。
 @en * **Before the First Event**
 @zh * **第一个事件之前**

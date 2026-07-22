@@ -1,7 +1,8 @@
 /// <reference types="vitepress/client" />
 
 // https://vitepress.dev/guide/custom-theme
-import { inBrowser, type Theme } from "vitepress";
+import { inBrowser, type Theme, type Router } from "vitepress";
+import { nextTick } from "vue";
 import DefaultTheme, { VPButton } from "vitepress/theme-without-fonts";
 import MyLayout from "./Layout.vue";
 import "./fonts.css";
@@ -22,11 +23,17 @@ export default {
 
 		if (!inBrowser) return;
 
+		// Route change handlers
+		const beforeRouteChangeHandlers = new RouteChangeHandlers<"before">(),
+			afterRouteChangeHandlers = new RouteChangeHandlers<"after">();
+		router.onBeforeRouteChange = beforeRouteChangeHandlers.invoke;
+		router.onAfterRouteChange = afterRouteChangeHandlers.invoke;
+
 		// View Transition API
 		let resolver: PromiseWithResolvers<void> | undefined;
 		const locales = Object.keys(siteData.value.locales).filter(lang => lang !== "root");
-		router.onBeforeRouteChange = toWithSearchAndHash => {
-			if (!globalThis.location) return;
+		beforeRouteChangeHandlers.add(toWithSearchAndHash => {
+			if (!inBrowser) return;
 			const from = location.pathname,
 				to = toWithSearchAndHash.replace(/[?#].*/, "");
 			if (!enableTransitions() || from === to) return;
@@ -37,21 +44,34 @@ export default {
 			viewTransition.finally(() => {
 				document.documentElement.classList.remove("locale-changing");
 			});
-		};
-		router.onAfterRouteChange = () => {
-			// Handle View Transition API
-			(() => {
-				if (!enableTransitions() || !resolver) return;
-				resolver.resolve();
-			})();
+		});
+		afterRouteChangeHandlers.add(() => {
+			if (!enableTransitions() || !resolver) return;
+			resolver.resolve();
+		});
 
-			// Handle details hash changed
-			(() => {
-				handleHashOpenAndScroll();
-			})();
-		};
+		// Details hash changed
+		afterRouteChangeHandlers.add(handleHashOpenAndScroll);
 	},
 } satisfies Theme;
+
+type RouteChangeHandler<TType extends "before" | "after"> = NonNullable<Router[`on${Capitalize<TType>}RouteChange`]>;
+class RouteChangeHandlers<TType extends "before" | "after"> {
+	handlers: RouteChangeHandler<TType>[] = [];
+	add(handler: RouteChangeHandler<TType>, clientOnly: boolean = true) {
+		this.handlers.push((async (...args) => {
+			if (clientOnly && !inBrowser) return;
+			return await handler(...args);
+		}) as RouteChangeHandler<TType>);
+	}
+	invoke = (async to => {
+		return await this.handlers.reduce<Promise<boolean>>(async (accumResultPromise, handler) => {
+			const accumResult = await accumResultPromise;
+			const currentResult = await handler(to);
+			return !(accumResult === false || currentResult === false);
+		}, Promise.resolve(true));
+	}) satisfies RouteChangeHandler<"before"> as unknown as RouteChangeHandler<TType>;
+}
 
 const enableTransitions = () =>
 	inBrowser && "startViewTransition" in document && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -62,7 +82,7 @@ function isLocaleChanged(from: string, to: string, locales: string[]) {
 }
 
 // 自动展开与定位的核心函数
-const handleHashOpenAndScroll = () => {
+const handleHashOpenAndScroll = async () => {
 	const hash = location.hash.slice(1);
 	if (!hash) return;
 
@@ -71,6 +91,19 @@ const handleHashOpenAndScroll = () => {
 	const heading = document.getElementById(targetId);
 
 	if (heading && heading.matches("details > summary > :is(h1, h2, h3, h4, h5, h6)")) {
-		heading.closest("details")!.open = true;
+		const details = heading.closest("details")!;
+		details.open = true;
+		const scroll = async () => {
+			const SCROLL_PADDING_TOP_CLASS = "scroll-padding-top";
+			document.documentElement.classList.add(SCROLL_PADDING_TOP_CLASS);
+			await details.scrollIntoView({ block: "start" });
+			await details.scrollIntoView({ block: "start" });
+			document.documentElement.classList.remove(SCROLL_PADDING_TOP_CLASS);
+		};
+		await scroll();
+		if (document.activeViewTransition) {
+			await document.activeViewTransition?.finished;
+			await scroll();
+		}
 	}
 };

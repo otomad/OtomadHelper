@@ -68,6 +68,10 @@ html:not(.dark) {
 	color-scheme: light only;
 }
 
+html.scroll-padding-top {
+	scroll-padding-block-start: calc(var(--vp-nav-height) + 2px);
+}
+
 /**
  * Colors
  *
@@ -877,5 +881,24 @@ summary {
 
 	.footnotes {
 		font-size: small;
+	}
+}
+
+/**
+ * Component: Table
+ */
+a.vp-external-link-icon {
+	&::after {
+		display: inline-block !important;
+		transition: 250ms;
+		transition-property: color, opacity, translate;
+	}
+
+	&:hover::after {
+		translate: 2px -2px;
+	}
+
+	&:active::after {
+		translate: 1px -1px;
 	}
 }
