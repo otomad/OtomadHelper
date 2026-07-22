@@ -1,7 +1,7 @@
 # Otomad Helper Documentation
 
 [![en](https://img.shields.io/badge/lang-English-blue?style=flat-square)](./README.md)
-[![zh-CN](https://img.shields.io/badge/lang-简体中文-blue?style=flat-square)](./README_zh-CN.md)
+[![zh-CN](https://img.shields.io/badge/语言-简体中文-blue?style=flat-square)](./README_zh-CN.md)
 
 Welcome to the documentation repository for **Otomad Helper** — a YTPMV/otoMAD/YTP extension for Vegas Pro. This site serves documentation for both the **new version (v8, an extension)** and the **old version (v4, a script)**.
 
@@ -32,18 +32,18 @@ The documentation covers two major versions:
 
 | Version | Type | Description |
 |---------|------|-------------|
-| **v8** (New) | Extension | The latest version, implemented as a Vegas Pro extension |
-| **v4** (Old) | Script | The legacy version, implemented as a script |
+| **v8** (New) | Extension/Custom Command | The latest version, implemented as a Vegas Pro extension (aka custom command) |
+| **v4** (Old) | Script | The legacy version, implemented as a Vegas Pro script |
 
 ## Tech Stack
 
 | Component | Technology |
 |-----------|-----------|
-| **Documentation Framework** | [VitePress](https://vitepress.dev/) (v2 alpha) |
+| **Documentation Framework** | [VitePress](https://vitepress.dev/) (v2) |
 | **Package Manager** | [pnpm](https://pnpm.io/) |
 | **Source Hosting** | [GitHub](https://github.com/otomad/OtomadHelper) (branch: `docs`) |
 | **Build & Hosting** | [Read the Docs](https://readthedocs.org/) |
-| **Custom Plugins** | i18n-macro, KaTeX math, image preview, pagefind search, RSS feeds, llms.txt |
+| **Custom Plugins** | i18n-macro, KaTeX math, image preview, pagefind search, RSS feeds, llms.txt, etc. |
 
 **How it works:** When code is pushed to the `docs` branch on GitHub, Read the Docs automatically rebuilds the site and serves the static HTML pages at [https://otomadhelper.readthedocs.io/](https://otomadhelper.readthedocs.io/).
 
@@ -184,17 +184,17 @@ Dependencies are external libraries the project needs to work.
    - This opens a terminal window already pointing to the project folder.
 2. In the terminal, type the following and press Enter:
    ```
-   pnpm install
+   pnpm i
    ```
 3. Wait for the installation to finish — it may take a minute or two. You'll see a progress indicator, and it will end with something like "Done".
 
-> You only need to run `pnpm install` once during setup. You generally don't need to run it again unless someone tells you new dependencies were added.
+> You only need to run `pnpm i` once during setup. You generally don't need to run it again unless someone tells you new dependencies were added.
 
 ---
 
-#### Step 6 (Recommended): Install Visual Studio Code
+#### Step 6 (Not Necessary, But Recommended): Install Visual Studio Code
 
-While you can edit files with Notepad, **Visual Studio Code (VS Code)** is a free, powerful editor that makes editing much easier with syntax highlighting and file browsing.
+While you can edit files with **Notepad** directly, *Visual Studio Code (VS Code)* is a free, powerful editor that makes editing much easier with syntax highlighting and file browsing.
 
 1. Go to **[https://code.visualstudio.com/](https://code.visualstudio.com/)**
 2. Click **Download** and install it (accept all defaults).
@@ -228,9 +228,9 @@ The documentation files are Markdown (`.md`) files located in the `docs/` folder
 1. Open the project folder in your file explorer, or open it in **VS Code**.
 2. Navigate to the `docs/` folder. Inside you'll find:
    - **`.vitepress/`** — Configuration and theme files (usually you won't touch these)
-   - **`v4/`** — Documentation for the old v4 script version
-   - **`zh-CN/`** — Chinese-specific pages (home page, etc.)
-   - **`*.md` files** — The main v8 documentation pages (these use the [multi-language format](#multi-language-documentation-format))
+   - **`zh-CN/**/*.md`** — Chinese-specific pages (home page, etc.)
+   - **`**/*.md` files** — The new v8 extension version documentation pages (these use the [multi-language format](#multi-language-documentation-format))
+   - **`v4/**/*.md`** — the old v4 script version documentation pages (these use the [multi-language format](#multi-language-documentation-format))
 3. Open the file you want to edit. Most content files use the single-file multi-language format, so English and Chinese content sit together. See the [Multi-Language Documentation Format](#multi-language-documentation-format) section above for details.
 4. Make your changes and save the file (`Ctrl+S`).
 
@@ -245,21 +245,21 @@ The documentation files are Markdown (`.md`) files located in the `docs/` folder
 
 Before pushing, you can preview the site on your own computer to see how your changes look.
 
-1. Open a terminal in the project folder:
-   - **In VS Code:** Press `` Ctrl+` `` (backtick key, usually below Esc) or go to **Terminal → New Terminal**.
-   - **In GitHub Desktop:** Click **Repository → Open in Terminal**.
-2. Type this command and press Enter:
-   ```
-   pnpm run dev
-   ```
-3. Wait a moment. You'll see output like:
+1. If you have **VS Code**, please Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>B</kbd>, and then select `npm: dev`.
+   > If you don't have VS Code, please:
+   > 1. Open a terminal in the project folder:\
+   >    **In GitHub Desktop:** Click **Repository → Open in Terminal**.
+   > 2. Type this command and press Enter:
+   >    ```bash
+   >    pnpm run dev
+   >    ```
+2. Wait a moment. You'll see output like:
    ```
    vitepress vX.X.X
    ➜  Local:   http://localhost:7000/
    ```
-4. Open your browser and go to **`http://localhost:7000/`**.
-5. Navigate to the page(s) you edited and check that everything looks correct.
-6. When you're done previewing, go back to the terminal and press `Ctrl+C` to stop the preview server.
+3. Press <kbd>Ctrl</kbd> (or maybe <kbd>Alt</kbd>) and click the link **`http://localhost:7000/`**.
+4. Navigate to the page(s) you edited and check that everything looks correct.
 
 > 💡 **Tip:** The preview updates automatically as you save files — just save in your editor and refresh the browser.
 
@@ -300,12 +300,12 @@ OtomadHelper/                          # Repository root (docs branch)
     │   ├── components/                # Custom Vue components
     │   ├── plugins/                   # Custom Markdown & build plugins
     │   ├── theme/                     # Custom theme overrides
-    │   └── use-i18n.ts               # Internationalization helpers
+    │   └── use-i18n.ts                # Internationalization helpers
     ├── assets/                        # Static assets (images, fonts, etc.)
     ├── img/                           # Documentation images
     ├── public/                        # Public static files
-    │   ├── favicon.svg               # Site favicon
-    │   └── favicon_1.ico             # Alternative favicon (RtD workaround)
+    │   ├── favicon.svg                # Site favicon
+    │   └── favicon_1.ico              # Alternative favicon (RtD workaround)
     ├── index.md                       # Home page (English)
     ├── introduction.md                # Introduction page (multi-language)
     ├── installation.md                # Installation guide (multi-language)

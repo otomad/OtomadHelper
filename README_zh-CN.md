@@ -1,11 +1,11 @@
 # 音MAD助手 说明文档
 
 [![en](https://img.shields.io/badge/lang-English-blue?style=flat-square)](./README.md)
-[![zh-CN](https://img.shields.io/badge/lang-简体中文-blue?style=flat-square)](./README_zh-CN.md)
+[![zh-CN](https://img.shields.io/badge/语言-简体中文-blue?style=flat-square)](./README_zh-CN.md)
 
-欢迎来到 **音MAD助手（Otomad Helper）** 的说明文档仓库——一个Vegas Pro的音MAD/YTPMV/YTP扩展程序。本站点同时涵盖了**新版（v8，扩展程序）**<wbr>和**旧版（v4，脚本）**<wbr>的说明文档内容。
+欢迎来到**音MAD助手（Otomad Helper）**<wbr>的说明文档仓库——一个Vegas Pro的音MAD/YTPMV/YTP扩展程序。本站点同时涵盖了**新版（v8，扩展程序）**<wbr>和**旧版（v4，脚本）**<wbr>的说明文档内容。
 
-- 📖 **在线文档**: [https://otomadhelper.readthedocs.io/](https://otomadhelper.readthedocs.io/)
+- 📖 **在线文档**: [https://otomadhelper.readthedocs.io/zh-CN/](https://otomadhelper.readthedocs.io/zh-CN/)
 - 🗂️ **源码分支**: `docs`
 
 ---
@@ -32,20 +32,20 @@
 
 | 版本 | 类型 | 说明 |
 |---------|------|-------------|
-| **v8**（新版） | 扩展程序 | 最新版本，以Vegas Pro扩展程序的形式实现 |
-| **v4**（旧版） | 脚本 | 旧版，以脚本的形式实现 |
+| **v8**（新版） | 扩展程序/自定义命令 | 最新版本，以Vegas Pro扩展程序（也被称为自定义命令）的形式实现 |
+| **v4**（旧版） | 脚本 | 旧版，以Vegas Pro脚本的形式实现 |
 
 ## 技术架构
 
 | 组件 | 技术 |
 |-----------|-----------|
-| **文档框架** | [VitePress](https://vitepress.dev/)（v2 alpha） |
+| **文档框架** | [VitePress](https://vitepress.dev/)（v2） |
 | **包管理器** | [pnpm](https://pnpm.io/) |
 | **源码托管** | [GitHub](https://github.com/otomad/OtomadHelper)（分支: `docs`） |
 | **构建与托管** | [Read the Docs](https://readthedocs.org/) |
-| **自定义插件** | i18n-macro、KaTeX数学公式、图片预览、pagefind搜索、RSS订阅源、llms.txt |
+| **自定义插件** | i18n-macro、KaTeX数学公式、图片预览、pagefind搜索、RSS订阅源、llms.txt，等 |
 
-**工作流程：** 当代码推送到GitHub的`docs`分支后，Read the Docs服务器会自动重新构建项目，并生成静态HTML网页。用户可通过 [https://otomadhelper.readthedocs.io/](https://otomadhelper.readthedocs.io/) 直接阅读最新文档内容。
+**工作流程：** 当代码推送到GitHub的`docs`分支后，Read the Docs服务器会自动重新构建项目，并生成静态HTML网页。用户可通过 [https://otomadhelper.readthedocs.io/zh-CN/](https://otomadhelper.readthedocs.io/zh-CN/) 直接阅读最新文档内容。
 
 ## 单文件多语言文档格式
 
@@ -184,17 +184,17 @@ GitHub Desktop 提供了 Git 的图形化界面，这样你就不需要记忆和
    - 这会打开一个已定位到项目文件夹的终端窗口。
 2. 在终端中输入以下命令并按回车：
    ```
-   pnpm install
+   pnpm i
    ```
 3. 等待安装完成——可能需要一两分钟。你会看到进度指示，最终会显示类似于 "Done" 的信息。
 
-> 你只需要在初始配置时运行一次 `pnpm install`。以后通常不需要再次运行，除非有人告知你项目新增了依赖库。
+> 你只需要在初始配置时运行一次 `pnpm i`。以后通常不需要再次运行，除非有人告知你项目新增了依赖库。
 
 ---
 
-#### 第六步（推荐）：安装 Visual Studio Code
+#### 第六步（不必要但是推荐）：安装 Visual Studio Code
 
-虽然你可以使用记事本编辑文件，但 **Visual Studio Code（VS Code）** 是一款免费且功能强大的编辑器，具有语法高亮和文件浏览功能，能让编辑工作轻松很多。
+虽然你可以直接使用**记事本**编辑文件，但 *Visual Studio Code (VS Code)* 是一款免费且功能强大的编辑器，具有语法高亮和文件浏览功能，能让编辑工作轻松很多。
 
 1. 访问 **[https://code.visualstudio.com/](https://code.visualstudio.com/)**
 2. 点击**下载**并安装（可以全部使用默认设置）。
@@ -230,9 +230,9 @@ GitHub Desktop 提供了 Git 的图形化界面，这样你就不需要记忆和
 1. 在文件资源管理器中打开项目文件夹，或在 **VS Code** 中打开。
 2. 进入 `docs/` 文件夹。里面的内容包括：
    - **`.vitepress/`** — 配置和主题文件（通常不需要修改这些）
-   - **`v4/`** — 旧版 v4 脚本的文档
-   - **`zh-CN/`** — 中文专属页面（主页等）
-   - **`*.md` 文件** — 主要的 v8 文档页面（这些页面使用[单文件多语言格式](#单文件多语言文档格式)）
+   - **`zh-CN/**/*.md`** — 中文专属页面（主页等）
+   - **`**/*.md` 文件** — 新版 v8 扩展的文档页面（这些页面使用[单文件多语言格式](#单文件多语言文档格式)）
+   - **`v4/**/*.md`** — 旧版 v4 脚本的文档页面（这些页面使用[单文件多语言格式](#单文件多语言文档格式)）
 3. 打开你想要编辑的文件。大多数内容文件使用单文件多语言格式，因此英文和中文内容在一起编写。详细格式说明请参见上方的[单文件多语言文档格式](#单文件多语言文档格式)部分。
 4. 进行修改并保存文件（`Ctrl+S`）。
 
@@ -247,21 +247,21 @@ GitHub Desktop 提供了 Git 的图形化界面，这样你就不需要记忆和
 
 在推送之前，你可以在自己的电脑上预览网站，看看修改后的效果。
 
-1. 在项目文件夹中打开终端：
-   - **在 VS Code 中：** 按 `` Ctrl+` ``（反引号键，通常在 Esc 键下方）或前往 **Terminal（终端）→ New Terminal（新建终端）**。
-   - **在 GitHub Desktop 中：** 点击 **Repository（仓库）→ Open in Terminal（在终端中打开）**。
-2. 输入以下命令并按回车：
-   ```
-   pnpm run dev
-   ```
-3. 稍等片刻。你会看到类似以下输出：
+1. 如果你有 **VS Code**，请按 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>B</kbd>，然后选择 `npm: dev`。
+   > 如果你没有 VS Code，请：
+   > 1. 在项目文件夹中打开终端：\
+   >    **在 GitHub Desktop 中：** 点击 **Repository（仓库）→ Open in Terminal（在终端中打开）**。
+   > 2. 输入以下命令并按回车：
+   >    ```bash
+   >    pnpm run dev
+   >    ```
+2. 稍等片刻。你会看到类似以下输出：
    ```
    vitepress vX.X.X
    ➜  Local:   http://localhost:7000/
    ```
-4. 打开浏览器访问 **`http://localhost:7000/`**。
-5. 导航到你编辑过的页面，检查所有内容是否正确显示。
-6. 预览完毕后，回到终端按 `Ctrl+C` 停止预览服务器。
+3. 按住 <kbd>Ctrl</kbd>（也有可能是 <kbd>Alt</kbd>）键不放并单击链接 **`http://localhost:7000/`**。
+4. 导航到你编辑过的页面，检查所有内容是否正确显示。
 
 > 💡 **提示：** 预览会随着你保存文件而自动更新——只需在编辑器中保存，然后刷新浏览器即可。
 
@@ -280,7 +280,7 @@ GitHub Desktop 提供了 Git 的图形化界面，这样你就不需要记忆和
 4. 点击 **"Commit to docs（提交到docs）"** 按钮。
 5. 提交完成后，点击 **"Push origin（推送远端）"** 按钮（右上角），将你的更改上传到 GitHub。
 
-> 🎉 **大功告成！** 推送完成后，Read the Docs 会在几分钟内自动重新构建网站。你可以在 [https://otomadhelper.readthedocs.io/](https://otomadhelper.readthedocs.io/) 查看更新后的在线文档。
+> 🎉 **大功告成！** 推送完成后，Read the Docs 会在几分钟内自动重新构建网站。你可以在 [https://otomadhelper.readthedocs.io/zh-CN/](https://otomadhelper.readthedocs.io/zh-CN/) 查看更新后的在线文档。
 
 ---
 
@@ -291,9 +291,9 @@ OtomadHelper/                          # 仓库根目录（docs 分支）
 ├── .gitignore                         # Git 忽略的文件
 ├── .readthedocs.yaml                  # Read the Docs 构建配置
 ├── .vscode/                           # VS Code 编辑器配置
-│   ├── extensions.json               # 推荐安装的扩展
-│   ├── settings.json                 # 编辑器设置（自动格式化等）
-│   └── tasks.json                    # 预配置的任务（dev/build）
+│   ├── extensions.json                # 推荐安装的扩展
+│   ├── settings.json                  # 编辑器设置（自动格式化等）
+│   └── tasks.json                     # 预配置的任务（dev/build）
 ├── package.json                       # 项目依赖库与脚本
 ├── pnpm-lock.yaml                     # 依赖库版本锁定文件
 ├── tsconfig.json                      # TypeScript 配置
@@ -306,12 +306,12 @@ OtomadHelper/                          # 仓库根目录（docs 分支）
     │   ├── components/                # 自定义 Vue 组件
     │   ├── plugins/                   # 自定义 Markdown 与构建插件
     │   ├── theme/                     # 自定义主题覆盖
-    │   └── use-i18n.ts               # 国际化辅助工具
+    │   └── use-i18n.ts                # 国际化辅助工具
     ├── assets/                        # 静态资源（图片、字体等）
     ├── img/                           # 文档图片
     ├── public/                        # 公共静态文件
-    │   ├── favicon.svg               # 网站图标
-    │   └── favicon_1.ico             # 备用图标（用于规避 RtD 图标替换）
+    │   ├── favicon.svg                # 网站图标
+    │   └── favicon_1.ico              # 备用图标（用于规避 RtD 图标替换）
     ├── index.md                       # 主页（英文）
     ├── introduction.md                # 介绍页面（单文件多语言）
     ├── installation.md                # 安装指南（单文件多语言）
@@ -344,7 +344,7 @@ graph LR
 1. 你编辑 Markdown 文件并推送到 GitHub 上的 `docs` 分支。
 2. Read the Docs 自动检测到推送。
 3. RtD 运行 `npm run build`（由 `.readthedocs.yaml` 配置），构建 VitePress 站点。
-4. 生成的静态 HTML 文件被托管在 [https://otomadhelper.readthedocs.io/](https://otomadhelper.readthedocs.io/)。
+4. 生成的静态 HTML 文件被托管在 [https://otomadhelper.readthedocs.io/zh-CN/](https://otomadhelper.readthedocs.io/zh-CN/)。
 5. 构建通常在推送后的 **2-5分钟** 内完成。
 
 ### 可用脚本
