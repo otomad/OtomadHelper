@@ -1,5 +1,5 @@
 import { defineConfig, type DefaultTheme, type HeadConfig } from "vitepress";
-import i18nMacroPlugin from "./plugins/markdown-it/i18n-macro";
+import i18nMacroPlugin from "markdown-it-i18n";
 import underlinePlugin from "./plugins/markdown-it/underline";
 import detailsHeadingPlugin from "markdown-it-container-details-heading";
 import containerImportantPlugin from "./plugins/markdown-it/container-important";
@@ -20,7 +20,7 @@ import llmsTransform from "./plugins/llms-transform";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import footnotePlugin from "./plugins/markdown-it/footnote";
 import { useI18nThemeConfig } from "./use-i18n";
-import smartypantsPlugin from "./plugins/markdown-it/smartypants";
+import smartypantsPlugin from "markdown-it-smartypants";
 
 const base = process.env.READTHEDOCS_CANONICAL_URL
 	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
@@ -36,7 +36,12 @@ export default defineConfig({
 		breaks: true,
 		cjkFriendlyEmphasis: true,
 		config: md => {
-			md.use(i18nMacroPlugin);
+			md.use(i18nMacroPlugin, {
+				langAlias(locale, rawLang) {
+					if (rawLang === "root") return "en";
+					return locale?.language ?? rawLang;
+				},
+			});
 			md.use(underlinePlugin);
 			md.use(detailsHeadingPlugin);
 			md.use(containerImportantPlugin);

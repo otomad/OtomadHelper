@@ -1,11 +1,10 @@
 import type { LlmsConfig } from "vitepress-plugin-llmstxt";
-import { parseI18nMacro } from "./markdown-it/i18n-macro";
+import { parseI18nMacro } from "markdown-it-i18n/utils";
 import type { DefaultTheme, LocaleConfig as _LocaleConfig } from "vitepress";
 import { join } from "path/posix";
 import { useI18nThemeConfig } from "../use-i18n";
 
-type LocaleConfig = _LocaleConfig<DefaultTheme.Config> &
-	Record<string, { themeConfig: {} }>;
+type LocaleConfig = _LocaleConfig<DefaultTheme.Config> & Record<string, { themeConfig: {} }>;
 
 let nonRootLanguages: string[] | undefined;
 
