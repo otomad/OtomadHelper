@@ -3,7 +3,7 @@ import type { RenderRule } from "markdown-it/lib/renderer.mjs";
 
 const markdownItUnderline: PluginSimple = md => {
 	const renderEm: RenderRule = (tokens, index, options, _, self) => {
-		var token = tokens[index];
+		const token = tokens[index];
 		if (token.markup === "_") token.tag = "u";
 		return self.renderToken(tokens, index, options);
 	};

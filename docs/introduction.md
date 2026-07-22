@@ -7,20 +7,21 @@
 @en ![Overview](/img/overview_dark.png){.dark}![Overview](/img/overview_light.png){.light}
 @zh ![概览](/img/overview_dark_zh-CN.png){.dark}![概览](/img/overview_light_zh-CN.png){.light}
 
-@en Check out the [usage](./usage.md) section for further information, including how to [install](./installation.md) the extension.
-@zh 查看[用法](./usage.md)部分以了解更多信息，包括如何[安装](./installation.md)该扩展。
-
 @@@en
-::: warning
-This project is under active development.
+::: warning NOTICE
+You are likely looking for the *Otomad Helper script* documentation, please refer to the [old documentation (v4)](v4/introduction).
 
-If you are looking for the documentation that for the old version of Otomad Helper, please refer to the [old documentation (v4)](v4/introduction).
+The _new documentation_ is for the *Otomad Helper extension* for *the future version*, and this project is currently under active development. Therefore, some pages are blank or 404, which does not mean that this documentation site is empty!
+
+If you insist on reading the content of the new documentation, please continue reading...
 :::
 @@@zh
-::: warning
-该项目正在积极开发中。
+::: warning 注意
+你很可能正在找*Otomad Helper脚本*的文档，请参看[旧版文档 (v4)](v4/introduction)。
 
-如果你正在寻求旧版Otomad Helper的文档，请参看[旧版文档 (v4)](v4/introduction)。
+_新版文档_<wbr>是针对*未来版本*的*Otomad Helper扩展*，该项目正在积极开发中。因此部分页面为空白或404，这并不是意味着这个文档网站是空的！
+
+如果你执意要阅读新版文档的内容，请继续往下看……
 :::
 @@@
 
@@ -36,6 +37,9 @@ v8目前正在开发中，需要你的帮助。如果你有时间和技能，可
 :::
 @@@
 
+@en Check out the [usage](./usage.md) section for further information, including how to [install](./installation.md) the extension.
+@zh 查看[用法](./usage.md)部分以了解更多信息，包括如何[安装](./installation.md)该扩展。
+
 @en ## Languages
 @zh ## 语言
 
@@ -46,3 +50,9 @@ v8目前正在开发中，需要你的帮助。如果你有时间和技能，可
 
 @en To learn more about the features of Otomad Helper, please continue reading on the next page...
 @zh 要了解关于Otomad Helper的更多功能，请继续往下看……
+
+<style scoped>
+  .custom-block {
+    zoom: 3;
+  }
+</style>
