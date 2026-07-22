@@ -347,7 +347,7 @@
 @zh _平移/裁切的起始尺寸值。_
 ::: info
 @en *Anything over 100% will reduce the video clip size.*
-@zh *任何超过 100% 的值都会减小视频剪辑的大小。*
+@zh *任何超过100%的值都会减小视频剪辑的大小。*
 :::
 @en #### End Size
 @zh #### 终止尺寸
@@ -355,7 +355,7 @@
 @zh _平移/裁切的终止尺寸值。_
 ::: info
 @en *Anything over 100% will reduce the video clip size.*
-@zh *任何超过 100% 的值都会减小视频剪辑的大小。*
+@zh *任何超过100%的值都会减小视频剪辑的大小。*
 :::
 @en #### Start Rotation
 @zh #### 起始旋转
