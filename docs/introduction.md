@@ -19,7 +19,7 @@ If you insist on reading the content of the new documentation, please continue r
 ::: warning 注意
 你很可能正在找*Otomad Helper脚本*的文档，请参看[旧版文档 (v4)](v4/introduction)。
 
-_新版文档_<wbr>是针对*未来版本*的*Otomad Helper扩展*，该项目正在积极开发中。因此部分页面为空白或404，这并不是意味着这个文档网站是空的！
+_新版文档_是针对*未来版本*的*Otomad Helper扩展*，该项目正在积极开发中。因此部分页面为空白或404，这并不是意味着这个文档网站是空的！
 
 如果你执意要阅读新版文档的内容，请继续往下看……
 :::
