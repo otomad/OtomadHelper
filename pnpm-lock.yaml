@@ -26,6 +26,9 @@ importers:
       linkedom:
         specifier: ^0.18.13
         version: 0.18.13
+      markdown-it:
+        specifier: ^14.3.0
+        version: 14.3.0
       markdown-it-bracketed-spans:
         specifier: ^1.0.3
         version: 1.0.3
