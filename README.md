@@ -53,7 +53,7 @@ This project uses a custom **single-file multi-language** format. Instead of mai
 
 ### Why This Format?
 
-When you need to fix a mistake that exists in multiple languages, the traditional approach requires you to:
+If the document contains 7 languages, when you need to fix a mistake that exists in multiple languages, the traditional approach requires you to:
 
 1. Open 7 separate files (one per language)
 2. Find the corresponding line in each file

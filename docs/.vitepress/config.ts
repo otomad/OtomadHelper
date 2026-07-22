@@ -3,7 +3,7 @@ import i18nMacroPlugin from "./plugins/markdown-it/i18n-macro";
 import underlinePlugin from "./plugins/markdown-it/underline";
 import detailsHeadingPlugin from "markdown-it-container-details-heading";
 import containerImportantPlugin from "./plugins/markdown-it/container-important";
-import bracketedSpans from "./plugins/markdown-it/bracketed-spans";
+import bracketedSpansPlugin from "markdown-it-bracketed-spans";
 import kbdPlugin from "./plugins/markdown-it/kbd";
 import fixCodeCopyI18n from "./plugins/markdown-it/fix-code-copy-i18n";
 import { katex } from "@mdit/plugin-katex";
@@ -40,7 +40,7 @@ export default defineConfig({
 			md.use(underlinePlugin);
 			md.use(detailsHeadingPlugin);
 			md.use(containerImportantPlugin);
-			md.use(bracketedSpans);
+			md.use(bracketedSpansPlugin);
 			md.use(kbdPlugin);
 			// VitePress 的默认数学公式渲染器 markdown-it-mathjax3 居然懒得添加 MathML 输出选项，所以换一个。
 			// See: https://github.com/tani/markdown-it-mathjax3/issues/58

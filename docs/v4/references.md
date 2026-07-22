@@ -141,7 +141,7 @@ Post | Author | Language | Kind | Last Updated
 [<SocialIcon icon="bilibili" />教程视频 (v4.26.14.0)][tutorialVideo_v4_26_14_0]<br>[<SocialIcon icon="youtube" />教程视频 (v4.26.14.0)][tutorialVideo] | 兰音 | 中文<br>英语 | 视频 | <Date value="2023/04/27" />
 [<SocialIcon icon="youtube" />探索视觉效果][exploreVisualEffects] | 兰音 | 英语 | 视频 | <Date value="2022/11/19" />
 [<SocialIcon icon="youtube" />教程视频 (v4.16.4.0)][tutorialVideo_greenBean] | GreenBean | 英语 | 视频 | <Date value="2022/05/09" />
-[<SocialIcon icon="youtube" />教程视频 (v4.26.14.0)][tutorialVideo_cyahega] | Cyahega | Vietnamese | 视频 | <Date value="2023/03/11" />
+[<SocialIcon icon="youtube" />教程视频 (v4.26.14.0)][tutorialVideo_cyahega] | Cyahega | 越南语 | 视频 | <Date value="2023/03/11" />
 [<SocialIcon icon="bilibili" />教程视频 (v0.1)][tutorialVideo_chaosinism] | Chaosinism | 中文 | 视频 | <Date value="2018/04/17" />
 [<SocialIcon icon="youtube" />数据抹失教程视频 (v1.4.0)][tutorialVideo_datamosh_delthas] | Delthas | 英语 | 视频 | <Date value="2020/09/24" />
 [<SocialIcon icon="youtube" />YTP教程视频][tutorialVideo_ytpPlus] | EthanNow | 英语 | 视频 | <Date value="2019/07/21" />

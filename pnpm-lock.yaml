@@ -26,6 +26,9 @@ importers:
       linkedom:
         specifier: ^0.18.13
         version: 0.18.13
+      markdown-it-bracketed-spans:
+        specifier: ^1.0.3
+        version: 1.0.3
       markdown-it-container:
         specifier: ^4.0.0
         version: 4.0.0
@@ -1267,6 +1270,9 @@ packages:
 
   mark.js@8.11.1:
     resolution: {integrity: sha512-1I+1qpDt4idfgLQG+BNWmrqku+7/2bi5nLf4YwF8y8zXvmfiTBY3PV3ZibfrjBueCByROpuBjLLFCajqkgYoLQ==}
+
+  markdown-it-bracketed-spans@1.0.3:
+    resolution: {integrity: sha512-1vo6vljv/1rm4fulUscv1lt/6BXg8KjCzRWHnZ2k7XHnYTMrph6fmgrc+Dszu8wGj1h08DweJ787+Y71B+hnYQ==}
 
   markdown-it-container-details-heading@1.0.0:
     resolution: {integrity: sha512-Gwf5lp48pHZJoFNhuwIvxB53ArhRI7XdMaEEN4kYwEKwGe2KOxWUlv19zKClwTjuIlptldSJcsifJ3uBKJsxyA==}
@@ -2735,6 +2741,8 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.5
 
   mark.js@8.11.1: {}
+
+  markdown-it-bracketed-spans@1.0.3: {}
 
   markdown-it-container-details-heading@1.0.0(markdown-it-container@4.0.0)(markdown-it@14.3.0):
     dependencies:
