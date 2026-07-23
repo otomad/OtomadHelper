@@ -2,9 +2,9 @@
 
 // https://vitepress.dev/guide/custom-theme
 import { inBrowser, type Theme, type Router } from "vitepress";
-import { nextTick } from "vue";
 import DefaultTheme, { VPButton } from "vitepress/theme-without-fonts";
 import MyLayout from "./Layout.vue";
+import handleHashOpenAndScroll from "./hash-open-and-scroll";
 import "./fonts.css";
 import "./style.css";
 import "./view-transitions.css";
@@ -25,9 +25,11 @@ export default {
 
 		// Route change handlers
 		const beforeRouteChangeHandlers = new RouteChangeHandlers<"before">(),
-			afterRouteChangeHandlers = new RouteChangeHandlers<"after">();
+			afterRouteChangeHandlers = new RouteChangeHandlers<"after">(),
+			afterPageLoadHandlers = new RouteChangeHandlers<"after">();
 		router.onBeforeRouteChange = beforeRouteChangeHandlers.invoke;
 		router.onAfterRouteChange = afterRouteChangeHandlers.invoke;
+		router.onAfterPageLoad = afterPageLoadHandlers.invoke;
 
 		// View Transition API
 		let resolver: PromiseWithResolvers<void> | undefined;
@@ -51,7 +53,7 @@ export default {
 		});
 
 		// Details hash changed
-		afterRouteChangeHandlers.add(handleHashOpenAndScroll);
+		afterRouteChangeHandlers.add(() => handleHashOpenAndScroll());
 	},
 } satisfies Theme;
 
@@ -80,30 +82,3 @@ function isLocaleChanged(from: string, to: string, locales: string[]) {
 	const [fromLocale, toLocale] = [from, to].map(route => locales.find(locale => route.startsWith("/" + locale)));
 	return fromLocale !== toLocale;
 }
-
-// 自动展开与定位的核心函数
-const handleHashOpenAndScroll = async () => {
-	const hash = location.hash.slice(1);
-	if (!hash) return;
-
-	// 找到对应 id 的元素
-	const targetId = decodeURIComponent(hash);
-	const heading = document.getElementById(targetId);
-
-	if (heading && heading.matches("details > summary > :is(h1, h2, h3, h4, h5, h6)")) {
-		const details = heading.closest("details")!;
-		details.open = true;
-		const scroll = async () => {
-			const SCROLL_PADDING_TOP_CLASS = "scroll-padding-top";
-			document.documentElement.classList.add(SCROLL_PADDING_TOP_CLASS);
-			await details.scrollIntoView({ block: "start" });
-			await details.scrollIntoView({ block: "start" });
-			document.documentElement.classList.remove(SCROLL_PADDING_TOP_CLASS);
-		};
-		await scroll();
-		if (document.activeViewTransition) {
-			await document.activeViewTransition?.finished;
-			await scroll();
-		}
-	}
-};

@@ -253,7 +253,10 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 			{
 				en: "Extra Info",
 				zh: "额外信息",
-				items: [{ en: "FAQ", zh: "常见问题解答", link: "/faq" }],
+				items: [
+					{ en: "FAQ", zh: "常见问题解答", link: "/faq" },
+					{ en: "Revise Docs", zh: "修订文档", link: "/revise" },
+				],
 			},
 		],
 		"/v4/": [
@@ -287,6 +290,7 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 				items: [
 					{ en: "FAQ", zh: "常见问题解答", link: "/faq" },
 					{ en: "References", zh: "参考", link: "/references" },
+					{ en: "Revise Docs", zh: "修订文档", link: "/revise" },
 				],
 			},
 		],

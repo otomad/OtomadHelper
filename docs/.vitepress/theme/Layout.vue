@@ -7,6 +7,7 @@ import VersionBadge from "@vp/components/VersionBadge.vue";
 import OutlineDepthToggle from "@vp/components/OutlineDepthToggle.vue";
 import PrintHeaderTitle from "@vp/components/PrintHeaderTitle.vue";
 import AccessArticleButtons from "@vp/components/AccessArticleButtons.vue";
+import handleHashOpenAndScroll from "./hash-open-and-scroll";
 
 const { isDark } = useData();
 
@@ -86,6 +87,10 @@ onMounted(() => {
 		// 仅屏蔽双击及连击。
 		if (kbd && e.detail > 1) e.preventDefault();
 	});
+});
+
+onMounted(async () => {
+	await handleHashOpenAndScroll(10);
 });
 </script>
 
