@@ -200,6 +200,8 @@ While you can edit files with **Notepad** directly, *Visual Studio Code (VS Code
 2. Click **Download** and install it (accept all defaults).
 3. After installation, in **GitHub Desktop**, you can right-click the repository and choose **"Open in Visual Studio Code"** to jump straight into editing.
 
+> 💡 **Tips:** This project has been pre-configured with VS Code related settings. When you open a project with VS Code, the editor will automatically recommend installing relevant extensions and configure functions such as automatic formatting when saving. You can click "Install" in the pop-up prompt in the lower right corner to install the recommended extension.
+
 ---
 
 ### Daily Editing Workflow
@@ -232,7 +234,7 @@ The documentation files are Markdown (`.md`) files located in the `docs/` folder
    - **`**/*.md` files** — The new v8 extension version documentation pages (these use the [multi-language format](#multi-language-documentation-format))
    - **`v4/**/*.md`** — the old v4 script version documentation pages (these use the [multi-language format](#multi-language-documentation-format))
 3. Open the file you want to edit. Most content files use the single-file multi-language format, so English and Chinese content sit together. See the [Multi-Language Documentation Format](#multi-language-documentation-format) section above for details.
-4. Make your changes and save the file (`Ctrl+S`).
+4. Make your changes and save the file (<kbd>Ctrl</kbd> + <kbd>S</kbd>).
 
 > 📝 **What to edit:**
 > - To fix a typo or error: find the `@en` line and edit it. The corresponding `@zh` line(s) are right below.
@@ -278,7 +280,7 @@ Before pushing, you can preview the site on your own computer to see how your ch
 4. Click the **"Commit to docs"** button.
 5. After committing, click the **"Push origin"** button (top right) to upload your changes to GitHub.
 
-> 🎉 That's it! Once pushed, Read the Docs will automatically rebuild the site within a few minutes. You can check the live site at [https://otomadhelper.readthedocs.io/](https://otomadhelper.readthedocs.io/).
+> 🎉 **That's it!** Once pushed, Read the Docs will automatically rebuild the site within a few minutes. You can check the live site at [https://otomadhelper.readthedocs.io/](https://otomadhelper.readthedocs.io/).
 
 ---
 

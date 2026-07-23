@@ -17,7 +17,7 @@ export default function reusePages(dirname: string): RouteModule {
 					content: fs.readFileSync(path.resolve(rootLangDirname, filePath), "utf-8"),
 				})),
 		// See: https://github.com/angelespejo/vitepress-plugin-llmstxt/issues/8#issuecomment-4973106751
-		options: { globOptions: { ignore: ["**/index.md"] } },
+		options: { globOptions: { ignore: ["**/index.md", "**/v4/revise.md"] } },
 	});
 }
 
