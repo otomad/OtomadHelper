@@ -21,6 +21,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import footnotePlugin from "./plugins/markdown-it/footnote";
 import { useI18nThemeConfig } from "./use-i18n";
 import smartypantsPlugin from "markdown-it-smartypants";
+import { mermaidPlugin } from './plugins/markdown-it/vitepress-mermaid';
 
 const base = process.env.READTHEDOCS_CANONICAL_URL
 	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
@@ -53,6 +54,7 @@ export default defineConfig({
 			md.use(fixCodeCopyI18n);
 			md.use(footnotePlugin);
 			md.use(smartypantsPlugin);
+			md.use(mermaidPlugin);
 		},
 	},
 	vite: {

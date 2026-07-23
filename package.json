@@ -21,6 +21,7 @@
 		"markdown-it-footnote": "^4.0.0",
 		"markdown-it-i18n": "^1.0.4",
 		"markdown-it-smartypants": "^1.0.0",
+		"mermaid": "^11.16.0",
 		"pagefind": "^1.5.2",
 		"typescript": "^6.0.3",
 		"vitepress": "^2.0.0-alpha.18",

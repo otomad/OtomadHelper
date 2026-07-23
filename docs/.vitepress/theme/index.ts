@@ -9,6 +9,7 @@ import "./fonts.css";
 import "./style.css";
 import "./view-transitions.css";
 import "markdown-it-container-details-heading/vitepress-theme.css";
+import VitePressMermaid from "../plugins/markdown-it/vitepress-mermaid/index.vue";
 
 const globalComponents = import.meta.glob<{}>("./*.vue", { base: "../components", import: "default", eager: true });
 
@@ -20,6 +21,7 @@ export default {
 		for (const [tagName, component] of Object.entries(globalComponents))
 			app.component(tagName.slice(2, -4), component); // `tagName` is "./MyComponent.vue".
 		app.component("Button", VPButton);
+		app.component("vitepress-mermaid", VitePressMermaid);
 
 		if (!inBrowser) return;
 
