@@ -1,6 +1,15 @@
 import type { PluginSimple } from "markdown-it";
 import type { RenderRule } from "markdown-it/lib/renderer.mjs";
 
+/** True for ASCII letters (A-Z, a-z) and digits (0-9). */
+function isASCIIAlphanumeric(code: number): boolean {
+	return (
+		(code >= 0x30 && code <= 0x39) || // 0-9
+		(code >= 0x41 && code <= 0x5a) || // A-Z
+		(code >= 0x61 && code <= 0x7a)    // a-z
+	);
+}
+
 const markdownItUnderline: PluginSimple = md => {
 	// Custom inline rule: handle _text_ cases that the built-in emphasis
 	// rule cannot close (i.e. when the closing _ has can_close=false in
@@ -8,13 +17,20 @@ const markdownItUnderline: PluginSimple = md => {
 	// _你好_世界！ where the closing _ before 世 is both left- and
 	// right-flanking — CommonMark forbids such a _ from closing emphasis.
 	//
-	// We ONLY open underline for _ that the emphasis rule would also open
-	// (can_open=true). Then we search for a closing _ that emphasis CANNOT
-	// close (can_close=false). This way:
-	// - Normal English _text_ (both can_open/can_close=true) → emphasis
-	// - Chinese _你好_世界！ (open can_open, close can_close=false) → us
-	// - Intra-word _ (neither can_open nor can_close) → skipped (literal)
-	// - Mixed *foo_bar*baz_ → _ can't open inside * emphasis → skipped
+	// We ONLY open underline for _ that:
+	// - The emphasis rule would also open (can_open=true), OR
+	// - Is NOT between two ASCII alphanumeric chars (not snake_case)
+	//
+	// This gives us:
+	// - Normal English _text_ (can_open=true) → emphasis handles close,
+	//   or we handle if emphasis can't close
+	// - Chinese _你好_世界！ (can_open=true for opening, can_close=false
+	//   for closing) → we handle the close
+	// - Chinese 你_好_世界！ (can_open=false, but not between ASCII
+	//   alnum) → we handle both open and close
+	// - Intra-word snake_case (can_open=false AND between ASCII alnum)
+	//   → skipped, remains literal
+	// - Mixed *foo_bar*baz_ (can_open=false, between ASCII alnum) → skipped
 	md.inline.ruler.before("emphasis", "underline", (state, silent) => {
 		const src = state.src;
 		const pos = state.pos;
@@ -26,13 +42,27 @@ const markdownItUnderline: PluginSimple = md => {
 		// __ belongs to strong emphasis — don't touch it
 		if (pos + 1 < posMax && src.charCodeAt(pos + 1) === 0x5f) return false;
 
-		// Only open if the emphasis rule would also be able to open this _
-		// (CommonMark left-flanking). Intra-word underscores in ASCII text
-		// and underscores inside * emphasis are skipped here.
+		// Decide whether this _ can open an underline.
+		// Allow if emphasis can open it (can_open=true), OR if it's not an
+		// intra-word ASCII underscore (where both neighbors are [a-zA-Z0-9]).
 		const openDelim = state.scanDelims(pos, false);
-		if (!openDelim.can_open) return false;
+		if (!openDelim.can_open) {
+			// Still allow if NOT between two ASCII alphanumeric chars.
+			// This catches Chinese text like 你_好_世界！ where the _
+			// is between CJK chars (both are Unicode letters, not ASCII).
+			if (pos <= 0 || pos + 1 >= posMax) return false;
+			const prev = src.charCodeAt(pos - 1);
+			const next = src.charCodeAt(pos + 1);
+			if (isASCIIAlphanumeric(prev) && isASCIIAlphanumeric(next)) {
+				return false; // snake_case — literal underscore
+			}
+		}
 
-		// Find matching closing single _ that the emphasis rule CANNOT close
+		// Find matching closing single _. Unlike the opening check, we do
+		// NOT gate on scanDelims here: once an underline is opened, any
+		// non-escaped single _ can close it. This is essential for Chinese
+		// text where the closing _ may have can_close=true (emphasis
+		// could close it) but emphasis has no matching opener.
 		let endPos = -1;
 		for (let i = pos + 1; i < posMax; i++) {
 			if (src.charCodeAt(i) !== 0x5f) continue;
@@ -48,11 +78,6 @@ const markdownItUnderline: PluginSimple = md => {
 				backslashCount++;
 			}
 			if (backslashCount % 2 === 1) continue;
-
-			// If emphasis can close this _, let the emphasis rule handle
-			// the pair. We only step in when emphasis CANNOT close.
-			const closeDelim = state.scanDelims(i, false);
-			if (closeDelim.can_close) continue;
 
 			// Empty content (_ immediately followed by _) is invalid
 			if (i === pos + 1) return false;
