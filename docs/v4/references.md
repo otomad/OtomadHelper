@@ -68,7 +68,7 @@
 Project | Authors | License | Notes
 ---- | ---- | ---- | ----
 [**Otomad Helper**][this-repo] | | GPL 3.0 | *Current project*
-[otomad_helper][chaosinism-scripts] | Chaosinism | LGPL 3.0 | *The original project this is based on*
+[otomad\_helper][chaosinism-scripts] | Chaosinism | LGPL 3.0 | *The original project this is based on*
 [VegasScripts][evankale-scripts] | Evan Kale | GPL 3.0 | *The project Chaosinism’s referenced*
 [NAudio][naudio] | Mark Heath | MIT | *MIDI read/write<br>Waveform sound*
 [YTP+][ytp-plus] | Ben Brown<br>Kiwifruitdev<br>Nuppington | GPL 3.0 | *YTP feature reference*
@@ -79,7 +79,7 @@ Project | Authors | License | Notes
 项目 | 作者 | 协议 | 备注
 ---- | ---- | ---- | ----
 [**Otomad Helper**][this-repo] | 兰音 | GPL 3.0 | *当前项目*
-[otomad_helper][chaosinism-scripts] | Chaosinism | LGPL 3.0 | *基于的原始项目*
+[otomad\_helper][chaosinism-scripts] | Chaosinism | LGPL 3.0 | *基于的原始项目*
 [VegasScripts][evankale-scripts] | Evan Kale | GPL 3.0 | *Chaosinism参考的项目*
 [NAudio][naudio] | Mark Heath | MIT | *MIDI读写<br>波形发声*
 [YTP+][ytp-plus] | Ben Brown<br>Kiwifruitdev<br>Nuppington | GPL 3.0 | *YTP功能参考*

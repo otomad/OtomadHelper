@@ -54,7 +54,6 @@ export default defineConfig({
 			md.use(footnotePlugin);
 			md.use(smartypantsPlugin);
 		},
-		attrs: {},
 	},
 	vite: {
 		plugins: [

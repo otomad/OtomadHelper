@@ -47,6 +47,10 @@ body {
 	}
 }
 
+html {
+	overflow-inline: hidden;
+}
+
 u,
 ins {
 	text-decoration: underline;
@@ -847,6 +851,7 @@ summary {
 .vp-doc table {
 	border-radius: 8px;
 	width: fit-content;
+	max-width: 100%;
 	border: 1px solid var(--vp-c-divider);
 
 	thead tr:first-child,
