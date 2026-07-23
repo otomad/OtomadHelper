@@ -55,9 +55,9 @@
 
 传统的多语言文档方式中，如果文档包含7种语言，修改一个错误需要：
 
-1. 同时打开7个文件（每种语言一个）
-2. 在每个文件中找到错误内容所在的行
-3. 逐个文件修改同样的内容
+1. 同时打开7个文件（每种语言一个）。
+2. 在每个文件中找到错误内容所在的行。
+3. 逐个文件修改同样的内容。
 
 使用单文件多语言格式后，各语言的翻译紧挨在一起，可以在同一个位置一次性修改所有语言。
 
@@ -87,8 +87,8 @@ It can span multiple lines and include **formatting**.
 @@@
 ```
 
-- 用 `@@@` 加语言标签开始一个块
-- 用单独的 `@@@`（不跟标签）结束整个多语言块
+- 用 `@@@` 加语言标签开始一个块。
+- 用单独的 `@@@`（不跟标签）结束整个多语言块。
 
 ### 回退（Fallback）机制
 
@@ -134,7 +134,7 @@ pnpm 是本项目使用的包管理器。
 
 1. 打开**命令提示符**（开始菜单 → 输入 `cmd` → 按回车）。
 2. 输入以下命令并按回车：
-   ```
+   ```bash
    npm install -g pnpm
    ```
 3. 等待安装完成。
@@ -145,7 +145,7 @@ pnpm 是本项目使用的包管理器。
 
 #### 第三步：安装 GitHub Desktop
 
-GitHub Desktop 提供了 Git 的图形化界面，这样你就不需要记忆和输入 Git 命令行指令了。
+GitHub Desktop 提供了 Git 的图形化界面，_这样你就不需要记忆和输入 Git 命令行指令了。_
 
 1. 访问 **[https://desktop.github.com/](https://desktop.github.com/)**
 2. 点击**下载**按钮。
@@ -180,10 +180,10 @@ GitHub Desktop 提供了 Git 的图形化界面，这样你就不需要记忆和
 
 依赖库是项目运行所需的外部程序库。
 
-1. 在 **GitHub Desktop** 中，确保仓库已打开，点击 **Repository（仓库）→ Open in Terminal（在终端中打开）**（或按 `` Ctrl+` ``）。
+1. 在 **GitHub Desktop** 中，确保仓库已打开，点击 **Repository（仓库）→ Open in Terminal（在终端中打开）**（或按 <kbd>Ctrl</kbd> + <kbd>`</kbd>）。
    - 这会打开一个已定位到项目文件夹的终端窗口。
 2. 在终端中输入以下命令并按回车：
-   ```
+   ```bash
    pnpm i
    ```
 3. 等待安装完成——可能需要一两分钟。你会看到进度指示，最终会显示类似于 "Done" 的信息。
@@ -192,7 +192,7 @@ GitHub Desktop 提供了 Git 的图形化界面，这样你就不需要记忆和
 
 ---
 
-#### 第六步（不必要但是推荐）：安装 Visual Studio Code
+#### 第六步<wbr>*（不必要但是推荐）*<wbr>：安装 Visual Studio Code
 
 虽然你可以直接使用**记事本**编辑文件，但 *Visual Studio Code (VS Code)* 是一款免费且功能强大的编辑器，具有语法高亮和文件浏览功能，能让编辑工作轻松很多。
 
@@ -287,7 +287,7 @@ GitHub Desktop 提供了 Git 的图形化界面，这样你就不需要记忆和
 ## 项目结构
 
 ```
-OtomadHelper/                          # 仓库根目录（docs 分支）
+OtomadHelper_docs/                     # 仓库根目录（docs 分支）
 ├── .gitignore                         # Git 忽略的文件
 ├── .readthedocs.yaml                  # Read the Docs 构建配置
 ├── .vscode/                           # VS Code 编辑器配置

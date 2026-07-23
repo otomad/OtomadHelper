@@ -55,9 +55,9 @@ This project uses a custom **single-file multi-language** format. Instead of mai
 
 If the document contains 7 languages, when you need to fix a mistake that exists in multiple languages, the traditional approach requires you to:
 
-1. Open 7 separate files (one per language)
-2. Find the corresponding line in each file
-3. Make the same fix 7 times
+1. Open 7 separate files (one per language).
+2. Find the corresponding line in each file.
+3. Make the same fix 7 times.
 
 With the single-file format, translations sit right next to each other, so you can fix everything in one place.
 
@@ -87,8 +87,8 @@ It can span multiple lines and include **formatting**.
 @@@
 ```
 
-- Start a block with `@@@` followed by a language tag
-- End the **entire** multi-language block with a bare `@@@` on its own line
+- Start a block with `@@@` followed by a language tag.
+- End the **entire** multi-language block with a bare `@@@` on its own line.
 
 ### Fallback Behavior
 
@@ -124,7 +124,7 @@ Node.js is the runtime that powers the documentation toolchain.
 4. Follow the installation wizard — you can accept all the default settings.
 5. Click **Finish** when done.
 
-> ✅ To verify it's installed: Open the Start Menu, type `cmd`, press Enter to open Command Prompt, then type `node --version`. If you see a version number (e.g., `v22.x.x`), you're all set.
+> ✅ To verify it's installed: Open the Start Menu, type `cmd`, press <kbd>Enter</kbd> to open Command Prompt, then type `node --version`. If you see a version number (e.g., `v22.x.x`), you're all set.
 
 ---
 
@@ -132,9 +132,9 @@ Node.js is the runtime that powers the documentation toolchain.
 
 pnpm is the package manager used by this project.
 
-1. Open **Command Prompt** (Start Menu → type `cmd` → press Enter).
-2. Type the following command and press Enter:
-   ```
+1. Open **Command Prompt** (Start Menu → type `cmd` → press <kbd>Enter</kbd>).
+2. Type the following command and press <kbd>Enter</kbd>:
+   ```bash
    npm install -g pnpm
    ```
 3. Wait for the installation to complete.
@@ -145,7 +145,7 @@ pnpm is the package manager used by this project.
 
 #### Step 3: Install GitHub Desktop
 
-GitHub Desktop provides a visual interface for Git, so you don't need to memorize command-line instructions.
+GitHub Desktop provides a visual interface for Git, _so you don't need to memorize command-line instructions._
 
 1. Go to **[https://desktop.github.com/](https://desktop.github.com/)**
 2. Click the **Download** button.
@@ -180,10 +180,10 @@ GitHub Desktop provides a visual interface for Git, so you don't need to memoriz
 
 Dependencies are external libraries the project needs to work.
 
-1. In **GitHub Desktop**, with the repository open, click **Repository → Open in Terminal** (or press `` Ctrl+` ``).
+1. In **GitHub Desktop**, with the repository open, click **Repository → Open in Terminal** (or press <kbd>Ctrl</kbd> + <kbd>`</kbd>).
    - This opens a terminal window already pointing to the project folder.
-2. In the terminal, type the following and press Enter:
-   ```
+2. In the terminal, type the following and press <kbd>Enter</kbd>:
+   ```bash
    pnpm i
    ```
 3. Wait for the installation to finish — it may take a minute or two. You'll see a progress indicator, and it will end with something like "Done".
@@ -192,7 +192,7 @@ Dependencies are external libraries the project needs to work.
 
 ---
 
-#### Step 6 (Not Necessary, But Recommended): Install Visual Studio Code
+#### Step 6 *(Not Necessary, But Recommended)*: Install Visual Studio Code
 
 While you can edit files with **Notepad** directly, *Visual Studio Code (VS Code)* is a free, powerful editor that makes editing much easier with syntax highlighting and file browsing.
 
@@ -249,7 +249,7 @@ Before pushing, you can preview the site on your own computer to see how your ch
    > If you don't have VS Code, please:
    > 1. Open a terminal in the project folder:\
    >    **In GitHub Desktop:** Click **Repository → Open in Terminal**.
-   > 2. Type this command and press Enter:
+   > 2. Type this command and press <kbd>Enter</kbd>:
    >    ```bash
    >    pnpm run dev
    >    ```
@@ -285,7 +285,7 @@ Before pushing, you can preview the site on your own computer to see how your ch
 ## Project Structure
 
 ```
-OtomadHelper/                          # Repository root (docs branch)
+OtomadHelper_docs/                     # Repository root (docs branch)
 ├── .gitignore                         # Files ignored by Git
 ├── .readthedocs.yaml                  # Read the Docs build configuration
 ├── package.json                       # Project dependencies and scripts
