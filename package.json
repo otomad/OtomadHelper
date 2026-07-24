@@ -15,7 +15,6 @@
 		"fullwidth-quotes": "^2.0.0",
 		"linkedom": "^0.18.13",
 		"markdown-it": "^14.3.0",
-		"markdown-it-anchor": "^9.2.1",
 		"markdown-it-bracketed-spans": "^1.0.3",
 		"markdown-it-container": "^4.0.0",
 		"markdown-it-container-details-heading": "^1.0.0",

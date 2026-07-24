@@ -29,9 +29,6 @@ importers:
       markdown-it:
         specifier: ^14.3.0
         version: 14.3.0
-      markdown-it-anchor:
-        specifier: ^9.2.1
-        version: 9.2.1(@types/markdown-it@14.1.2)(markdown-it@14.3.0)
       markdown-it-bracketed-spans:
         specifier: ^1.0.3
         version: 1.0.3
@@ -1612,12 +1609,6 @@ packages:
 
   mark.js@8.11.1:
     resolution: {integrity: sha512-1I+1qpDt4idfgLQG+BNWmrqku+7/2bi5nLf4YwF8y8zXvmfiTBY3PV3ZibfrjBueCByROpuBjLLFCajqkgYoLQ==}
-
-  markdown-it-anchor@9.2.1:
-    resolution: {integrity: sha512-p6APiLJDFAW2GEvaavDvhIBn7jrX2jLv77NkBGgNacFTurbORYc4pyYySg/mI6mpR6cHQuAtzKtmqgQr4K8dsQ==}
-    peerDependencies:
-      '@types/markdown-it': '*'
-      markdown-it: '*'
 
   markdown-it-bracketed-spans@1.0.3:
     resolution: {integrity: sha512-1vo6vljv/1rm4fulUscv1lt/6BXg8KjCzRWHnZ2k7XHnYTMrph6fmgrc+Dszu8wGj1h08DweJ787+Y71B+hnYQ==}
@@ -3517,11 +3508,6 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.5
 
   mark.js@8.11.1: {}
-
-  markdown-it-anchor@9.2.1(@types/markdown-it@14.1.2)(markdown-it@14.3.0):
-    dependencies:
-      '@types/markdown-it': 14.1.2
-      markdown-it: 14.3.0
 
   markdown-it-bracketed-spans@1.0.3: {}
 
