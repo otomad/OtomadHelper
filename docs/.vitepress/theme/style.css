@@ -494,26 +494,40 @@ kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *, .wrapped, .menu-path > 
 		content: "⌃";
 	}
 
-	&:is(
-			[aria-keyshortcuts="alt" i],
-			[aria-keyshortcuts="alt gr" i],
-			[aria-keyshortcuts="altGr" i],
-			[aria-keyshortcuts="opt" i],
-			[aria-keyshortcuts="option" i]
-		)::before {
+	&[aria-keyshortcuts="helm" i]::before {
+		content: "⎈";
+	}
+
+	&:is([aria-keyshortcuts="opt" i], [aria-keyshortcuts="option" i])::before {
 		content: "⌥";
 	}
 
-	&:is([aria-keyshortcuts="cmd" i], [aria-keyshortcuts="command" i], [aria-keyshortcuts="meta" i])::before {
-		content: "⌘";
+	&:is([aria-keyshortcuts="alt" i], [aria-keyshortcuts="alt gr" i], [aria-keyshortcuts="altGr" i])::before {
+		content: "⎇";
 	}
 
 	&[aria-keyshortcuts="shift" i]::before {
 		content: "⇧";
 	}
 
+	&:is([aria-keyshortcuts="cmd" i], [aria-keyshortcuts="command" i])::before {
+		content: "⌘";
+	}
+
 	&:is([aria-keyshortcuts="win" i], [aria-keyshortcuts="windows" i])::before {
 		content: "⊞";
+	}
+
+	&[aria-keyshortcuts="meta" i]::before {
+		content: "◆";
+	}
+
+	&[aria-keyshortcuts="super" i]::before {
+		content: "❖";
+	}
+
+	&[aria-keyshortcuts="hyper" i]::before {
+		content: "✦";
 	}
 
 	&:is([aria-keyshortcuts$="enter" i], [aria-keyshortcuts="return" i], [aria-keyshortcuts="ret" i])::after {
@@ -609,11 +623,11 @@ kbd:not(.VPNavBarSearch *, .search-keyboard-shortcuts *, .wrapped, .menu-path > 
 		content: "⇭";
 	}
 
-	&[aria-keyshortcuts="fn" i]::before {
+	&:is([aria-keyshortcuts="fn" i], [aria-keyshortcuts="globe" i])::before {
 		content: "🌐";
 	}
 
-	&:is([aria-keyshortcuts="emoji" i], [aria-keyshortcuts="emoticon" i])::before {
+	&:is([aria-keyshortcuts="expressive" i], [aria-keyshortcuts="emoji" i], [aria-keyshortcuts="emoticon" i])::before {
 		content: "☺";
 	}
 

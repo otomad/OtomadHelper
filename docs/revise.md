@@ -370,9 +370,9 @@ It can span multiple lines and include **formatting**.
    ➜  Local:   http://localhost:7000/
    ```
 @en 3. Press [[Ctrl]] (or maybe [[Alt]]) and click the link **`http://localhost:7000/`**.
-@zh 3. 3. 按住 [[Ctrl]]（也有可能是 [[Alt]]）键不放并单击链接 **`http://localhost:7000/`**。
+@zh 3. 按住 [[Ctrl]]（也有可能是 [[Alt]]）键不放并单击链接 **`http://localhost:7000/`**。
 @en 4. Navigate to the page(s) you edited and check that everything looks correct.
-@zh 4. 4. 导航到你编辑过的页面，检查所有内容是否正确显示。
+@zh 4. 导航到你编辑过的页面，检查所有内容是否正确显示。
 
 ::: tip
 @en The preview updates automatically as you save files — just save in your editor and refresh the browser.
