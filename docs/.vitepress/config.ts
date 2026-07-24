@@ -1,6 +1,6 @@
 import { defineConfig, type DefaultTheme, type HeadConfig } from "vitepress";
 import i18nMacroPlugin from "markdown-it-i18n";
-import underlinePlugin from "./plugins/markdown-it/underline";
+import underlinePlugin from "markdown-it-underline-cjk-friendly";
 import detailsHeadingPlugin from "markdown-it-container-details-heading";
 import containerImportantPlugin from "./plugins/markdown-it/container-important";
 import bracketedSpansPlugin from "markdown-it-bracketed-spans";
@@ -21,7 +21,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import footnotePlugin from "./plugins/markdown-it/footnote";
 import { useI18nThemeConfig } from "./use-i18n";
 import smartypantsPlugin from "markdown-it-smartypants";
-import { mermaidPlugin } from './plugins/markdown-it/vitepress-mermaid';
+import { mermaidPlugin } from "./plugins/markdown-it/vitepress-mermaid";
 
 const base = process.env.READTHEDOCS_CANONICAL_URL
 	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
@@ -55,6 +55,16 @@ export default defineConfig({
 			md.use(footnotePlugin);
 			md.use(smartypantsPlugin);
 			md.use(mermaidPlugin);
+		},
+	},
+	vue: {
+		template: {
+			compilerOptions: {
+				isCustomElement: tag => {
+					const deprecatedTags = ["nobr"];
+					if (deprecatedTags.includes(tag)) return true;
+				},
+			},
 		},
 	},
 	vite: {

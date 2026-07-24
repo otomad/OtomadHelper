@@ -77,4 +77,8 @@ watch(
 .mermaid:has(> svg) {
 	opacity: 1;
 }
+
+.mermaid:deep(a) {
+	text-decoration-color: var(--vp-c-text-1);
+}
 </style>

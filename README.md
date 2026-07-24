@@ -32,7 +32,7 @@ The documentation covers two major versions:
 
 | Version | Type | Description |
 |---------|------|-------------|
-| **v8** (New) | Extension/Custom Command | The latest version, implemented as a Vegas Pro extension (aka custom command) |
+| **v8** (New) | Extension / Custom Command | The latest version, implemented as a Vegas Pro extension (aka custom command) |
 | **v4** (Old) | Script | The legacy version, implemented as a Vegas Pro script |
 
 ## Tech Stack
@@ -329,12 +329,14 @@ OtomadHelper_docs/                     # Repository root (docs branch)
 
 ```mermaid
 graph LR
-    A[Edit .md files] --> B[Commit & Push to docs branch]
-    B --> C[GitHub]
-    C --> D[Read the Docs detects push]
-    D --> E[RtD runs pnpm build]
-    E --> F[Static HTML generated]
-    F --> G[Served at otomadhelper.readthedocs.io]
+  A[Edit .md files] --> B[Commit & Push to docs branch]
+  B --> C[GitHub]
+  C --> D[Read the Docs detects push]
+  D --> E[RtD runs npm build]
+  E --> F[Static HTML generated]
+  F --> G[Served at otomadhelper.readthedocs.io]
+
+  click G "https://otomadhelper.readthedocs.io/"
 ```
 
 1. You edit Markdown files and push to the `docs` branch on GitHub.

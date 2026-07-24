@@ -16,10 +16,10 @@
 @en | Version | Type | Description |
 @zh | 版本 | 类型 | 说明 |
 |---------|------|-------------|
-@en | **v8** (New) | Extension/Custom Command | The latest version, implemented as a Vegas Pro extension (aka custom command) |
-@zh | **v8**（新版） | 扩展程序/自定义命令 | 最新版本，以Vegas Pro扩展程序（也被称为自定义命令）的形式实现 |
-@en | **v4** (Old) | Script | The legacy version, implemented as a Vegas Pro script |
-@zh | **v4**（旧版） | 脚本 | 旧版，以Vegas Pro脚本的形式实现 |
+@en | <nobr>**v8** (New)</nobr> | Extension / Custom Command | The latest version, implemented as a Vegas Pro extension (aka custom command) |
+@zh | <nobr>**v8**（新版）</nobr> | 扩展程序/自定义命令 | 最新版本，以Vegas Pro扩展程序（也被称为自定义命令）的形式实现 |
+@en | <nobr>**v4** (Old)</nobr> | Script | The legacy version, implemented as a Vegas Pro script |
+@zh | <nobr>**v4**（旧版）</nobr> | 脚本 | 旧版，以Vegas Pro脚本的形式实现 |
 
 @en ## Tech Stack
 @zh ## 技术架构
@@ -70,9 +70,9 @@
 @zh 以行为单位为其编写多语言翻译。格式以一个 **`@`符号**开头，后面紧跟着语言标签，空一格后填写该语言在本行的翻译内容：
 
 ```markdown
-﹫en This is English content.
-﹫zh 这是中文内容。
-﹫ja これは日本語の内容です。
+\@en This is English content.
+\@zh 这是中文内容。
+\@ja これは日本語の内容です。
 ```
 
 @en Currently supported language tags: `en` (English), `zh` (Simplified Chinese).
@@ -85,13 +85,13 @@
 @zh 以块为单位为其编写多语言翻译。适用于大量内容差异或复杂格式的多语言翻译，例如整个表格、警告框等。格式以**三个`@`符号**开头，后面紧跟语言标签：
 
 ```markdown
-﹫﹫﹫en
+\@@@en
 This is a large block of English content.
 It can span multiple lines and include **formatting**.
-﹫﹫﹫zh
+\@@@zh
 这是一大段中文内容。
 它可以跨越多行并包含**格式**。
-﹫﹫﹫
+\@@@
 ```
 
 @en - Start a block with `@@@` followed by a language tag.
@@ -338,8 +338,8 @@ It can span multiple lines and include **formatting**.
 @zh - 修改错别字或错误：找到 `@en` 行进行编辑，对应的 `@zh` 行就在其下方。
 @en - To add a new section: write `@en Your English text` followed by `@zh 你的中文文本` for each paragraph.
 @zh - 添加新段落：为每个段落写 `@en 你的英文文本`，紧接着下面写 `@zh 你的中文文本`。
-@en - For large blocks (warnings, tables, etc.), use the `﹫﹫﹫en` / `﹫﹫﹫zh` / `﹫﹫﹫` block format.
-@zh - 对于大块内容（警告框、表格等），请使用 `﹫﹫﹫en` / `﹫﹫﹫zh` / `﹫﹫﹫` 块格式。
+@en - For large blocks (warnings, tables, etc.), use the `@@@en` / `@@@zh` / `@@@` block format.
+@zh - 对于大块内容（警告框、表格等），请使用 `@@@en` / `@@@zh` / `@@@` 块格式。
 :::
 
 ---
@@ -499,22 +499,26 @@ OtomadHelper_docs/                     # 仓库根目录（docs 分支）
 @@@en
 ```mermaid
 graph LR
-    A[Edit .md files] --> B[Commit & Push to docs branch]
-    B --> C[GitHub]
-    C --> D[Read the Docs detects push]
-    D --> E[RtD runs pnpm build]
-    E --> F[Static HTML generated]
-    F --> G[Served at otomadhelper.readthedocs.io]
+  A[Edit .md files] --> B[Commit & Push to docs branch]
+  B --> C[GitHub]
+  C --> D[Read the Docs detects push]
+  D --> E[RtD runs npm build]
+  E --> F[Static HTML generated]
+  F --> G[Served at otomadhelper.readthedocs.io]
+
+  click G "https://otomadhelper.readthedocs.io/"
 ```
 @@@zh
 ```mermaid
 graph LR
-    A[编辑 .md 文件] --> B[提交并推送到 docs 分支]
-    B --> C[GitHub]
-    C --> D[Read the Docs 检测到推送]
-    D --> E[RtD 运行 pnpm build]
-    E --> F[生成静态 HTML]
-    F --> G[在 otomadhelper.readthedocs.io 上呈现]
+  A[编辑 .md 文件] --> B[提交并推送到 docs 分支]
+  B --> C[GitHub]
+  C --> D[Read the Docs 检测到推送]
+  D --> E[RtD 运行 npm build]
+  E --> F[生成静态 HTML]
+  F --> G[在 otomadhelper.readthedocs.io 上呈现]
+
+  click G "https://otomadhelper.readthedocs.io/zh-CN/"
 ```
 @@@
 

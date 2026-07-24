@@ -333,12 +333,14 @@ OtomadHelper_docs/                     # 仓库根目录（docs 分支）
 
 ```mermaid
 graph LR
-    A[编辑 .md 文件] --> B[提交并推送到 docs 分支]
-    B --> C[GitHub]
-    C --> D[Read the Docs 检测到推送]
-    D --> E[RtD 运行 pnpm build]
-    E --> F[生成静态 HTML]
-    F --> G[在 otomadhelper.readthedocs.io 上呈现]
+  A[编辑 .md 文件] --> B[提交并推送到 docs 分支]
+  B --> C[GitHub]
+  C --> D[Read the Docs 检测到推送]
+  D --> E[RtD 运行 npm build]
+  E --> F[生成静态 HTML]
+  F --> G[在 otomadhelper.readthedocs.io 上呈现]
+
+  click G "https://otomadhelper.readthedocs.io/zh-CN/"
 ```
 
 1. 你编辑 Markdown 文件并推送到 GitHub 上的 `docs` 分支。

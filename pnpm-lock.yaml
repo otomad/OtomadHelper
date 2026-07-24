@@ -42,11 +42,14 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       markdown-it-i18n:
-        specifier: ^1.0.4
-        version: 1.0.4
+        specifier: ^1.0.5
+        version: 1.0.5
       markdown-it-smartypants:
         specifier: ^1.0.0
         version: 1.0.0
+      markdown-it-underline-cjk-friendly:
+        specifier: ^1.0.3
+        version: 1.0.3
       mermaid:
         specifier: ^11.16.0
         version: 11.16.0
@@ -1622,14 +1625,17 @@ packages:
   markdown-it-footnote@4.0.0:
     resolution: {integrity: sha512-WYJ7urf+khJYl3DqofQpYfEYkZKbmXmwxQV8c8mO/hGIhgZ1wOe7R4HLFNwqx7TjILbnC98fuyeSsin19JdFcQ==}
 
-  markdown-it-i18n@1.0.4:
-    resolution: {integrity: sha512-zn8eoMiCqHH4MGoI+8c3NmX0C/8nssiliIo6ksYfyU9n1LUrbExev326Xp5uLpp23mstyepy20H1Pv8nlnKJPg==}
+  markdown-it-i18n@1.0.5:
+    resolution: {integrity: sha512-hcNBSFSvN95k2qCqJk2nM5IrxwJTIdnlYxLAh8q1fuaFvwQtBRygyT3WrSXiC6gL0lMn2QpEjjcd4wCtPrArOQ==}
 
   markdown-it-mathjax3@4.3.2:
     resolution: {integrity: sha512-TX3GW5NjmupgFtMJGRauioMbbkGsOXAAt1DZ/rzzYmTHqzkO1rNAdiMD4NiruurToPApn2kYy76x02QN26qr2w==}
 
   markdown-it-smartypants@1.0.0:
     resolution: {integrity: sha512-PhrAxdVMx1mWBSP8sF3qzp2i9qWzR8Vh0WqKr5fFEYu2PUA/WsM03yBiKyxobDbHyVx7x0rDoYvjtsJFffVRJg==}
+
+  markdown-it-underline-cjk-friendly@1.0.3:
+    resolution: {integrity: sha512-0HrQMxD8z3qXlmNtgJnzXvYWyi39vCXFySNzklBioiYGOvqKCabLSqemAB+3lzQQdLdQtKy5/GdkRm9mlHTvqQ==}
 
   markdown-it@14.3.0:
     resolution: {integrity: sha512-RCEsPjR+sr0x+AuYp601tKTkgFG4YEPLCzHST3cQ/fhlJkqAkz1L2/Qbp1j9qw5SBwQHFBoW8+hoN5xssOF0Tw==}
@@ -3514,7 +3520,7 @@ snapshots:
 
   markdown-it-footnote@4.0.0: {}
 
-  markdown-it-i18n@1.0.4: {}
+  markdown-it-i18n@1.0.5: {}
 
   markdown-it-mathjax3@4.3.2:
     dependencies:
@@ -3527,6 +3533,8 @@ snapshots:
   markdown-it-smartypants@1.0.0:
     dependencies:
       fullwidth-quotes: 2.0.0
+
+  markdown-it-underline-cjk-friendly@1.0.3: {}
 
   markdown-it@14.3.0:
     dependencies:
