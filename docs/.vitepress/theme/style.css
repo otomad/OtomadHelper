@@ -687,77 +687,16 @@ summary {
 }
 
 /**
- * Fix Component: Algolia Search (PageFind)
- */
-.nav-search-btn-wait {
-	border-radius: 8px !important;
-}
-
-.algolia [command-dialog-mask] {
-	background-color: var(--vp-backdrop-bg-color);
-}
-
-.vitepress-image-viewer__mask {
-	opacity: 1 !important;
-	background-color: var(--vp-backdrop-bg-color) !important;
-}
-
-.vitepress-image-viewer__actions,
-.vitepress-image-viewer__btn {
-	opacity: 1 !important;
-	background-color: hsla(0, 0%, 0%, 0.22) !important; /* var(--grayA9) in light theme */
-	backdrop-filter: blur(3px);
-}
-
-.vitepress-image-viewer__btn:hover:not(.is-disabled) {
-	background-color: hsla(0, 0%, 0%, 0.141) !important; /* var(--grayA8) in light theme */
-}
-
-.vitepress-image-viewer__btn.is-disabled {
-	opacity: 0.4 !important;
-}
-
-.vitepress-image-viewer__progress {
-	-webkit-text-stroke: 1.5px black;
-	paint-order: stroke fill;
-}
-
-/**
  * Fix Component: Back to Top
  */
-.back-to-top:not(#\#) {
-	pointer-events: none;
-	bottom: 100px;
+.VPDoc main {
+	/* HACK: 针对 Chromium 浏览器的意料之外的 BUG。如果未对 main 元素设置背景色或设为透明色，则 Back to Top 插件的亚克力背景会出现渲染层级异常。 */
+	background-color: var(--vp-c-bg);
+}
 
-	&,
-	.icon-wrapper {
-		transition:
-			opacity,
-			scale cubic-bezier(0, 0, 0, 1),
-			display;
-		transition-behavior: allow-discrete;
-		transition-duration: 250ms;
-	}
-
-	.icon-wrapper {
-		pointer-events: auto;
-
-		&:active {
-			scale: 0.9;
-		}
-
-		@starting-style {
-			scale: 0;
-		}
-	}
-
-	&[style*="display: none"] .icon-wrapper {
-		scale: 0;
-	}
-
-	@media print {
-		display: none;
-	}
+.back-to-top {
+	--box-shadow-color: var(--vp-c-brand-soft) !important;
+	--box-shadow-hover-color: var(--vp-c-brand-soft) !important;
 }
 
 /**

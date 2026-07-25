@@ -164,44 +164,8 @@ readthedocs-flyout::part(flyout) {
 	animation-name: float-up-slight-in;
 }
 
-.vitepress-image-viewer__wrapper {
-	.vitepress-image-viewer__canvas,
-	.vitepress-image-viewer__close {
-		animation: zoom-in cubic-bezier(0, 0, 0, 1) 250ms;
-	}
-
-	.vitepress-image-viewer__mask,
-	.vitepress-image-viewer__actions,
-	.vitepress-image-viewer__progress,
-	.vitepress-image-viewer__prev,
-	.vitepress-image-viewer__next {
-		animation: none;
-		transition:
-			opacity 250ms,
-			translate 250ms;
-	}
-
-	@starting-style {
-		.vitepress-image-viewer__mask {
-			opacity: 0 !important;
-		}
-
-		.vitepress-image-viewer__actions,
-		.vitepress-image-viewer__progress {
-			translate: 0 100px;
-		}
-
-		.vitepress-image-viewer__prev {
-			translate: -80px;
-		}
-
-		.vitepress-image-viewer__next {
-			translate: 80px;
-		}
-	}
-}
-
-.VPBackdrop {
+.VPBackdrop,
+.algolia [command-dialog-mask] {
 	view-transition-name: backdrop;
 
 	&.fade-leave-active:not(#\#) {

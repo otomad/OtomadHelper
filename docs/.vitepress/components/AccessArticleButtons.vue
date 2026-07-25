@@ -125,8 +125,8 @@ const rssFeed = () => {
 	if (link) window.open(link);
 };
 
-const share = () => {
-	navigator.share?.({
+const share = async () => {
+	await navigator.share?.({
 		title: document.title,
 		url: location.href,
 	});
