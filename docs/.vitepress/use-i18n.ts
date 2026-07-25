@@ -90,5 +90,8 @@ export function useI18nThemeConfig(lang: "en" | "zh" | (string & {})) {
 		footnote: {
 			footnotesHeading: t({ en: "Footnotes", zh: "脚注" }),
 		},
+		anchor: {
+			permalinkTo: t({ en: "Permalink to “{}”", zh: "“\ufe01{}”\ufe01的永久链接" }),
+		},
 	};
 }

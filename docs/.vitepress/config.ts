@@ -22,11 +22,18 @@ import footnotePlugin from "./plugins/markdown-it/footnote";
 import { useI18nThemeConfig } from "./use-i18n";
 import smartypantsPlugin from "markdown-it-smartypants";
 import { mermaidPlugin } from "./plugins/markdown-it/vitepress-mermaid";
+import anchorPlugin from "markdown-it-anchor";
 
 const base = process.env.READTHEDOCS_CANONICAL_URL
 	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
 	: "";
 const withBase = (path: string) => join(base || "/", path);
+const slugify = (str: string) =>
+	str
+		.toLowerCase()
+		.replaceAll(/[\p{P}\p{S}]/gu, " ")
+		.trim()
+		.replaceAll(/\s+/g, "-");
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -36,6 +43,18 @@ export default defineConfig({
 	markdown: {
 		breaks: true,
 		cjkFriendlyEmphasis: true,
+		anchor: {
+			permalink: anchorPlugin.permalink.linkInsideHeader({
+				space: false,
+				symbol: "",
+				renderAttrs: (_1, state, _3, _4, title) => ({
+					"aria-label": !title
+						? undefined!
+						: useI18nThemeConfig(state.env.localeIndex).anchor.permalinkTo.replaceAll("{}", title),
+				}),
+			}),
+			slugify,
+		},
 		config: md => {
 			md.use(i18nMacroPlugin, {
 				langAlias(locale, rawLang) {
@@ -55,18 +74,10 @@ export default defineConfig({
 			md.use(footnotePlugin);
 			md.use(smartypantsPlugin);
 			md.use(mermaidPlugin);
-			/* md.use(anchorPlugin, {
-				permalink: anchorPlugin.permalink.linkInsideHeader({
-					space: false,
-					symbol: "",
-				}),
-				slugify: str =>
-					str
-						.toLowerCase()
-						.replaceAll(/[\p{P}\p{S}]/gu, " ")
-						.trim()
-						.replaceAll(/\s+/g, "-"),
-			}); */
+		},
+		preConfig: md => {
+			// See: https://github.com/vuejs/vitepress/discussions/5334#discussioncomment-17772849
+			md.use(anchorPlugin);
 		},
 	},
 	vue: {
