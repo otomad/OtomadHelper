@@ -199,6 +199,10 @@ readthedocs-flyout::part(flyout) {
 	block-size: 0;
 }
 
+.back-to-top {
+	view-transition-name: back-to-top;
+}
+
 @keyframes float-up-out {
 	to {
 		translate: 0 -2rem;
