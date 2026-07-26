@@ -438,6 +438,15 @@ readthedocs-flyout {
 }
 
 /**
+ * Component: VPNavBar 在改变窗口尺寸时会短暂变透明动画
+ */
+@media (width < 960px) {
+	.VPNavBar:not(.home) .content-body {
+		background-color: var(--vp-nav-bg-color) !important;
+	}
+}
+
+/**
  * Component: Kbd
  */
 * {
@@ -689,14 +698,31 @@ summary {
 /**
  * Fix Component: Back to Top
  */
-.VPDoc main {
+.VPDoc :has(~ .back-to-top) {
 	/* HACK: 针对 Chromium 浏览器的意料之外的 BUG。如果未对 main 元素设置背景色或设为透明色，则 Back to Top 插件的亚克力背景会出现渲染层级异常。 */
 	background-color: var(--vp-c-bg);
 }
 
 .back-to-top {
-	--box-shadow-color: var(--vp-c-brand-soft) !important;
-	--box-shadow-hover-color: var(--vp-c-brand-soft) !important;
+	--box-shadow-color: oklch(from var(--vp-c-brand-1) calc(l / 2.5) c h / calc(alpha * 0.08)) !important;
+	--box-shadow-hover-color: oklch(from var(--vp-c-brand-1) calc(l / 2.5) c h / calc(alpha * 0.2)) !important;
+}
+html.dark .back-to-top {
+	--box-shadow-color: oklch(from var(--vp-c-brand-1) calc(l / 2.5) c h / calc(alpha * 0.2)) !important;
+	--box-shadow-hover-color: oklch(from var(--vp-c-brand-1) calc(l / 5) c h / calc(alpha * 0.7)) !important;
+}
+.back-to-top .icon-wrapper:not(:hover):not(:active) {
+	background-color: rgb(from var(--vp-c-brand-soft) r g b / calc(alpha * 0.6));
+	color: rgb(from var(--vp-c-brand-1) r g b / calc(alpha * 0.6));
+}
+
+.vitepress-image-viewer__btn.is-disabled {
+	opacity: 1 !important;
+	background-color: #00000016 !important;
+	color: #fff6 !important;
+}
+html.dark .vitepress-image-viewer__btn.is-disabled {
+	background-color: #60626633 !important;
 }
 
 /**

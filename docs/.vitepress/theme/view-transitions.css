@@ -199,7 +199,7 @@ readthedocs-flyout::part(flyout) {
 	block-size: 0;
 }
 
-.back-to-top {
+.back-to-top .icon-wrapper {
 	view-transition-name: back-to-top;
 }
 

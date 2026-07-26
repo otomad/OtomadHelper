@@ -68,6 +68,8 @@ export function useI18nThemeConfig(lang: "en" | "zh" | (string & {})) {
 			toNavigate: t({ zh: "导航" }),
 			toClose: t({ zh: "关闭" }),
 			searchBy: t({ zh: "搜索提供" }),
+			displayDetailedList: t({ zh: "显示详细列表" }),
+			resetSearch: t({ zh: "重置搜索" }),
 		} as SearchConfig,
 		rssFeed: {
 			rssFeedTitle: t({ en: "RSS Feed", zh: "RSS 订阅" }),
