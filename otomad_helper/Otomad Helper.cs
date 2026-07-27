@@ -34772,7 +34772,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				TUTORIAL_VIDEO_V0_1 = "https://www.bilibili.com/video/av22226321",
 				RELEASE_NOTES_V4_9_25_0 = "http://www.bilibili.com/read/cv13335178",
 				RELEASE_NOTES_V4_10_17_0 = "https://www.bilibili.com/read/cv13614419",
-				DOCUMENTATION_ENGLISH = "https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng",
+				DOCUMENTATION_ENGLISH = "https://otomadhelper.readthedocs.io/v4/introduction.html",
 				TUTORIAL_VIDEO_ENGLISH = "https://youtu.be/8vSpzgL_86A", // Bug 之一：链接中不能包含如问号或等号等特殊符号。暂时打不开，以 YouTube 短链替换之。
 				TUTORIAL_VIDEO_V4_X_CHINESE = "https://www.bilibili.com/video/av613241077",
 				TUTORIAL_VIDEO_V4_X_ENGLISH = "https://youtu.be/amDtqY_HsGM",
