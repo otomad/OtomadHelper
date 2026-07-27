@@ -92,7 +92,7 @@
 @zh ### 拉伸
 
 @en _Makes the clip stretch if applicable_
-@zh _Makes the clip stretch if applicable_
+@zh _如果适用的话，使剪辑循环。_
 
 @en * **None**
 @zh * **不拉伸**

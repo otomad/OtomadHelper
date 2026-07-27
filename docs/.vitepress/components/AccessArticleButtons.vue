@@ -19,6 +19,7 @@ import icon from "@vp/theme/icons/print.svg?raw";
 import { useI18n } from "@vp/use-i18n";
 import { computed, reactive, onMounted, ref, useTemplateRef } from "vue";
 import { getRssFeedLink } from "@vp/plugins/rss-feed_get-link";
+import { URLEx } from "@vp/theme/hash-open-and-scroll";
 const t = useI18n();
 const data = useData();
 
@@ -71,8 +72,8 @@ const viewAsMarkdown = () => {
 };
 
 const isCopyingMarkdown = ref<false | null | true>(false);
-const copiedMarkdownTimeoutId = ref<number>();
-const copiedMarkdownCloseDropdownTimeoutId = ref<number>();
+const copiedMarkdownTimeoutId = ref<NodeJS.Timeout>();
+const copiedMarkdownCloseDropdownTimeoutId = ref<NodeJS.Timeout>();
 const copyAsMarkdown = async () => {
 	if (isCopyingMarkdown.value) return;
 	clearTimeout(copiedMarkdownTimeoutId.value);
@@ -116,7 +117,7 @@ const openInAi = (provider: string) => {
 		en: `Read from ${markdown} so I can ask questions about it.`,
 		zh: `请阅读 ${markdown} ，以便我可以提出相关问题。`,
 	});
-	window.open(defaultAiProviders[provider] + encodeURIComponent(prompt), "_blank");
+	window.open(defaultAiProviders[provider as keyof typeof defaultAiProviders] + encodeURIComponent(prompt), "_blank");
 };
 
 const rssFeed = () => {
@@ -128,13 +129,13 @@ const rssFeed = () => {
 const share = async () => {
 	await navigator.share?.({
 		title: document.title,
-		url: location.href,
+		url: new URLEx().toString(),
 	});
 };
 
 const isSpeaking = ref<false | null | true>(false);
 const speak = () => {
-	const post = document.querySelector(".vp-doc > div");
+	const post = document.querySelector(".vp-doc > div") as HTMLDivElement;
 	const utterance = new SpeechSynthesisUtterance(post.innerText);
 	const voices = speechSynthesis.getVoices();
 	const locale = new Intl.Locale(document.documentElement.lang).maximize();

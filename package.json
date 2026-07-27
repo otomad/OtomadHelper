@@ -2,6 +2,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vitepress dev docs",
+		"dev:force": "vitepress dev docs --force",
 		"build": "vitepress build docs",
 		"preview": "vitepress preview docs",
 		"fmt": "oxfmt",
@@ -30,7 +31,7 @@
 		"vitepress-plugin-back2top": "^0.1.3",
 		"vitepress-plugin-image-preview": "^0.1.5",
 		"vitepress-plugin-llmstxt": "^0.5.2",
-		"vitepress-plugin-pagefind": "^0.4.23"
+		"vitepress-plugin-pagefind": "file:D:/sugar-blog/packages/vitepress-plugin-pagefind"
 	},
 	"devDependencies": {
 		"@types/markdown-it": "^14.1.2",

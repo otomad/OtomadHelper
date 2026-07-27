@@ -1,4 +1,4 @@
-.VPLocalSearchBox > *,
+/* .VPLocalSearchBox > *,
 .algolia [command-dialog-mask],
 .algolia [command-dialog-wrapper] {
 	transition: 250ms;
@@ -12,7 +12,7 @@
 			translate: 0 -1rem;
 		}
 	}
-}
+} */
 
 .VPNavScreenTranslations {
 	transition: height 250ms;

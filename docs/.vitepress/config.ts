@@ -24,6 +24,7 @@ import smartypantsPlugin from "markdown-it-smartypants";
 import { mermaidPlugin } from "./plugins/markdown-it/vitepress-mermaid";
 import anchorPlugin from "markdown-it-anchor";
 
+const ENABLE_MINIFY = false; // true;
 const base = process.env.READTHEDOCS_CANONICAL_URL
 	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
 	: "";
@@ -97,6 +98,7 @@ export default defineConfig({
 			back2topPlugin(),
 			pagefindPlugin({
 				customSearchQuery: chineseSearchOptimize,
+				showDate: true,
 				locales: {
 					"zh-CN": useI18nThemeConfig("zh").pageFind,
 				},
@@ -123,7 +125,9 @@ export default defineConfig({
 			// See: https://github.com/parcel-bundler/lightningcss/issues/1069
 			// LightningCSS even messes property declaration order! It will break the CSS behavior!.
 			// See: https://github.com/parcel-bundler/lightningcss/issues/1084
-			cssMinify: "esbuild",
+			cssMinify: ENABLE_MINIFY ? "esbuild" : false,
+			minify: ENABLE_MINIFY ? "oxc" : false,
+			chunkSizeWarningLimit: 500_000,
 		},
 	},
 	lastUpdated: true,

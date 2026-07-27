@@ -13,6 +13,16 @@
 		},
 		{
 			"type": "npm",
+			"script": "dev:force",
+			"problemMatcher": [],
+			"label": "npm: dev:force",
+			"detail": "vitepress dev docs --force",
+			"group": {
+				"kind": "build"
+			}
+		},
+		{
+			"type": "npm",
 			"script": "build",
 			"group": {
 				"kind": "build",
