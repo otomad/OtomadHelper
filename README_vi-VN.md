@@ -50,7 +50,7 @@ Chọn track event nguồn trong track window, hoặc chọn file phương tiệ
 
 Bạn có thể thêm script thành nút toolbar thay vì luôn phải click vào menu phụ *Tools > Scripting*, bằng cách thêm vào toolbar thông qua menu *Options > Customize Toolbar*.
 
-Bạn cũng có thể đọc [tài liệu](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng) của [@Evauation](https://github.com/Evauation) *(Tiếng Anh)* và xem [video hướng dẫn](https://www.youtube.com/watch?v=8vSpzgL_86A) của [@Cassidy](https://github.com/composition-cassidy) *(Tiếng Anh)*, [video hướng dẫn](https://www.youtube.com/watch?v=fVWfUAf063o) của @GreenBean *(Tiếng Anh)*, [video hướng dẫn](https://www.youtube.com/watch?v=vLqYIaw0hMc) của [@Cyahega](https://github.com/cyahega) *(Tiếng Việt)*.
+Bạn cũng có thể đọc [tài liệu](https://otomadhelper.readthedocs.io/v4/introduction.html) *(Tiếng Anh)* và xem [video hướng dẫn](https://www.youtube.com/watch?v=8vSpzgL_86A) của [@Cassidy](https://github.com/composition-cassidy) *(Tiếng Anh)*, [video hướng dẫn](https://www.youtube.com/watch?v=fVWfUAf063o) của @GreenBean *(Tiếng Anh)*, [video hướng dẫn](https://www.youtube.com/watch?v=vLqYIaw0hMc) của [@Cyahega](https://github.com/cyahega) *(Tiếng Việt)*.
 
 [Bấm vào đây để xem giới thiệu về Datamosh](Datamosh/README.md). Bạn cũng có thể [xem video](https://www.youtube.com/watch?v=6D2lW6H0bb8) *(Tiếng Anh)*.
 

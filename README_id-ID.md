@@ -50,7 +50,7 @@ Pilih trek source di trek jendela (maksudnya di timeline), atau pilih trek sourc
 
 Kalian bisa menambahkan skrip sebagai tombol toolbar daripada harus mengeklik di dalam submenu *Tools > Scripting*, dengan menambahkannya ke toolbar menggunakan menu *Options > Customize Toolbar*.
 
-Kalian bisa baca ini: [@Evauation](https://github.com/Evauation)'s [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng) *(Inggris)* dan nonton video ini: [@Cassidy](https://github.com/composition-cassidy)'s [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(Inggris)*, @GreenBean's [tutorial video](https://www.youtube.com/watch?v=fVWfUAf063o) *(Inggris)*, [@Cyahega](https://github.com/cyahega)'s [tutorial video](https://www.youtube.com/watch?v=vLqYIaw0hMc) *(Vietnam)*.
+Kalian bisa baca ini: [documentation](https://otomadhelper.readthedocs.io/v4/introduction.html) *(Inggris)* dan nonton video ini: [@Cassidy](https://github.com/composition-cassidy)'s [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(Inggris)*, @GreenBean's [tutorial video](https://www.youtube.com/watch?v=fVWfUAf063o) *(Inggris)*, [@Cyahega](https://github.com/cyahega)'s [tutorial video](https://www.youtube.com/watch?v=vLqYIaw0hMc) *(Vietnam)*.
 
 [Tekan sini untuk intruksi Datamosh](Datamosh/README.md). Atau nonton [watch the video](https://www.youtube.com/watch?v=6D2lW6H0bb8) *(Inggris)*.
 
