@@ -50,7 +50,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 您可以選擇功能表列 *選項 > 自訂工具列*，將腳本添加到工具列中以便操作。
 
-您也可以閱讀 [說明文件](https://otomadhelper.readthedocs.io/v4/introduction.html)*（英語）*，觀看 [@Cassidy](https://github.com/composition-cassidy) 的[教程影片](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英語）*、@GreenBean 的[教程影片](https://www.youtube.com/watch?v=fVWfUAf063o) *（英語）*、[@Cyahega](https://github.com/cyahega) 的[教程影片](https://www.youtube.com/watch?v=vLqYIaw0hMc) *（越南語）*。
+您也可以閱讀[說明文件](https://otomadhelper.readthedocs.io/v4/introduction.html)*（英語）*，觀看 [@Cassidy](https://github.com/composition-cassidy) 的[教程影片](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英語）*、@GreenBean 的[教程影片](https://www.youtube.com/watch?v=fVWfUAf063o)*（英語）*、[@Cyahega](https://github.com/cyahega) 的[教程影片](https://www.youtube.com/watch?v=vLqYIaw0hMc)*（越南語）*。
 
 [點擊此處查看資料狂舞的使用介紹](Datamosh/README.md)。您也可以[觀看影片](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英語）*。
 
