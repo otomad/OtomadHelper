@@ -19,7 +19,6 @@ import icon from "@vp/theme/icons/print.svg?raw";
 import { useI18n } from "@vp/use-i18n";
 import { computed, reactive, onMounted, ref, useTemplateRef } from "vue";
 import { getRssFeedLink } from "@vp/plugins/rss-feed_get-link";
-import { URLEx } from "@vp/theme/hash-open-and-scroll";
 const t = useI18n();
 const data = useData();
 
@@ -129,7 +128,7 @@ const rssFeed = () => {
 const share = async () => {
 	await navigator.share?.({
 		title: document.title,
-		url: new URLEx().toString(),
+		url: location.href,
 	});
 };
 

@@ -35,6 +35,7 @@
 	},
 	"devDependencies": {
 		"@types/markdown-it": "^14.1.2",
+		"@types/markdown-it-footnote": "^3.0.4",
 		"@types/node": "^26.0.0",
 		"oxfmt": "^0.55.0",
 		"vue": "^3.5.39"
