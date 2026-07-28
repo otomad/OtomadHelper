@@ -19,8 +19,8 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite --host",
-		"dev-force": "vite --host --force",
-		"dev-delete-auto-types": "pnpm run delete-auto-types && vite --host --force",
+		"dev:force": "vite --host --force",
+		"dev:delete-auto-types": "pnpm run delete-auto-types && vite --host --force",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prebuild": "scripts\\prebuild.bat",

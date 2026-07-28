@@ -19,18 +19,18 @@
 		},
 		{
 			"type": "npm",
-			"script": "dev-force",
+			"script": "dev:force",
 			"group": "build",
 			"problemMatcher": [],
-			"label": "npm: dev-force",
+			"label": "npm: dev:force",
 			"detail": "vite",
 		},
 		{
 			"type": "npm",
-			"script": "dev-delete-auto-types",
+			"script": "dev:delete-auto-types",
 			"group": "build",
 			"problemMatcher": [],
-			"label": "npm: dev-delete-auto-types",
+			"label": "npm: dev:delete-auto-types",
 			"detail": "vite",
 		},
 		{
