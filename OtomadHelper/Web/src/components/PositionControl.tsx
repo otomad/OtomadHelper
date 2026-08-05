@@ -105,7 +105,7 @@ export default function PositionControl({ value, disabled, defaultValue = [50, 5
 }>) {
 	const thumbEl = useDomRef<"div">(), buttonsEl = useDomRef<"div">();
 	const lastPointerAction = useRef<"move" | "down" | "down move" | "up">("up");
-	const smoothValue = useSmoothValue(value, 0.5);
+	const smoothValue = useSmoothValue(value);
 
 	const getHoveredElements = (e: PointerEvent) => document.elementsFromPoint(e.pageX, e.pageY);
 

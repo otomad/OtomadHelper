@@ -212,7 +212,7 @@ export default function Slider({ value: _value, min = 0, max = 100, autoClampVal
 	const constrain = useCallback((n: number | undefined, nanValue: number) => Number.isFinite(n) ? clamp(map(n!, min, max, 0, 1), 0, 1) : nanValue, [min, max]);
 	const sharpValue = useMemo(() => constrain(value, 0), [value, constrain]);
 	// Modify this parameter to adjust the smooth movement value of the slider.
-	let smoothValue = useSmoothValue(sharpValue, 0.5);
+	let smoothValue = useSmoothValue(sharpValue);
 	if (disableSmooth) smoothValue = sharpValue;
 	const id = useId();
 

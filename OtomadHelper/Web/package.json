@@ -69,6 +69,7 @@
 		"react-i18next": "^16.2.4",
 		"react-modifiers": "^1.0.2",
 		"react-transition-group-fc": "^4.6.2",
+		"smooth-value": "^1.1.0",
 		"styled-components": "^6.1.19",
 		"styled-tools": "^1.7.2",
 		"use-immer": "^0.11.0",

@@ -92,6 +92,10 @@ export default [
 		"react-modifiers": [
 			["default", "mod"],
 		],
+		["smooth-value/react"]: [
+			"useSmoothValue",
+			"getSpringByFps",
+		],
 		/* "@number-flow/react": [
 			["default", "NumberFlow"],
 		], */
