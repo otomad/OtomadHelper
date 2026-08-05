@@ -1,0 +1,2 @@
+overrides:
+  vitepress-plugin-outline-depth: link:../../../../vitepress-plugin-outline-depth

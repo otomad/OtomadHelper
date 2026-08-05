@@ -728,7 +728,8 @@ html.dark .vitepress-image-viewer__btn.is-disabled {
 /**
  * Fix Component: Mouse Wheel Overscroll the Outline will Unexpectedly Trigger Page Scroll
  */
-.aside-container {
+.VPDoc .aside-container,
+.VPLocalNavOutlineDropdown .items {
 	overscroll-behavior: contain;
 }
 

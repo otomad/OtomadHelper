@@ -1,40 +1,41 @@
-import { defineConfig, type DefaultTheme, type HeadConfig } from "vitepress";
-import i18nMacroPlugin from "markdown-it-i18n";
-import underlinePlugin from "markdown-it-underline-cjk-friendly";
-import detailsHeadingPlugin from "markdown-it-container-details-heading";
-import containerImportantPlugin from "./plugins/markdown-it/container-important";
-import bracketedSpansPlugin from "markdown-it-bracketed-spans";
-import kbdPlugin from "./plugins/markdown-it/kbd";
-import fixCodeCopyI18n from "./plugins/markdown-it/fix-code-copy-i18n";
-import { katex } from "@mdit/plugin-katex";
-import { resolve } from "path";
-import { join } from "path/posix";
-import { pagefindPlugin, chineseSearchOptimize } from "vitepress-plugin-pagefind";
-import { ImagePreviewPlugin } from "vitepress-plugin-image-preview";
-import { back2topPlugin } from "vitepress-plugin-back2top";
-import { llmstxtPlugin } from "vitepress-plugin-llmstxt";
-import hostname from "./plugins/hostname";
-import { createRssFeeds } from "./plugins/rss-feed";
-import { getRssFeedLink } from "./plugins/rss-feed_get-link";
-import llmsTransform from "./plugins/llms-transform";
-import vueJsx from "@vitejs/plugin-vue-jsx";
-import footnotePlugin from "./plugins/markdown-it/footnote";
-import { useI18nThemeConfig } from "./use-i18n";
-import smartypantsPlugin from "markdown-it-smartypants";
-import { mermaidPlugin } from "./plugins/markdown-it/vitepress-mermaid";
-import anchorPlugin from "markdown-it-anchor";
+import { resolve } from "path"
+import { join } from "path/posix"
+import { katex } from "@mdit/plugin-katex"
+import vueJsx from "@vitejs/plugin-vue-jsx"
+import anchorPlugin from "markdown-it-anchor"
+import bracketedSpansPlugin from "markdown-it-bracketed-spans"
+import detailsHeadingPlugin from "markdown-it-container-details-heading"
+import i18nMacroPlugin from "markdown-it-i18n"
+import smartypantsPlugin from "markdown-it-smartypants"
+import underlinePlugin from "markdown-it-underline-cjk-friendly"
+import { defineConfig, type DefaultTheme, type HeadConfig } from "vitepress"
+import { back2topPlugin } from "vitepress-plugin-back2top"
+import { ImagePreviewPlugin } from "vitepress-plugin-image-preview"
+import { llmstxtPlugin } from "vitepress-plugin-llmstxt"
+import outlineDepthPlugin from "vitepress-plugin-outline-depth"
+import { pagefindPlugin, chineseSearchOptimize } from "vitepress-plugin-pagefind"
+import hostname from "./plugins/hostname"
+import llmsTransform from "./plugins/llms-transform"
+import containerImportantPlugin from "./plugins/markdown-it/container-important"
+import fixCodeCopyI18n from "./plugins/markdown-it/fix-code-copy-i18n"
+import footnotePlugin from "./plugins/markdown-it/footnote"
+import kbdPlugin from "./plugins/markdown-it/kbd"
+import { mermaidPlugin } from "./plugins/markdown-it/vitepress-mermaid"
+import { createRssFeeds } from "./plugins/rss-feed"
+import { getRssFeedLink } from "./plugins/rss-feed_get-link"
+import { useI18nThemeConfig } from "./use-i18n"
 
-const ENABLE_MINIFY = false; // true;
+const ENABLE_MINIFY = false // true;
 const base = process.env.READTHEDOCS_CANONICAL_URL
 	? new URL(process.env.READTHEDOCS_CANONICAL_URL).pathname.replace(/\/$/, "")
-	: "";
-const withBase = (path: string) => join(base || "/", path);
+	: ""
+const withBase = (path: string) => join(base || "/", path)
 const slugify = (str: string) =>
 	str
 		.toLowerCase()
 		.replaceAll(/[\p{P}\p{S}]/gu, " ")
 		.trim()
-		.replaceAll(/\s+/g, "-");
+		.replaceAll(/\s+/g, "-")
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -59,34 +60,34 @@ export default defineConfig({
 		config: md => {
 			md.use(i18nMacroPlugin, {
 				langAlias(locale, rawLang) {
-					if (rawLang === "root") return "en";
-					return locale?.language ?? rawLang;
+					if (rawLang === "root") return "en"
+					return locale?.language ?? rawLang
 				},
-			});
-			md.use(underlinePlugin);
-			md.use(detailsHeadingPlugin);
-			md.use(containerImportantPlugin);
-			md.use(bracketedSpansPlugin);
-			md.use(kbdPlugin);
+			})
+			md.use(underlinePlugin)
+			md.use(detailsHeadingPlugin)
+			md.use(containerImportantPlugin)
+			md.use(bracketedSpansPlugin)
+			md.use(kbdPlugin)
 			// VitePress 的默认数学公式渲染器 markdown-it-mathjax3 居然懒得添加 MathML 输出选项，所以换一个。
 			// See: https://github.com/tani/markdown-it-mathjax3/issues/58
-			md.use(katex, { output: "mathml" });
-			md.use(fixCodeCopyI18n);
-			md.use(footnotePlugin);
-			md.use(smartypantsPlugin);
-			md.use(mermaidPlugin);
+			md.use(katex, { output: "mathml" })
+			md.use(fixCodeCopyI18n)
+			md.use(footnotePlugin)
+			md.use(smartypantsPlugin)
+			md.use(mermaidPlugin)
 		},
 		preConfig: md => {
 			// See: https://github.com/vuejs/vitepress/discussions/5334#discussioncomment-17772849
-			md.use(anchorPlugin);
+			md.use(anchorPlugin)
 		},
 	},
 	vue: {
 		template: {
 			compilerOptions: {
 				isCustomElement: tag => {
-					const deprecatedTags = ["nobr"];
-					if (deprecatedTags.includes(tag)) return true;
+					const deprecatedTags = ["nobr"]
+					if (deprecatedTags.includes(tag)) return true
 				},
 			},
 		},
@@ -108,6 +109,7 @@ export default defineConfig({
 				llmsFullFile: false,
 				transform: llmsTransform,
 			}),
+			outlineDepthPlugin(),
 		],
 		server: {
 			port: 7000,
@@ -134,13 +136,13 @@ export default defineConfig({
 	ignoreDeadLinks: true,
 	sitemap: { hostname },
 	async buildEnd(config) {
-		await createRssFeeds(config);
+		await createRssFeeds(config)
 	},
 	async transformHead({ siteData, pageData, title: webPageTitleWithTitleTemplate }) {
-		const lang = siteData.lang;
-		const rssLink = getRssFeedLink(lang);
-		const head: HeadConfig[] = [];
-		head.push(["meta", { property: "og:title", content: pageData.title || webPageTitleWithTitleTemplate }]);
+		const lang = siteData.lang
+		const rssLink = getRssFeedLink(lang)
+		const head: HeadConfig[] = []
+		head.push(["meta", { property: "og:title", content: pageData.title || webPageTitleWithTitleTemplate }])
 		head.push([
 			"link",
 			{
@@ -149,8 +151,8 @@ export default defineConfig({
 				title: useI18nThemeConfig("zh").rssFeed.rssFeedTitle,
 				href: rssLink,
 			},
-		]);
-		return head;
+		])
+		return head
 	},
 	title: "Otomad Helper",
 	description: "Helps to create YTPMVs in Vegas Pro",
@@ -214,10 +216,10 @@ export default defineConfig({
 		lastUpdated: { formatOptions: { forceLocale: true, year: "numeric", month: "2-digit", day: "2-digit" } },
 		editLink: {
 			pattern({ relativePath, filePath }) {
-				const githubPath = "https://github.com/otomad/OtomadHelper/blob/docs/docs/";
-				const showPlainCodeQuery = "?plain=1";
-				if (!filePath.includes("[")) return githubPath + relativePath + showPlainCodeQuery;
-				else return githubPath + relativePath.replace(/^.*?\//, "") + showPlainCodeQuery;
+				const githubPath = "https://github.com/otomad/OtomadHelper/blob/docs/docs/"
+				const showPlainCodeQuery = "?plain=1"
+				if (!filePath.includes("[")) return githubPath + relativePath + showPlainCodeQuery
+				else return githubPath + relativePath.replace(/^.*?\//, "") + showPlainCodeQuery
 			},
 		},
 		logo: {
@@ -241,11 +243,11 @@ export default defineConfig({
 			},
 		},
 	},
-});
+})
 
-type SidebarLocales = "en" | "zh";
-type SidebarItems = Record<string, DefaultTheme.SidebarItem[]>;
-type Override<TSource, TOverrider> = Omit<TSource, keyof TOverrider> & TOverrider;
+type SidebarLocales = "en" | "zh"
+type SidebarItems = Record<string, DefaultTheme.SidebarItem[]>
+type Override<TSource, TOverrider> = Omit<TSource, keyof TOverrider> & TOverrider
 function sidebar(locale: SidebarLocales): SidebarItems {
 	type SidebarTemplate = Record<
 		string,
@@ -253,10 +255,10 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 			Override<
 				DefaultTheme.SidebarItem,
 				{
-					items: (Record<SidebarLocales, string> & DefaultTheme.SidebarItem)[];
+					items: (Record<SidebarLocales, string> & DefaultTheme.SidebarItem)[]
 				}
 			>)[]
-	>;
+	>
 	const sidebar: SidebarTemplate = {
 		"/": [
 			{
@@ -333,22 +335,22 @@ function sidebar(locale: SidebarLocales): SidebarItems {
 				],
 			},
 		],
-	};
+	}
 	const lang = (() => {
-		if (locale === "en") return "";
-		else if (locale === "zh") return "zh-CN";
-		else return locale;
-	})();
+		if (locale === "en") return ""
+		else if (locale === "zh") return "zh-CN"
+		else return locale
+	})()
 	return Object.fromEntries(
 		Object.entries(sidebar).map(([base, nav]) => {
-			if (lang) base = "/" + lang + base;
+			if (lang) base = "/" + lang + base
 			for (const section of nav) {
-				if ((locale as "en") in section) section.text = section[locale];
-				section.base = base;
-				section.collapsed = false;
-				for (const item of section.items) item.text = item[locale];
+				if ((locale as "en") in section) section.text = section[locale]
+				section.base = base
+				section.collapsed = false
+				for (const item of section.items) item.text = item[locale]
 			}
-			return [base, nav] as const;
+			return [base, nav] as const
 		}),
-	) as SidebarItems;
+	) as SidebarItems
 }

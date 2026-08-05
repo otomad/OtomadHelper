@@ -4,7 +4,6 @@ import DefaultTheme from "vitepress/theme-without-fonts";
 import { nextTick, provide, onMounted } from "vue";
 import flyoutShadowStyle from "./readthedocs-flyout-shadow.css?inline";
 import VersionBadge from "@vp/components/VersionBadge.vue";
-import OutlineDepthToggle from "@vp/components/OutlineDepthToggle.vue";
 import PrintHeaderTitle from "@vp/components/PrintHeaderTitle.vue";
 import AccessArticleButtons from "@vp/components/AccessArticleButtons.vue";
 import handleHashOpenAndScroll from "./hash-open-and-scroll";
@@ -50,7 +49,7 @@ onMounted(async () => {
 	// Readthedocs flyout custom style.
 	if (!location.hostname.includes("readthedocs")) return;
 	const READTHEDOCS_FLYOUT = "readthedocs-flyout";
-	await new Promise(resolve => {
+	await new Promise<void>(resolve => {
 		if (document.querySelector(READTHEDOCS_FLYOUT)?.shadowRoot) {
 			resolve();
 			return;
@@ -97,7 +96,6 @@ onMounted(async () => {
 <template>
 	<DefaultTheme.Layout>
 		<template #home-hero-info-before><VersionBadge /></template>
-		<template #aside-outline-before><OutlineDepthToggle /></template>
 		<template #nav-bar-title-after><PrintHeaderTitle /></template>
 		<template #doc-top><AccessArticleButtons /></template>
 	</DefaultTheme.Layout>

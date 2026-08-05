@@ -516,6 +516,13 @@ const InnerButton = defineComponent({
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	}
 
+	.button-group:active,
+	.button:not(.button-group *):active {
+		border-color: var(--vp-c-brand-1);
+		transform: none;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	}
+
 	.dropdown-item {
 		&::before {
 			content: "";
