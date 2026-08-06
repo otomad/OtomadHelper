@@ -1,6 +1,7 @@
 import { useData, type DefaultTheme } from "vitepress";
-import { computed } from "vue";
+import type { ToolbarI18nLocaleOptions } from "vitepress-mermaid-renderer";
 import type { SearchConfig } from "vitepress-plugin-pagefind";
+import { computed } from "vue";
 
 export function useI18n() {
 	const { lang } = useData();
@@ -113,5 +114,19 @@ export function useI18nThemeConfig(lang: "en" | "zh" | (string & {})) {
 		anchor: {
 			permalinkTo: t({ en: "Permalink to “{}”", zh: "“\ufe01{}”\ufe01的永久链接" }),
 		},
+		mermaid: {
+			tooltips: {
+				zoomIn: t({ zh: "放大" }),
+				zoomOut: t({ zh: "缩小" }),
+				resetView: t({ zh: "重置视图" }),
+				copyCode: t({ zh: "复制代码" }),
+				copyCodeCopied: t({ zh: "已复制" }),
+				download: t({ zh: "下载图表" }),
+				toggleFullscreen: t({ zh: "切换全屏" }),
+				renderErrorText: t({ zh: "图表渲染失败" }),
+				toggleErrorDetailsText: t({ zh: "显示详情" }),
+				toggleErrorDetailsHideText: t({ zh: "隐藏详情" }),
+			},
+		} as ToolbarI18nLocaleOptions,
 	};
 }

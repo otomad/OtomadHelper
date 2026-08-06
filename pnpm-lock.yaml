@@ -56,9 +56,6 @@ importers:
       markdown-it-underline-cjk-friendly:
         specifier: ^1.0.3
         version: 1.0.3
-      mermaid:
-        specifier: ^11.16.0
-        version: 11.16.0
       pagefind:
         specifier: ^1.5.2
         version: 1.5.2
@@ -68,6 +65,9 @@ importers:
       vitepress:
         specifier: ^2.0.0-alpha.18
         version: 2.0.0-alpha.18(@types/node@26.0.0)(esbuild@0.28.1)(markdown-it-mathjax3@4.3.2)(postcss@8.5.24)(typescript@6.0.3)
+      vitepress-mermaid-renderer:
+        specifier: ^1.1.29
+        version: 1.1.29(mermaid@11.16.0)(vue@3.5.39(typescript@6.0.3))
       vitepress-plugin-back2top:
         specifier: ^0.1.4
         version: 0.1.4(vitepress@2.0.0-alpha.18(@types/node@26.0.0)(esbuild@0.28.1)(markdown-it-mathjax3@4.3.2)(postcss@8.5.24)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3))
@@ -78,8 +78,8 @@ importers:
         specifier: ^0.5.2
         version: 0.5.2(vitepress@2.0.0-alpha.18(@types/node@26.0.0)(esbuild@0.28.1)(markdown-it-mathjax3@4.3.2)(postcss@8.5.24)(typescript@6.0.3))
       vitepress-plugin-outline-depth:
-        specifier: ^1.1.0
-        version: 1.1.0
+        specifier: link:../../../../vitepress-plugin-outline-depth
+        version: link:../../../../vitepress-plugin-outline-depth
       vitepress-plugin-pagefind:
         specifier: ^0.4.24
         version: 0.4.24(pagefind@1.5.2)(vitepress@2.0.0-alpha.18(@types/node@26.0.0)(esbuild@0.28.1)(markdown-it-mathjax3@4.3.2)(postcss@8.5.24)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3))
@@ -1868,9 +1868,6 @@ packages:
   slick@1.12.2:
     resolution: {integrity: sha512-4qdtOGcBjral6YIBCWJ0ljFSKNLz9KkhbWtuGvUyRowl1kxfuE1x/Z/aJcaiilpb3do9bl5K7/1h9XC5wWpY/A==}
 
-  smooth-value@1.1.0:
-    resolution: {integrity: sha512-mKlwmFjgXucUdVxGmj48h0EH/dajPfqU7U8Kt8S1W6Lvhm9c65DQEh9Oa0EGYEioLAaWNcM8qSWEUs4at4GIhQ==}
-
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -2015,6 +2012,13 @@ packages:
       yaml:
         optional: true
 
+  vitepress-mermaid-renderer@1.1.29:
+    resolution: {integrity: sha512-zgBsPVL8GRTPd6p4buIDegzVbOPnlCKyozzwrpcdMQDXptPF41wQMlCJvEla42/YDOTVQnQK3W0He13WgFiPXg==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      mermaid: ^11.0.0
+      vue: ^3.0.0
+
   vitepress-plugin-back2top@0.1.4:
     resolution: {integrity: sha512-Iblfm3qCkiZfDonEdLZI9AyS6ymBM1Dtf9A99SdDnJYWeosPRvq51/cZ45KQR2ivb+hayMZTKGWqKMkSczjQlw==}
     peerDependencies:
@@ -2030,9 +2034,6 @@ packages:
     engines: {node: '>=20.19.4'}
     peerDependencies:
       vitepress: ^1.0.0
-
-  vitepress-plugin-outline-depth@1.1.0:
-    resolution: {integrity: sha512-+ley4zUuwFSRO1fs0W3iHJjSM5v+y5otpWVKCCbdH9ejWELxgjo4gF0Ntj3D9m8/2ZjD0A3bwUVMWEFkMSmFlA==}
 
   vitepress-plugin-pagefind@0.4.24:
     resolution: {integrity: sha512-AWGSoAD0QseGRu6htayh7L2GfVH9DH4ToL/ETtknKOXTnvdTm6hMBH7Fx3+8LjP89/x6Poi6vrutM6vXPg+r1Q==}
@@ -3845,8 +3846,6 @@ snapshots:
   slick@1.12.2:
     optional: true
 
-  smooth-value@1.1.0: {}
-
   source-map-js@1.2.1: {}
 
   space-separated-tokens@2.0.2: {}
@@ -3954,6 +3953,11 @@ snapshots:
       esbuild: 0.28.1
       fsevents: 2.3.3
 
+  vitepress-mermaid-renderer@1.1.29(mermaid@11.16.0)(vue@3.5.39(typescript@6.0.3)):
+    dependencies:
+      mermaid: 11.16.0
+      vue: 3.5.39(typescript@6.0.3)
+
   vitepress-plugin-back2top@0.1.4(vitepress@2.0.0-alpha.18(@types/node@26.0.0)(esbuild@0.28.1)(markdown-it-mathjax3@4.3.2)(postcss@8.5.24)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3)):
     dependencies:
       '@vueuse/core': 14.3.0(vue@3.5.39(typescript@6.0.3))
@@ -3973,10 +3977,6 @@ snapshots:
   vitepress-plugin-llmstxt@0.5.2(vitepress@2.0.0-alpha.18(@types/node@26.0.0)(esbuild@0.28.1)(markdown-it-mathjax3@4.3.2)(postcss@8.5.24)(typescript@6.0.3)):
     dependencies:
       vitepress: 2.0.0-alpha.18(@types/node@26.0.0)(esbuild@0.28.1)(markdown-it-mathjax3@4.3.2)(postcss@8.5.24)(typescript@6.0.3)
-
-  vitepress-plugin-outline-depth@1.1.0:
-    dependencies:
-      smooth-value: 1.1.0
 
   vitepress-plugin-pagefind@0.4.24(pagefind@1.5.2)(vitepress@2.0.0-alpha.18(@types/node@26.0.0)(esbuild@0.28.1)(markdown-it-mathjax3@4.3.2)(postcss@8.5.24)(typescript@6.0.3))(vue@3.5.39(typescript@6.0.3)):
     dependencies:

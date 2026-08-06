@@ -887,3 +887,10 @@ a.vp-external-link-icon {
 		translate: 1px -1px;
 	}
 }
+
+/**
+ * Component: Mermaid
+ */
+.mermaid-container a p {
+	color: var(--vp-c-brand-1);
+}

@@ -1,10 +1,10 @@
-import { defineConfig } from "oxfmt"
+import { defineConfig } from "oxfmt";
 
 export default defineConfig({
 	printWidth: 120,
 	tabWidth: 4,
 	useTabs: true,
-	semi: false,
+	semi: true,
 	singleQuote: false,
 	arrowParens: "avoid",
 	htmlWhitespaceSensitivity: "ignore",
@@ -19,4 +19,4 @@ export default defineConfig({
 		newlinesBetween: false,
 	},
 	vueIndentScriptAndStyle: true,
-})
+});
