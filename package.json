@@ -31,7 +31,7 @@
 		"vitepress-plugin-back2top": "^0.1.4",
 		"vitepress-plugin-image-preview": "^0.1.6",
 		"vitepress-plugin-llmstxt": "^0.5.2",
-		"vitepress-plugin-outline-depth": "^1.1.0",
+		"vitepress-plugin-outline-depth": "^1.1.1",
 		"vitepress-plugin-pagefind": "^0.4.24"
 	},
 	"devDependencies": {
