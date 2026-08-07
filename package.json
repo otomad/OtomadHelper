@@ -27,7 +27,7 @@
 		"pagefind": "^1.5.2",
 		"typescript": "^6.0.3",
 		"vitepress": "^2.0.0-alpha.18",
-		"vitepress-mermaid-renderer": "^1.1.29",
+		"vitepress-mermaid-renderer": "^1.1.30",
 		"vitepress-plugin-back2top": "^0.1.4",
 		"vitepress-plugin-image-preview": "^0.1.6",
 		"vitepress-plugin-llmstxt": "^0.5.2",

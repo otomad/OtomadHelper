@@ -889,8 +889,12 @@ a.vp-external-link-icon {
 }
 
 /**
- * Component: Mermaid
+ * Component: VitePress Mermaid Renderer
  */
 .mermaid-container a p {
 	color: var(--vp-c-brand-1);
+}
+
+.mermaid-container .mermaid {
+	transition-property: opacity, transform;
 }
