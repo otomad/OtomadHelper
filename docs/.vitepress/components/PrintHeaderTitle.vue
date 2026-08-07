@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useData } from "vitepress";
-const { page } = useData();
+	import { useData } from "vitepress";
+	const { page } = useData();
 </script>
 
 <template>
@@ -8,16 +8,16 @@ const { page } = useData();
 </template>
 
 <style scoped>
-.print-header-title {
-	display: none;
-	position: fixed;
-	width: 100%;
-	text-align: center;
-	font-size: 14px;
-	font-weight: normal;
+	.print-header-title {
+		display: none;
+		position: fixed;
+		width: 100%;
+		text-align: center;
+		font-size: 14px;
+		font-weight: normal;
 
-	@media print {
-		display: block;
+		@media print {
+			display: block;
+		}
 	}
-}
 </style>

@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useData } from "vitepress";
+	import { useData } from "vitepress";
+	import { computed } from "vue";
 
-const props = defineProps<{
-	value: string;
-}>();
+	const props = defineProps<{
+		value: string;
+	}>();
 
-const { lang } = useData();
+	const { lang } = useData();
 
-const standardDateString = computed(() => {
-	const [year, month, day] = props.value.split(/[\/\-\.]/).map(num => num.padStart(2, "0"));
-	return `${year}-${month}-${day}`;
-});
+	const standardDateString = computed(() => {
+		const [year, month, day] = props.value.split(/[\/\-\.]/).map(num => num.padStart(2, "0"));
+		return `${year}-${month}-${day}`;
+	});
 
-const formattedDate = computed(() => {
-	const date = new Date(standardDateString.value);
-	return new Intl.DateTimeFormat(lang.value, {
-		year: "numeric",
-		month: "2-digit",
-		day: "2-digit",
-		timeZone: "UTC",
-	}).format(date);
-});
+	const formattedDate = computed(() => {
+		const date = new Date(standardDateString.value);
+		return new Intl.DateTimeFormat(lang.value, {
+			year: "numeric",
+			month: "2-digit",
+			day: "2-digit",
+			timeZone: "UTC",
+		}).format(date);
+	});
 </script>
 
 <template>
@@ -29,7 +29,7 @@ const formattedDate = computed(() => {
 </template>
 
 <style scoped>
-time {
-	font-variant-numeric: tabular-nums;
-}
+	time {
+		font-variant-numeric: tabular-nums;
+	}
 </style>

@@ -1,6 +1,3 @@
-/// <reference types="vitepress/client" />
-/// <reference types="./shims-vue.d.ts" />
-
 // https://vitepress.dev/guide/custom-theme
 import { inBrowser, type Theme, type Router } from "vitepress";
 import DefaultTheme, { VPButton } from "vitepress/theme-without-fonts";

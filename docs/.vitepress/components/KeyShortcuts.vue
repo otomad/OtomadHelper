@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed } from "vue";
+	import { computed } from "vue";
 
-const props = defineProps<{
-	path: string;
-}>();
+	const props = defineProps<{
+		path: string;
+	}>();
 
-const isKeyShortcut = computed(() => /\s\+\s/.test(props.path));
-const isMenuPath = computed(() => /\s>\s/.test(props.path));
-const items = computed(() => props.path.split(/\s+[+>]\s+/));
+	const isKeyShortcut = computed(() => /\s\+\s/.test(props.path));
+	const isMenuPath = computed(() => /\s>\s/.test(props.path));
+	const items = computed(() => props.path.split(/\s+[+>]\s+/));
 </script>
 
 <template>
@@ -27,26 +27,26 @@ const items = computed(() => props.path.split(/\s+[+>]\s+/));
 </template>
 
 <style scoped>
-.sep {
-	font-family: "Lucide Keyboard Icons";
-	display: inline-block;
-	font-size: var(--vp-code-font-size);
-	line-height: var(--vp-code-line-height);
-	margin-inline: 0.25em;
-	vertical-align: middle;
-	margin-block-start: -2px;
+	.sep {
+		font-family: "Lucide Keyboard Icons";
+		display: inline-block;
+		font-size: var(--vp-code-font-size);
+		line-height: var(--vp-code-line-height);
+		margin-inline: 0.25em;
+		vertical-align: middle;
+		margin-block-start: -2px;
 
-	&.menu-arrow {
-		color: var(--vp-c-text-3);
+		&.menu-arrow {
+			color: var(--vp-c-text-3);
+		}
+
+		&.key-shortcut-add {
+			color: var(--vp-c-text-2);
+		}
 	}
 
-	&.key-shortcut-add {
-		color: var(--vp-c-text-2);
+	kbd.menu-path,
+	.menu-path kbd {
+		text-autospace: normal;
 	}
-}
-
-kbd.menu-path,
-.menu-path kbd {
-	text-autospace: normal;
-}
 </style>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-const props = defineProps<{
-	normal: string;
-	glitchy: string;
-}>();
+	const props = defineProps<{
+		normal: string;
+		glitchy: string;
+	}>();
 </script>
 
 <template>
@@ -13,8 +13,8 @@ const props = defineProps<{
 </template>
 
 <style scoped>
-.glitchy-text:not(:hover) .normal,
-.glitchy-text:hover .glitchy {
-	display: none;
-}
+	.glitchy-text:not(:hover) .normal,
+	.glitchy-text:hover .glitchy {
+		display: none;
+	}
 </style>

@@ -2,11 +2,11 @@
 	import AccessArticleButtons from "@vp/components/AccessArticleButtons.vue";
 	import PrintHeaderTitle from "@vp/components/PrintHeaderTitle.vue";
 	import VersionBadge from "@vp/components/VersionBadge.vue";
+	import { useI18nThemeConfig } from "@vp/use-i18n";
 	import { useData } from "vitepress";
 	import { createMermaidRenderer } from "vitepress-mermaid-renderer";
 	import DefaultTheme from "vitepress/theme-without-fonts";
 	import { nextTick, provide, onMounted, watch } from "vue";
-	import { useI18nThemeConfig } from "../use-i18n";
 	import handleHashOpenAndScroll from "./hash-open-and-scroll";
 	import flyoutShadowStyle from "./readthedocs-flyout-shadow.css?inline";
 
