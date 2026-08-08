@@ -57,12 +57,7 @@ export default defineConfig({
 			slugify,
 		},
 		config: md => {
-			md.use(i18nMacroPlugin, {
-				langAlias(locale, rawLang) {
-					if (rawLang === "root") return "en";
-					return locale?.language ?? rawLang;
-				},
-			});
+			md.use(i18nMacroPlugin, { consistentHeadingId: true });
 			md.use(underlinePlugin);
 			md.use(detailsHeadingPlugin);
 			md.use(containerImportantPlugin);
@@ -77,7 +72,7 @@ export default defineConfig({
 		},
 		preConfig: md => {
 			// See: https://github.com/vuejs/vitepress/discussions/5334#discussioncomment-17772849
-			md.use(anchorPlugin);
+			md.use(anchorPlugin, { failOnNonUnique: false });
 		},
 	},
 	vue: {

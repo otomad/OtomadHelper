@@ -111,10 +111,10 @@ at ScriptPortal.Vegas.Fade.set_Gain(Single value)
 ```
 
 @en This is caused by ["Mapping Velocity"](./audio.md#velocity) being turned on and having a value set that is higher or lower than what is used in the MIDI file. Change the Mapping Velocity back to 0 ~ 127 and Volume to 0 ~ 100 or disable Mapping Velocity. (Most Likely Scenario.)
-@zh 这是由于[“映射力度”](./audio.md#力度)已打开且设置的值高于或低于MIDI文件中使用的值所致。将映射力度更改回0 ~ 127，将音量更改为0 ~ 100或禁用映射力度。（最有可能的情况。）
+@zh 这是由于[“映射力度”](./audio.md#velocity)已打开且设置的值高于或低于MIDI文件中使用的值所致。将映射力度更改回0 ~ 127，将音量更改为0 ~ 100或禁用映射力度。（最有可能的情况。）
 
 @en [How does Mapping Velocity Working?](#mapping-velocity-explanation){.vp-external-link-icon}
-@zh [映射力度是如何工作的？](#映射力度解释){.vp-external-link-icon}
+@zh [映射力度是如何工作的？](#mapping-velocity-explanation){.vp-external-link-icon}
 ::::
 
 @en ## Installation Related
@@ -416,7 +416,7 @@ System.ArgumentException: Media stream not specified.
 :::
 
 @en ::: details ### Got an off without an on 0 NoteOn (How to find the offending note?) {#how-to-find-the-offending-note}
-@zh ::: details ### 得到一个“音符关”而没有“音符开”（如何找到有问题的音符？） {#如何找到有问题的音符}
+@zh ::: details ### 得到一个“音符关”而没有“音符开”（如何找到有问题的音符？） {#how-to-find-the-offending-note}
 @en * Value of $\frac{\text{Offending Note}}{\text{Timebase}}$ (PPQ).
 @zh * $\frac{\text{有问题的音符}}{\text{时基}}$ (PPQ) 的值。
 @en * Answer is $\text{Value}+1$ in `Bar:Beat:Tick` is where the off value note is.
@@ -471,6 +471,6 @@ System.ArgumentException: Media stream not specified.
 @zh * **Vegas Pro 17 及以下：**按住 [[Shift]]，进入上方菜单栏的 [[选项 > 首选项]]，然后切换到 `内部` 选项卡。
 :::
 
-@en **Why did this bug occur?** Firstly, the Vegas official does not expect you to deliberately modify the **Internal Preferences**. They believe that the **default settings** are the most suitable for general users to use. Unless you proactively modify the setting. If you download and install the so-called *"Vegas Optimization Solution"* registry file elsewhere, they may turn on the **`Multi Stream Render`** settings, even if you don't know how these files have tampered with your settings.
-@zh **为什么会出现此问题？**首先官方是不期望你特意修改**内部首选项**的，他们认为**默认设置**是最适合普通用户使用的。除非你主动去修改该设置以外。如果你在其它地方下载并安装了所谓的*“Vegas优化方案”*注册表文件，则他们可能会将 **`多流渲染`** 设置打开，即便你并不知道这些文件对你的设置动了哪些手脚。
+@en **Why did this bug occur?** Firstly, the Vegas official does not expect you to deliberately modify the **Internal Preferences**. They believe that the **default settings** are the most suitable for common users to use. Unless you proactively modify the setting, if you download and install the so-called *"Vegas Optimization Solution"* registry file elsewhere, they may turn on the **`Multi Stream Render`** settings, even if you don't know how these files have tampered with your settings.
+@zh **为什么会出现此问题？**首先官方是不期望你特意修改**内部首选项**的，他们认为**默认设置**是最适合普通用户使用的。除非你主动去修改该设置以外，如果你在其它地方下载并安装了所谓的*“Vegas优化方案”*注册表文件，则他们可能会将 **`多流渲染`** 设置打开，即便你并不知道这些文件对你的设置动了哪些手脚。
 ::::

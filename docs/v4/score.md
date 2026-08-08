@@ -29,7 +29,7 @@
 
 ::: tip
 @en *If the start has been set at `0:05.000`. The MIDI would generate all notes from the 5th second, and the clips will be generated from the 5th second after where ["generate at"](./source.md#generate-at).*
-@zh *如果起始时间设置为 `0:05.000`，则MIDI将从第5秒后生成所有音符，并且剪辑也将从[“生成开始位置”](./source.md#设定生成开始位置)之后的第5秒开始生成。*
+@zh *如果起始时间设置为 `0:05.000`，则MIDI将从第5秒后生成所有音符，并且剪辑也将从[“生成开始位置”](./source.md#generate-at)之后的第5秒开始生成。*
 :::
 ::: info
 @en *This will still generate the visuals at the respected note time placements.*
@@ -122,7 +122,7 @@
 @en ::: warning
 @zh ::: warning 陷阱
 @en _*This may conflict with [Legato](./audio.md#legato) even if it is set to "Unlimited" in Audio/Visual Settings.*_
-@zh _*当音频/画面设置中的[填补间隙](./audio.md#填补间隙)设置为“无限填补”时则可能和本设置冲突。*_
+@zh _*当音频/画面设置中的[填补间隙](./audio.md#legato)设置为“无限填补”时则可能和本设置冲突。*_
 :::
 
 @en ## Use MIDI track
@@ -178,4 +178,4 @@
 @zh ![自动布局轨道](/img/v4/score/auto_layout_tracks_zh-CN.png)
 
 @en [Refer to Tools](./tools.md#auto-layout-tracks){.vp-external-link-icon}
-@zh [参阅工具](./tools.md#自动布局轨道){.vp-external-link-icon}
+@zh [参阅工具](./tools.md#auto-layout-tracks){.vp-external-link-icon}

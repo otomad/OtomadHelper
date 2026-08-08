@@ -39,14 +39,14 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       markdown-it-container-details-heading:
-        specifier: ^1.0.0
-        version: 1.0.0(markdown-it-container@4.0.0)(markdown-it@14.3.0)
+        specifier: file:D:/markdown-it-container-details-heading
+        version: file:../../../../markdown-it-container-details-heading
       markdown-it-footnote:
         specifier: ^4.0.0
         version: 4.0.0
       markdown-it-i18n:
-        specifier: ^1.0.5
-        version: 1.0.5
+        specifier: file:D:/markdown-it-i18n
+        version: file:../../../../markdown-it-i18n
       markdown-it-smartypants:
         specifier: ^1.0.0
         version: 1.0.0
@@ -398,6 +398,12 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@formatjs/fast-memoize@3.1.7':
+    resolution: {integrity: sha512-zXfhLpvA6T7+efdt9JLbBwZ00tT7NsBMDVnDu8rpHeNNv8KfRZAMo2gkG0k9lK/Nzc//3kJ9pImsfuJxk3KhUA==}
+
+  '@formatjs/intl-localematcher@0.8.13':
+    resolution: {integrity: sha512-kHEAFOkeJSPNi7c5PaKaRjxcBrJwzzt81ifUu+8uve1EDW/VJl83KsxmqgqNZLzcFEhSliZGvx3+pk/RH0IOmg==}
 
   '@iconify-json/simple-icons@1.2.89':
     resolution: {integrity: sha512-hRaCY5s2G5oWAIhc4LCGYn6g6RrwLL4zhoLOT+KUO3joVCxVlZKA+839bv/47Nbe9/ZD4UA6dznZ4XPYcI53wA==}
@@ -1631,11 +1637,8 @@ packages:
   markdown-it-bracketed-spans@1.0.3:
     resolution: {integrity: sha512-1vo6vljv/1rm4fulUscv1lt/6BXg8KjCzRWHnZ2k7XHnYTMrph6fmgrc+Dszu8wGj1h08DweJ787+Y71B+hnYQ==}
 
-  markdown-it-container-details-heading@1.0.0:
-    resolution: {integrity: sha512-Gwf5lp48pHZJoFNhuwIvxB53ArhRI7XdMaEEN4kYwEKwGe2KOxWUlv19zKClwTjuIlptldSJcsifJ3uBKJsxyA==}
-    peerDependencies:
-      markdown-it: '>=13'
-      markdown-it-container: '>=4'
+  markdown-it-container-details-heading@file:../../../../markdown-it-container-details-heading:
+    resolution: {directory: ../../../../markdown-it-container-details-heading, type: directory}
 
   markdown-it-container@4.0.0:
     resolution: {integrity: sha512-HaNccxUH0l7BNGYbFbjmGpf5aLHAMTinqRZQAEQbMr2cdD3z91Q6kIo1oUn1CQndkT03jat6ckrdRYuwwqLlQw==}
@@ -1643,8 +1646,8 @@ packages:
   markdown-it-footnote@4.0.0:
     resolution: {integrity: sha512-WYJ7urf+khJYl3DqofQpYfEYkZKbmXmwxQV8c8mO/hGIhgZ1wOe7R4HLFNwqx7TjILbnC98fuyeSsin19JdFcQ==}
 
-  markdown-it-i18n@1.0.5:
-    resolution: {integrity: sha512-hcNBSFSvN95k2qCqJk2nM5IrxwJTIdnlYxLAh8q1fuaFvwQtBRygyT3WrSXiC6gL0lMn2QpEjjcd4wCtPrArOQ==}
+  markdown-it-i18n@file:../../../../markdown-it-i18n:
+    resolution: {directory: ../../../../markdown-it-i18n, type: directory}
 
   markdown-it-mathjax3@4.3.2:
     resolution: {integrity: sha512-TX3GW5NjmupgFtMJGRauioMbbkGsOXAAt1DZ/rzzYmTHqzkO1rNAdiMD4NiruurToPApn2kYy76x02QN26qr2w==}
@@ -2369,6 +2372,12 @@ snapshots:
 
   '@esbuild/win32-x64@0.28.1':
     optional: true
+
+  '@formatjs/fast-memoize@3.1.7': {}
+
+  '@formatjs/intl-localematcher@0.8.13':
+    dependencies:
+      '@formatjs/fast-memoize': 3.1.7
 
   '@iconify-json/simple-icons@1.2.89':
     dependencies:
@@ -3556,16 +3565,15 @@ snapshots:
 
   markdown-it-bracketed-spans@1.0.3: {}
 
-  markdown-it-container-details-heading@1.0.0(markdown-it-container@4.0.0)(markdown-it@14.3.0):
-    dependencies:
-      markdown-it: 14.3.0
-      markdown-it-container: 4.0.0
+  markdown-it-container-details-heading@file:../../../../markdown-it-container-details-heading: {}
 
   markdown-it-container@4.0.0: {}
 
   markdown-it-footnote@4.0.0: {}
 
-  markdown-it-i18n@1.0.5: {}
+  markdown-it-i18n@file:../../../../markdown-it-i18n:
+    dependencies:
+      '@formatjs/intl-localematcher': 0.8.13
 
   markdown-it-mathjax3@4.3.2:
     dependencies:

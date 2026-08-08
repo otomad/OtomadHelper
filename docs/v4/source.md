@@ -149,7 +149,7 @@
 @zh 目前存在错误。如果你在使用音频总线轨道功能时发现无法正常渲染项目，请立即点击下方链接以修复。
 
 @en [How to Fix](./faq.md#audio-bus-track-bug-caused-by-vegas-pro){.vp-external-link-icon}
-@zh [如何修复](./faq.md#vegas-pro引起的音频总线轨道错误){.vp-external-link-icon}
+@zh [如何修复](./faq.md#audio-bus-track-bug-caused-by-vegas-pro){.vp-external-link-icon}
 :::
 
 ---

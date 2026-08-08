@@ -377,7 +377,7 @@
 @en * *Replaces specific clips in the track with any clip you select in any order you want.*
 @zh * *将轨道中的特定剪辑替换为你按所需顺序所选的任何剪辑。*
 @en * [*Explanation in Extra Info*](./faq.md#replace-track-events-separately-explanation){.vp-external-link-icon}
-@zh * [*额外信息中的解释*](./faq.md#替换轨道剪辑-分别指定-解释){.vp-external-link-icon}
+@zh * [*额外信息中的解释*](./faq.md#replace-track-events-separately-explanation){.vp-external-link-icon}
 
 @en ### Options
 @zh ### 选项
@@ -408,7 +408,7 @@
 @zh ![更改调音算法](/img/v4/tools/change_tuning_method_zh-CN.png){.shadow-less}
 
 @en *Refer to ["Audio"](./audio.md#tuning) on details about the Audio Tuning Methods*
-@zh *有关音频调音方法的详细信息，请参阅[“音频”](./audio.md#调音)部分。*
+@zh *有关音频调音方法的详细信息，请参阅[“音频”](./audio.md#tuning)部分。*
 
 @en ### Pitch Semitones
 @zh ### 音调更改
@@ -509,7 +509,7 @@
 @zh ![应用视觉效果](/img/v4/tools/apply_visual_effect_zh-CN.png){.shadow-less}
 
 @en *Refer to ["Visual"](./visual.md#effects) for details on the Visual effects you can use.*
-@zh *有关你可以使用的视觉效果的详细信息，请参阅[“画面”](./visual.md#效果)部分。*
+@zh *有关你可以使用的视觉效果的详细信息，请参阅[“画面”](./visual.md#effects)部分。*
 
 @en ## Convert Music Beats
 @zh ## 转换音乐节拍

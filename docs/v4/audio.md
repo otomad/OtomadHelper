@@ -192,7 +192,7 @@
 @zh   * 重置为默认设置。
 
 @en [*Mapping Velocity Explanation*](./faq.md#mapping-velocity-explanation){.vp-external-link-icon}
-@zh [*映射力度解释*](./faq.md#映射力度解释){.vp-external-link-icon}
+@zh [*映射力度解释*](./faq.md#mapping-velocity-explanation){.vp-external-link-icon}
 
 @en ## Tuning
 @zh ## 调音
