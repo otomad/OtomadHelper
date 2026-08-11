@@ -1,7 +1,7 @@
-import pluginCreditRoll from "src/assets/images/plugins/credit_roll.webp";
-import pluginLegacyText from "src/assets/images/plugins/legacy_text.webp";
-import pluginProtypeTitler from "src/assets/images/plugins/protype_titler.webp";
-import pluginCreditTitlesAndText from "src/assets/images/plugins/titles_and_text.webp";
+import pluginCreditRoll from "assets/images/plugins/credit_roll.webp";
+import pluginLegacyText from "assets/images/plugins/legacy_text.webp";
+import pluginProtypeTitler from "assets/images/plugins/protype_titler.webp";
+import pluginCreditTitlesAndText from "assets/images/plugins/titles_and_text.webp";
 import { exactTuningMethods, tuningClassicModes, tuningElasticModes } from "views/audio";
 
 export /* @internal */ const vegasLanguages = [

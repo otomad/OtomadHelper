@@ -1,8 +1,8 @@
 import type SettingsCard from "components/Settings/SettingsCard/SettingsCard";
 import type { I18nArgsFunction } from "locales/types";
-import { redirectIcon } from "src/ShellPage";
 import type { Trans } from "utils/i18n";
 import { tf as $$t } from "utils/i18n";
+import { redirectIcon } from "../ShellPage";
 import { languageNode, settingsMetaInput } from "./settings-meta_input";
 
 type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup" | "subheader";
