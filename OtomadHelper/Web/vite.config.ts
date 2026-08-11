@@ -18,7 +18,6 @@ import { qrcode } from "vite-plugin-qrcode";
 import tsconfigPaths from "vite-tsconfig-paths";
 import autoImportConfig from "./auto-import.config";
 import { author, displayName, github, homepage, project, version } from "./package.json"/* with { type: "json" } */;
-import minifySvgMatrix from "./src/plugins/babel/minify-svg-matrix";
 import tAutoTostring from "./src/plugins/babel/t-auto-tostring";
 import nameof from "./src/plugins/babel/nameof";
 import transformJsxClsx from "./src/plugins/babel/transform-jsx-clsx";
@@ -101,7 +100,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 								transpileTemplateLiterals: false,
 							},
 						],
-						minifySvgMatrix,
+						"babel-plugin-minify-svg-matrix",
 					],
 				},
 			}),
