@@ -39,14 +39,14 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       markdown-it-container-details-heading:
-        specifier: file:D:/markdown-it-container-details-heading
-        version: file:../../../../markdown-it-container-details-heading
+        specifier: ^1.0.2
+        version: 1.0.2
       markdown-it-footnote:
         specifier: ^4.0.0
         version: 4.0.0
       markdown-it-i18n:
-        specifier: file:D:/markdown-it-i18n
-        version: file:../../../../markdown-it-i18n
+        specifier: ^2.0.0
+        version: 2.0.0
       markdown-it-smartypants:
         specifier: ^1.0.0
         version: 1.0.0
@@ -1637,8 +1637,8 @@ packages:
   markdown-it-bracketed-spans@1.0.3:
     resolution: {integrity: sha512-1vo6vljv/1rm4fulUscv1lt/6BXg8KjCzRWHnZ2k7XHnYTMrph6fmgrc+Dszu8wGj1h08DweJ787+Y71B+hnYQ==}
 
-  markdown-it-container-details-heading@file:../../../../markdown-it-container-details-heading:
-    resolution: {directory: ../../../../markdown-it-container-details-heading, type: directory}
+  markdown-it-container-details-heading@1.0.2:
+    resolution: {integrity: sha512-+0L59XsQuzY1g+Kjn02oIzSdDWMS2f6+1QIdUEIG8czw7X5tnSRbnLT3OI9wtxZnsjNAXNs5NNOEp2dunp7zkg==}
 
   markdown-it-container@4.0.0:
     resolution: {integrity: sha512-HaNccxUH0l7BNGYbFbjmGpf5aLHAMTinqRZQAEQbMr2cdD3z91Q6kIo1oUn1CQndkT03jat6ckrdRYuwwqLlQw==}
@@ -1646,8 +1646,8 @@ packages:
   markdown-it-footnote@4.0.0:
     resolution: {integrity: sha512-WYJ7urf+khJYl3DqofQpYfEYkZKbmXmwxQV8c8mO/hGIhgZ1wOe7R4HLFNwqx7TjILbnC98fuyeSsin19JdFcQ==}
 
-  markdown-it-i18n@file:../../../../markdown-it-i18n:
-    resolution: {directory: ../../../../markdown-it-i18n, type: directory}
+  markdown-it-i18n@2.0.0:
+    resolution: {integrity: sha512-Qld2OuqnLXVDD2RdwBBiy2g8xe4OVOepeN217DrNejVlwcb7lYN4xxADGDeS4p5caIF6xjfWijv5TavxNySdmg==}
 
   markdown-it-mathjax3@4.3.2:
     resolution: {integrity: sha512-TX3GW5NjmupgFtMJGRauioMbbkGsOXAAt1DZ/rzzYmTHqzkO1rNAdiMD4NiruurToPApn2kYy76x02QN26qr2w==}
@@ -3565,13 +3565,13 @@ snapshots:
 
   markdown-it-bracketed-spans@1.0.3: {}
 
-  markdown-it-container-details-heading@file:../../../../markdown-it-container-details-heading: {}
+  markdown-it-container-details-heading@1.0.2: {}
 
   markdown-it-container@4.0.0: {}
 
   markdown-it-footnote@4.0.0: {}
 
-  markdown-it-i18n@file:../../../../markdown-it-i18n:
+  markdown-it-i18n@2.0.0:
     dependencies:
       '@formatjs/intl-localematcher': 0.8.13
 
