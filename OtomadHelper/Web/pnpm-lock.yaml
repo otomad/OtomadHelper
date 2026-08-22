@@ -212,6 +212,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^5.2.0
         version: 5.2.0(vite@7.3.1(@types/node@25.1.0)(jiti@2.6.1)(lightningcss@1.28.2)(terser@5.37.0))
+      babel-plugin-jsx-clsx:
+        specifier: ^1.1.0
+        version: 1.1.0
       babel-plugin-minify-svg-matrix:
         specifier: ^1.0.1
         version: 1.0.1
@@ -2000,6 +2003,10 @@ packages:
 
   axios@1.13.2:
     resolution: {integrity: sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==}
+
+  babel-plugin-jsx-clsx@1.1.0:
+    resolution: {integrity: sha512-UrbelStoyGgu7zNzXU+HKnwlNFiTFrKnSitkbkPK0BadzpEziIhx4MVUoCC/KD9qYUfCP/0uhs1co0TE+goRKA==}
+    hasBin: true
 
   babel-plugin-minify-svg-matrix@1.0.1:
     resolution: {integrity: sha512-+QxcJI7jnb2FsbGT87MMU3N4eNxZ+t6uwd3ZvvPQWJhEiBEtNgIfZfTOJ8YEQcsJ4rYQFR2f1y31oqQYWRlZcg==}
@@ -7746,6 +7753,8 @@ snapshots:
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
+
+  babel-plugin-jsx-clsx@1.1.0: {}
 
   babel-plugin-minify-svg-matrix@1.0.1: {}
 

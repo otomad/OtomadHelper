@@ -96,6 +96,7 @@
 		"@types/react": "^19.2.2",
 		"@types/react-dom": "^19.2.2",
 		"@vitejs/plugin-react": "^5.2.0",
+		"babel-plugin-jsx-clsx": "^1.1.0",
 		"babel-plugin-minify-svg-matrix": "^1.0.1",
 		"babel-plugin-react-compiler": "1.0.0",
 		"babel-plugin-styled-components": "^2.1.4",

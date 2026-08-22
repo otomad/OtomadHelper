@@ -20,7 +20,6 @@ import autoImportConfig from "./auto-import.config";
 import { author, displayName, github, homepage, project, version } from "./package.json"/* with { type: "json" } */;
 import tAutoTostring from "./src/plugins/babel/t-auto-tostring";
 import nameof from "./src/plugins/babel/nameof";
-import transformJsxClsx from "./src/plugins/babel/transform-jsx-clsx";
 import fragmentFiltersVirtualFile from "./src/plugins/vite/fragment-filters";
 import globalized from "./src/plugins/vite/globalized";
 import midiKeyframes from "./src/plugins/vite/midi";
@@ -64,8 +63,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 							},
 						],
 						nameof,
-						// "babel-plugin-transform-jsx-classnames",
-						transformJsxClsx,
+						["babel-plugin-jsx-clsx", { package: "clsx/lite" }],
 						...ENABLE_COMPILER ? [["babel-plugin-react-compiler", {
 							target: "19",
 							panicThreshold: "none",
