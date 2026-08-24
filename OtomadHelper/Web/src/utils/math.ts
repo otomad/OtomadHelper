@@ -77,31 +77,6 @@ export function clampMap(x: number, min: number, max: number, a: number, b: numb
 }
 
 /**
- * ### Inaccurate Thermometer
- *
- * Maps a value from one range to another, with a linear relationship between the old and new ranges and
- * not necessarily a proportional relationship, such as the relationship between Celsius and Fahrenheit,
- * and return the corresponding new value.
- *
- * This function takes a value `x` within a range `[min, max]` and maps it to a new range `[a, b]`.
- * The mapping is done linearly, meaning that the ratio of the new range to the old range is preserved.
- *
- * For example, changing a color value from 0 to 255 to a value from 0 to 100.
- *
- * This will return a CSS `calc()` formula declaration.
- *
- * @param x - The value within the old range to be mapped.
- * @param min - The minimum value of the old range.
- * @param max - The maximum value of the old range.
- * @param a - The minimum value of the new range.
- * @param b - The maximum value of the new range.
- * @returns A CSS `calc()` formula declaration that will be calculated as the mapped value within the new range.
- */
-export function mapCssCalc(x: string | number, min: string | number, max: string | number, a: string | number, b: string | number) {
-	return `calc(((${b} - ${a}) * (${x} - ${min}) / (${max} - ${min})) + ${a})`;
-}
-
-/**
  * Generates a random integer between the specified range.
  *
  * This function generates a random integer within the specified range `[min, max]` (inclusive).
