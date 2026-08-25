@@ -1,9 +1,9 @@
 import { readFile } from "fs/promises";
 import path, { posix, resolve as resolve_ } from "path";
+import { compileTypeScript, minifyHtml, minifyJavaScript, wrapIife } from "js-build-utils";
 import { JSDOM } from "jsdom";
 import type { HtmlTagDescriptor } from "vite";
 import "../../utils/object";
-import { compileTypeScript, minifyHtml, minifyJavaScript, wrapIife } from "./utils";
 
 export default ({ scripts, minifyHtml: minify = true }: {
 	scripts: (string | PriorScript)[];
@@ -18,7 +18,7 @@ export default ({ scripts, minifyHtml: minify = true }: {
 	const bundles = new Map<string, string>();
 
 	return {
-		name: "vite-plugin-inject-script",
+		name: "vite-plugin-inject-scripts",
 		enforce: "pre",
 
 		async configResolved(resolvedConfig) {
@@ -36,7 +36,7 @@ export default ({ scripts, minifyHtml: minify = true }: {
 				if (script.modify) source = script.modify(source);
 				if (script.type === "iife") source = wrapIife(source);
 				if (script.src.match(/\.[cm]?tsx?/i)) source = compileTypeScript(source);
-				if (!isDev) source = await minifyJavaScript(source);
+				if (!isDev) source = await minifyJavaScript(source, "oxc");
 
 				return Object.assign(script, { source });
 			}));
@@ -58,7 +58,7 @@ export default ({ scripts, minifyHtml: minify = true }: {
 		configureServer(server) {
 			for (const { src, source, inline } of scripts_) {
 				if (inline) continue;
-				let route = posix.join("/@inject-script", src);
+				let route = posix.join("/@inject-scripts", src);
 				route = posix.format({ ...path.parse(route), base: "", ext: ".js" });
 				server.middlewares.use(route, (_, res) => {
 					res.setHeader("Content-Type", "text/javascript");
@@ -107,7 +107,7 @@ export default ({ scripts, minifyHtml: minify = true }: {
 				});
 
 				let newHtml = dom.serialize();
-				if (minify) newHtml = await minifyHtml(newHtml);
+				if (minify) newHtml = await minifyHtml(newHtml, { html: "terser", js: "oxc", css: "lightningcss" });
 				return newHtml;
 			},
 		},

@@ -4,8 +4,7 @@
  */
 
 import { readFile } from "fs/promises";
-import { noop } from "lodash-es";
-import { isRolldownVite, minifyJavaScript } from "./utils";
+import { isRolldownVite, minifyJavaScript } from "js-build-utils";
 
 const lottieJsonExt = /\.json\?lottie$/i;
 const getPath = (id: string) => lottieJsonExt.test(id) ? id.replace(/\?.*/, "") : false;
@@ -32,8 +31,7 @@ export default (): VitePlugin => {
 			if (config.command === "serve") return rolldownModuleExtra + raw;
 
 			const json = JSON.parse(raw);
-			const promises = walk(json);
-			await Promise.all(promises);
+			walk(json);
 
 			return rolldownModuleExtra + JSON.stringify(json);
 		},
@@ -44,20 +42,19 @@ type AnyObject = Record<string, unknown>;
 const isObject = (x: unknown): x is AnyObject => x !== null && typeof x === "object";
 
 function walk(json: AnyObject) {
-	const promises: Promise<unknown>[] = [];
 	for (const key in json)
 		if (Object.hasOwn(json, key)) {
 			const value = json[key];
 			if (isObject(value))
-				promises.push(...walk(value));
-			if (key === "x" && typeof value === "string" && value.startsWith("var $bm_rt")) {
-				const minified = minifyJavaScript(value).then(min => json[key] = min.trimEnd()).catch(noop);
-				promises.push(minified);
-			} else if (key === "cm" && typeof value === "string")
-				try {
+				walk(value);
+			try {
+				if (key === "x" && typeof value === "string" && value.startsWith("var $bm_rt")) {
+					const minified = minifyJavaScript(value, "oxc");
+					json[key] = minified;
+				} else if (key === "cm" && typeof value === "string") {
 					const jsonMarker = JSON.parse(value);
 					json[key] = JSON.stringify(jsonMarker);
-				} catch { }
+				}
+			} catch { }
 		}
-	return promises;
 }

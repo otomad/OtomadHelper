@@ -113,6 +113,7 @@
 		"html-minifier-terser": "^7.2.0",
 		"husky": "latest",
 		"inquirer": "^9.0.0",
+		"js-build-utils": "file:D:/js-build-utils",
 		"jsdom": "^25.0.1",
 		"license-checker": "^25.0.1",
 		"lightningcss": "^1.28.2",
