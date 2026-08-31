@@ -1,5 +1,5 @@
 import { readFile } from "fs/promises";
-import { JSDOM } from "jsdom";
+import { DOMParser } from "linkedom";
 
 const CURSOR_BASE_SIZE = 32;
 const CURSOR_MAX_SIZE = 128; // Chromium (maybe) has max custom cursor size limit, exceed it will use default cursor.
@@ -47,11 +47,13 @@ export const svgDataset = (): VitePlugin => {
 	};
 };
 
+const parser = new DOMParser();
+
 function getSvgDataset(svgString: string): DOMStringMap;
 function getSvgDataset<TKeys extends string>(svgString: string): Record<TKeys, string>;
 function getSvgDataset(svgString: string) {
-	const svg = new JSDOM(svgString, { contentType: "text/xml" });
-	const root = svg.window.document.documentElement as Element as SVGSVGElement;
+	const svg = parser.parseFromString(svgString, "image/svg+xml");
+	const root = svg.documentElement as unknown as SVGSVGElement;
 	return {
 		...root.dataset,
 		baseWidth: root.getAttribute("width")!,

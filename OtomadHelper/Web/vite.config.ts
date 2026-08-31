@@ -25,7 +25,7 @@ import globalized from "./src/plugins/vite/globalized";
 import midiKeyframes from "./src/plugins/vite/midi";
 import minifyLottieJson from "./src/plugins/vite/minify-lottie-json";
 import { svgCursor, svgDataset } from "./src/plugins/vite/svg-cursor";
-import injectScript from "./src/plugins/vite/inject-script";
+import injectScripts from "vite-plugin-inject-scripts";
 import moment from "moment";
 import crowdinBadgeApiLink from "./src/helpers/links_crowdin-badge-api";
 
@@ -131,7 +131,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 				include: "**/*.svg?react",
 			}),
 			tsconfigPaths(),
-			injectScript({
+			injectScripts({
 				scripts: [
 					{ src: "./src/priors/init-system-config-fallback.ts", inline: true },
 					{ src: "./src/priors/init-background-color.ts", inline: true },
