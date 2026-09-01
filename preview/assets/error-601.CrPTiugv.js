@@ -1,1 +1,0 @@
-(function(){"use strict";if(window.ActiveXObject||`ActiveXObject`in window){var e=document.getElementsByTagName(`noscript`)[0];if(e){var t=e.nextSibling;if(typeof Comment<`u`&&t instanceof Comment){var n=t.textContent.replace(`[if IE]>`,``).replace(`<![endif]`,``);e.insertAdjacentHTML(`afterend`,n)}}}})();
