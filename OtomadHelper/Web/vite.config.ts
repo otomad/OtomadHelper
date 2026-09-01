@@ -23,7 +23,7 @@ import nameof from "./src/plugins/babel/nameof";
 import fragmentFiltersVirtualFile from "./src/plugins/vite/fragment-filters";
 import globalized from "./src/plugins/vite/globalized";
 import midiKeyframes from "./src/plugins/vite/midi";
-import minifyLottieJson from "./src/plugins/vite/minify-lottie-json";
+import minifyLottieJson from "vite-plugin-minify-lottie-json";
 import { svgCursor, svgDataset } from "./src/plugins/vite/svg-cursor";
 import injectScripts from "vite-plugin-inject-scripts";
 import moment from "moment";
