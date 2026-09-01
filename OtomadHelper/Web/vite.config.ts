@@ -134,9 +134,9 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 			injectScripts({
 				scripts: [
 					{ src: "./src/priors/init-system-config-fallback.ts", inline: true },
-					{ src: "./src/priors/init-background-color.ts", inline: true },
-					{ src: "./src/priors/dpi.ts", type: "iife" },
-					{ src: "./src/priors/error-601.ts", type: "iife", injectTo: "body-append" },
+					{ src: "./src/priors/init-background-color.ts", type: "block", inline: true },
+					{ src: "./src/priors/dpi.ts", type: "iife-arrow" },
+					{ src: "./src/priors/error-601.ts", type: "iife-arrow", injectTo: "body-append" },
 				],
 				minifyHtml: ENABLE_MINIFY && !NO_BUNDLE,
 			}),
