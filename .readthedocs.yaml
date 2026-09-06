@@ -7,6 +7,7 @@ build:
   jobs:
     install:
       # - npm install --omit=dev --force
+      - npm install -g pnpm
       - pnpm install --prod
     build:
       html:
