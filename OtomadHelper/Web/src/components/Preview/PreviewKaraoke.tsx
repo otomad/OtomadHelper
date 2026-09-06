@@ -44,7 +44,7 @@ const StyledPreviewKaraoke = styled.div`
 		-webkit-text-stroke-color: contrast-color(var(--color));
 	}
 
-	main.page.enter-done &:not(.reset) {
+	&:not(.reset, .page-content:active-view-transition *) {
 		&.future,
 		&.past:dir(rtl) {
 			clip-path: inset(0 0 0 50%);
