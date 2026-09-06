@@ -934,12 +934,12 @@ a.vp-external-link-icon {
 }
 
 .vp-file-tree .vp-file-tree-info:not(.focus).folder {
-	> * {
+	> :is(.vp-icon, .name) {
 		transition: color 0.25s ease;
 	}
 
-	&:hover {
-		> *,
+	&:has(> :is(.vp-icon, .name):hover) {
+		> :is(.vp-icon, .name),
 		&::before {
 			color: var(--vp-c-brand-1);
 		}
