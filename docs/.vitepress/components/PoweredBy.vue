@@ -14,7 +14,7 @@
 	]);
 	const versions = reactive([
 		{ name: "VitePress", icon: "vitepress", version: VITEPRESS_VER, color: "#5C73E7" },
-		{ name: "Vue", icon: "vue", version: vueVersion, color: "#4FC08D" },
+		{ name: "Vue", icon: "vuedotjs", version: vueVersion, color: "#4FC08D" },
 	]);
 </script>
 

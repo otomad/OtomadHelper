@@ -46,21 +46,31 @@
 
 	onMounted(() => {
 		const { classList } = document.documentElement;
-		window.onbeforeprint = event => {
+		window.onbeforeprint = () => {
 			classList.add("locale-changing");
 			classList.remove("dark");
 		};
-		window.onafterprint = async event => {
+		window.onafterprint = async () => {
 			if (data.isDark.value) classList.add("dark");
 			await new Promise(resolve => requestAnimationFrame(resolve));
 			classList.remove("locale-changing");
 		};
 	});
 
+	/**
+	 * Get base URL of current page, which contains origin and pathname only, without hash and search params.
+	 */
+	function getCurrentBaseUrl() {
+		const url = new URL(location.href);
+		url.hash = "";
+		url.search = "";
+		return url.toString();
+	}
+
 	function getMarkdownLink() {
-		const { href } = location;
-		if (href.endsWith(".html")) return href.slice(0, -5) + ".md";
-		else if (href.endsWith("/")) return href + "index.md";
+		const url = getCurrentBaseUrl();
+		if (url.endsWith(".html")) return url.slice(0, -".html".length) + ".md";
+		else if (url.endsWith("/")) return url + "index.md";
 		else return;
 	}
 
