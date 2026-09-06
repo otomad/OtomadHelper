@@ -170,7 +170,6 @@
 		speechSynthesis.cancel();
 		buttonsInner.value?.startViewTransition(() => (isSpeaking.value = false));
 	};
-	document.startViewTransition;
 </script>
 
 <script lang="tsx">
