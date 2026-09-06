@@ -1,5 +1,6 @@
 {
 	"type": "module",
+	"private": true,
 	"scripts": {
 		"dev": "vitepress dev docs",
 		"dev:force": "vitepress dev docs --force",

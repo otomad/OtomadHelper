@@ -901,3 +901,14 @@ a.vp-external-link-icon {
 .mermaid-container .mermaid {
 	transition-property: opacity, transform;
 }
+
+/**
+ * Fix Component: VPFeatures has ul disc
+ */
+.VPFeatures ul {
+	list-style: none;
+}
+
+.VPFeatures li + li {
+	margin-top: 0;
+}
