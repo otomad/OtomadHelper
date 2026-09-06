@@ -20,6 +20,7 @@
 			"vite-plugin-svgr/client",
 			"vite-plugin-glsl/ext",
 			"vite-plugin-minify-lottie-json/client",
+			"vite-plugin-midi/client",
 		],
 		"jsx": "react-jsx",
 		"allowSyntheticDefaultImports": true,

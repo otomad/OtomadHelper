@@ -861,3 +861,24 @@ export function deconstructState<TState, TSelected = TState>(state: StatePropert
 export function isRenderable(node: ReactNode): node is Exclude<ReactNode, null | undefined | false | ""> {
 	return node === 0 || node === 0n || !(!node || typeof node === "object" && Symbol.iterator in node && node[Symbol.iterator]().next().done);
 }
+
+/**
+ * Map from `Record<TKeyInput, TValueInput>` object to a new `Record<TKeyOutput, TValueOutput>` object.
+ * @template TKeyInput - Old object key type.
+ * @template TValueInput - Old object value type.
+ * @template TKeyOutput - New object key type.
+ * @template TValueOutput - New object value type.
+ * @param object - Original object.
+ * @param callback - A function that accepts up to four arguments. The map method calls the callbackfn function one time for each entry of the object.
+ * @returns New mapped object.
+ */
+export function mapObject<
+	TKeyInput extends PropertyKey, TValueInput,
+	TKeyOutput extends PropertyKey, TValueOutput,
+>(
+	object: Record<TKeyInput, TValueInput>,
+	callback: (key: TKeyInput, value: TValueInput, index: number, object: Record<TKeyInput, TValueInput>) => [TKeyOutput, TValueOutput],
+): Record<TKeyOutput, TValueOutput> {
+	return Object.fromEntries((Object.entries(object) as [TKeyInput, TValueInput][])
+		.map(([key, value], index) => callback(key, value, index, object))) as Record<TKeyOutput, TValueOutput>;
+}

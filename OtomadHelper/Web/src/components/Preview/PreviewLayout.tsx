@@ -1,8 +1,8 @@
 /* eslint-disable dot-notation */
 import midi from "assets/audios/Second Heaven.mid?keyframes";
-import type { Keyframes } from "styled-components/dist/types";
+import type { MidiKeyframes } from "vite-plugin-midi";
 
-const flippedKeyframes = convertMidiToKeyframes(midi.tracks);
+const flippedKeyframes = convertMidiToKeyframes(midi);
 
 const FLIPPING_SCALE = 1.3;
 
@@ -101,11 +101,11 @@ const StyledPreviewLayout = styled.div<{
 		}
 
 		&.lead::before {
-			animation-name: ${flippedKeyframes["Lead"]()};
+			animation-name: ${flippedKeyframes["Lead"]};
 		}
 
 		&.bass::before {
-			animation-name: ${flippedKeyframes["Chord"]()};
+			animation-name: ${flippedKeyframes["Chord"]};
 		}
 	}
 
@@ -121,19 +121,19 @@ const StyledPreviewLayout = styled.div<{
 			--size: 75%;
 
 			&:nth-of-type(1)::before {
-				animation-name: ${flippedKeyframes["Ring"]()};
+				animation-name: ${flippedKeyframes["Ring"]};
 			}
 
 			&:nth-of-type(2)::before {
-				animation-name: ${flippedKeyframes["Arpeggio"]()};
+				animation-name: ${flippedKeyframes["Arpeggio"]};
 			}
 
 			&:nth-of-type(3)::before {
-				animation-name: ${flippedKeyframes["Bass"]()};
+				animation-name: ${flippedKeyframes["Bass"]};
 			}
 
 			&:nth-of-type(4)::before {
-				animation-name: ${flippedKeyframes["Bass #2"]()};
+				animation-name: ${flippedKeyframes["Bass #2"]};
 			}
 		}
 	}
@@ -156,28 +156,6 @@ export default function PreviewLayout({ thumbnail }: FCP<{
 	);
 }
 
-function convertMidiToKeyframes(mid: typeof import("*.mid?keyframes").default.tracks) {
-	const result: Record<string, () => Keyframes> = {};
-	const toPercents = (percents: number[]) => percents.map(number => number + "%").join(",");
-	for (const [name, notes] of Object.entries(mid))
-		result[name] = () => keyframes`
-			${toPercents(notes[0])} {
-				scale: ${FLIPPING_SCALE};
-			}
-
-			${toPercents(notes[1])} {
-				scale: 1;
-				animation-timing-function: step-end;
-			}
-
-			${toPercents(notes[2])} {
-				scale: -${FLIPPING_SCALE} ${FLIPPING_SCALE};
-			}
-
-			${toPercents(notes[3])} {
-				scale: -1 1;
-				animation-timing-function: step-end;
-			}
-		`;
-	return result;
+function convertMidiToKeyframes(mid: MidiKeyframes) {
+	return mid.hFlip().mapKeyframesRules(rules => keyframes`${rules}`);
 }

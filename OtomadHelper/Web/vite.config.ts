@@ -22,7 +22,7 @@ import tAutoTostring from "./src/plugins/babel/t-auto-tostring";
 import nameof from "./src/plugins/babel/nameof";
 import fragmentFiltersVirtualFile from "./src/plugins/vite/fragment-filters";
 import globalized from "./src/plugins/vite/globalized";
-import midiKeyframes from "./src/plugins/vite/midi";
+import midiKeyframes from "vite-plugin-midi";
 import minifyLottieJson from "vite-plugin-minify-lottie-json";
 import { svgCursor, svgDataset } from "./src/plugins/vite/svg-cursor";
 import injectScripts from "vite-plugin-inject-scripts";
@@ -53,6 +53,12 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 	const DEV = command === "serve", PROD = command === "build";
 	return {
 		plugins: [
+			{
+				name: "xxxxxxx",
+				configResolved(config) {
+					console.log(config.root);
+				},
+			},
 			react({
 				babel: {
 					plugins: [

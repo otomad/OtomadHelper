@@ -182,9 +182,6 @@ importers:
       '@stylistic/stylelint-plugin':
         specifier: ^5.0.1
         version: 5.0.1(stylelint@17.5.0(typescript@6.0.3))
-      '@tonejs/midi':
-        specifier: ^2.0.28
-        version: 2.0.28
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -317,6 +314,9 @@ importers:
       vite-plugin-inject-scripts:
         specifier: ^1.1.0
         version: 1.1.0
+      vite-plugin-midi:
+        specifier: ^1.1.1
+        version: 1.1.1
       vite-plugin-minify-lottie-json:
         specifier: ^1.0.2
         version: 1.0.2
@@ -3833,6 +3833,9 @@ packages:
     resolution: {integrity: sha512-cub8rahkh0Q/bw1+GxP7aeSe29hHHn2V4m29nnDlvCdlgU+3UGxkZp7Z53jLUdpX3jdTO0nJZUDl3xvbWc2Xog==}
     engines: {node: 20 || >=22}
 
+  javascript-stringify@2.1.0:
+    resolution: {integrity: sha512-JVAfqNPTvNq3sB/VHQJAFxN/sPgKnsKrCwyRt15zwNCdrMMJDdcEOdubuy+DuJYYdm0ox1J4uzEuYKkN+9yhVg==}
+
   jiti@2.6.1:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
@@ -5752,6 +5755,9 @@ packages:
 
   vite-plugin-inject-scripts@1.1.0:
     resolution: {integrity: sha512-DwOc3YuhIPi7aMKG8/GPFuqRT5uVia8WSSqPwLGC4uqxexSvw7d8BRIz/JlRvgBaXD12TfzunsRTBcsPPh9S7w==}
+
+  vite-plugin-midi@1.1.1:
+    resolution: {integrity: sha512-aKug3uoatSBolcPysVWKF58d1kB6GhK2nx7hrSCNSXOL+1j04613naQIilJoYXP9A6l5mupcMaHpwe+m5mvXeg==}
 
   vite-plugin-minify-lottie-json@1.0.2:
     resolution: {integrity: sha512-MpC4hceHXnqkv0BCFUlbwbxtLKcCpfQWSmFAwOtcZy1hYKoFkafivBJpIEdxn28RzpOB0NuI/Y6wYrdjcvYgkQ==}
@@ -9805,6 +9811,8 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
+  javascript-stringify@2.1.0: {}
+
   jiti@2.6.1: {}
 
   jotai-immer@0.4.1(immer@10.1.1)(jotai@2.15.1(@babel/core@7.28.5)(@babel/template@7.28.6)(@types/react@19.2.2(patch_hash=a45cd7d41a73017efd57908f91ad7f7b8375af685f0e19d3fb7035d0af6650b5))(react@19.2.4)):
@@ -11948,6 +11956,11 @@ snapshots:
       oxc-minify: 0.148.0
     transitivePeerDependencies:
       - canvas
+
+  vite-plugin-midi@1.1.1:
+    dependencies:
+      '@tonejs/midi': 2.0.28
+      javascript-stringify: 2.1.0
 
   vite-plugin-minify-lottie-json@1.0.2:
     dependencies:
