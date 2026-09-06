@@ -31,10 +31,10 @@
 @en    1. The script reads and writes an INI user profile in your disk memory to save your user data.
 @zh    1. 脚本会在磁盘中创建一个ini文件用来保存你的用户配置设置。
        ::: code-group
-@en       ```[Path]
-@zh       ```[路径]
-@en       C:\Users\(Your User Name)\AppData\Roaming\VEGAS Pro\(Your Vegas Version)\Otomad Helper.ini
-@zh       C:\Users\(你的用户名)\AppData\Roaming\VEGAS Pro\(你的Vegas版本)\Otomad Helper.ini
+@en        ```[Path]
+@zh        ```[路径]
+@en        C:\Users\(Your User Name)\AppData\Roaming\VEGAS Pro\(Your Vegas Version)\Otomad Helper.ini
+@zh        C:\Users\(你的用户名)\AppData\Roaming\VEGAS Pro\(你的Vegas版本)\Otomad Helper.ini
        ```
        :::
 @en 2. Registry read and write.
@@ -42,16 +42,16 @@
 @en    1. The script need to read and write the registry to install or uninstall pitch-shift plugin presets.
 @zh    1. 脚本需要读写注册表来安装或卸载移调插件预设。
        ::: code-group
-@en       ```[Path]
-@zh       ```[路径]
+@en        ```[Path]
+@zh        ```[路径]
        HKEY_CURRENT_USER\Software\DirectShow\Presets\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
        ```
        :::
 @en    2. Configurations related to Datamosh are saved in the registry.
 @zh    2. 数据抹失的相关配置保存在注册表中。
        ::: code-group
-@en       ```[Path]
-@zh       ```[路径]
+@en        ```[Path]
+@zh        ```[路径]
        HKEY_CURRENT_USER\SOFTWARE\VEGAS Creative Software\Custom Presets
        ```
        :::
