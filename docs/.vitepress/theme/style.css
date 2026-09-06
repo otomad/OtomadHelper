@@ -912,3 +912,43 @@ a.vp-external-link-icon {
 .VPFeatures li + li {
 	margin-top: 0;
 }
+
+/**
+ * Component: VitePress Plugin File Tree
+ */
+.vp-file-tree .vp-file-tree-node .folder {
+	+ .group {
+		transition: ease 250ms;
+		transition-property: block-size, display;
+		transition-behavior: allow-discrete;
+		overflow-block: clip;
+
+		@starting-style {
+			block-size: 0;
+		}
+	}
+
+	&:not(.expanded) + .group {
+		block-size: 0;
+	}
+}
+
+.vp-file-tree .vp-file-tree-info:not(.focus).folder {
+	> * {
+		transition: color 0.25s ease;
+	}
+
+	&:hover {
+		> *,
+		&::before {
+			color: var(--vp-c-brand-1);
+		}
+	}
+}
+
+:root {
+	--vp-file-tree-icon-file: url(./icons/file.svg?inline);
+	--vp-file-tree-icon-folder: url(./icons/folder-closed.svg?inline);
+	--vp-file-tree-icon-folder-expanded: url(./icons/folder-open.svg?inline);
+	--vp-file-tree-icon-arrow: url(./icons/chevron.svg?inline);
+}

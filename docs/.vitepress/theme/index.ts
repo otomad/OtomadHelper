@@ -1,19 +1,24 @@
 // https://vitepress.dev/guide/custom-theme
 import { inBrowser, type Theme, type Router } from "vitepress";
+import { enhanceAppWithFileTree } from "vitepress-plugin-file-tree/client";
 import DefaultTheme, { VPButton } from "vitepress/theme-without-fonts";
 import handleHashOpenAndScroll from "./hash-open-and-scroll";
-import MyLayout from "./Layout.vue";
 import "./fonts.css";
 import "./style.css";
 import "./view-transitions.css";
 import "markdown-it-container-details-heading/vitepress-theme.css";
+import MyLayout from "./Layout.vue";
 
 const globalComponents = import.meta.glob<{}>("./*.vue", { base: "../components", import: "default", eager: true });
 
 export default {
 	extends: DefaultTheme,
 	Layout: MyLayout,
-	enhanceApp({ app, router, siteData }) {
+	enhanceApp(ctx) {
+		const { app, router, siteData } = ctx;
+		// vitepress-plugin-file-tree
+		enhanceAppWithFileTree(ctx);
+
 		// Register custom global components
 		for (const [tagName, component] of Object.entries(globalComponents))
 			app.component(tagName.slice(2, -4), component); // `tagName` is "./MyComponent.vue".

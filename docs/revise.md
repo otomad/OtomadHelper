@@ -414,83 +414,88 @@ It can span multiple lines and include **formatting**.
 @zh ## 项目结构
 
 @@@en
-```
-OtomadHelper_docs/                     # Repository root (docs branch)
-├── .gitignore                         # Files ignored by Git
-├── .readthedocs.yaml                  # Read the Docs build configuration
-├── package.json                       # Project dependencies and scripts
-├── pnpm-lock.yaml                     # Dependency version lock file
-├── tsconfig.json                      # TypeScript configuration
-├── oxfmt.config.ts                    # Code formatter configuration
-├── README.md                          # You are here
-├── README_zh-CN.md                    # Chinese version of this file
-└── docs/                              # Documentation source (VitePress root)
-    ├── .vitepress/                    # VitePress configuration & theme
-    │   ├── config.ts                  # Main site configuration
-    │   ├── components/                # Custom Vue components
-    │   ├── plugins/                   # Custom Markdown & build plugins
-    │   ├── theme/                     # Custom theme overrides
-    │   └── use-i18n.ts                # Internationalization helpers
-    ├── assets/                        # Static assets (images, fonts, etc.)
-    ├── img/                           # Documentation images
-    ├── public/                        # Public static files
-    │   ├── favicon.svg                # Site favicon
-    │   └── favicon_1.ico              # Alternative favicon (RtD workaround)
-    ├── index.md                       # Home page (English)
-    ├── introduction.md                # Introduction page (multi-language)
-    ├── installation.md                # Installation guide (multi-language)
-    ├── usage.md                       # Usage guide (multi-language)
-    ├── faq.md                         # FAQ (multi-language)
-    ├── audio.md, visual.md, ...       # Feature pages (multi-language)
-    ├── v4/                            # Old v4 documentation pages
-    │   ├── introduction.md
-    │   ├── installation.md
-    │   └── ...
-    └── zh-CN/                         # Chinese-specific pages
-        ├── index.md                   # Home page (Chinese)
-        └── v4/                        # Chinese v4 entry point
-```
+::: file-tree title="Project Structure"
+- OtomadHelper_docs            # Repository root (docs branch)
+  - .gitignore                 # Files ignored by Git
+  - .readthedocs.yaml          # Read the Docs build configuration
+  - .vscode                    # VS Code editor config
+    - extensions.json          # Recommended extensions to installed
+    - settings.json            # Editor settings (auto-format, etc.)
+    - tasks.json               # Pre configured tasks (dev/build)
+  - package.json               # Project dependencies and scripts
+  - pnpm-lock.yaml             # Dependency version lock file
+  - tsconfig.json              # TypeScript configuration
+  - oxfmt.config.ts            # Code formatter configuration
+  - README.md                  # Project readme file
+  - README_zh-CN.md            # Chinese version of project readme
+  - docs                       # Documentation source (VitePress root)
+    - .vitepress               # VitePress configuration & theme
+      -  config.ts             # Main site configuration
+      -  components/           # Custom Vue components
+      -  plugins/              # Custom Markdown & build plugins
+      -  theme/                # Custom theme overrides
+      -  use-i18n.ts           # Internationalization helpers
+    - assets/                  # Static assets (images, fonts, etc.)
+    - img/                     # Documentation images
+    - public                   # Public static files
+      - favicon.svg            # Site favicon
+      - favicon_1.ico          # Alternative favicon (RtD workaround)
+    - index.md                 # Home page (English)
+    - introduction.md          # Introduction page (multi-language)
+    - installation.md          # Installation guide (multi-language)
+    - usage.md                 # Usage guide (multi-language)
+    - faq.md                   # FAQ (multi-language)
+    - audio.md, visual.md, …   # Feature pages (multi-language)
+    - v4                       # Old v4 documentation pages
+      - introduction.md
+      - installation.md
+      - …
+    - zh-CN                    # Chinese-specific pages
+      - index.md               # Home page (Chinese)
+      - v4/                    # Chinese v4 entry point
+:::
 @@@zh
-```
-OtomadHelper_docs/                     # 仓库根目录（docs 分支）
-├── .gitignore                         # Git 忽略的文件
-├── .readthedocs.yaml                  # Read the Docs 构建配置
-├── .vscode/                           # VS Code 编辑器配置
-│   ├── extensions.json                # 推荐安装的扩展
-│   ├── settings.json                  # 编辑器设置（自动格式化等）
-│   └── tasks.json                     # 预配置的任务（dev/build）
-├── package.json                       # 项目依赖库与脚本
-├── pnpm-lock.yaml                     # 依赖库版本锁定文件
-├── tsconfig.json                      # TypeScript 配置
-├── oxfmt.config.ts                    # 代码格式化工具配置
-├── README.md                          # 英文版 README
-├── README_zh-CN.md                    # 中文版 README（你正在读的这个）
-└── docs/                              # 文档源码（VitePress 根目录）
-    ├── .vitepress/                    # VitePress 配置与主题
-    │   ├── config.ts                  # 主站点配置
-    │   ├── components/                # 自定义 Vue 组件
-    │   ├── plugins/                   # 自定义 Markdown 与构建插件
-    │   ├── theme/                     # 自定义主题覆盖
-    │   └── use-i18n.ts                # 国际化辅助工具
-    ├── assets/                        # 静态资源（图片、字体等）
-    ├── img/                           # 文档图片
-    ├── public/                        # 公共静态文件
-    │   ├── favicon.svg                # 网站图标
-    │   └── favicon_1.ico              # 备用图标（用于规避 RtD 图标替换）
-    ├── index.md                       # 主页（英文）
-    ├── introduction.md                # 介绍页面（单文件多语言）
-    ├── installation.md                # 安装指南（单文件多语言）
-    ├── usage.md                       # 使用指南（单文件多语言）
-    ├── faq.md                         # 常见问题（单文件多语言）
-    ├── audio.md, visual.md, ...       # 各功能页面（单文件多语言）
-    ├── v4/                            # 旧版 v4 文档页面
-    │   ├── introduction.md
-    │   ├── installation.md
-    │   └── ...
-    └── zh-CN/                         # 中文专属页面
-        ├── index.md                   # 主页（中文）
-        └── v4/                        # 中文 v4 页面入口
-```
+
+::: file-tree title="项目结构"
+- OtomadHelper_docs            # 仓库根目录（docs 分支）
+  - .gitignore                 # Git 忽略的文件
+  - .readthedocs.yaml          # Read the Docs 构建配置
+  - .vscode                    # VS Code 编辑器配置
+    - extensions.json          # 推荐安装的扩展
+    - settings.json            # 编辑器设置（自动格式化等）
+    - tasks.json               # 预配置的任务（dev/build）
+  - package.json               # 项目依赖库与脚本
+  - pnpm-lock.yaml             # 依赖库版本锁定文件
+  - tsconfig.json              # TypeScript 配置
+  - oxfmt.config.ts            # 代码格式化工具配置
+  - README.md                  # 英文版 README
+  - README_zh-CN.md            # 中文版 README
+  - docs                       # 文档源码（VitePress 根目录）
+    - .vitepress               # VitePress 配置与主题
+      -  config.ts             # 主站点配置
+      -  components/           # 自定义 Vue 组件
+      -  plugins/              # 自定义 Markdown 与构建插件
+      -  theme/                # 自定义主题覆盖
+      -  use-i18n.ts           # 国际化辅助工具
+    - assets/                  # 静态资源（图片、字体等）
+    - img/                     # 文档图片
+    - public                   # 公共静态文件
+      - favicon.svg            # 网站图标
+      - favicon_1.ico          # 备用图标（用于规避 RtD 图标替换）
+    - index.md                 # 主页（英文）
+    - introduction.md          # 介绍页面（单文件多语言）
+    - installation.md          # 安装指南（单文件多语言）
+    - usage.md                 # 使用指南（单文件多语言）
+    - faq.md                   # 常见问题（单文件多语言）
+    - audio.md, visual.md, …   # 各功能页面（单文件多语言）
+    - v4                       # 旧版 v4 文档页面
+      - introduction.md
+      - installation.md
+      - …
+    - zh-CN                    # 中文专属页面
+      - index.md               # 主页（中文）
+      - v4/                    # 中文 v4 页面入口
+:::
 @@@
 
 @en ## How Build & Deployment Works

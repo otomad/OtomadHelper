@@ -9,6 +9,7 @@ import smartypantsPlugin from "markdown-it-smartypants";
 import underlinePlugin from "markdown-it-underline-cjk-friendly";
 import { defineConfig, type DefaultTheme, type HeadConfig } from "vitepress";
 import { back2topPlugin } from "vitepress-plugin-back2top";
+import { fileTreeMarkdownPlugin } from "vitepress-plugin-file-tree";
 import { ImagePreviewPlugin } from "vitepress-plugin-image-preview";
 import { llmstxtPlugin } from "vitepress-plugin-llmstxt";
 import outlineDepthPlugin from "vitepress-plugin-outline-depth";
@@ -58,6 +59,7 @@ export default defineConfig({
 			md.use(fixCodeCopyI18n);
 			md.use(footnotePlugin);
 			md.use(smartypantsPlugin);
+			md.use(fileTreeMarkdownPlugin);
 		},
 		/* preConfig: md => {
 			// See: https://github.com/vuejs/vitepress/discussions/5334#discussioncomment-17772849

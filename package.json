@@ -29,6 +29,7 @@
 		"vitepress": "2.0.0-alpha.20",
 		"vitepress-mermaid-renderer": "^1.2.1",
 		"vitepress-plugin-back2top": "^0.1.4",
+		"vitepress-plugin-file-tree": "^0.12.1",
 		"vitepress-plugin-image-preview": "^0.1.6",
 		"vitepress-plugin-llmstxt": "^0.5.2",
 		"vitepress-plugin-outline-depth": "^1.1.1",

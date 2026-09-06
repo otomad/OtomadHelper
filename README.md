@@ -290,6 +290,10 @@ Before pushing, you can preview the site on your own computer to see how your ch
 OtomadHelper_docs/                     # Repository root (docs branch)
 ├── .gitignore                         # Files ignored by Git
 ├── .readthedocs.yaml                  # Read the Docs build configuration
+├── .vscode                    # VS Code editor config
+│   ├── extensions.json          # Recommended extensions to installed
+│   ├── settings.json            # Editor settings (auto-format, etc.)
+│   └── tasks.json               # Pre configured tasks (dev/build)
 ├── package.json                       # Project dependencies and scripts
 ├── pnpm-lock.yaml                     # Dependency version lock file
 ├── tsconfig.json                      # TypeScript configuration
