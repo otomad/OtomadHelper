@@ -81,7 +81,7 @@ const StyledComboBox = styled(StyledButton)(() => css`
 
 			&::picker(select) {
 				position: fixed;
-				position-area: none;
+				position-area: span-all;
 				inset-block-start: clamp(
 					0dvh,
 					calc(anchor(start) - 3px - ${OPTION_HEIGHT}px * var(--selected-index)),
@@ -115,10 +115,6 @@ const StyledComboBox = styled(StyledButton)(() => css`
 					@starting-style {
 						opacity: 0;
 					}
-				}
-
-				&:not(:popover-open) {
-					--top-transition-timing-function: step-end;
 				}
 			}
 
