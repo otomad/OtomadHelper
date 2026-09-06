@@ -1,3 +1,4 @@
 patchedDependencies:
   vitepress: patches/vitepress.patch
 minimumReleaseAge: 0
+dangerouslyAllowAllBuilds: true
