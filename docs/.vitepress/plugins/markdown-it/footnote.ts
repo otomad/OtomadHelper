@@ -1,6 +1,6 @@
 import type { PluginSimple } from "markdown-it";
 import footnotePlugin from "markdown-it-footnote";
-import { useI18nThemeConfig } from "../../use-i18n";
+import { useI18nThemeConfig } from "../../use-i18n.js";
 
 // See: https://github.com/markdown-it/markdown-it-footnote#customize
 const footnotePluginWithCustomized: PluginSimple = md => {

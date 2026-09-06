@@ -2,7 +2,7 @@ import type { LlmsConfig } from "vitepress-plugin-llmstxt";
 import { parseI18nMacro } from "markdown-it-i18n/utils";
 import type { DefaultTheme, LocaleConfig as _LocaleConfig } from "vitepress";
 import { join } from "path/posix";
-import { useI18nThemeConfig } from "../use-i18n";
+import { useI18nThemeConfig } from "../use-i18n.js";
 
 type LocaleConfig = _LocaleConfig<DefaultTheme.Config> & Record<string, { themeConfig: {} }>;
 

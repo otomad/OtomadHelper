@@ -2,7 +2,6 @@ import { resolve } from "path";
 import { join } from "path/posix";
 import { katex } from "@mdit/plugin-katex";
 import vueJsx from "@vitejs/plugin-vue-jsx";
-import anchorPlugin from "markdown-it-anchor";
 import bracketedSpansPlugin from "markdown-it-bracketed-spans";
 import detailsHeadingPlugin from "markdown-it-container-details-heading";
 import i18nMacroPlugin from "markdown-it-i18n";
@@ -14,15 +13,14 @@ import { ImagePreviewPlugin } from "vitepress-plugin-image-preview";
 import { llmstxtPlugin } from "vitepress-plugin-llmstxt";
 import outlineDepthPlugin from "vitepress-plugin-outline-depth";
 import { pagefindPlugin, chineseSearchOptimize } from "vitepress-plugin-pagefind";
-import hostname from "./plugins/hostname";
-import llmsTransform from "./plugins/llms-transform";
-import containerImportantPlugin from "./plugins/markdown-it/container-important";
-import fixCodeCopyI18n from "./plugins/markdown-it/fix-code-copy-i18n";
-import footnotePlugin from "./plugins/markdown-it/footnote";
-import kbdPlugin from "./plugins/markdown-it/kbd";
-import { createRssFeeds } from "./plugins/rss-feed";
-import { getRssFeedLink } from "./plugins/rss-feed_get-link";
-import { useI18nThemeConfig } from "./use-i18n";
+import hostname from "./plugins/hostname.js";
+import llmsTransform from "./plugins/llms-transform.js";
+import fixCodeCopyI18n from "./plugins/markdown-it/fix-code-copy-i18n.js";
+import footnotePlugin from "./plugins/markdown-it/footnote.js";
+import kbdPlugin from "./plugins/markdown-it/kbd.js";
+import { createRssFeeds } from "./plugins/rss-feed.js";
+import { getRssFeedLink } from "./plugins/rss-feed_get-link.js";
+import { useI18nThemeConfig } from "./use-i18n.js";
 
 const ENABLE_MINIFY = false; // true;
 const base = process.env.READTHEDOCS_CANONICAL_URL
@@ -45,22 +43,12 @@ export default defineConfig({
 		breaks: true,
 		cjkFriendlyEmphasis: true,
 		anchor: {
-			permalink: anchorPlugin.permalink.linkInsideHeader({
-				space: false,
-				symbol: "",
-				renderAttrs: (_1, state, _3, _4, title) => ({
-					"aria-label": !title
-						? undefined!
-						: useI18nThemeConfig(state.env.localeIndex).anchor.permalinkTo.replaceAll("{}", title),
-				}),
-			}),
 			slugify,
 		},
 		config: md => {
 			md.use(i18nMacroPlugin, { consistentHeadingId: true });
 			md.use(underlinePlugin);
 			md.use(detailsHeadingPlugin);
-			md.use(containerImportantPlugin);
 			md.use(bracketedSpansPlugin);
 			md.use(kbdPlugin);
 			// VitePress 的默认数学公式渲染器 markdown-it-mathjax3 居然懒得添加 MathML 输出选项，所以换一个。
@@ -70,10 +58,10 @@ export default defineConfig({
 			md.use(footnotePlugin);
 			md.use(smartypantsPlugin);
 		},
-		preConfig: md => {
+		/* preConfig: md => {
 			// See: https://github.com/vuejs/vitepress/discussions/5334#discussioncomment-17772849
 			md.use(anchorPlugin, { failOnNonUnique: false });
-		},
+		}, */
 	},
 	vue: {
 		template: {

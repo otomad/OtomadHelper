@@ -6,7 +6,8 @@ build:
     nodejs: "latest"
   jobs:
     install:
-      - npm install --omit=dev --force
+      # - npm install --omit=dev --force
+      - pnpm install --prod
     build:
       html:
         # The site was created by running `vitepress init`

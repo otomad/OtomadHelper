@@ -369,6 +369,7 @@
 		transition-duration: 250ms;
 		pointer-events: none;
 		box-shadow: var(--vp-shadow-3);
+		font-size: 14px;
 
 		@starting-style {
 			opacity: 0;
@@ -378,6 +379,10 @@
 		&:not(:popover-open) {
 			opacity: 0;
 			margin: 0;
+		}
+
+		@media (any-hover: none) {
+			display: none;
 		}
 	}
 

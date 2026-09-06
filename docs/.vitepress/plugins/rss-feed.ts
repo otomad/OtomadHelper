@@ -1,7 +1,7 @@
 import { type SiteConfig, type DefaultTheme } from "vitepress";
 import { readFile, writeFile } from "fs/promises";
 import { Feed } from "feed";
-import hostname from "./hostname";
+import hostname from "./hostname.js";
 import { join } from "path/posix";
 import { join as localJoin } from "path";
 import { parseHTML, NodeFilter } from "linkedom";

@@ -2,7 +2,7 @@
 // See: https://github.com/vuejs/vitepress/blob/d30f32246dffcf279e7bc2bc73a979821bd9f24c/docs/.vitepress/config.ts#L53-L82
 
 import type { PluginSimple } from "markdown-it";
-import { useI18nThemeConfig } from "../../use-i18n";
+import { useI18nThemeConfig } from "../../use-i18n.js";
 
 const fixCodeCopyI18n: PluginSimple = md => {
 	const fence = md.renderer.rules.fence!;

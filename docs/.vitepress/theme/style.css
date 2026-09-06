@@ -298,9 +298,12 @@ em:is(:lang(zh), :lang(ja), :lang(ko)) {
 	max-height: 600px;
 	margin-inline: auto !important;
 	border-radius: 6px;
+	object-fit: contain;
 
-	&:not(.shadow-less) {
-		box-shadow: var(--vp-shadow-3);
+	@media screen {
+		&:not(.shadow-less) {
+			box-shadow: var(--vp-shadow-3);
+		}
 	}
 
 	&.light:is(html.dark *),
