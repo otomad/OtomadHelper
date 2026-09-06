@@ -80,7 +80,7 @@ export default defineConfig({
 		plugins: [
 			vueJsx(),
 			ImagePreviewPlugin({ hideOnClickModal: true }),
-			back2topPlugin(),
+			back2topPlugin({ marginBottom: 100 }),
 			pagefindPlugin({
 				customSearchQuery: chineseSearchOptimize,
 				showDate: true,
