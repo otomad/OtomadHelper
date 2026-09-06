@@ -8,6 +8,9 @@ patchedDependencies:
   vitepress:
     hash: 9a4184859f32f6294762fb4b0630851b8628d2dc8388b55e977ab760b54bc213
     path: patches/vitepress.patch
+  vitepress-plugin-file-tree:
+    hash: adc08098b9683f7d7d599f9d9ab6502c0bcc3574eabbc5f0918fedc260453f87
+    path: patches/vitepress-plugin-file-tree.patch
 
 importers:
 
@@ -72,7 +75,7 @@ importers:
         version: 0.1.4(vitepress@2.0.0-alpha.20(patch_hash=9a4184859f32f6294762fb4b0630851b8628d2dc8388b55e977ab760b54bc213)(@types/node@26.4.1)(esbuild@0.28.2)(markdown-it-mathjax3@4.3.2)(postcss@8.5.28)(typescript@6.0.3))(vue@3.5.42(typescript@6.0.3))
       vitepress-plugin-file-tree:
         specifier: ^0.12.1
-        version: 0.12.1(esbuild@0.28.2)(rolldown@1.2.7)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2))(vitepress@2.0.0-alpha.20(patch_hash=9a4184859f32f6294762fb4b0630851b8628d2dc8388b55e977ab760b54bc213)(@types/node@26.4.1)(esbuild@0.28.2)(markdown-it-mathjax3@4.3.2)(postcss@8.5.28)(typescript@6.0.3))(vue@3.5.42(typescript@6.0.3))
+        version: 0.12.1(patch_hash=adc08098b9683f7d7d599f9d9ab6502c0bcc3574eabbc5f0918fedc260453f87)(esbuild@0.28.2)(rolldown@1.2.7)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2))(vitepress@2.0.0-alpha.20(patch_hash=9a4184859f32f6294762fb4b0630851b8628d2dc8388b55e977ab760b54bc213)(@types/node@26.4.1)(esbuild@0.28.2)(markdown-it-mathjax3@4.3.2)(postcss@8.5.28)(typescript@6.0.3))(vue@3.5.42(typescript@6.0.3))
       vitepress-plugin-image-preview:
         specifier: ^0.1.6
         version: 0.1.6(vitepress@2.0.0-alpha.20(patch_hash=9a4184859f32f6294762fb4b0630851b8628d2dc8388b55e977ab760b54bc213)(@types/node@26.4.1)(esbuild@0.28.2)(markdown-it-mathjax3@4.3.2)(postcss@8.5.28)(typescript@6.0.3))(vue@3.5.42(typescript@6.0.3))
@@ -4622,7 +4625,7 @@ snapshots:
     transitivePeerDependencies:
       - vue
 
-  vitepress-plugin-file-tree@0.12.1(esbuild@0.28.2)(rolldown@1.2.7)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2))(vitepress@2.0.0-alpha.20(patch_hash=9a4184859f32f6294762fb4b0630851b8628d2dc8388b55e977ab760b54bc213)(@types/node@26.4.1)(esbuild@0.28.2)(markdown-it-mathjax3@4.3.2)(postcss@8.5.28)(typescript@6.0.3))(vue@3.5.42(typescript@6.0.3)):
+  vitepress-plugin-file-tree@0.12.1(patch_hash=adc08098b9683f7d7d599f9d9ab6502c0bcc3574eabbc5f0918fedc260453f87)(esbuild@0.28.2)(rolldown@1.2.7)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2))(vitepress@2.0.0-alpha.20(patch_hash=9a4184859f32f6294762fb4b0630851b8628d2dc8388b55e977ab760b54bc213)(@types/node@26.4.1)(esbuild@0.28.2)(markdown-it-mathjax3@4.3.2)(postcss@8.5.28)(typescript@6.0.3))(vue@3.5.42(typescript@6.0.3)):
     dependencies:
       '@pengzhanbo/utils': 3.11.0
       '@vueuse/core': 14.4.0(vue@3.5.42(typescript@6.0.3))

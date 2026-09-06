@@ -14,7 +14,7 @@ import { ImagePreviewPlugin } from "vitepress-plugin-image-preview";
 import { llmstxtPlugin } from "vitepress-plugin-llmstxt";
 import outlineDepthPlugin from "vitepress-plugin-outline-depth";
 import { pagefindPlugin, chineseSearchOptimize } from "vitepress-plugin-pagefind";
-import { dependencies } from "../../package.json";
+import { dependencies } from "../../package.json" with { type: "json" };
 import hostname from "./plugins/hostname.js";
 import llmsTransform from "./plugins/llms-transform.js";
 import fixCodeCopyI18n from "./plugins/markdown-it/fix-code-copy-i18n.js";
