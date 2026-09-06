@@ -82,6 +82,9 @@ importers:
       vitepress-plugin-pagefind:
         specifier: ^0.4.24
         version: 0.4.24(pagefind@1.5.2)(vitepress@2.0.0-alpha.20(patch_hash=9a4184859f32f6294762fb4b0630851b8628d2dc8388b55e977ab760b54bc213)(@types/node@26.4.1)(esbuild@0.28.2)(markdown-it-mathjax3@4.3.2)(postcss@8.5.28)(typescript@6.0.3))(vue@3.5.42(typescript@6.0.3))
+      vue:
+        specifier: ^3.5.42
+        version: 3.5.42(typescript@6.0.3)
     devDependencies:
       '@types/markdown-it':
         specifier: ^14.2.0
@@ -95,9 +98,6 @@ importers:
       oxfmt:
         specifier: ^0.55.0
         version: 0.55.0
-      vue:
-        specifier: ^3.5.42
-        version: 3.5.42(typescript@6.0.3)
 
 packages:
 

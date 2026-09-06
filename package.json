@@ -31,13 +31,13 @@
 		"vitepress-plugin-image-preview": "^0.1.6",
 		"vitepress-plugin-llmstxt": "^0.5.2",
 		"vitepress-plugin-outline-depth": "^1.1.1",
-		"vitepress-plugin-pagefind": "^0.4.24"
+		"vitepress-plugin-pagefind": "^0.4.24",
+		"vue": "^3.5.42"
 	},
 	"devDependencies": {
 		"@types/markdown-it": "^14.2.0",
 		"@types/markdown-it-footnote": "^3.0.4",
 		"@types/node": "^26.4.1",
-		"oxfmt": "^0.55.0",
-		"vue": "^3.5.42"
+		"oxfmt": "^0.55.0"
 	}
 }
