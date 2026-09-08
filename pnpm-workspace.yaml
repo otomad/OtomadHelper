@@ -2,4 +2,3 @@ dangerouslyAllowAllBuilds: true
 minimumReleaseAge: 0
 patchedDependencies:
   vitepress: patches/vitepress.patch
-  vitepress-plugin-file-tree: patches/vitepress-plugin-file-tree.patch

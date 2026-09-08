@@ -8,16 +8,3 @@ index 7c729e1ff751c14e4bf355d160f6c3cf0d6422ef..119e3ee899ebe3c6437e6321e2b3a875
  import { computed, provide, useSlots } from "vue";
  import VPBackdrop from "./components/VPBackdrop.vue";
  import VPContent from "./components/VPContent.vue";
-diff --git a/dist/node/chunk-BYTgXTwz.js b/dist/node/chunk-BYTgXTwz.js
-index 94bb6c8ed28caeac6dce3c1bcc7ef6bc01de8955..0bccd70c393a646d48a94f8fc25c3fb9df51528d 100644
---- a/dist/node/chunk-BYTgXTwz.js
-+++ b/dist/node/chunk-BYTgXTwz.js
-@@ -8970,7 +8970,7 @@ ${header.children.length > 0 ? renderHeaders(header.children) : ""}\
- 	}));
- }, e$4 = (e, t, n, r) => {
- 	let i = e, a = r;
--	if (n && Object.hasOwn(t, i)) throw Error(`User defined "id" attribute "${e}" is not unique. Please fix it in your Markdown to continue.`);
-+	if (false && Object.hasOwn(t, i)) throw Error(`User defined "id" attribute "${e}" is not unique. Please fix it in your Markdown to continue.`);
- 	for (; Object.hasOwn(t, i);) i = `${e}-${a}`, a += 1;
- 	return t[i] = !0, i;
- }, t$4 = (e) => (t) => t >= e, n$6 = (e) => (t) => e.includes(t), c$11 = {
