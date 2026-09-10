@@ -152,8 +152,8 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0(patch_hash=797d5a767fad25c5f5814dfdd6f7dd68652b2948dd1855907088d0a500af4e71)(@types/react@19.2.2(patch_hash=a45cd7d41a73017efd57908f91ad7f7b8375af685f0e19d3fb7035d0af6650b5))(react@19.2.4)
       variable-name-conversion:
-        specifier: ^1.7.0
-        version: 1.7.0
+        specifier: ^1.8.0
+        version: 1.8.0
       view-transitions-toolkit:
         specifier: ^1.0.0
         version: 1.0.0
@@ -5731,8 +5731,8 @@ packages:
       react:
         optional: true
 
-  variable-name-conversion@1.7.0:
-    resolution: {integrity: sha512-ozRnRUjiqsr/CWakvZqCm3PTYsR4BYbKiR/6B/Uwjx9rg7YLyfnjWzudS9yLvfsEkL+suaGd3CgSJf2kET+1CQ==}
+  variable-name-conversion@1.8.0:
+    resolution: {integrity: sha512-GvBd2ECsDVBsDYdko1MlhSfKgZAP1IeiaVkB4K+juRwo6wvoLWN2aQLGyQbLW8yLClRc2T2KPht8Istr6kefNw==}
 
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
@@ -11928,7 +11928,7 @@ snapshots:
       '@types/react': 19.2.2(patch_hash=a45cd7d41a73017efd57908f91ad7f7b8375af685f0e19d3fb7035d0af6650b5)
       react: 19.2.4
 
-  variable-name-conversion@1.7.0: {}
+  variable-name-conversion@1.8.0: {}
 
   vary@1.1.2: {}
 
