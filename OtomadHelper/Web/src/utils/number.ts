@@ -34,8 +34,7 @@
 
 /**
  * Validates whether a value is a valid number.
- * @param value - The value to validate. Can be of any type.
- * @returns `true` if the value is a valid finite number, non-empty string that represents a number, or a BigInt; otherwise `false`.
+ *
  * value | returns
  * --- | :--:
  * `-123.45e-56` | true
@@ -45,6 +44,9 @@
  * `""` | false
  * `NaN` | false
  * `Infinity` | false
+ *
+ * @param value - The value to validate. Can be of any type.
+ * @returns Is the value a valid finite number, non-empty string that represents a number, or a BigInt?
  */
 export function isValidNumber(value: unknown) {
 	// eslint-disable-next-line no-restricted-globals
