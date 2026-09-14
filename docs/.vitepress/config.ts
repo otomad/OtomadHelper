@@ -1,3 +1,4 @@
+import { writeFile } from "fs/promises";
 import { resolve } from "path";
 import { join } from "path/posix";
 import { katex } from "@mdit/plugin-katex";
@@ -21,7 +22,7 @@ import fixCodeCopyI18n from "./plugins/markdown-it/fix-code-copy-i18n.js";
 import footnotePlugin from "./plugins/markdown-it/footnote.js";
 import kbdPlugin from "./plugins/markdown-it/kbd.js";
 import { createRssFeeds } from "./plugins/rss-feed.js";
-import { getRssFeedLink } from "./plugins/rss-feed_get-link.js";
+import { getLangFromPageData, getRssFeedLink } from "./plugins/rss-feed_get-link.js";
 import { useI18nThemeConfig } from "./use-i18n.js";
 
 const ENABLE_MINIFY = false; // true;
@@ -125,21 +126,24 @@ export default defineConfig({
 	async buildEnd(config) {
 		await createRssFeeds(config);
 	},
-	async transformHead({ siteData, pageData, title: webPageTitleWithTitleTemplate }) {
-		const lang = siteData.lang;
+	async transformPageData(pageData, ctx) {
+		const lang = getLangFromPageData(pageData, ctx);
 		const rssLink = getRssFeedLink(lang);
-		const head: HeadConfig[] = [];
-		head.push(["meta", { property: "og:title", content: pageData.title || webPageTitleWithTitleTemplate }]);
-		head.push([
-			"link",
-			{
-				rel: "alternate",
-				type: "application/rss+xml",
-				title: useI18nThemeConfig("zh").rssFeed.rssFeedTitle,
-				href: rssLink,
-			},
-		]);
-		return head;
+		const canonicalPath = pageData.relativePath.replace(/index\.md$/, "").replace(/\.md$/, ".html");
+		pageData.frontmatter.head ??= [];
+		pageData.frontmatter.head.push(
+			[
+				"link",
+				{
+					rel: "alternate",
+					type: "application/rss+xml",
+					title: useI18nThemeConfig(lang).rssFeed.rssFeedTitle,
+					href: rssLink,
+				},
+			],
+			["link", { rel: "alternate", type: "text/markdown", href: `${hostname}/${pageData.relativePath}` }],
+			["link", { rel: "canonical", href: `${hostname}/${canonicalPath}` }],
+		);
 	},
 	title: "Otomad Helper",
 	description: "Helps to create YTPMVs in Vegas Pro",
@@ -160,6 +164,18 @@ export default defineConfig({
 			{ rel: "apple-touch-icon", href: withBase("apple-touch-icon.png"), type: "image/png", sizes: "180x180" },
 		],
 		["meta", { property: "og:type", content: "article" }],
+		[
+			"script",
+			{ type: "speculationrules" },
+			JSON.stringify({
+				prerender: [
+					{
+						source: "document",
+						eagerness: "moderate",
+					},
+				],
+			}),
+		],
 	],
 	locales: {
 		root: {

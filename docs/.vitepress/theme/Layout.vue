@@ -98,7 +98,6 @@
 	function initMermaid() {
 		const mermaidRenderer = createMermaidRenderer({
 			theme: isDark.value ? "dark" : "default",
-			fitToContainer: true,
 		});
 		mermaidRenderer.setToolbar({
 			i18n: {
