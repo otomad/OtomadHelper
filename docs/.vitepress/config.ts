@@ -171,6 +171,9 @@ export default defineConfig({
 				prerender: [
 					{
 						source: "document",
+						where: {
+							and: [{ href_matches: "/*" }, { not: { href_matches: "http*://*" } }],
+						},
 						eagerness: "moderate",
 					},
 				],

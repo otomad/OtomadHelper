@@ -1,8 +1,13 @@
 <script setup lang="ts">
 	import { useI18n } from "@vp/use-i18n";
+	import { inBrowser } from "vitepress";
 	import { VPTeamPage, VPTeamPageTitle, VPFeatures } from "vitepress/theme-without-fonts";
-	import { reactive, type MaybeRef } from "vue";
+	import { reactive, ref, computed, watch, type MaybeRef } from "vue";
 	const t = useI18n();
+	const uwu = ref(inBrowser ? localStorage.getItem("uwu") === "true" : false);
+	const u = (normal: string, uwuKind: string) => computed(() => (!uwu.value ? normal : uwuKind));
+
+	watch(uwu, uwu => localStorage.setItem("uwu", String(uwu)));
 
 	const img = (src: MaybeRef<string>) => ({
 		src,
@@ -15,14 +20,14 @@
 				title: "Otomad Helper",
 				details: t({ en: "Create YTPMVs in Vegas Pro", zh: "在Vegas Pro中生成音MAD" }),
 				// link: "https://otomadhelper.readthedocs.io/",
-				icon: img("/img/projects/otomad_helper.avif"),
+				icon: img(u("/img/projects/otomad_helper.avif", "/img/projects/otomad_helper_uwu.svg")),
 				linkText: t({ en: "Current Project", zh: "当前项目" }),
 			},
 			{
 				title: "om midi",
 				details: t({ en: "Create YTPMVs in After Effects", zh: "在After Effects中生成音MAD" }),
 				link: t({ en: "https://ommidi.readthedocs.io/", zh: "https://ommidi.readthedocs.io/zh-cn/" }),
-				icon: img("/img/projects/om_midi.avif"),
+				icon: img(u("/img/projects/om_midi.avif", "/img/projects/om_midi_uwu.svg")),
 				linkText: t({ en: "Visit", zh: "访问" }),
 			},
 			{
@@ -44,6 +49,21 @@
 			<template #title>{{ title }}</template>
 		</VPTeamPageTitle>
 		<VPFeatures :features="projects" class="projects" />
+		<p class="uwu-wrapper">
+			<a href="javascript:void(0);" @click="uwu = !uwu">
+				<template v-if="!uwu">
+					<span></span>
+					<span>uwu</span>
+					<span>?</span>
+				</template>
+				<template v-else>
+					<span>no&nbsp;</span>
+					<span>uwu</span>
+					<span>&nbsp;plz</span>
+				</template>
+			</a>
+			<!-- TODO: Toggle Switch -->
+		</p>
 	</VPTeamPage>
 </template>
 
@@ -123,6 +143,32 @@
 
 		& :deep(a.VPLink:not(:hover, :active) .vpi-arrow-right) {
 			opacity: 0.5;
+		}
+	}
+
+	.uwu-wrapper {
+		text-align: center;
+		margin-block: 2.5rem -1rem;
+		display: block;
+
+		a {
+			display: grid;
+			margin-inline: auto;
+			inline-size: fit-content;
+			grid-template-columns: repeat(3, 1fr);
+			font-family: sans-serif;
+
+			> span:nth-child(1) {
+				text-align: end;
+			}
+
+			> span:nth-child(2) {
+				text-align: center;
+			}
+
+			> span:nth-child(3) {
+				text-align: start;
+			}
 		}
 	}
 </style>
