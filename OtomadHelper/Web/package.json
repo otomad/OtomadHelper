@@ -72,6 +72,7 @@
 		"smooth-value": "^1.1.0",
 		"styled-components": "^6.1.19",
 		"styled-tools": "^1.7.2",
+		"to-plain": "^1.0.1",
 		"use-immer": "^0.11.0",
 		"valtio": "^2.2.0",
 		"variable-name-conversion": "^1.8.0",

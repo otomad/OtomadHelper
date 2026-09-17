@@ -508,7 +508,7 @@ export default function TextBox({ value: _value, placeholder, disabled, readOnly
 			setTimeout(() => caret !== null && Caret.set(el, caret));
 		}
 		setValue(newText); // true or undefined
-		onChanging?.(e as never);
+		onChanging?.(e);
 	}, [value, setValue, onChanging, onInput]);
 
 	const handleKeyDown = useCallback<KeyboardEventHandler<HTMLInputElement>>(e => {
@@ -627,7 +627,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: _value, disabled, re
 	const normalizeValue = useCallback((value?: NumberLike) => {
 		if (isUndefinedNullNaN(value)) return "";
 		value = clamp(value, min!, max!);
-		let result = normalizeNumber(value);
+		let result = toPlain(value);
 		if (decimalPlaces !== undefined && typeof value === "number") {
 			if (typeof decimalPlaces !== "number" || decimalPlaces < 0 || decimalPlaces > 100)
 				throw new RangeError(`Decimal places argument must be between 0 and 100, got ${decimalPlaces}`);
@@ -694,7 +694,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: _value, disabled, re
 			const pointIndex = inputEl.current.value.indexOf(".");
 			let offset = 0;
 			if (spinnerStep) {
-				const step = normalizeNumber(spinnerStep);
+				const step = toPlain(spinnerStep);
 				if (step.includes(".")) {
 					const part = step.match(/(?<=\.)\d*/)?.[0].replace(/0+$/, "");
 					if (part) offset = part.length + 1;
