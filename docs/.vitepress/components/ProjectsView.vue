@@ -1,9 +1,12 @@
 <script setup lang="ts">
 	import { useI18n } from "@vp/use-i18n";
+	import { TextMorph } from "torph/vue";
 	import { inBrowser } from "vitepress";
+	import { Switch } from "vitepress-plugin-outline-depth/components";
 	import { VPTeamPage, VPTeamPageTitle, VPFeatures } from "vitepress/theme-without-fonts";
-	import { reactive, ref, computed, watch, type MaybeRef } from "vue";
+	import { reactive, ref, computed, watch, useId, type MaybeRef } from "vue";
 	const t = useI18n();
+	const id = useId();
 	const uwu = ref(inBrowser ? localStorage.getItem("uwu") === "true" : false);
 	const u = (normal: string, uwuKind: string) => computed(() => (!uwu.value ? normal : uwuKind));
 
@@ -50,19 +53,10 @@
 		</VPTeamPageTitle>
 		<VPFeatures :features="projects" class="projects" />
 		<p class="uwu-wrapper">
-			<a href="javascript:void(0);" @click="uwu = !uwu">
-				<template v-if="!uwu">
-					<span></span>
-					<span>uwu</span>
-					<span>?</span>
-				</template>
-				<template v-else>
-					<span>no&nbsp;</span>
-					<span>uwu</span>
-					<span>&nbsp;plz</span>
-				</template>
-			</a>
-			<!-- TODO: Toggle Switch -->
+			<label :for="`${id}-uwu`" :class="{ on: uwu }">
+				<TextMorph :text="!uwu ? 'uwu?' : 'no uwu plz'" />
+			</label>
+			<Switch :id="`${id}-uwu`" v-model="uwu" />
 		</p>
 	</VPTeamPage>
 </template>
@@ -147,27 +141,22 @@
 	}
 
 	.uwu-wrapper {
-		text-align: center;
 		margin-block: 2.5rem -1rem;
-		display: block;
+		display: grid;
+		align-items: center;
+		grid-template-columns: calc(50% + 1em) calc(50% - 1em);
 
-		a {
-			display: grid;
-			margin-inline: auto;
+		label {
 			inline-size: fit-content;
-			grid-template-columns: repeat(3, 1fr);
-			font-family: sans-serif;
+			font-family: "Segoe UI Variable", "Segoe UI", sans-serif;
+			font-weight: 600;
+			padding-inline-end: 1em;
+			justify-self: end;
+			transition: color 250ms;
+			user-select: none;
 
-			> span:nth-child(1) {
-				text-align: end;
-			}
-
-			> span:nth-child(2) {
-				text-align: center;
-			}
-
-			> span:nth-child(3) {
-				text-align: start;
+			&.on {
+				color: var(--vp-c-brand-1);
 			}
 		}
 	}

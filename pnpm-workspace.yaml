@@ -1,4 +1,3 @@
 dangerouslyAllowAllBuilds: true
 minimumReleaseAge: 0
-patchedDependencies:
-  vitepress: patches/vitepress.patch
+trustPolicy: off
