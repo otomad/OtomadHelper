@@ -4,7 +4,7 @@
 	import { inBrowser } from "vitepress";
 	import { Switch } from "vitepress-plugin-outline-depth/components";
 	import { VPTeamPage, VPTeamPageTitle, VPFeatures } from "vitepress/theme-without-fonts";
-	import { reactive, ref, computed, watch, useId, type MaybeRef } from "vue";
+	import { reactive, ref, computed, watch, useId, type MaybeRef, type ToRef } from "vue";
 	const t = useI18n();
 	const id = useId();
 	const uwu = ref(inBrowser ? localStorage.getItem("uwu") === "true" : false);
@@ -17,30 +17,37 @@
 		width: "100%",
 	});
 
+	type ToMaybeRefs<T> = {
+		[K in keyof T]: T[K] | ToRef<T[K]> | ToMaybeRefs<T[K]>;
+	};
+	type Features = ToMaybeRefs<InstanceType<typeof VPFeatures>["$props"]["features"][number]>[];
+
 	const projects = reactive(
-		[
-			{
-				title: "Otomad Helper",
-				details: t({ en: "Create YTPMVs in Vegas Pro", zh: "在Vegas Pro中生成音MAD" }),
-				// link: "https://otomadhelper.readthedocs.io/",
-				icon: img(u("/img/projects/otomad_helper.avif", "/img/projects/otomad_helper_uwu.svg")),
-				linkText: t({ en: "Current Project", zh: "当前项目" }),
-			},
-			{
-				title: "om midi",
-				details: t({ en: "Create YTPMVs in After Effects", zh: "在After Effects中生成音MAD" }),
-				link: t({ en: "https://ommidi.readthedocs.io/", zh: "https://ommidi.readthedocs.io/zh-cn/" }),
-				icon: img(u("/img/projects/om_midi.avif", "/img/projects/om_midi_uwu.svg")),
-				linkText: t({ en: "Visit", zh: "访问" }),
-			},
-			{
-				title: "VegTips",
-				details: t({ en: "Some Practical Tips for Vegas Pro", zh: "Vegas Pro的一些实用小技巧" }),
-				link: t({ en: "https://vegtips.readthedocs.io/", zh: "https://vegtips.readthedocs.io/zh/" }),
-				icon: img(t({ en: "/img/projects/vegtips.avif", zh: "/img/projects/vegtips_zh-CN.avif" })),
-				linkText: t({ en: "Visit", zh: "访问" }),
-			},
-		].map(project => ({ ...project, target: "_blank" as const })),
+		(
+			[
+				{
+					title: "Otomad Helper",
+					details: t({ en: "Create YTPMVs in Vegas Pro", zh: "在Vegas Pro中生成音MAD" }),
+					// link: "https://otomadhelper.readthedocs.io/",
+					icon: img(u("/img/projects/otomad_helper.avif", "/img/projects/otomad_helper_uwu.svg")),
+					linkText: t({ en: "Current Project", zh: "当前项目" }),
+				},
+				{
+					title: "om midi",
+					details: t({ en: "Create YTPMVs in After Effects", zh: "在After Effects中生成音MAD" }),
+					link: t({ en: "https://ommidi.readthedocs.io/", zh: "https://ommidi.readthedocs.io/zh-cn/" }),
+					icon: img(u("/img/projects/om_midi.avif", "/img/projects/om_midi_uwu.svg")),
+					linkText: t({ en: "Visit", zh: "访问" }),
+				},
+				{
+					title: "VegTips",
+					details: t({ en: "Some Practical Tips for Vegas Pro", zh: "Vegas Pro的一些实用小技巧" }),
+					link: t({ en: "https://vegtips.readthedocs.io/", zh: "https://vegtips.readthedocs.io/zh/" }),
+					icon: img(t({ en: "/img/projects/vegtips.avif", zh: "/img/projects/vegtips_zh-CN.avif" })),
+					linkText: t({ en: "Visit", zh: "访问" }),
+				},
+			] satisfies Features
+		).map(project => ({ ...project, target: "_blank" as const })),
 	);
 
 	const title = t({ en: "Projects", zh: "项目" });
@@ -49,7 +56,10 @@
 <template>
 	<VPTeamPage>
 		<VPTeamPageTitle>
-			<template #title>{{ title }}</template>
+			<template #title>
+				{{ title }}
+				<img src="/img/projects/otomad_plus.svg" alt="OTOMAD+" :draggable="false" />
+			</template>
 		</VPTeamPageTitle>
 		<VPFeatures :features="projects" class="projects" />
 		<p class="uwu-wrapper">
@@ -154,10 +164,42 @@
 			justify-self: end;
 			transition: color 250ms;
 			user-select: none;
+			cursor: pointer;
 
 			&.on {
 				color: var(--vp-c-brand-1);
 			}
+		}
+	}
+
+	.VPTeamPageTitle :deep(.title) {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		@media (width >= 640px) {
+			img {
+				height: 0.75lh;
+				padding-inline-start: 0.9em;
+				margin-inline-start: 0.9em;
+				border-inline-start: 1px solid;
+			}
+		}
+
+		@media (width < 640px) {
+			flex-direction: column;
+
+			img {
+				height: 1.125lh;
+				padding-block-start: 0.5em;
+				margin-block-start: 0.5em;
+				border-block-start: 1px solid;
+			}
+		}
+
+		img {
+			border-color: var(--vp-c-border);
+			-webkit-user-drag: none;
 		}
 	}
 </style>
