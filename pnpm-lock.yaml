@@ -4,9 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  vitepress-plugin-outline-depth: link:../../../../vitepress-plugin-outline-depth
-
 importers:
 
   .:
@@ -78,8 +75,8 @@ importers:
         specifier: ^0.5.2
         version: 0.5.2(vitepress@2.0.0-alpha.20(@types/node@26.4.1)(esbuild@0.28.2)(markdown-it-mathjax3@4.3.2)(postcss@8.5.28)(typescript@7.0.2))
       vitepress-plugin-outline-depth:
-        specifier: 1.2.0
-        version: 1.2.0
+        specifier: 1.2.1
+        version: 1.2.1
       vitepress-plugin-pagefind:
         specifier: ^0.4.25
         version: 0.4.25(pagefind@1.5.2)(vitepress@2.0.0-alpha.20(@types/node@26.4.1)(esbuild@0.28.2)(markdown-it-mathjax3@4.3.2)(postcss@8.5.28)(typescript@7.0.2))(vue@3.5.42(typescript@7.0.2))
@@ -2431,8 +2428,8 @@ packages:
     peerDependencies:
       vitepress: ^1.0.0
 
-  vitepress-plugin-outline-depth@1.2.0:
-    resolution: {integrity: sha512-H0KTsRg872Mh30cSjEzBPhAt4Cei0y6BWwJqz7cVBC84qWsDr4+sgtpvG+MAC8HQbwUT0icKsQIY5xgHX19l5Q==}
+  vitepress-plugin-outline-depth@1.2.1:
+    resolution: {integrity: sha512-cLiLtvWNvc4+h9Jfk6lEcJXIvnrHLtMSAuJWhtqjeDV4uz4moDW4LLRDQQ81q1D2aXSoIjMZZfYeVahMfl/8Mw==}
 
   vitepress-plugin-pagefind@0.4.25:
     resolution: {integrity: sha512-hlKGCyVXjjtMYM7V6PcP9NVrahzskPrahi2U2zjnWewSaZFHNbjh3kZr9ThQZ+m+y8zFp9v65ooyHZX58mBhkQ==}
@@ -4677,7 +4674,7 @@ snapshots:
     dependencies:
       vitepress: 2.0.0-alpha.20(@types/node@26.4.1)(esbuild@0.28.2)(markdown-it-mathjax3@4.3.2)(postcss@8.5.28)(typescript@7.0.2)
 
-  vitepress-plugin-outline-depth@1.2.0:
+  vitepress-plugin-outline-depth@1.2.1:
     dependencies:
       '@sugarat/theme-shared': 0.1.0
       smooth-value: 1.1.0

@@ -32,7 +32,7 @@
 		"vitepress-plugin-file-tree": "^0.12.2",
 		"vitepress-plugin-image-preview": "^0.1.7",
 		"vitepress-plugin-llmstxt": "^0.5.2",
-		"vitepress-plugin-outline-depth": "1.2.0",
+		"vitepress-plugin-outline-depth": "1.2.1",
 		"vitepress-plugin-pagefind": "^0.4.25",
 		"vue": "^3.5.42"
 	},
