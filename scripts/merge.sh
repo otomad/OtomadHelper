@@ -22,4 +22,6 @@ for remote_branch in $(git branch -r | grep -v "HEAD ->"); do
 	fi
 done
 
+git push
+
 echo "Done!"

@@ -27,5 +27,7 @@ for /f "tokens=*" %%i in ('git branch -r') do (
 	)
 )
 
+git push
+
 echo Done!
 pause

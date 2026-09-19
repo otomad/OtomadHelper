@@ -24,4 +24,6 @@ git branch -r | ForEach-Object {
 	}
 }
 
+git push
+
 Write-Host "Done!"
