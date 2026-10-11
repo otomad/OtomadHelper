@@ -76,6 +76,9 @@ using Microsoft.Win32;
 using NAudio.Midi;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using NWaves.FeatureExtractors;
+using NWaves.FeatureExtractors.Options;
+using NWaves.Signals;
 #if VER_GEQ_14 || VER_GEQ_16
 	using ScriptPortal.Vegas;
 #else
@@ -803,6 +806,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				get {
 					return audioReverse != null || videoReverse != null;
 				}
+			}
+			private double _lastOffset = 0;
+			private int? _autoBasePitch = -1;
+			public int? GetAutoBasePitch(double offset) {
+				if (_autoBasePitch == -1 || offset != _lastOffset) {
+					_lastOffset = offset;
+					if (audioEvent == null || audioEvent.Takes.Count == 0 || !audioEvent.ActiveTake.Media.IsLocalMedia()) return null;
+					string path = audioEvent.ActiveTake.Media.FilePath;
+					double ms = (audioEvent.ActiveTake.Offset.ToMilliseconds() + offset) % audioEvent.ActiveTake.Media.Length.ToMilliseconds();
+					_autoBasePitch = PitchDetector.GetPitchAt(path, ms);
+				}
+				return _autoBasePitch;
 			}
 		}
 
@@ -1640,7 +1655,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (AConfigVelocity) audioEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Audio), AConfigVelocityMultiplyGain);
 
 						#region 应用变调
-						int pitchDelta = pitch - AConfigBasePitch;
+						int basePitch = AConfigBasePitch;
+						int? autoBasePitch = activeSource.GetAutoBasePitch(adjustTime ? sourceStartTime : 0);
+						if (autoBasePitch != null) basePitch = autoBasePitch.Value;
+						//string[] noteNames = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
+						//int octave = basePitch / 12 - 1;
+						//string noteName = noteNames[basePitch % 12];
+						//S.s = noteName + octave;
+						//return false;
+						int pitchDelta = pitch - basePitch;
 						bool backToUsePlugin = false;
 					BackToUsePlugin:
 						if (AConfigMethod == AudioTuningMethod.PITCH_SHIFT || backToUsePlugin) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
@@ -4385,6 +4408,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public static bool IsDisposed(this TrackGroup trackGroup) {
 			return trackGroup == null || !EntryPoint.instance.vegas.Project.TrackGroups.Contains(trackGroup);
+		}
+
+		/// <summary>
+		/// 判断一个媒体是否是真实本地可用的媒体。
+		/// </summary>
+		/// <remarks>
+		/// 即不能是媒体发生器的媒体、子剪辑、反转剪辑等。
+		/// </remarks>
+		/// <param name="media">媒体。</param>
+		/// <returns>是否是真实本地可用的媒体？</returns>
+		public static bool IsLocalMedia(this Media media) {
+			if (media.IsGenerated() || media.IsSubclip() || media.IsImageSequence() || !media.IsValid()) return false;
+			string path = media.FilePath;
+			if (string.IsNullOrEmpty(path) || !File.Exists(path)) return false;
+			return true;
 		}
 	}
 
@@ -7988,6 +8026,83 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		void ICollection.CopyTo(Array array, int index) { ((ICollection)list).CopyTo(array, index); }
 		object ICollection.SyncRoot { get { return ((ICollection)list).SyncRoot; } }
 		bool ICollection.IsSynchronized { get { return ((ICollection)list).IsSynchronized; } }
+	}
+
+	public static class PitchDetector {
+		/// <summary>
+		/// 将任意格式的音频文件加载为 NWaves 的单声道 Signal 对象。
+		/// </summary>
+		public static DiscreteSignal LoadAudioAsSignal(string filePath) {
+			using (AudioFileReader reader = new AudioFileReader(filePath)) {
+				int sampleRate = reader.WaveFormat.SampleRate;
+				int channels = reader.WaveFormat.Channels;
+
+				List<float> sampleList = new List<float>();
+				float[] buffer = new float[sampleRate * channels];
+				int read;
+				while ((read = reader.Read(buffer, 0, buffer.Length)) > 0) {
+					for (int i = 0; i < read; i++)
+						sampleList.Add(buffer[i]);
+				}
+
+				float[] monoSamples;
+				if (channels > 1) {
+					int monoCount = sampleList.Count / channels;
+					monoSamples = new float[monoCount];
+					for (int i = 0; i < monoCount; i++) {
+						float sum = 0;
+						for (int c = 0; c < channels; c++)
+							sum += sampleList[i * channels + c];
+						monoSamples[i] = sum / channels;
+					}
+				}
+				else {
+					monoSamples = sampleList.ToArray();
+				}
+
+				return new DiscreteSignal(sampleRate, monoSamples);
+			}
+		}
+
+		/// <summary>
+		/// 获取音频文件在指定时间（毫秒）处的 MIDI 音高数值。
+		/// </summary>
+		/// <param name="filePath">音频文件路径</param>
+		/// <param name="timeMs">目标时间（毫秒）</param>
+		/// <param name="windowMs">分析窗口大小（毫秒），默认 50ms</param>
+		/// <returns>MIDI 音高数值（A4=69，C4=60），若无法检测则返回 null</returns>
+		public static int? GetPitchAt(string filePath, double timeMs, int windowMs = 50) {
+			DiscreteSignal signal = LoadAudioAsSignal(filePath);
+
+			int startSample = (int)(signal.SamplingRate * (timeMs - windowMs / 2.0) / 1000.0);
+			int windowSamples = (int)(signal.SamplingRate * windowMs / 1000.0);
+
+			startSample = Math.Max(0, startSample);
+			if (startSample >= signal.Length)
+				return null;
+
+			int endSample = Math.Min(startSample + windowSamples, signal.Length);
+			DiscreteSignal segment = signal[startSample, endSample];
+
+			PitchOptions options = new PitchOptions {
+				SamplingRate = signal.SamplingRate,
+				LowFrequency = 80,
+				HighFrequency = 1000,
+				//FeatureList = new List<string> { "pitch" }
+			};
+			PitchExtractor extractor = new PitchExtractor(options);
+			List<float[]> pitches = extractor.ComputeFrom(segment);
+
+			if (pitches.Count == 0 || pitches[0].Length == 0)
+				return null;
+
+			float pitchHz = pitches[0][0];
+			if (pitchHz <= 0)
+				return null;
+
+			double midiNote = 12 * Math.Log(pitchHz / 440.0, 2) + 69;
+			return (int)Math.Round(midiNote);
+		}
 	}
 	#endregion
 
