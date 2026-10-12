@@ -6644,9 +6644,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public string BeginNote = "";
 			public bool HasName { get { return !string.IsNullOrWhiteSpace(Name); } }
 			public bool HasInstrument { get { return !string.IsNullOrWhiteSpace(Instrument); } }
+			public bool HasChannel { get { return Index != -1; } }
 			public override string ToString() {
 				List<string> info = new List<string> {
-					Lang.str.midi_channel + ' ' + Index + (HasName ? Lang.str.colon + Name : ""),
+					(HasChannel ? Lang.str.midi_channel + ' ' + Index : "") + (HasName ? Lang.str.colon + Name : ""),
 				};
 				if (HasInstrument) info.Add(Lang.str.midi_instrument + Lang.str.colon + Instrument);
 				if (IsDrumKit) info.Add(Lang.str.drum_kit);
@@ -6694,16 +6695,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MsPerQuarter = 0; // 毫秒每拍
 			TimeSignature = "";
 			for (int i = 0; i < Events.Tracks; i++) {
-				TrackInfo info = new TrackInfo { Index = i, Events = Events[i] };
+				TrackInfo info = new TrackInfo { Index = -1, Events = Events[i] };
 				foreach (MidiEvent midiEvent in info.Events) {
 					if (midiEvent is NoteEvent && !(midiEvent is NoteOnEvent)) {
 						NoteEvent noteEvent = midiEvent as NoteEvent;
 						if (info.NotesCount++ == 0) info.BeginNote = noteEvent.NoteName; // 起音判断
+						if (!info.HasChannel) info.Index = noteEvent.Channel;
 					}
-					if (midiEvent is PatchChangeEvent && !info.HasInstrument) {
+					if (midiEvent is PatchChangeEvent) {
 						PatchChangeEvent patchEvent = midiEvent as PatchChangeEvent;
-						info.Instrument = PatchChangeEvent.GetPatchName(patchEvent.Patch); // 乐器名称
-						info.Index = patchEvent.Channel;
+						if (!info.HasInstrument) info.Instrument = PatchChangeEvent.GetPatchName(patchEvent.Patch); // 乐器名称
+						if (!info.HasChannel) info.Index = patchEvent.Channel;
 					}
 					if (midiEvent is TempoEvent && MsPerQuarter == 0) {
 						TempoEvent tempoEvent = midiEvent as TempoEvent;
@@ -6745,8 +6747,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						info.HasPitchWheelEvents = true;
 				}
 				if (info.NotesCount != 0) {
-					string beginNote = info.BeginNote.Trim().ToUpper();
-					info.IsDrumKit = !Regex.IsMatch(beginNote, @"^[A-G]#?\d+$");
+					if (!info.HasChannel) {
+						string beginNote = info.BeginNote.Trim().ToUpper();
+						info.IsDrumKit = !Regex.IsMatch(beginNote, @"^[A-G]#?\d+$");
+					} else
+						info.IsDrumKit = info.Index == 10;
 					trackInfos.Add(info);
 				}
 			}
@@ -34010,7 +34015,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					Lang.str.pan_center_abbr; // 60 ~ 68 之间判定为中置声道。
 				if (midiChannel.IsVariablePan) pan += " " + Lang.str.pan_dynamic_abbr;
 				ListViewItem item = MidiTrackListView.Items.Add(new ListViewItem(new string[] {
-					i.ToString(), midiChannel.Index.ToString(), midiChannel.Name, midiChannel.Instrument,
+					i.ToString(), midiChannel.HasChannel ? midiChannel.Index.ToString() : "", midiChannel.Name, midiChannel.Instrument,
 					midiChannel.IsDrumKit ? "√" : "",
 					midiChannel.NotesCount.ToString(), pan, midiChannel.BeginNote
 				}));
