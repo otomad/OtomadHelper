@@ -1659,11 +1659,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						int basePitch = AConfigBasePitch;
 						int? autoBasePitch = activeSource.GetAutoBasePitch(adjustTime ? sourceStartTime : 0);
 						if (autoBasePitch != null) basePitch = autoBasePitch.Value;
-						//string[] noteNames = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
-						//int octave = basePitch / 12 - 1;
-						//string noteName = noteNames[basePitch % 12];
-						//S.s = noteName + octave;
-						//return false;
 						int pitchDelta = pitch - basePitch;
 						bool backToUsePlugin = false;
 					BackToUsePlugin:
