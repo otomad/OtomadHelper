@@ -814,7 +814,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					_lastOffset = offset;
 					if (audioEvent == null || audioEvent.Takes.Count == 0 || !audioEvent.ActiveTake.Media.IsLocalMedia()) return null;
 					string path = audioEvent.ActiveTake.Media.FilePath;
-					double ms = (audioEvent.ActiveTake.Offset.ToMilliseconds() + offset) % audioEvent.ActiveTake.Media.Length.ToMilliseconds();
+					const double additionalOffset = 100;
+					double ms = (audioEvent.ActiveTake.Offset.ToMilliseconds() + offset + additionalOffset) % audioEvent.ActiveTake.Media.Length.ToMilliseconds();
 					_autoBasePitch = PitchDetector.GetPitchAt(path, ms);
 				}
 				return _autoBasePitch;
@@ -8064,6 +8065,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 		}
 
+		private static DiscreteSignal lastLoadedAudioSignal;
+		private static string lastLoadedAudioFilePath = null;
+
 		/// <summary>
 		/// 获取音频文件在指定时间（毫秒）处的 MIDI 音高数值。
 		/// </summary>
@@ -8072,7 +8076,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <param name="windowMs">分析窗口大小（毫秒），默认 50ms</param>
 		/// <returns>MIDI 音高数值（A4=69，C4=60），若无法检测则返回 null</returns>
 		public static int? GetPitchAt(string filePath, double timeMs, int windowMs = 50) {
-			DiscreteSignal signal = LoadAudioAsSignal(filePath);
+			DiscreteSignal signal = filePath == lastLoadedAudioFilePath && lastLoadedAudioSignal != null ? lastLoadedAudioSignal : LoadAudioAsSignal(filePath);
+			lastLoadedAudioFilePath = filePath;
+			lastLoadedAudioSignal = signal;
 
 			int startSample = (int)(signal.SamplingRate * (timeMs - windowMs / 2.0) / 1000.0);
 			int windowSamples = (int)(signal.SamplingRate * windowMs / 1000.0);
@@ -8088,7 +8094,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				SamplingRate = signal.SamplingRate,
 				LowFrequency = 80,
 				HighFrequency = 1000,
-				//FeatureList = new List<string> { "pitch" }
 			};
 			PitchExtractor extractor = new PitchExtractor(options);
 			List<float[]> pitches = extractor.ComputeFrom(segment);
