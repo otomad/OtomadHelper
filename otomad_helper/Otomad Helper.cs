@@ -575,13 +575,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			DoingAfterShowError(state);
 		}
 		public static void ShowError(Exception e, ShowErrorState state = ShowErrorState.NORMAL) {
-			string stackTrace = !string.IsNullOrWhiteSpace(e.StackTrace) ? e.StackTrace :
+			string stackTrace = e != null && !string.IsNullOrWhiteSpace(e.StackTrace) ? e.StackTrace :
 				(e == null ? string.Empty : e.ToString() + Environment.NewLine) + Environment.StackTrace;
 			instance.vegas.ShowError(e.Message + ExceptionVersionInfo, stackTrace);
 			DoingAfterShowError(state);
 		}
 		public static void ShowError(Exception e1, Exception e2, ShowErrorState state = ShowErrorState.NORMAL) {
-			string stackTrace = !string.IsNullOrWhiteSpace(e2.ToString()) ? e2.ToString() :
+			string stackTrace = e2 != null && !string.IsNullOrWhiteSpace(e2.ToString()) ? e2.ToString() :
 				(e1 == null ? string.Empty : string.IsNullOrWhiteSpace(e1.ToString()) ? string.Empty : e1.ToString() + Environment.NewLine) +
 				(e2 == null ? string.Empty : string.IsNullOrWhiteSpace(e2.ToString()) ? string.Empty : e2.ToString() + Environment.NewLine) + Environment.StackTrace;
 			instance.vegas.ShowError(e1.Message + ExceptionVersionInfo, stackTrace);
