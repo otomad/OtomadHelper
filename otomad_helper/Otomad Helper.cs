@@ -4425,6 +4425,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (string.IsNullOrEmpty(path) || !File.Exists(path)) return false;
 			return true;
 		}
+
+		/// <summary>
+		/// 判断两个插件是否真正相等。
+		/// </summary>
+		/// <remarks>
+		/// 小心！直接使用 <c>pluginA == pluginB</c> 判断可能会产生意外情况，譬如任意两个不同的插件都会认为相等。这是由于 Vegas 未能正确实现重载等号运算符的判断相等功能。<br />
+		/// 必须对其的 <see cref="PlugInNode.UniqueID" /> 属性判断相等才行。
+		/// </remarks>
+		/// <param name="one">一个插件。</param>
+		/// <param name="another">另一个插件。</param>
+		/// <returns>两个插件是否真正相等？</returns>
+		public static bool RealEquals(this PlugInNode one, PlugInNode another) {
+			return one.UniqueID == another.UniqueID;
+		}
 	}
 
 	public struct IndexerEntry<T> {
@@ -13903,7 +13917,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			Tuple<double, double, double, double> existData = track.CustomData.GetObject(MarkedCropEffectGuid) as Tuple<double, double, double, double>;
 			if (existData != null) {
 				foreach (Effect effect in track.Effects)
-					if (effect.PlugIn == Plugin.crop) {
+					if (effect.PlugIn.RealEquals(Plugin.crop)) {
 						double xCur = (effect.OFXEffect.FindParameterByName("XScale") as OFXDoubleParameter).Value;
 						double yCur = (effect.OFXEffect.FindParameterByName("YScale") as OFXDoubleParameter).Value;
 						OFXDouble2D location = (effect.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter).Value;
