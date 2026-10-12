@@ -36669,6 +36669,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void MidiAutoChangeProjectPropertiesApplyBtn_Click(object sender, EventArgs e) {
 			parent.ChangeProjectProperties();
+			MidiProjectBpmCheck.Text = Lang.str.midi_project_bpm + Lang.str.colon + ProcessBpmDouble(parent.ProjectBpm);
 			vegas.UpdateUI();
 		}
 
