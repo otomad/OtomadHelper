@@ -13820,6 +13820,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			CustomRadio_CheckedChanged(null, null);
 			ColumnCountBox.MouseWheel += NumericUpDown_MouseWheel;
 			if (tracks == null) FormClosing += (sender, e) => SaveIni();
+
+			// Vegas Pro 14 及以下版本未提供“裁切”视频FX插件，因此此时只能使用“遮幅”轨道取景方式。
+			if (EntryPoint.CurrentVegasVersion < new Version(15, 0)) {
+				Fit = FitType.CONTAIN;
+				FillRadio.Enabled = false;
+				OverlayRadio.Enabled = false;
+			}
 		}
 
 		public static void NumericUpDown_MouseWheel(object sender, MouseEventArgs e) {
