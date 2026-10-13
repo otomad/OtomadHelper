@@ -1474,5 +1474,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void MidiAutoChangeProjectPropertiesApplyBtn_Click(object sender, EventArgs e) {
 			Console.WriteLine(DatamoshInfoLbl);
 		}
+
+		private void PlaySelectedTrackBtn_Click(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void ConfigForm_Load(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
 	}
 }
