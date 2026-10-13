@@ -403,7 +403,7 @@ export default {
 					fadeIn: "Rõ dần",
 					fadeOut: "Mờ dần",
 				},
-				plunk: {
+				pluck: {
 					presets: {},
 				},
 				glow: {

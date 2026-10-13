@@ -596,7 +596,7 @@ export default {
 					fadeIn: "渐入",
 					fadeOut: "渐出",
 				},
-				plunk: {
+				pluck: {
 					_: "拨弦",
 					splicePosition: "分割位置",
 					volumeDuck: "音量避让",

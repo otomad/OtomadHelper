@@ -622,8 +622,8 @@ export default {
 					fadeIn: "Fade in",
 					fadeOut: "Fade out",
 				},
-				plunk: {
-					_: "Plunk",
+				pluck: {
+					_: "Pluck",
 					splicePosition: "Splice position",
 					volumeDuck: "Volume duck",
 					presets: {

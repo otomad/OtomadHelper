@@ -597,7 +597,7 @@ export default {
 					fadeIn: "crwdns6481:0crwdne6481:0",
 					fadeOut: "crwdns6483:0crwdne6483:0",
 				},
-				plunk: {
+				pluck: {
 					_: "crwdns6485:0crwdne6485:0",
 					splicePosition: "crwdns6487:0crwdne6487:0",
 					volumeDuck: "crwdns6489:0crwdne6489:0",

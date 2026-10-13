@@ -40,14 +40,14 @@ export /* @internal */ const tuningClassicModes = forMap(19, i => "a" + String(i
 /** @deprecated */
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
-const plunkPresetsLabel = (key: string) => t.stream.parameters.plunk + t.colon + t.stream.parameters.plunk.presets[key];
+const pluckPresetsLabel = (key: string) => t.stream.parameters.pluck + t.colon + t.stream.parameters.pluck.presets[key];
 const BuiltInPresets = Enum({
-	normal: { icon: "star", isPlunk: false },
-	fadeOut: { icon: "fade", isPlunk: false },
-	dePop: { icon: "flash_off", isPlunk: false },
-	jario: { icon: "jario", label: plunkPresetsLabel("jario"), isPlunk: true },
-	standard: { icon: "curves/linear", label: plunkPresetsLabel("standard"), isPlunk: true },
-	snappy: { icon: "curves/fast", label: plunkPresetsLabel("snappy"), isPlunk: true },
+	normal: { icon: "star", isPluck: false },
+	fadeOut: { icon: "fade", isPluck: false },
+	dePop: { icon: "flash_off", isPluck: false },
+	jario: { icon: "jario", label: pluckPresetsLabel("jario"), isPluck: true },
+	standard: { icon: "curves/linear", label: pluckPresetsLabel("standard"), isPluck: true },
+	snappy: { icon: "curves/fast", label: pluckPresetsLabel("snappy"), isPluck: true },
 }, { labelPrefix: t.stream.preset.builtInPresets });
 
 // #region Styles

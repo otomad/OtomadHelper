@@ -193,7 +193,7 @@ export default {
 					fadeIn: "Fade in",
 					fadeOut: "Fade out",
 				},
-				plunk: {
+				pluck: {
 					presets: {},
 				},
 				glow: {

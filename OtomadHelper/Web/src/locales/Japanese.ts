@@ -596,7 +596,7 @@ export default {
 					fadeIn: "フェードイン",
 					fadeOut: "フェードアウト",
 				},
-				plunk: {
+				pluck: {
 					_: "植物format@@0",
 					splicePosition: "スプライスの位置",
 					volumeDuck: "ボリュームダック",
