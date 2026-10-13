@@ -529,7 +529,7 @@ export default {
 				},
 				resample: "重采样音频",
 				preserveFormant: "保持共振峰",
-				vocalFry: "气泡音",
+				vocalFry: "气泡音（1刻模式）",
 				basePitch: {
 					_: "原始音高",
 					cent: "音分",
@@ -597,7 +597,7 @@ export default {
 					fadeOut: "渐出",
 				},
 				pluck: {
-					_: "拨弦",
+					_: "弹拨（脆鸣）",
 					splicePosition: "分割位置",
 					volumeDuck: "音量避让",
 					presets: {

@@ -555,7 +555,7 @@ export default {
 				},
 				resample: "Resample",
 				preserveFormant: "Preserve formant",
-				vocalFry: "Vocal fry",
+				vocalFry: "Vocal fry (1tick mode)",
 				basePitch: {
 					_: "Base pitch",
 					cent: "Cent",
@@ -623,7 +623,7 @@ export default {
 					fadeOut: "Fade out",
 				},
 				pluck: {
-					_: "Pluck",
+					_: "Pluck (Chorus Crisp)",
 					splicePosition: "Splice position",
 					volumeDuck: "Volume duck",
 					presets: {
