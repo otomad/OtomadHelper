@@ -51,7 +51,7 @@
 		"colorjs.io": "^0.5.2",
 		"dedent": "^1.5.3",
 		"easing-coordinates": "^2.0.2",
-		"enum-plus": "^3.1.8",
+		"enum-plus": "^3.3.0",
 		"fullwidth-quotes": "^1.0.1",
 		"i18next": "^26.4.0",
 		"i18next-browser-languagedetector": "^8.2.0",
@@ -153,7 +153,6 @@
 			"postcss-styled-syntax": "patches/postcss-styled-syntax.patch",
 			"@types/react": "patches/@types__react.patch",
 			"react-dom": "patches/react-dom.patch",
-			"enum-plus": "patches/enum-plus.patch",
 			"postcss-selector-parser": "patches/postcss-selector-parser.patch"
 		},
 		"allowUnusedPatches": false
