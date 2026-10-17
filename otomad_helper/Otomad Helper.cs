@@ -814,17 +814,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					_lastOffset = offset;
 					if (audioEvent == null || audioEvent.Takes.Count == 0 || !audioEvent.ActiveTake.Media.IsLocalMedia()) return null;
 					string path = audioEvent.ActiveTake.Media.FilePath;
-					const double additionalOffset = 0; // 100;
-					double ms = (audioEvent.ActiveTake.Offset.ToMilliseconds() + offset + additionalOffset) % audioEvent.ActiveTake.Media.Length.ToMilliseconds();
+					double mediaLength = audioEvent.ActiveTake.Media.Length.ToMilliseconds();
+					double ms = (audioEvent.ActiveTake.Offset.ToMilliseconds() + offset) % mediaLength;
+					const double ADDITIONAL_OFFSET = 100;
+					if (mediaLength - ms > ADDITIONAL_OFFSET) ms += ADDITIONAL_OFFSET;
 					_autoBasePitch = PitchDetector.GetPitchAt(path, ms);
 
-					PitchDetector.RenderToDesktop(
+					/*PitchDetector.RenderToDesktop(
 						filePath: path,
 						imageWidth: 3000,
 						imageHeight: 600,
 						startMs: ms,
 						endMs: ms + audioEvent.Length.ToMilliseconds()
-					);
+					);*/
 				}
 				return _autoBasePitch;
 			}
@@ -8056,7 +8058,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 	public static class PitchDetector {
 		/// <summary>
-		/// 将任意格式的音频文件加载为 NWaves 的单声道 Signal 对象。
+		/// 加载任意格式音频为 NWaves 的单声道 DiscreteSignal。
 		/// </summary>
 		public static DiscreteSignal LoadAudioAsSignal(string filePath) {
 			using (AudioFileReader reader = new AudioFileReader(filePath)) {
@@ -8067,8 +8069,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				float[] buffer = new float[sampleRate * channels];
 				int read;
 				while ((read = reader.Read(buffer, 0, buffer.Length)) > 0) {
-					for (int i = 0; i < read; i++)
+					for (int i = 0; i < read; i++) {
 						sampleList.Add(buffer[i]);
+					}
 				}
 
 				float[] monoSamples;
@@ -8077,12 +8080,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					monoSamples = new float[monoCount];
 					for (int i = 0; i < monoCount; i++) {
 						float sum = 0;
-						for (int c = 0; c < channels; c++)
+						for (int c = 0; c < channels; c++) {
 							sum += sampleList[i * channels + c];
+						}
 						monoSamples[i] = sum / channels;
 					}
-				}
-				else {
+				} else {
 					monoSamples = sampleList.ToArray();
 				}
 
@@ -8090,83 +8093,111 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 		}
 
-		private static DiscreteSignal lastLoadedAudioSignal;
-		private static string lastLoadedAudioFilePath = null;
-
 		/// <summary>
-		/// 获取音频文件在指定时间（毫秒）处的 MIDI 音高数值。
+		/// 提取整段音频的音高曲线。返回 MIDI 值数组及每帧时间位置（秒）。
+		/// medianWindow 大于 1 时应用中值滤波，用于抑制噪声导致的剧烈跳动。
 		/// </summary>
-		/// <param name="filePath">音频文件路径</param>
-		/// <param name="timeMs">目标时间（毫秒）</param>
-		/// <param name="windowMs">分析窗口大小（毫秒），默认 50ms</param>
-		/// <returns>MIDI 音高数值（A4=69，C4=60），若无法检测则返回 null</returns>
-		public static int? GetPitchAt(string filePath, double timeMs, int windowMs = 50) {
-			DiscreteSignal signal = filePath == lastLoadedAudioFilePath && lastLoadedAudioSignal != null ? lastLoadedAudioSignal : LoadAudioAsSignal(filePath);
-			lastLoadedAudioFilePath = filePath;
-			lastLoadedAudioSignal = signal;
+		public static Tuple<double[], double[]> ExtractPitchCurve(
+			DiscreteSignal signal,
+			double lowFreq = 80,
+			double highFreq = 1000,
+			int medianWindow = 3,
+			double frameDuration = 0.046,
+			double hopDuration = 0.0116) {
 
-			int startSample = (int)(signal.SamplingRate * (timeMs - windowMs / 2.0) / 1000.0);
-			int windowSamples = (int)(signal.SamplingRate * windowMs / 1000.0);
-
-			startSample = Math.Max(0, startSample);
-			if (startSample >= signal.Length)
-				return null;
-
-			int endSample = Math.Min(startSample + windowSamples, signal.Length);
-			DiscreteSignal segment = signal[startSample, endSample];
-
-			PitchOptions options = new PitchOptions {
-				SamplingRate = signal.SamplingRate,
-				LowFrequency = 80,
-				HighFrequency = 1000,
-			};
-			PitchExtractor extractor = new PitchExtractor(options);
-			List<float[]> pitches = extractor.ComputeFrom(segment);
-
-			if (pitches.Count == 0 || pitches[0].Length == 0)
-				return null;
-
-			float pitchHz = pitches[0][0];
-			if (pitchHz <= 0)
-				return null;
-
-			double midiNote = 12 * Math.Log(pitchHz / 440.0, 2) + 69;
-			return (int)Math.Round(midiNote);
-		}
-
-		#region 测试音高检测准确性
-		private const double DefaultLowFreq = 80;
-		private const double DefaultHighFreq = 1000;
-		/// <summary>
-		/// 使用 NWaves 的 YIN 算法提取整段音频的音高曲线（MIDI 值，无效帧为 NaN）。
-		/// </summary>
-		public static double[] ExtractPitchCurve(DiscreteSignal signal, double lowFreq = DefaultLowFreq, double highFreq = DefaultHighFreq) {
 			PitchOptions pitchOptions = new PitchOptions {
 				SamplingRate = signal.SamplingRate,
 				LowFrequency = lowFreq,
 				HighFrequency = highFreq,
+				FrameDuration = frameDuration,
+				HopDuration = hopDuration
 			};
 			PitchExtractor extractor = new PitchExtractor(pitchOptions);
-			List<float[]> pitchVectors = extractor.ComputeFrom(signal);
+			List<float[]> vectors = extractor.ComputeFrom(signal);
 
-			double[] midiCurve = new double[pitchVectors.Count];
-			for (int i = 0; i < pitchVectors.Count; i++) {
-				float hz = pitchVectors[i].Length > 0 ? pitchVectors[i][0] : 0;
-				midiCurve[i] = hz > 0 ? 69 + 12 * Math.Log(hz / 440.0, 2) : double.NaN;
+			int count = vectors.Count;
+			double[] midiValues = new double[count];
+			double[] timePositions = new double[count];
+
+			for (int i = 0; i < count; i++) {
+				timePositions[i] = i * hopDuration;
+				float[] features = vectors[i];
+				float hz = features != null && features.Length > 0 ? features[0] : 0;
+				if (hz > 0) {
+					midiValues[i] = 69 + 12 * Math.Log(hz / 440.0, 2);
+				} else {
+					midiValues[i] = double.NaN;
+				}
 			}
-			return midiCurve;
+
+			if (medianWindow > 1) {
+				ApplyMedianFilter(midiValues, medianWindow);
+			}
+
+			return Tuple.Create(midiValues, timePositions);
 		}
 
 		/// <summary>
-		/// 根据音频生成音高曲线图并保存到桌面 test.png。
+		/// 获取音频在指定时间（毫秒）处的 MIDI 音高数值。
+		/// 在目标时间附近截取一个小窗口，提取音高后取有效值中位数。
 		/// </summary>
-		/// <param name="filePath">音频文件路径</param>
-		/// <param name="imageWidth">图片宽度（像素）</param>
-		/// <param name="imageHeight">图片高度（像素）</param>
-		/// <param name="startMs">音频截取开始时间（毫秒）</param>
-		/// <param name="endMs">音频截取结束时间（毫秒）</param>
-		/// <param name="minMidi">纵轴最小值（MIDI），默认从曲线自动计算</param>
-		/// <param name="maxMidi">纵轴最大值（MIDI），默认从曲线自动计算</param>
+		public static int? GetPitchAt(
+			string filePath,
+			double timeMs,
+			int windowMs = 50,
+			double lowFreq = 80,
+			double highFreq = 1000) {
+
+			DiscreteSignal signal = LoadAudioAsSignal(filePath);
+			double totalDurationMs = signal.Length * 1000.0 / signal.SamplingRate;
+			if (timeMs < 0 || timeMs > totalDurationMs) {
+				return null;
+			}
+
+			int startSample = (int)Math.Floor((timeMs - windowMs / 2.0) / 1000.0 * signal.SamplingRate);
+			int endSample = (int)Math.Ceiling((timeMs + windowMs / 2.0) / 1000.0 * signal.SamplingRate);
+			startSample = Math.Max(0, startSample);
+			endSample = Math.Min(signal.Length, endSample);
+			if (endSample <= startSample) {
+				return null;
+			}
+
+			int segmentLength = endSample - startSample;
+			float[] segmentSamples = new float[segmentLength];
+			Array.Copy(signal.Samples, startSample, segmentSamples, 0, segmentLength);
+			DiscreteSignal segment = new DiscreteSignal(signal.SamplingRate, segmentSamples);
+
+			Tuple<double[], double[]> curve = ExtractPitchCurve(
+				segment, lowFreq, highFreq, medianWindow: 0);
+
+			double[] midiValues = curve.Item1;
+			List<double> validValues = new List<double>();
+			for (int i = 0; i < midiValues.Length; i++) {
+				if (!double.IsNaN(midiValues[i])) {
+					validValues.Add(midiValues[i]);
+				}
+			}
+
+			if (validValues.Count == 0) {
+				return null;
+			}
+
+			validValues.Sort();
+			int mid = validValues.Count / 2;
+			double median;
+			if (validValues.Count % 2 == 1) {
+				median = validValues[mid];
+			} else {
+				median = (validValues[mid - 1] + validValues[mid]) / 2.0;
+			}
+
+			return (int)Math.Round(median, MidpointRounding.AwayFromZero);
+		}
+
+		/// <summary>
+		/// 生成指定时间范围的音高曲线图，并保存到桌面 test.png。
+		/// 同时把该时间范围的音频保存为桌面 test.wav，方便调试对齐。
+		/// </summary>
 		public static void RenderToDesktop(
 			string filePath,
 			int imageWidth,
@@ -8174,88 +8205,102 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			double startMs,
 			double endMs,
 			double? minMidi = null,
-			double? maxMidi = null) {
+			double? maxMidi = null,
+			int medianWindow = 3,
+			double lowFreq = 80,
+			double highFreq = 1000) {
 
-			if (imageWidth <= 0 || imageHeight <= 0)
+			if (imageWidth <= 0 || imageHeight <= 0) {
 				throw new ArgumentException("图片尺寸必须为正数。");
-			if (endMs <= startMs)
+			}
+			if (endMs <= startMs) {
 				throw new ArgumentException("结束时间必须大于开始时间。");
+			}
 
-			// 1. 加载音频并提取整段音高曲线
 			DiscreteSignal signal = LoadAudioAsSignal(filePath);
-			double[] midiCurve = ExtractPitchCurve(signal);
+			Tuple<double[], double[]> curve = ExtractPitchCurve(
+				signal, lowFreq, highFreq, medianWindow);
+			double[] midiValues = curve.Item1;
+			double[] timePositions = curve.Item2;
 
-			// 2. 计算实际截取的时间范围（裁剪到音频有效范围内）
 			double totalDurationMs = signal.Length * 1000.0 / signal.SamplingRate;
 			double clampedStartMs = Math.Max(0, startMs);
 			double clampedEndMs = Math.Min(totalDurationMs, endMs);
+			double spanMs = clampedEndMs - clampedStartMs;
+			if (spanMs <= 0) {
+				spanMs = 1;
+			}
 
-			// 3. 将时间范围映射到帧索引（用于音高曲线）
-			int startFrame = (int)Math.Floor(clampedStartMs / 1000.0 / DefaultHopDuration);
-			int endFrame = (int)Math.Ceiling(clampedEndMs / 1000.0 / DefaultHopDuration);
-			startFrame = Math.Max(0, Math.Min(startFrame, midiCurve.Length - 1));
-			endFrame = Math.Max(startFrame + 1, Math.Min(endFrame, midiCurve.Length));
-
-			// 4. 将时间范围映射到样本索引（用于保存修剪后的音频）
 			int startSample = (int)Math.Floor(clampedStartMs / 1000.0 * signal.SamplingRate);
 			int endSample = (int)Math.Ceiling(clampedEndMs / 1000.0 * signal.SamplingRate);
 			startSample = Math.Max(0, Math.Min(startSample, signal.Length));
 			endSample = Math.Max(startSample, Math.Min(endSample, signal.Length));
 
-			// 5. 保存修剪后的音频为桌面 test.wav
 			string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 			string wavPath = System.IO.Path.Combine(desktopPath, "test.wav");
-			float[] trimmedSamples = new float[endSample - startSample];
-			Array.Copy(signal.Samples, startSample, trimmedSamples, 0, trimmedSamples.Length);
+			SaveTrimmedAudioToWav(signal, startSample, endSample, wavPath);
 
-			WaveFormat wavFormat = WaveFormat.CreateIeeeFloatWaveFormat(signal.SamplingRate, 1);
-			using (WaveFileWriter writer = new WaveFileWriter(wavPath, wavFormat)) {
-				byte[] byteBuffer = new byte[trimmedSamples.Length * 4];
-				Buffer.BlockCopy(trimmedSamples, 0, byteBuffer, 0, byteBuffer.Length);
-				writer.Write(byteBuffer, 0, byteBuffer.Length);
-			}
-
-			// 6. 统计有效 MIDI 值以确定纵轴范围
 			double minVal = double.MaxValue;
 			double maxVal = double.MinValue;
-			for (int i = startFrame; i < endFrame; i++) {
-				double v = midiCurve[i];
+			for (int i = 0; i < midiValues.Length; i++) {
+				double timeMs = timePositions[i] * 1000.0;
+				if (timeMs < clampedStartMs || timeMs > clampedEndMs) {
+					continue;
+				}
+				double v = midiValues[i];
 				if (!double.IsNaN(v)) {
-					if (v < minVal) minVal = v;
-					if (v > maxVal) maxVal = v;
+					if (v < minVal) {
+						minVal = v;
+					}
+					if (v > maxVal) {
+						maxVal = v;
+					}
 				}
 			}
 
 			if (minVal > maxVal) {
-				minVal = 48; // C3
-				maxVal = 84; // C6
+				minVal = 48;
+				maxVal = 84;
 			}
 
 			double axisMin = minMidi ?? (minVal - 1);
 			double axisMax = maxMidi ?? (maxVal + 1);
-			if (axisMax <= axisMin) axisMax = axisMin + 1;
+			if (axisMax <= axisMin) {
+				axisMax = axisMin + 1;
+			}
 
-			// 7. 创建空白图像并绘制曲线
 			using (Bitmap bitmap = new Bitmap(imageWidth, imageHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
 			using (Graphics g = Graphics.FromImage(bitmap)) {
 				g.Clear(Color.White);
 				g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-				int frameCount = endFrame - startFrame;
-				if (frameCount > 0) {
-					List<PointF> points = new List<PointF>();
-					for (int i = 0; i < frameCount; i++) {
-						double v = midiCurve[startFrame + i];
-						if (double.IsNaN(v)) {
-							DrawCurve(g, points, imageWidth, imageHeight, axisMin, axisMax);
+				List<PointF> points = new List<PointF>();
+				for (int i = 0; i < midiValues.Length; i++) {
+					double timeMs = timePositions[i] * 1000.0;
+					if (timeMs < clampedStartMs || timeMs > clampedEndMs) {
+						if (points.Count > 0) {
+							DrawCurve(g, points, imageHeight);
 							points.Clear();
-							continue;
 						}
-						float x = (float)(i * imageWidth / (double)frameCount);
-						float y = (float)(imageHeight - (v - axisMin) / (axisMax - axisMin) * imageHeight);
-						points.Add(new PointF(x, y));
+						continue;
 					}
-					DrawCurve(g, points, imageWidth, imageHeight, axisMin, axisMax);
+
+					double v = midiValues[i];
+					if (double.IsNaN(v)) {
+						if (points.Count > 0) {
+							DrawCurve(g, points, imageHeight);
+							points.Clear();
+						}
+						continue;
+					}
+
+					float x = (float)((timeMs - clampedStartMs) / spanMs * imageWidth);
+					float y = (float)(imageHeight - (v - axisMin) / (axisMax - axisMin) * imageHeight);
+					points.Add(new PointF(x, y));
+				}
+
+				if (points.Count > 0) {
+					DrawCurve(g, points, imageHeight);
 				}
 
 				string pngPath = System.IO.Path.Combine(desktopPath, "test.png");
@@ -8263,28 +8308,100 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 		}
 
-		private static void DrawCurve(Graphics g, List<PointF> points, int imageWidth, int imageHeight, double axisMin, double axisMax) {
-			if (points.Count < 1) return;
+		private static void SaveTrimmedAudioToWav(
+			DiscreteSignal signal,
+			int startSample,
+			int endSample,
+			string path) {
+
+			if (endSample <= startSample) {
+				endSample = Math.Min(signal.Length, startSample + 1);
+			}
+			if (startSample >= signal.Length) {
+				startSample = Math.Max(0, signal.Length - 1);
+			}
+			if (endSample <= startSample) {
+				return;
+			}
+
+			int length = endSample - startSample;
+			float[] trimmedSamples = new float[length];
+			Array.Copy(signal.Samples, startSample, trimmedSamples, 0, length);
+
+			WaveFormat wavFormat = WaveFormat.CreateIeeeFloatWaveFormat(signal.SamplingRate, 1);
+			using (WaveFileWriter writer = new WaveFileWriter(path, wavFormat)) {
+				byte[] byteBuffer = new byte[trimmedSamples.Length * 4];
+				Buffer.BlockCopy(trimmedSamples, 0, byteBuffer, 0, byteBuffer.Length);
+				writer.Write(byteBuffer, 0, byteBuffer.Length);
+			}
+		}
+
+		/// <summary>
+		/// 对 MIDI 值数组应用标准中值滤波。NaN 位置保持不变，不会跨断点填充。
+		/// </summary>
+		private static void ApplyMedianFilter(double[] values, int windowSize) {
+			if (windowSize <= 1 || values.Length == 0) {
+				return;
+			}
+
+			int half = windowSize / 2;
+			double[] original = new double[values.Length];
+			Array.Copy(values, original, values.Length);
+
+			List<double> window = new List<double>(windowSize);
+			for (int i = 0; i < original.Length; i++) {
+				if (double.IsNaN(original[i])) {
+					values[i] = double.NaN;
+					continue;
+				}
+
+				window.Clear();
+				int start = Math.Max(0, i - half);
+				int end = Math.Min(original.Length - 1, i + half);
+				for (int j = start; j <= end; j++) {
+					if (!double.IsNaN(original[j])) {
+						window.Add(original[j]);
+					}
+				}
+
+				if (window.Count == 0) {
+					values[i] = double.NaN;
+				} else {
+					window.Sort();
+					int mid = window.Count / 2;
+					if (window.Count % 2 == 1) {
+						values[i] = window[mid];
+					} else {
+						values[i] = (window[mid - 1] + window[mid]) / 2.0;
+					}
+				}
+			}
+		}
+
+		private static void DrawCurve(Graphics g, List<PointF> points, int imageHeight) {
+			if (points.Count < 1) {
+				return;
+			}
 
 			using (Pen pen = new Pen(Color.Black, 1.0f)) {
 				if (points.Count == 1) {
-					// 单点用短线段表示
 					g.DrawLine(pen, points[0].X, points[0].Y, points[0].X + 1, points[0].Y);
-				}
-				else {
-					// 将 Y 值裁剪到图像范围内，避免线条越界
+				} else {
 					PointF[] clipped = new PointF[points.Count];
 					for (int i = 0; i < points.Count; i++) {
 						float y = points[i].Y;
-						if (y < 0) y = 0;
-						if (y > imageHeight - 1) y = imageHeight - 1;
+						if (y < 0) {
+							y = 0;
+						}
+						if (y > imageHeight - 1) {
+							y = imageHeight - 1;
+						}
 						clipped[i] = new PointF(points[i].X, y);
 					}
 					g.DrawLines(pen, clipped);
 				}
 			}
 		}
-		#endregion
 	}
 
 	public class WindowsMidiPlayer : IDisposable {
