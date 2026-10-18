@@ -599,7 +599,8 @@ export default {
 				pluck: {
 					_: "弹拨（脆鸣）",
 					splicePosition: "分割位置",
-					volumeDuck: "音量避让",
+					volumeDuck: "音量闪避",
+					overlapOffset: "重叠偏移",
 					presets: {
 						jario: "杰力欧风格",
 						standard: "标准",

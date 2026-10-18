@@ -624,8 +624,9 @@ export default {
 				},
 				pluck: {
 					_: "Pluck (Chorus Crisp)",
-					splicePosition: "Splice position",
+					splicePosition: "Splice position", // Although this command actually performs a “split” rather than a “splice” operation.
 					volumeDuck: "Volume duck",
+					overlapOffset: "Overlap offset",
 					presets: {
 						jario: "Jario Style",
 						standard: "Standard",
