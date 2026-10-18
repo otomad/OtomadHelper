@@ -1482,5 +1482,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void ConfigForm_Load(object sender, EventArgs e) {
 			Console.WriteLine(DatamoshInfoLbl);
 		}
+
+		private void Tabs_SelectedIndexChanged(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void AudioPluckPresetsBtn_Click(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
 	}
 }
