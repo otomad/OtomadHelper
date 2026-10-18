@@ -4573,6 +4573,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	}
 
 	/// <summary>
+	/// 拉伸方式算法枚举。
+	/// </summary>
+	public enum AudioStretchMethod {
+		/// <summary>不调音*且不拉伸。</summary>
+		/// <remarks>* 此处的调音指的是通过音频事件属性配置的时间拉伸/音调转换的方法，其它调音方法（如移调音效插件、粒子振荡器）不受影响。</remarks>
+		NO_TUNING,
+		/// <summary>不改变。</summary>
+		UNSET,
+		/// <summary>弹性音调更改。</summary>
+		ELASTIQUE,
+		/// <summary>古典音调更改。</summary>
+		CLASSIC,
+		/// <summary>ACID Pro 使用的调音。</summary>
+		/// <remarks>v4 版本暂不可用。</remarks>
+		ACID_STYLE = 20,
+	}
+
+	/// <summary>
 	/// 调音方式算法枚举。
 	/// </summary>
 	public enum AudioTuningMethod {
@@ -4589,7 +4607,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>粒子振荡器。</summary>
 		OSCILLATOR,
 		/// <summary>ACID Pro 使用的调音。</summary>
+		/// <remarks>v4 版本暂不可用。</remarks>
 		ACID_STYLE = 20,
+		/// <summary>不改变。</summary>
+		/// <remarks>v4 版本暂不可用。</remarks>
+		UNSET,
 	}
 
 	/// <summary>
@@ -21906,6 +21928,213 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 	}
 
+	public class RememberedComboBox : ComboBox {
+		// 内部使用的锁定模式枚举，不对外公开
+		private enum LockMode {
+			Unlocked = -1,
+			LockedWithIndex,
+			LockedWithItem
+		}
+
+		private bool isInternalChanging = false;
+		private LockMode internalLockMode = LockMode.Unlocked;
+
+		public RememberedComboBox() {
+			// 当用户在未锁定状态下手动改变选择时，同步更新用户真实设定的值
+			SelectedIndexChanged += (sender, e) => {
+				if (internalLockMode == LockMode.Unlocked && !isInternalChanging) {
+					userSelectedIndex = base.SelectedIndex;
+					userSelectedItem = base.SelectedItem;
+				}
+			};
+		}
+
+		#region 用户原始值存储区（保证双向数据匹配）
+
+		private int userSelectedIndex = -1;
+		[Category("Behavior"), DefaultValue(-1), Description("获取或设置用户设定的选择索引。与 UserSelectedItem 保持同步匹配。")]
+		public int UserSelectedIndex {
+			get { return userSelectedIndex; }
+			set {
+				userSelectedIndex = value;
+				if (internalLockMode == LockMode.Unlocked) {
+					ApplyValueInternally(() => {
+						base.SelectedIndex = value;
+						userSelectedItem = base.SelectedItem; // 同步获取匹配的对象
+					});
+				}
+			}
+		}
+
+		private object userSelectedItem = null;
+		[Category("Behavior"), DefaultValue(null), Description("获取或设置用户设定的选择项。与 UserSelectedIndex 保持同步匹配。")]
+		public object UserSelectedItem {
+			get { return userSelectedItem; }
+			set {
+				userSelectedItem = value;
+				if (internalLockMode == LockMode.Unlocked) {
+					ApplyValueInternally(() => {
+						base.SelectedItem = value;
+						userSelectedIndex = base.SelectedIndex; // 同步获取匹配的索引
+					});
+				}
+			}
+		}
+
+		#endregion
+
+		#region 锁定状态控制与公开接口
+
+		/// <summary>
+		/// 获取或设置组件当前是否处于锁定状态。
+		/// 支持读取 true/false，但仅支持写入 false 用于解锁，写入 true 会触发异常。
+		/// </summary>
+		[Category("Appearance"), DefaultValue(false), Description("获取组件当前是否处于锁定状态。也可以通过设为 false 来解锁。")]
+		public bool Lock {
+			get { return internalLockMode != LockMode.Unlocked; }
+			set {
+				if (value) {
+					// 试图直接设为 true 时报错
+					throw new InvalidOperationException("不能直接将 Lock 属性设置为 true。请通过设置 LockSelectedIndex 或 LockSelectedItem 来指定锁定的目标选项。");
+				} else {
+					// 显式设置为 false 时执行解锁
+					Unlock();
+				}
+			}
+		}
+
+		private int lockSelectedIndex = -1;
+		[Category("Behavior"), DefaultValue(-1), Description("设置该属性将立即锁定控件到指定的索引。设为 -1 会锁定到空选项。")]
+		public int LockSelectedIndex {
+			get { return lockSelectedIndex; }
+			set {
+				lockSelectedIndex = value;
+				internalLockMode = LockMode.LockedWithIndex;
+				Enabled = false;
+
+				// 强制应用锁定索引，并提取出匹配的 Item 对象（如果是 -1 则匹配为 null）
+				ApplyValueInternally(() => {
+					base.SelectedIndex = value;
+					lockSelectedItem = base.SelectedItem;
+				});
+			}
+		}
+
+		private object lockSelectedItem = null;
+		[Category("Behavior"), DefaultValue(null), Description("设置该属性将立即锁定控件到指定的对象。设为 null 会锁定到空选项。")]
+		public object LockSelectedItem {
+			get { return lockSelectedItem; }
+			set {
+				lockSelectedItem = value;
+				internalLockMode = LockMode.LockedWithItem;
+				Enabled = false;
+
+				// 强制应用锁定项，并提取出匹配的 Index 索引（如果是 null 则匹配为 -1）
+				ApplyValueInternally(() => {
+					base.SelectedItem = value;
+					lockSelectedIndex = base.SelectedIndex;
+				});
+			}
+		}
+
+		/// <summary>
+		/// 解除控件的锁定状态，恢复控件的启用状态并还原用户原先的选择。
+		/// </summary>
+		public void Unlock() {
+			lockSelectedIndex = -1;
+			lockSelectedItem = null;
+			internalLockMode = LockMode.Unlocked;
+			Enabled = true;
+
+			// 还原用户原先的选择
+			ApplyValueInternally(() => {
+				base.SelectedIndex = userSelectedIndex;
+				if (userSelectedIndex == -1 && userSelectedItem != null) {
+					base.SelectedItem = userSelectedItem;
+				}
+			});
+		}
+
+		#endregion
+
+		#region 重写原生选择属性
+
+		[Category("Behavior"), Description("获取或设置当前选中的索引。如果处于锁定状态，赋值将不会更改用户的原始选择记录。")]
+		public new int SelectedIndex {
+			get { return base.SelectedIndex; }
+			set {
+				if (internalLockMode == LockMode.Unlocked) {
+					ApplyValueInternally(() => base.SelectedIndex = value);
+					userSelectedIndex = base.SelectedIndex;
+					userSelectedItem = base.SelectedItem; // 强制保持 User 匹配
+				} else {
+					// 处于锁定状态时，忽略外部对原生属性的修改
+					RestoreLockedValue();
+				}
+			}
+		}
+
+		[Category("Behavior"), Description("获取或设置当前选中的条目。如果处于锁定状态，赋值将不会更改用户的原始选择记录。")]
+		public new object SelectedItem {
+			get { return base.SelectedItem; }
+			set {
+				if (internalLockMode == LockMode.Unlocked) {
+					ApplyValueInternally(() => base.SelectedItem = value);
+					userSelectedItem = base.SelectedItem;
+					userSelectedIndex = base.SelectedIndex; // 强制保持 User 匹配
+				} else {
+					// 处于锁定状态时，忽略外部对原生属性的修改
+					RestoreLockedValue();
+				}
+			}
+		}
+
+		/// <summary>
+		/// 设定下拉菜单选择的编号，避免设定的编号超出下拉菜单的项目数量。
+		/// </summary>
+		/// <param name="index">设定选项序号</param>
+		/// <param name="def">设定如果设定失败的默认值，如果为 -1 或留空表示不设定</param>
+		public void SetIndex(int index, int def = -1) {
+			int length = Items.Count;
+			if (length == 0) return;
+			if (index >= length || index < 0) {
+				if (def >= length || def < 0) return;
+				UserSelectedIndex = def;
+			} else UserSelectedIndex = index;
+		}
+
+		#endregion
+
+		#region 内部辅助方法
+
+		/// <summary>
+		/// 当处于锁定状态时，用于拒绝并恢复正确的锁定显示值
+		/// </summary>
+		private void RestoreLockedValue() {
+			ApplyValueInternally(() => {
+				if (internalLockMode == LockMode.LockedWithIndex) {
+					base.SelectedIndex = lockSelectedIndex;
+				} else if (internalLockMode == LockMode.LockedWithItem) {
+					base.SelectedItem = lockSelectedItem;
+				}
+			});
+		}
+
+		/// <summary>
+		/// 安全地执行内部的值改变，避免触发内部事件导致的死循环
+		/// </summary>
+		private void ApplyValueInternally(Action action) {
+			isInternalChanging = true;
+			try {
+				if (action != null) action.Invoke();
+			} finally {
+				isInternalChanging = false;
+			}
+		}
+
+		#endregion
+	}
+
 	partial class HorizontalDivider {
 		/// <summary>
 		/// 必需的设计器变量。
@@ -23606,7 +23835,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.YtpMaxLenBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
 			this.MatchCutRepeatRoundBox = new System.Windows.Forms.NumericUpDown();
 			this.AudioTuneMethodCombo = new System.Windows.Forms.ComboBox();
-			this.AudioAltMethodCombo = new System.Windows.Forms.ComboBox();
+			this.AudioAltMethodCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.StaffFreezeAtNoteOffCheck = new System.Windows.Forms.CheckBox();
 			this.PreviewBasePitchBtn = new System.Windows.Forms.Button();
 			this.AudioStretchAttrCombo = new System.Windows.Forms.ComboBox();
@@ -23851,10 +24080,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioFadeSetAsTimecodeRadio = new System.Windows.Forms.RadioButton();
 			this.AudioTuneGroup = new System.Windows.Forms.GroupBox();
 			this.AudioTuneTablePanel = new System.Windows.Forms.TableLayoutPanel();
-			this.flowLayoutPanel19 = new System.Windows.Forms.FlowLayoutPanel();
-			this.AudioNoTuningAllowStretchCheck = new System.Windows.Forms.CheckBox();
-			this.AudioNoTuningDrumKitsCheck = new System.Windows.Forms.CheckBox();
-			this.AudioNoTuningLbl = new System.Windows.Forms.Label();
+			this.AudioStretchMethodCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
+			this.AudioStretchMethodLbl = new System.Windows.Forms.Label();
 			this.AudioAltMethodLbl = new System.Windows.Forms.Label();
 			this.AudioTuneMethodLbl = new System.Windows.Forms.Label();
 			this.AudioStretchAttrLbl = new System.Windows.Forms.Label();
@@ -23862,6 +24089,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioReserveFormantCheck = new System.Windows.Forms.CheckBox();
 			this.AudioVocalFryCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
+			this.AudioNoTuningDrumKitsCheck = new System.Windows.Forms.CheckBox();
 			this.AudioBasePitchLbl = new System.Windows.Forms.Label();
 			this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioMainKeyCombo = new System.Windows.Forms.ComboBox();
@@ -23894,7 +24122,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioPreferredTrackCombo = new System.Windows.Forms.ComboBox();
 			this.AudioComboPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioScratchLbl = new System.Windows.Forms.Label();
-			this.AudioScratchCombo = new System.Windows.Forms.ComboBox();
+			this.AudioScratchCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.AudioLegatoLbl = new System.Windows.Forms.Label();
 			this.AudioLegatoCombo = new System.Windows.Forms.ComboBox();
 			this.AudioTogglePanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -24265,7 +24493,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel20.SuspendLayout();
 			this.AudioTuneGroup.SuspendLayout();
 			this.AudioTuneTablePanel.SuspendLayout();
-			this.flowLayoutPanel19.SuspendLayout();
 			this.flowLayoutPanel10.SuspendLayout();
 			this.flowLayoutPanel6.SuspendLayout();
 			this.tableLayoutPanel17.SuspendLayout();
@@ -24793,13 +25020,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneMethodCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.AudioTuneMethodCombo.FormattingEnabled = true;
 			this.AudioTuneMethodCombo.Items.AddRange(new object[] {
-			"不调音且不拉伸",
+			"不调音",
 			"移调效果插件",
 			"弹性音调更改",
 			"古典音调更改",
 			"无音阶调音",
 			"粒子振荡器"});
-			this.AudioTuneMethodCombo.Location = new System.Drawing.Point(119, 53);
+			this.AudioTuneMethodCombo.Location = new System.Drawing.Point(119, 3);
 			this.AudioTuneMethodCombo.Name = "AudioTuneMethodCombo";
 			this.AudioTuneMethodCombo.Size = new System.Drawing.Size(864, 40);
 			this.AudioTuneMethodCombo.TabIndex = 2;
@@ -24816,11 +25043,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			"升 / 降八度 (实验性)",
 			"停靠在边缘",
 			"不发声"});
-			this.AudioAltMethodCombo.Location = new System.Drawing.Point(119, 161);
+			this.AudioAltMethodCombo.Location = new System.Drawing.Point(119, 165);
 			this.AudioAltMethodCombo.Name = "AudioAltMethodCombo";
 			this.AudioAltMethodCombo.Size = new System.Drawing.Size(864, 40);
 			this.AudioAltMethodCombo.TabIndex = 12;
-			this.AudioAltMethodCombo.SelectedIndexChanged += new System.EventHandler(this.AudioAltMethodCombo_SelectedIndexChanged);
 			//
 			// StaffFreezeAtNoteOffCheck
 			//
@@ -24851,7 +25077,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioStretchAttrCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioStretchAttrCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.AudioStretchAttrCombo.FormattingEnabled = true;
-			this.AudioStretchAttrCombo.Location = new System.Drawing.Point(119, 107);
+			this.AudioStretchAttrCombo.Location = new System.Drawing.Point(119, 111);
 			this.AudioStretchAttrCombo.Name = "AudioStretchAttrCombo";
 			this.AudioStretchAttrCombo.Size = new System.Drawing.Size(864, 40);
 			this.AudioStretchAttrCombo.TabIndex = 3;
@@ -24870,7 +25096,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
 			this.menu.Padding = new System.Windows.Forms.Padding(10, 4, 0, 6);
-			this.menu.Size = new System.Drawing.Size(1092, 48);
+			this.menu.Size = new System.Drawing.Size(1092, 46);
 			this.menu.TabIndex = 2;
 			this.menu.Text = "menuStrip1";
 			//
@@ -24891,7 +25117,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.exitDiscardingChangesToolStripMenuItem,
 			this.exitToolStripMenuItem});
 			this.fileMenuItem.Name = "fileMenuItem";
-			this.fileMenuItem.Size = new System.Drawing.Size(108, 38);
+			this.fileMenuItem.Size = new System.Drawing.Size(108, 36);
 			this.fileMenuItem.Text = "文件(&F)";
 			//
 			// saveConfigToolStripMenuItem
@@ -25047,7 +25273,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.schineseDocsToolStripMenuItem,
 			this.vitenameseDocsToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(113, 38);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(113, 36);
 			this.helpToolStripMenuItem.Text = "帮助(&H)";
 			//
 			// versionToolStripMenuItem
@@ -25267,7 +25493,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.vietnameseToolStripMenuItem,
 			this.indonesianToolStripMenuItem});
 			this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
-			this.languageToolStripMenuItem.Size = new System.Drawing.Size(195, 38);
+			this.languageToolStripMenuItem.Size = new System.Drawing.Size(195, 36);
 			this.languageToolStripMenuItem.Text = "语言/&Language";
 			//
 			// chineseToolStripMenuItem
@@ -25341,7 +25567,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.currentVersionMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this.currentVersionMenuItem.Enabled = false;
 			this.currentVersionMenuItem.Name = "currentVersionMenuItem";
-			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 38);
+			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 36);
 			this.currentVersionMenuItem.Text = "v4";
 			//
 			// panel1
@@ -25349,10 +25575,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.panel1.BackColor = System.Drawing.Color.Transparent;
 			this.panel1.Controls.Add(this.Tabs);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(0, 48);
+			this.panel1.Location = new System.Drawing.Point(0, 46);
 			this.panel1.Name = "panel1";
 			this.panel1.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
-			this.panel1.Size = new System.Drawing.Size(1092, 1054);
+			this.panel1.Size = new System.Drawing.Size(1092, 1056);
 			this.panel1.TabIndex = 3;
 			//
 			// Tabs
@@ -25372,7 +25598,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Tabs.Multiline = true;
 			this.Tabs.Name = "Tabs";
 			this.Tabs.SelectedIndex = 0;
-			this.Tabs.Size = new System.Drawing.Size(1068, 1054);
+			this.Tabs.Size = new System.Drawing.Size(1068, 1056);
 			this.Tabs.TabIndex = 2;
 			this.Tabs.SelectedIndexChanged += new System.EventHandler(this.Tabs_SelectedIndexChanged);
 			//
@@ -27443,7 +27669,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTab.Location = new System.Drawing.Point(8, 46);
 			this.AudioTab.Name = "AudioTab";
 			this.AudioTab.Padding = new System.Windows.Forms.Padding(8);
-			this.AudioTab.Size = new System.Drawing.Size(1052, 1000);
+			this.AudioTab.Size = new System.Drawing.Size(1052, 1002);
 			this.AudioTab.TabIndex = 1;
 			this.AudioTab.Text = "音频";
 			this.AudioTab.UseVisualStyleBackColor = true;
@@ -27453,7 +27679,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioPluckGroup.AutoSize = true;
 			this.AudioPluckGroup.Controls.Add(this.AudioPluckTable);
 			this.AudioPluckGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AudioPluckGroup.Location = new System.Drawing.Point(8, 1102);
+			this.AudioPluckGroup.Location = new System.Drawing.Point(8, 1110);
 			this.AudioPluckGroup.Name = "AudioPluckGroup";
 			this.AudioPluckGroup.Padding = new System.Windows.Forms.Padding(8);
 			this.AudioPluckGroup.Size = new System.Drawing.Size(1002, 300);
@@ -27545,7 +27771,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioPluckOffsetLbl.Name = "AudioPluckOffsetLbl";
 			this.AudioPluckOffsetLbl.Size = new System.Drawing.Size(110, 66);
 			this.AudioPluckOffsetLbl.TabIndex = 9;
-			this.AudioPluckOffsetLbl.Text = "偏移";
+			this.AudioPluckOffsetLbl.Text = "重叠偏移";
 			this.AudioPluckOffsetLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
 			// AudioPluckPresetsBtn
@@ -27619,7 +27845,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioPluckDuckLbl.Name = "AudioPluckDuckLbl";
 			this.AudioPluckDuckLbl.Size = new System.Drawing.Size(110, 66);
 			this.AudioPluckDuckLbl.TabIndex = 1;
-			this.AudioPluckDuckLbl.Text = "音量避让";
+			this.AudioPluckDuckLbl.Text = "音量闪避";
 			this.AudioPluckDuckLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
 			// AudioPluckDuckBox
@@ -27659,7 +27885,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioParamsGroup.AutoSize = true;
 			this.AudioParamsGroup.Controls.Add(this.AudioParamsTable);
 			this.AudioParamsGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AudioParamsGroup.Location = new System.Drawing.Point(8, 880);
+			this.AudioParamsGroup.Location = new System.Drawing.Point(8, 888);
 			this.AudioParamsGroup.Name = "AudioParamsGroup";
 			this.AudioParamsGroup.Padding = new System.Windows.Forms.Padding(8);
 			this.AudioParamsGroup.Size = new System.Drawing.Size(1002, 222);
@@ -27892,7 +28118,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneGroup.Location = new System.Drawing.Point(8, 404);
 			this.AudioTuneGroup.Name = "AudioTuneGroup";
 			this.AudioTuneGroup.Padding = new System.Windows.Forms.Padding(8);
-			this.AudioTuneGroup.Size = new System.Drawing.Size(1002, 476);
+			this.AudioTuneGroup.Size = new System.Drawing.Size(1002, 484);
 			this.AudioTuneGroup.TabIndex = 4;
 			this.AudioTuneGroup.TabStop = false;
 			this.AudioTuneGroup.Text = "调音";
@@ -27903,12 +28129,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneTablePanel.ColumnCount = 2;
 			this.AudioTuneTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.AudioTuneTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.AudioTuneTablePanel.Controls.Add(this.flowLayoutPanel19, 1, 0);
-			this.AudioTuneTablePanel.Controls.Add(this.AudioNoTuningLbl, 0, 0);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioStretchMethodCombo, 1, 1);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioStretchMethodLbl, 0, 1);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioAltMethodCombo, 1, 3);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioAltMethodLbl, 0, 3);
-			this.AudioTuneTablePanel.Controls.Add(this.AudioTuneMethodLbl, 0, 1);
-			this.AudioTuneTablePanel.Controls.Add(this.AudioTuneMethodCombo, 1, 1);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioTuneMethodLbl, 0, 0);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioTuneMethodCombo, 1, 0);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioStretchAttrLbl, 0, 2);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioStretchAttrCombo, 1, 2);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioLockAttrLbl, 0, 4);
@@ -27924,72 +28150,51 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneTablePanel.Margin = new System.Windows.Forms.Padding(6);
 			this.AudioTuneTablePanel.Name = "AudioTuneTablePanel";
 			this.AudioTuneTablePanel.RowCount = 8;
-			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
 			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.AudioTuneTablePanel.Size = new System.Drawing.Size(986, 428);
+			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.AudioTuneTablePanel.Size = new System.Drawing.Size(986, 436);
 			this.AudioTuneTablePanel.TabIndex = 2;
 			//
-			// flowLayoutPanel19
+			// AudioStretchMethodCombo
 			//
-			this.flowLayoutPanel19.AutoSize = true;
-			this.flowLayoutPanel19.Controls.Add(this.AudioNoTuningAllowStretchCheck);
-			this.flowLayoutPanel19.Controls.Add(this.AudioNoTuningDrumKitsCheck);
-			this.flowLayoutPanel19.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel19.Location = new System.Drawing.Point(116, 0);
-			this.flowLayoutPanel19.Margin = new System.Windows.Forms.Padding(0);
-			this.flowLayoutPanel19.Name = "flowLayoutPanel19";
-			this.flowLayoutPanel19.Size = new System.Drawing.Size(870, 50);
-			this.flowLayoutPanel19.TabIndex = 14;
+			this.AudioStretchMethodCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioStretchMethodCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.AudioStretchMethodCombo.FormattingEnabled = true;
+			this.AudioStretchMethodCombo.Items.AddRange(new object[] {
+			"不调音且不拉伸",
+			"不改变",
+			"弹性音调更改",
+			"古典音调更改"});
+			this.AudioStretchMethodCombo.Location = new System.Drawing.Point(119, 57);
+			this.AudioStretchMethodCombo.Name = "AudioStretchMethodCombo";
+			this.AudioStretchMethodCombo.Size = new System.Drawing.Size(864, 40);
+			this.AudioStretchMethodCombo.TabIndex = 16;
+			this.AudioStretchMethodCombo.SelectedIndexChanged += new System.EventHandler(this.AudioStretchMethodCombo_SelectedIndexChanged);
 			//
-			// AudioNoTuningAllowStretchCheck
+			// AudioStretchMethodLbl
 			//
-			this.AudioNoTuningAllowStretchCheck.AutoSize = true;
-			this.AudioNoTuningAllowStretchCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioNoTuningAllowStretchCheck.Location = new System.Drawing.Point(3, 3);
-			this.AudioNoTuningAllowStretchCheck.MinimumSize = new System.Drawing.Size(0, 48);
-			this.AudioNoTuningAllowStretchCheck.Name = "AudioNoTuningAllowStretchCheck";
-			this.AudioNoTuningAllowStretchCheck.Size = new System.Drawing.Size(214, 48);
-			this.AudioNoTuningAllowStretchCheck.TabIndex = 0;
-			this.AudioNoTuningAllowStretchCheck.Text = "不调音但可拉伸";
-			this.AudioNoTuningAllowStretchCheck.UseVisualStyleBackColor = true;
-			//
-			// AudioNoTuningDrumKitsCheck
-			//
-			this.AudioNoTuningDrumKitsCheck.AutoSize = true;
-			this.AudioNoTuningDrumKitsCheck.Checked = true;
-			this.AudioNoTuningDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.AudioNoTuningDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(223, 3);
-			this.AudioNoTuningDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
-			this.AudioNoTuningDrumKitsCheck.Name = "AudioNoTuningDrumKitsCheck";
-			this.AudioNoTuningDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
-			this.AudioNoTuningDrumKitsCheck.TabIndex = 1;
-			this.AudioNoTuningDrumKitsCheck.Text = "不调音鼓组通道";
-			this.AudioNoTuningDrumKitsCheck.UseVisualStyleBackColor = true;
-			//
-			// AudioNoTuningLbl
-			//
-			this.AudioNoTuningLbl.AutoSize = true;
-			this.AudioNoTuningLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioNoTuningLbl.Location = new System.Drawing.Point(3, 0);
-			this.AudioNoTuningLbl.MinimumSize = new System.Drawing.Size(0, 54);
-			this.AudioNoTuningLbl.Name = "AudioNoTuningLbl";
-			this.AudioNoTuningLbl.Size = new System.Drawing.Size(110, 54);
-			this.AudioNoTuningLbl.TabIndex = 13;
-			this.AudioNoTuningLbl.Text = "不调音";
-			this.AudioNoTuningLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.AudioStretchMethodLbl.AutoSize = true;
+			this.AudioStretchMethodLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioStretchMethodLbl.Location = new System.Drawing.Point(3, 54);
+			this.AudioStretchMethodLbl.MinimumSize = new System.Drawing.Size(0, 54);
+			this.AudioStretchMethodLbl.Name = "AudioStretchMethodLbl";
+			this.AudioStretchMethodLbl.Size = new System.Drawing.Size(110, 54);
+			this.AudioStretchMethodLbl.TabIndex = 15;
+			this.AudioStretchMethodLbl.Text = "拉伸方法";
+			this.AudioStretchMethodLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
 			// AudioAltMethodLbl
 			//
 			this.AudioAltMethodLbl.AutoSize = true;
 			this.AudioAltMethodLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioAltMethodLbl.Location = new System.Drawing.Point(3, 158);
+			this.AudioAltMethodLbl.Location = new System.Drawing.Point(3, 162);
 			this.AudioAltMethodLbl.MinimumSize = new System.Drawing.Size(0, 54);
 			this.AudioAltMethodLbl.Name = "AudioAltMethodLbl";
 			this.AudioAltMethodLbl.Size = new System.Drawing.Size(110, 54);
@@ -28001,7 +28206,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.AudioTuneMethodLbl.AutoSize = true;
 			this.AudioTuneMethodLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioTuneMethodLbl.Location = new System.Drawing.Point(3, 50);
+			this.AudioTuneMethodLbl.Location = new System.Drawing.Point(3, 0);
 			this.AudioTuneMethodLbl.MinimumSize = new System.Drawing.Size(0, 54);
 			this.AudioTuneMethodLbl.Name = "AudioTuneMethodLbl";
 			this.AudioTuneMethodLbl.Size = new System.Drawing.Size(110, 54);
@@ -28013,7 +28218,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.AudioStretchAttrLbl.AutoSize = true;
 			this.AudioStretchAttrLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioStretchAttrLbl.Location = new System.Drawing.Point(3, 104);
+			this.AudioStretchAttrLbl.Location = new System.Drawing.Point(3, 108);
 			this.AudioStretchAttrLbl.MinimumSize = new System.Drawing.Size(0, 54);
 			this.AudioStretchAttrLbl.Name = "AudioStretchAttrLbl";
 			this.AudioStretchAttrLbl.Size = new System.Drawing.Size(110, 54);
@@ -28025,7 +28230,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.AudioLockAttrLbl.AutoSize = true;
 			this.AudioLockAttrLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioLockAttrLbl.Location = new System.Drawing.Point(3, 208);
+			this.AudioLockAttrLbl.Location = new System.Drawing.Point(3, 216);
 			this.AudioLockAttrLbl.MinimumSize = new System.Drawing.Size(0, 54);
 			this.AudioLockAttrLbl.Name = "AudioLockAttrLbl";
 			this.AudioLockAttrLbl.Size = new System.Drawing.Size(110, 54);
@@ -28039,8 +28244,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel10.Controls.Add(this.AudioLockStretchPitchCheck);
 			this.flowLayoutPanel10.Controls.Add(this.AudioReserveFormantCheck);
 			this.flowLayoutPanel10.Controls.Add(this.AudioVocalFryCheck);
+			this.flowLayoutPanel10.Controls.Add(this.AudioNoTuningDrumKitsCheck);
 			this.flowLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel10.Location = new System.Drawing.Point(116, 208);
+			this.flowLayoutPanel10.Location = new System.Drawing.Point(116, 216);
 			this.flowLayoutPanel10.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel10.Name = "flowLayoutPanel10";
 			this.flowLayoutPanel10.Size = new System.Drawing.Size(870, 54);
@@ -28070,11 +28276,25 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioVocalFryCheck.Text = "气泡音 (1刻模式)";
 			this.AudioVocalFryCheck.UseVisualStyleBackColor = true;
 			//
+			// AudioNoTuningDrumKitsCheck
+			//
+			this.AudioNoTuningDrumKitsCheck.AutoSize = true;
+			this.AudioNoTuningDrumKitsCheck.Checked = true;
+			this.AudioNoTuningDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.AudioNoTuningDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(625, 3);
+			this.AudioNoTuningDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioNoTuningDrumKitsCheck.Name = "AudioNoTuningDrumKitsCheck";
+			this.AudioNoTuningDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
+			this.AudioNoTuningDrumKitsCheck.TabIndex = 1;
+			this.AudioNoTuningDrumKitsCheck.Text = "不调音鼓组通道";
+			this.AudioNoTuningDrumKitsCheck.UseVisualStyleBackColor = true;
+			//
 			// AudioBasePitchLbl
 			//
 			this.AudioBasePitchLbl.AutoSize = true;
 			this.AudioBasePitchLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioBasePitchLbl.Location = new System.Drawing.Point(3, 262);
+			this.AudioBasePitchLbl.Location = new System.Drawing.Point(3, 270);
 			this.AudioBasePitchLbl.MinimumSize = new System.Drawing.Size(0, 54);
 			this.AudioBasePitchLbl.Name = "AudioBasePitchLbl";
 			this.AudioBasePitchLbl.Size = new System.Drawing.Size(110, 54);
@@ -28090,7 +28310,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel6.Controls.Add(this.AudioBasePitchIntervalLbl);
 			this.flowLayoutPanel6.Controls.Add(this.AudioAutoBasePitchCheck);
 			this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel6.Location = new System.Drawing.Point(116, 262);
+			this.flowLayoutPanel6.Location = new System.Drawing.Point(116, 270);
 			this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel6.Name = "flowLayoutPanel6";
 			this.flowLayoutPanel6.Size = new System.Drawing.Size(870, 54);
@@ -28171,7 +28391,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.AudioPreviewLbl.AutoSize = true;
 			this.AudioPreviewLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioPreviewLbl.Location = new System.Drawing.Point(3, 316);
+			this.AudioPreviewLbl.Location = new System.Drawing.Point(3, 324);
 			this.AudioPreviewLbl.MinimumSize = new System.Drawing.Size(0, 54);
 			this.AudioPreviewLbl.Name = "AudioPreviewLbl";
 			this.AudioPreviewLbl.Size = new System.Drawing.Size(110, 56);
@@ -28188,7 +28408,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel17.Controls.Add(this.PreviewBasePitchBtn, 0, 0);
 			this.tableLayoutPanel17.Controls.Add(this.PreviewAudioBtn, 1, 0);
 			this.tableLayoutPanel17.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel17.Location = new System.Drawing.Point(116, 316);
+			this.tableLayoutPanel17.Location = new System.Drawing.Point(116, 324);
 			this.tableLayoutPanel17.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel17.Name = "tableLayoutPanel17";
 			this.tableLayoutPanel17.RowCount = 1;
@@ -28212,7 +28432,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.AudioPreviewAttrLbl.AutoSize = true;
 			this.AudioPreviewAttrLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioPreviewAttrLbl.Location = new System.Drawing.Point(3, 372);
+			this.AudioPreviewAttrLbl.Location = new System.Drawing.Point(3, 380);
 			this.AudioPreviewAttrLbl.MinimumSize = new System.Drawing.Size(0, 54);
 			this.AudioPreviewAttrLbl.Name = "AudioPreviewAttrLbl";
 			this.AudioPreviewAttrLbl.Size = new System.Drawing.Size(110, 56);
@@ -28228,7 +28448,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioPreviewAttrLayoutPanel.Controls.Add(this.PreviewBeepDurationBox);
 			this.AudioPreviewAttrLayoutPanel.Controls.Add(this.PreviewTuneAudioCheck);
 			this.AudioPreviewAttrLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioPreviewAttrLayoutPanel.Location = new System.Drawing.Point(116, 372);
+			this.AudioPreviewAttrLayoutPanel.Location = new System.Drawing.Point(116, 380);
 			this.AudioPreviewAttrLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.AudioPreviewAttrLayoutPanel.Name = "AudioPreviewAttrLayoutPanel";
 			this.AudioPreviewAttrLayoutPanel.Size = new System.Drawing.Size(870, 56);
@@ -28759,7 +28979,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab.Location = new System.Drawing.Point(8, 46);
 			this.VideoTab.Name = "VideoTab";
 			this.VideoTab.Padding = new System.Windows.Forms.Padding(8);
-			this.VideoTab.Size = new System.Drawing.Size(1052, 1000);
+			this.VideoTab.Size = new System.Drawing.Size(1052, 1002);
 			this.VideoTab.TabIndex = 2;
 			this.VideoTab.Text = "画面";
 			this.VideoTab.UseVisualStyleBackColor = true;
@@ -33512,8 +33732,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneGroup.PerformLayout();
 			this.AudioTuneTablePanel.ResumeLayout(false);
 			this.AudioTuneTablePanel.PerformLayout();
-			this.flowLayoutPanel19.ResumeLayout(false);
-			this.flowLayoutPanel19.PerformLayout();
 			this.flowLayoutPanel10.ResumeLayout(false);
 			this.flowLayoutPanel10.PerformLayout();
 			this.flowLayoutPanel6.ResumeLayout(false);
@@ -34036,7 +34254,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.Button DatamoshClipsFolderOpenButton;
 		public CommandLinkButton StutterBtn;
 		public System.Windows.Forms.Label AudioScratchLbl;
-		public System.Windows.Forms.ComboBox AudioScratchCombo;
+		public RememberedComboBox AudioScratchCombo;
 		public System.Windows.Forms.Label VideoScratchLbl;
 		public System.Windows.Forms.ComboBox VideoScratchCombo;
 		public CommandLinkButton CustomFadeGainBtn;
@@ -34109,7 +34327,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public RememberedCheckBox AudioTimeUnremappingCheck;
 		public System.Windows.Forms.CheckBox VideoStackCheck;
 		public RememberedCheckBox VideoTimeUnremappingCheck;
-		public System.Windows.Forms.ComboBox AudioAltMethodCombo;
+		public RememberedComboBox AudioAltMethodCombo;
 		public System.Windows.Forms.Label AudioAltMethodLbl;
 		public System.Windows.Forms.Label AudioBasePitchIntervalLbl;
 		public System.Windows.Forms.ToolStripMenuItem tutorialVideoV4_XEnToolStripMenuItem;
@@ -34255,10 +34473,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public RememberedCheckBox LinearMapReuseCheck;
 		public System.Windows.Forms.Button PlaySelectedTrackBtn;
 		public System.Windows.Forms.CheckBox AudioAutoBasePitchCheck;
-		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel19;
-		public System.Windows.Forms.CheckBox AudioNoTuningAllowStretchCheck;
 		public System.Windows.Forms.CheckBox AudioNoTuningDrumKitsCheck;
-		public System.Windows.Forms.Label AudioNoTuningLbl;
 		public System.Windows.Forms.GroupBox AudioPluckGroup;
 		public System.Windows.Forms.TableLayoutPanel AudioPluckTable;
 		public System.Windows.Forms.Label AudioPluckSpliceLbl;
@@ -34272,6 +34487,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.ToolStripMenuItem englishDocsToolStripMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem schineseDocsToolStripMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem vitenameseDocsToolStripMenuItem;
+		public RememberedComboBox AudioStretchMethodCombo;
+		public System.Windows.Forms.Label AudioStretchMethodLbl;
 	}
 	#endregion
 
@@ -34349,13 +34566,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			#region 复选框设置、下拉菜单默认值
 			{
-				EventHandler e = new EventHandler(SetCheckedEnabled);
+				EventHandler e = SetCheckedEnabled;
 				VideoConfigCheck.CheckedChanged += e;
 				AudioConfigCheck.CheckedChanged += e;
 				StaffVisualizerConfigCheck.CheckedChanged += e;
 				StaffGenerateLinesCheck.CheckedChanged += e;
 				StaffGenerateClefCheck.CheckedChanged += e;
 				AudioTuneMethodCombo.SelectedIndexChanged += e;
+				AudioStretchMethodCombo.SelectedIndexChanged += e;
 				AudioStretchAttrCombo.SelectedIndexChanged += e;
 				AudioLockStretchPitchCheck.CheckedChanged += e;
 				VideoEffectCombo.SelectedIndexChanged += e;
@@ -34641,7 +34859,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioFadeInCurveCombo.SetIndex(configIni.Read("FadeInCurve", 1), 1);
 			AudioFadeOutCurveCombo.SetIndex(configIni.Read("FadeOutCurve", 2), 2);
 			SetBasePitchCombo(configIni.Read("BasePitch", "C5"));
-			AltMethod = configIni.Read("AltTuneMethod", 1);
+			AudioAltMethodCombo.SetIndex(configIni.Read("AltTuneMethod", 1), 1);
 			AudioTuneMethodCombo.SetIndex(configIni.Read("TuneMethod", 2), 2);
 			AudioStretchAttrCombo.SetIndex(configIni.Read("StretchAttr", 1), 1);
 			AudioLockStretchPitchCheck.Checked = configIni.Read("LockStretchPitch", false);
@@ -34651,7 +34869,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioTimeUnremappingCheck.UserChecked = configIni.Read("TimeUnremapping", false);
 			CreateEventGroupInAudioCheck.Checked = configIni.Read("CreateEventGroup", true);
 			AudioAutoBasePitchCheck.Checked = configIni.Read("AutoBasePitch", false);
-			AudioNoTuningAllowStretchCheck.Checked = configIni.Read("NoTuningAllowStretch", false);
+			AudioStretchMethodCombo.SetIndex(configIni.Read("StretchMethod", 2), 2);
 			AudioNoTuningDrumKitsCheck.Checked = configIni.Read("NoTuningDrumKits", true);
 			AudioPluckSpliceBox.SetValue(configIni.Read("PluckSplice", 40), 40);
 			AudioPluckDuckBox.SetValue(configIni.Read("PluckDuck", 100), 100);
@@ -34916,7 +35134,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("FadeInCurve", AudioFadeInCurveCombo.SelectedIndex);
 			configIni.Write("FadeOutCurve", AudioFadeOutCurveCombo.SelectedIndex);
 			configIni.Write("BasePitch", AudioMainKeyCombo.SelectedItem.ToString() + AudioMainOctaveCombo.SelectedItem.ToString());
-			configIni.Write("AltTuneMethod", AltMethod);
+			configIni.Write("AltTuneMethod", AudioAltMethodCombo.UserSelectedIndex);
 			configIni.Write("TuneMethod", AudioTuneMethodCombo.SelectedIndex);
 			configIni.Write("StretchAttr", AudioStretchAttrCombo.SelectedIndex);
 			configIni.Write("LockStretchPitch", AudioLockStretchPitchCheck.Checked);
@@ -34926,7 +35144,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("TimeUnremapping", AudioTimeUnremappingCheck.UserChecked);
 			configIni.Write("CreateEventGroup", CreateEventGroupInAudioCheck.Checked);
 			configIni.Write("AutoBasePitch", AudioAutoBasePitchCheck.Checked);
-			configIni.Write("NoTuningAllowStretch", AudioNoTuningAllowStretchCheck.Checked);
+			configIni.Write("StretchMethod", AudioStretchMethodCombo.SelectedIndex);
 			configIni.Write("NoTuningDrumKits", AudioNoTuningDrumKitsCheck.Checked);
 			configIni.Write("PluckSplice", AudioPluckSpliceBox.Value);
 			configIni.Write("PluckDuck", AudioPluckDuckBox.Value);
@@ -35291,14 +35509,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			Balloon.SetToolTip(PreviewTuneAudioCheck, str.preview_tune_audio_tooltip);
 			Balloon.SetToolTip(MatchCutRepeatRoundBox, str.match_cut_repeat_round_tooltip);
 			StaffRelativeValueCheck.Text = str.sheet_relative;
+			AudioStretchMethodLbl.Text = str.stretch_method;
 			AudioTuneMethodCombo.Items[0] = str.no_tune;
 			AudioTuneMethodCombo.Items[1] = str.pitch_shift_plugin;
+			AudioStretchMethodCombo.Items[0] = str.no_tuning_no_stretching;
+			AudioStretchMethodCombo.Items[1] = str.unset;
 			#if VER_GEQ_16
-			AudioTuneMethodCombo.Items[2] = str.elastique_method;
-			AudioTuneMethodCombo.Items[3] = str.classic_method;
+			AudioTuneMethodCombo.Items[2] = AudioStretchMethodCombo.Items[2] = str.elastique_method;
+			AudioTuneMethodCombo.Items[3] = AudioStretchMethodCombo.Items[3] = str.classic_method;
 			AudioTuneMethodCombo.Items[4] = str.fool_tuning_method;
 			AudioTuneMethodCombo.Items[5] = str.oscillator;
 			#endif
+			AudioAltMethodCombo.Items[0] = AudioTuneMethodCombo.SelectedIndex == 1 ? str.alt_multiple : str.alt_plugin;
+			AudioAltMethodCombo.Items[1] = str.alt_octave;
+			AudioAltMethodCombo.Items[2] = str.alt_octaveExp;
+			AudioAltMethodCombo.Items[3] = str.alt_dock;
+			AudioAltMethodCombo.Items[4] = str.alt_silent;
 			PreviewBeepWaveFormCombo.Items[0] = str.sine_wave;
 			PreviewBeepWaveFormCombo.Items[1] = str.triangle_wave;
 			PreviewBeepWaveFormCombo.Items[2] = str.square_wave;
@@ -35759,13 +35985,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioAutoBasePitchCheck.Text = str.auto_base_pitch;
 			OverflowToolTip.SetToolTip(AudioAutoBasePitchCheck, str.auto_base_pitch_tooltip);
 			PlaySelectedTrackBtn.Text = str.play;
-			AudioNoTuningLbl.Text = str.no_tuning;
-			AudioNoTuningAllowStretchCheck.Text = str.no_tuning_allow_strecthing;
 			AudioNoTuningDrumKitsCheck.Text = str.no_tuning_drum_kits;
 			AudioPluckGroup.Text = str.chorus_crisp;
 			AudioPluckSpliceLbl.Text = str.splice_position;
 			AudioPluckDuckLbl.Text = str.volume_duck;
-			AudioPluckOffsetLbl.Text = str.offset;
+			AudioPluckOffsetLbl.Text = str.overlap_offset;
 
 			Text = str.otomad_helper_config;
 		}
@@ -35902,9 +36126,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (AudioParamsGroup.Enabled != isAConfigOn)
 				SetEnabled(AudioTab, isAConfigOn, new Control[] { AudioConfigCheck });
 			AudioTuningMethod method = (AudioTuningMethod)AudioTuneMethodCombo.SelectedIndex;
-			AudioLockStretchPitchCheck.Enabled = AudioScratchCombo.Enabled
+			if (method == AudioTuningMethod.ELASTIQUE || method == AudioTuningMethod.CLASSIC) AudioStretchMethodCombo.LockSelectedIndex = (int)method;
+			else if (method == AudioTuningMethod.OSCILLATOR) AudioStretchMethodCombo.LockSelectedIndex = (int)AudioStretchMethod.NO_TUNING;
+			else AudioStretchMethodCombo.Unlock();
+			AudioStretchMethod stretchMethod = (AudioStretchMethod)AudioStretchMethodCombo.SelectedIndex;
+			AudioScratchCombo.Unlock();
+			AudioLockStretchPitchCheck.Enabled
 				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING && method != AudioTuningMethod.OSCILLATOR;
-			AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled = PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled
+			AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled = PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled = AudioAutoBasePitchCheck.Enabled
 				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING;
 			AudioFadeSetAsTimecodeRadio.Enabled = AudioFadeInCurveCombo.Enabled = AudioFadeOutCurveCombo.Enabled = method != AudioTuningMethod.OSCILLATOR;
 			AudioVocalFryCheck.Status = (isAConfigOn && method == AudioTuningMethod.OSCILLATOR) ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
@@ -35912,16 +36141,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (method == AudioTuningMethod.FOOL_TUNING || method == AudioTuningMethod.OSCILLATOR) {
 				AudioLockStretchPitchCheck.Enabled = AudioScratchCombo.Enabled = false;
 				AudioLockStretchPitchCheck.Checked = method == AudioTuningMethod.FOOL_TUNING;
-				AudioScratchCombo.SelectedIndex = 1;
+				if (method == AudioTuningMethod.FOOL_TUNING) AudioScratchCombo.LockSelectedIndex = 1;
 			}
-			bool isPitchChangeMethod = method == AudioTuningMethod.ELASTIQUE || method == AudioTuningMethod.CLASSIC;
+			bool isPitchChangeMethod = stretchMethod == AudioStretchMethod.ELASTIQUE || stretchMethod == AudioStretchMethod.CLASSIC;
 			AudioStretchAttrCombo.Enabled = isPitchChangeMethod;
 			AudioReserveFormantCheck.Enabled = false;
-			if (isPitchChangeMethod && AudioLockStretchPitchCheck.Checked) {
-				AudioScratchCombo.Enabled = false;
-				AudioScratchCombo.SelectedIndex = 0;
-			}
-			AudioAltMethodCombo.Enabled = AudioAltMethodCombo.Items.Count >= 2;
+			if (isPitchChangeMethod && AudioLockStretchPitchCheck.Checked || stretchMethod == AudioStretchMethod.NO_TUNING || method == AudioTuningMethod.FOOL_TUNING)
+				AudioScratchCombo.LockSelectedIndex = 0;
 			#if VER_GEQ_16
 			if (method == AudioTuningMethod.ELASTIQUE) {
 				ElastiqueStretchAttributes attr = (ElastiqueStretchAttributes)AudioStretchAttrCombo.SelectedIndex;
@@ -35994,6 +36220,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			{
 				AudioStretchAttrCombo.Enabled = false;
 				AudioStretchAttrCombo.SelectedIndex = -1;
+				AudioStretchMethodCombo.LockSelectedIndex = 1;
 				AudioAltMethodCombo.Enabled = false;
 				AudioAltMethodCombo.SelectedIndex = -1;
 				AudioReserveFormantCheck.Enabled = AudioReserveFormantCheck.Checked = false;
@@ -36599,50 +36826,33 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MidiConfigTablePanel.RowStyles[MidiConfigTablePanel.GetRow(MidiBpmFlowPanel)] = new RowStyle(SizeType.Absolute, MidiBpmFlowPanel.Height);
 		}
 
-		private AudioTuningMethod previousAudioTuneMethod = new AudioTuningMethod();
+		private AudioStretchMethod previousAudioTuneMethod = default(AudioStretchMethod);
 		private void AudioTuneMethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
 			#if VER_GEQ_16 // Vegas 版本号 15 及以下无法调整。
-			ComboBox attrs = AudioStretchAttrCombo, alts = AudioAltMethodCombo;
-			AudioTuningMethod method = (AudioTuningMethod)AudioTuneMethodCombo.SelectedIndex;
-			if (method == previousAudioTuneMethod) return;
-			else previousAudioTuneMethod = method;
-			attrs.Items.Clear();
-			if (method == AudioTuningMethod.ELASTIQUE) {
-				attrs.Items.AddRange(ChangeTuneMethodForm.ElastiqueAttrArray);
-				attrs.SelectedIndex = 1;
-			} else if (method == AudioTuningMethod.CLASSIC) {
-				attrs.Items.AddRange(ChangeTuneMethodForm.ClassicAttrArray);
-				attrs.SelectedIndex = 2;
-			}
-			AudioAltMethodCombo_InternalChanging = true;
-			alts.Items.Clear();
-			alts.Items.AddRange(AltMethodArray);
-			bool isElasticOrClassic = alts.Items.Count >= 2, isPitchShift = alts.Items.Count == 1;
-			alts.Enabled = isElasticOrClassic;
-			if (isElasticOrClassic) alts.SetIndex(AltMethod, 1);
-			else if (isPitchShift) alts.SelectedIndex = 0;
-			AudioAltMethodCombo_InternalChanging = false;
+			RememberedComboBox alts = AudioAltMethodCombo;
+			bool isPitchShift = AudioTuneMethodCombo.SelectedIndex == 1, isElasticOrClassic = AudioTuneMethodCombo.SelectedIndex == 2 || AudioTuneMethodCombo.SelectedIndex == 3;
+			alts.Items[0] = isPitchShift ? Lang.str.alt_multiple : Lang.str.alt_plugin;
+			if (isPitchShift) alts.LockSelectedIndex = 0;
+			else if (isElasticOrClassic) alts.Unlock();
+			else alts.LockSelectedIndex = -1;
 			#endif
 		}
 
-		private bool AudioAltMethodCombo_InternalChanging = false;
-		private void AudioAltMethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
-			if (AudioAltMethodCombo_InternalChanging) return;
-			AltMethod = AudioAltMethodCombo.SelectedIndex;
-		}
-
-		private int AltMethod { get; set; }
-		public string[] AltMethodArray {
-			get {
-				Lang str = Lang.str;
-				AudioTuningMethod method = (AudioTuningMethod)AudioTuneMethodCombo.SelectedIndex;
-				if (method == AudioTuningMethod.PITCH_SHIFT) return new string[] { str.alt_multiple };
-				else if (method == AudioTuningMethod.ELASTIQUE || method == AudioTuningMethod.CLASSIC)
-					return new string[] {
-						str.alt_plugin, str.alt_octave, str.alt_octaveExp, str.alt_dock, str.alt_silent,
-					};
-				else return new string[0];
+		private void AudioStretchMethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
+			#if VER_GEQ_16 // Vegas 版本号 15 及以下无法调整。
+			ComboBox attrs = AudioStretchAttrCombo;
+			AudioStretchMethod method = (AudioStretchMethod)AudioStretchMethodCombo.SelectedIndex;
+			if (method == previousAudioTuneMethod) return;
+			else previousAudioTuneMethod = method;
+			attrs.Items.Clear();
+			if (method == AudioStretchMethod.ELASTIQUE) {
+				attrs.Items.AddRange(ChangeTuneMethodForm.ElastiqueAttrArray);
+				attrs.SelectedIndex = 1;
+			} else if (method == AudioStretchMethod.CLASSIC) {
+				attrs.Items.AddRange(ChangeTuneMethodForm.ClassicAttrArray);
+				attrs.SelectedIndex = 2;
 			}
+			#endif
 		}
 
 		private void WhyOkBtnIsDisabledToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -38270,7 +38480,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			midi_beat_conbo_tooltip = "目前仅用于五线谱的分页功能。\n暂时无法通过 MIDI 文件自动推测。",
 			source_start_time_tooltip = "此处填写媒体素材裁剪的开始时间。\n单位：秒。",
 			source_end_time_tooltip = "注意如果此处填写的数值比入点时间小或相等，则始终表示持续到素材时间末尾。\n单位：秒。",
-			no_tune = "不调音且不拉伸",
+			no_tune = "不调音",
 			pitch_shift_plugin = "移调音效插件",
 			elastique_method = "弹性音调更改",
 			classic_method = "古典音调更改",
@@ -38920,16 +39130,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			play = "播放",
 			stop = "停止",
 			play_selected_track = "播放所选音轨",
-			no_tuning = "不调音",
-			no_tuning_allow_strecthing = "不调音但可拉伸",
+			stretch_method = "拉伸方法",
+			no_tuning_no_stretching = "不调音*且不拉伸",
 			no_tuning_drum_kits = "不调音鼓组通道",
 			chorus_crisp = "弹拨 (脆鸣)",
 			splice_position = "分割位置",
-			volume_duck = "音量避让",
-			offset = "偏移",
+			volume_duck = "音量闪避",
+			overlap_offset = "重叠偏移",
 			jario = "杰力欧风格",
 			standard = "标准",
 			snappy = "迅捷",
+			unset = "不改变",
 			__eol__ = null;
 
 		static Lang() {

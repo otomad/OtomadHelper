@@ -293,6 +293,9 @@
     <Compile Include="RememberedCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="RememberedComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="ReplaceClipsForm.cs">
       <SubType>Form</SubType>
     </Compile>

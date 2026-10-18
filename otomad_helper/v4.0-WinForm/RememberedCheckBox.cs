@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	public class RememberedCheckBox : CheckBox {
-		private bool locked = false;
+		internal bool locked = false;
 
 		public RememberedCheckBox() {
 			CheckedChanged += (sender, e) => Checked = base.Checked;
@@ -18,7 +18,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		[Category("Appearance"), DefaultValue(false), Description("设置用户设定的选中状态值。")]
 		public bool UserChecked {
 			get { return userChecked; }
-			set { userChecked = value; }
+			set {
+				userChecked = value;
+				if (!locked) base.Checked = value;
+			}
 		}
 
 		private StatusType status = StatusType.Unlocked;
@@ -26,19 +29,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public StatusType Status {
 			get { return status; }
 			set {
-				if (status == value) return;
-				else if (status != StatusType.Unlocked && value != StatusType.Unlocked)
-					Checked = value == StatusType.True;
-				else if (status == StatusType.Unlocked && value != StatusType.Unlocked) {
-					locked = true;
-					Enabled = false;
-					Checked = value == StatusType.True;
-				} else if (status != StatusType.Unlocked && value == StatusType.Unlocked) {
-					locked = false;
-					Enabled = true;
-					Checked = userChecked;
-				}
+				locked = value != StatusType.Unlocked;
 				status = value;
+				Enabled = !locked;
+				Checked = !locked ? UserChecked : value == StatusType.True;
 			}
 		}
 
@@ -47,7 +41,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			get { return base.Checked; }
 			set {
 				base.Checked = value;
-				if (!locked) UserChecked = value;
+				if (!locked) userChecked = value;
 			}
 		}
 
