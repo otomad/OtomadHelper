@@ -116,9 +116,9 @@ Project | Authors | License | Notes
 @@@en
 Post | Author | Language | Kind | Last Updated
 ---- | ---- | ---- | ---- | ----
-[<SocialIcon icon="google" />Otomad Helper Features and Details][documentation_evauation] | Evauation | English | Article
-[<SocialIcon icon="bilibili" />Release Notes (v4.10.17.0)][releaseNotes_v4_10_17_0] | | Chinese | Article | <Date value="2021/10/17" />
+[<SocialIcon icon="google" />Otomad Helper Features and Details][documentation_evauation] | Evauation | English | Article | <Date value="2026/06/12" />
 [<SocialIcon icon="bilibili" />Release Notes (v4.9.25.0)][releaseNotes_v4_9_25_0] | | Chinese | Article | <Date value="2021/09/26" />
+[<SocialIcon icon="bilibili" />Release Notes (v4.10.17.0)][releaseNotes_v4_10_17_0] | | Chinese | Article | <Date value="2021/10/17" />
 [<SocialIcon icon="bilibili" />Documentation (v0.1)][documentation_chaosinism]<br>[<SocialIcon icon="bowlroll" />Documentation (v0.1)][documentation_chaosinism_ja] | Chaosinism | Chinese<br>Japanese | Article | <Date value="2019/09/01" />
 [<SocialIcon icon="bilibili" />Documentation for Staff Visualizer (v0.1)][documentation_staffVisualizer_chaosinism] | Chaosinism | Chinese | Article | <Date value="2018/08/24" />
 [<SocialIcon icon="bilibili" />Troubleshooting (v0.1)][troubleshooting_chaosinism] | Chaosinism | Chinese | Article | <Date value="2018/05/19" />
@@ -132,9 +132,9 @@ Post | Author | Language | Kind | Last Updated
 @@@zh
 稿件 | 作者 | 语言 | 种类 | 最后更新
 ---- | ---- | ---- | ---- | ----
-[<SocialIcon icon="google" />Otomad Helper特点和细节][documentation_evauation] | Evauation | 英语 | 文章
-[<SocialIcon icon="bilibili" />更新日志 (v4.10.17.0)][releaseNotes_v4_10_17_0] | 兰音 | 中文 | 文章 | <Date value="2021/10/17" />
+[<SocialIcon icon="google" />Otomad Helper特点和细节][documentation_evauation] | Evauation | 英语 | 文章 | <Date value="2026/06/12" />
 [<SocialIcon icon="bilibili" />更新日志 (v4.9.25.0)][releaseNotes_v4_9_25_0] | 兰音 | 中文 | 文章 | <Date value="2021/09/26" />
+[<SocialIcon icon="bilibili" />更新日志 (v4.10.17.0)][releaseNotes_v4_10_17_0] | 兰音 | 中文 | 文章 | <Date value="2021/10/17" />
 [<SocialIcon icon="bilibili" />说明文档 (v0.1)][documentation_chaosinism]<br>[<SocialIcon icon="bowlroll" />说明文档 (v0.1)][documentation_chaosinism_ja] | Chaosinism | 中文<br>日语 | 文章 | <Date value="2019/09/01" />
 [<SocialIcon icon="bilibili" />五线谱可视化说明文档 (v0.1)][documentation_staffVisualizer_chaosinism] | Chaosinism | 中文 | 文章 | <Date value="2018/08/24" />
 [<SocialIcon icon="bilibili" />疑难解答 (v0.1)][troubleshooting_chaosinism] | Chaosinism | 中文 | 文章 | <Date value="2018/05/19" />

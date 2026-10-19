@@ -67,7 +67,7 @@
 @zh ### 行多语言
 
 @en For translating individual lines, use the **`@` prefix** followed by a language tag, a space, and the translated content:
-@zh 以行为单位为其编写多语言翻译。格式以一个 **`@`符号**开头，后面紧跟着语言标签，空一格后填写该语言在本行的翻译内容：
+@zh 以行为单位为其编写多语言翻译。格式以一个 **`@` 符号**开头，后面紧跟着语言标签，空一格后填写该语言在本行的翻译内容：
 
 ```markdown
 \@en This is English content.
@@ -82,7 +82,7 @@
 @zh ### 块多语言
 
 @en For large blocks of content — such as entire paragraphs with complex formatting, tables, or admonition blocks — use **`@@@` delimiters**:
-@zh 以块为单位为其编写多语言翻译。适用于大量内容差异或复杂格式的多语言翻译，例如整个表格、警告框等。格式以**三个`@`符号**开头，后面紧跟语言标签：
+@zh 以块为单位为其编写多语言翻译。适用于大量内容差异或复杂格式的多语言翻译，例如整个表格、警告框等。格式以**三个 `@` 符号**开头，后面紧跟语言标签：
 
 ```markdown
 \@@@en
@@ -111,9 +111,9 @@ It can span multiple lines and include **formatting**.
 @en - **Do not** mix line-level (`@`) and block-level (`@@@`) syntax for the same content — pick one.
 @zh - **不要**将行多语言（`@`）和块多语言（`@@@`）语法混用于同一段内容——选择其中一种即可。
 @en - The `@` or `@@@` markers must appear at the very beginning of a line.
-@zh - `@`或`@@@`标记必须出现在一行的最开头。
+@zh - `@` 或 `@@@` 标记必须出现在一行的最开头。
 @en - For line-level translations, languages can appear in any order, but keeping them consistent (e.g., always `@en` first, then `@zh`) helps readability.
-@zh - 对于行多语言翻译，语言的出现顺序可以任意，但保持统一的顺序（例如始终`@en`在前、`@zh`在后）有助于提高可读性。
+@zh - 对于行多语言翻译，语言的出现顺序可以任意，但保持统一的顺序（例如始终 `@en` 在前、`@zh` 在后）有助于提高可读性。
 
 @en ## How to Edit Documentation
 @zh ## 如何编辑文档

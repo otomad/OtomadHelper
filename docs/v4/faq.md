@@ -96,7 +96,7 @@ System.FormatException: Got an off without an on 0 NoteOn
 @zh ![音符关示例](/img/v4/faq/note_off_example.png)
 
 @en [How to find the offending note?](#how-to-find-the-offending-note){.vp-external-link-icon}
-@zh [如何找到有问题的音符？](#如何找到有问题的音符){.vp-external-link-icon}
+@zh [如何找到有问题的音符？](#how-to-find-the-offending-note){.vp-external-link-icon}
 :::
 
 @en :::: details ### ~~Specified argument was out of the range of valid values.~~
@@ -251,7 +251,7 @@ new Dictionary<string, int>()
 ```
 @en ```[报错2]
 @zh ```[Error 2]
-System.Reflection. TargetInvocationException: Exception has been thrown by the target of an invocation. ---> System.NullReferenceException: Object reference not set to an instance of an object.
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation. ---> System.NullReferenceException: Object reference not set to an instance of an object.
   at EntryPoint.FromVegas(Vegas vegas)
   --- End of inner exception stack trace ---
   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
