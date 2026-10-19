@@ -9273,7 +9273,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.HelperTab.Controls.Add(this.tableLayoutPanel19);
 			this.HelperTab.Location = new System.Drawing.Point(8, 46);
 			this.HelperTab.Name = "HelperTab";
-			this.HelperTab.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.HelperTab.Padding = new System.Windows.Forms.Padding(1, 6, 1, 6);
 			this.HelperTab.Size = new System.Drawing.Size(1052, 1002);
 			this.HelperTab.TabIndex = 4;
 			this.HelperTab.Text = "工具";
@@ -9297,7 +9297,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.toolsTableLayoutPanel.Controls.Add(this.ConvertMusicBeatsBtn, 0, 9);
 			this.toolsTableLayoutPanel.Controls.Add(this.CustomFadeGainBtn, 0, 10);
 			this.toolsTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Top;
-			this.toolsTableLayoutPanel.Location = new System.Drawing.Point(4, 46);
+			this.toolsTableLayoutPanel.Location = new System.Drawing.Point(1, 46);
 			this.toolsTableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.toolsTableLayoutPanel.Name = "toolsTableLayoutPanel";
 			this.toolsTableLayoutPanel.Padding = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -9314,7 +9314,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 176F));
 			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 176F));
 			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 176F));
-			this.toolsTableLayoutPanel.Size = new System.Drawing.Size(1010, 2060);
+			this.toolsTableLayoutPanel.Size = new System.Drawing.Size(1016, 2053);
 			this.toolsTableLayoutPanel.TabIndex = 8;
 			//
 			// ExportMidiFileBtn
@@ -9322,9 +9322,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ExportMidiFileBtn.CommandLink = true;
 			this.ExportMidiFileBtn.CommandLinkNote = "依照轨道中的事件来导出 MIDI 文件。";
 			this.ExportMidiFileBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ExportMidiFileBtn.Location = new System.Drawing.Point(5, 1887);
+			this.ExportMidiFileBtn.Location = new System.Drawing.Point(5, 1880);
 			this.ExportMidiFileBtn.Name = "ExportMidiFileBtn";
-			this.ExportMidiFileBtn.Size = new System.Drawing.Size(1000, 170);
+			this.ExportMidiFileBtn.Size = new System.Drawing.Size(1006, 170);
 			this.ExportMidiFileBtn.TabIndex = 20;
 			this.ExportMidiFileBtn.Text = "导出 MIDI 文件";
 			this.ExportMidiFileBtn.UseVisualStyleBackColor = true;
@@ -9336,10 +9336,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.CloseAfterOpenHelperCheck.Checked = true;
 			this.CloseAfterOpenHelperCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.CloseAfterOpenHelperCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CloseAfterOpenHelperCheck.Location = new System.Drawing.Point(14, 12);
-			this.CloseAfterOpenHelperCheck.Margin = new System.Windows.Forms.Padding(12);
+			this.CloseAfterOpenHelperCheck.Location = new System.Drawing.Point(14, 5);
+			this.CloseAfterOpenHelperCheck.Margin = new System.Windows.Forms.Padding(12, 5, 12, 12);
 			this.CloseAfterOpenHelperCheck.Name = "CloseAfterOpenHelperCheck";
-			this.CloseAfterOpenHelperCheck.Size = new System.Drawing.Size(982, 36);
+			this.CloseAfterOpenHelperCheck.Size = new System.Drawing.Size(988, 36);
 			this.CloseAfterOpenHelperCheck.TabIndex = 0;
 			this.CloseAfterOpenHelperCheck.Text = "操作完成之后关闭本对话框";
 			this.CloseAfterOpenHelperCheck.UseVisualStyleBackColor = true;
@@ -9349,10 +9349,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksGroup.AutoSize = true;
 			this.AutoLayoutTracksGroup.Controls.Add(this.tableLayoutPanel14);
 			this.AutoLayoutTracksGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AutoLayoutTracksGroup.Location = new System.Drawing.Point(5, 63);
+			this.AutoLayoutTracksGroup.Location = new System.Drawing.Point(5, 56);
 			this.AutoLayoutTracksGroup.Name = "AutoLayoutTracksGroup";
 			this.AutoLayoutTracksGroup.Padding = new System.Windows.Forms.Padding(8);
-			this.AutoLayoutTracksGroup.Size = new System.Drawing.Size(1000, 234);
+			this.AutoLayoutTracksGroup.Size = new System.Drawing.Size(1006, 234);
 			this.AutoLayoutTracksGroup.TabIndex = 6;
 			this.AutoLayoutTracksGroup.TabStop = false;
 			this.AutoLayoutTracksGroup.Text = "自动布局轨道";
@@ -9374,7 +9374,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel14.Size = new System.Drawing.Size(984, 186);
+			this.tableLayoutPanel14.Size = new System.Drawing.Size(990, 186);
 			this.tableLayoutPanel14.TabIndex = 2;
 			//
 			// AutoLayoutTracksLbl
@@ -9384,7 +9384,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksLbl.Location = new System.Drawing.Point(3, 0);
 			this.AutoLayoutTracksLbl.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
 			this.AutoLayoutTracksLbl.Name = "AutoLayoutTracksLbl";
-			this.AutoLayoutTracksLbl.Size = new System.Drawing.Size(978, 32);
+			this.AutoLayoutTracksLbl.Size = new System.Drawing.Size(984, 32);
 			this.AutoLayoutTracksLbl.TabIndex = 1;
 			this.AutoLayoutTracksLbl.Text = "类 YTPMV 风格自动布局选中的轨道。";
 			this.AutoLayoutTracksLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -9397,7 +9397,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksSelectInfo.Location = new System.Drawing.Point(3, 35);
 			this.AutoLayoutTracksSelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
 			this.AutoLayoutTracksSelectInfo.Name = "AutoLayoutTracksSelectInfo";
-			this.AutoLayoutTracksSelectInfo.Size = new System.Drawing.Size(978, 32);
+			this.AutoLayoutTracksSelectInfo.Size = new System.Drawing.Size(984, 32);
 			this.AutoLayoutTracksSelectInfo.TabIndex = 7;
 			this.AutoLayoutTracksSelectInfo.Text = "已选中 0 个视频轨道。";
 			this.AutoLayoutTracksSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -9419,7 +9419,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksButtons.Name = "AutoLayoutTracksButtons";
 			this.AutoLayoutTracksButtons.RowCount = 1;
 			this.AutoLayoutTracksButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.AutoLayoutTracksButtons.Size = new System.Drawing.Size(984, 58);
+			this.AutoLayoutTracksButtons.Size = new System.Drawing.Size(990, 58);
 			this.AutoLayoutTracksButtons.TabIndex = 8;
 			//
 			// GradientTracksBtn
@@ -9478,7 +9478,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.Name = "AutoLayoutTracksClearButtons";
 			this.AutoLayoutTracksClearButtons.RowCount = 1;
 			this.AutoLayoutTracksClearButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.AutoLayoutTracksClearButtons.Size = new System.Drawing.Size(984, 58);
+			this.AutoLayoutTracksClearButtons.Size = new System.Drawing.Size(990, 58);
 			this.AutoLayoutTracksClearButtons.TabIndex = 9;
 			//
 			// TrackLegatoBtn
@@ -9532,9 +9532,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.QuickSelectIntervalBtn.CommandLink = true;
 			this.QuickSelectIntervalBtn.CommandLinkNote = "本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴事件属性”等操作。\r\n已选中 0 个轨道剪辑。";
 			this.QuickSelectIntervalBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.QuickSelectIntervalBtn.Location = new System.Drawing.Point(5, 303);
+			this.QuickSelectIntervalBtn.Location = new System.Drawing.Point(5, 296);
 			this.QuickSelectIntervalBtn.Name = "QuickSelectIntervalBtn";
-			this.QuickSelectIntervalBtn.Size = new System.Drawing.Size(1000, 170);
+			this.QuickSelectIntervalBtn.Size = new System.Drawing.Size(1006, 170);
 			this.QuickSelectIntervalBtn.TabIndex = 11;
 			this.QuickSelectIntervalBtn.Text = "快速间隔选择";
 			this.QuickSelectIntervalBtn.UseVisualStyleBackColor = true;
@@ -9545,9 +9545,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.QuickConfigPropertiesBtn.CommandLink = true;
 			this.QuickConfigPropertiesBtn.CommandLinkNote = "批量为所有选中剪辑设置属性（如规范化音量、拉伸）。\r\n已选中 0 个轨道剪辑。";
 			this.QuickConfigPropertiesBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.QuickConfigPropertiesBtn.Location = new System.Drawing.Point(5, 479);
+			this.QuickConfigPropertiesBtn.Location = new System.Drawing.Point(5, 472);
 			this.QuickConfigPropertiesBtn.Name = "QuickConfigPropertiesBtn";
-			this.QuickConfigPropertiesBtn.Size = new System.Drawing.Size(1000, 170);
+			this.QuickConfigPropertiesBtn.Size = new System.Drawing.Size(1006, 170);
 			this.QuickConfigPropertiesBtn.TabIndex = 12;
 			this.QuickConfigPropertiesBtn.Text = "快速配置属性";
 			this.QuickConfigPropertiesBtn.UseVisualStyleBackColor = true;
@@ -9558,9 +9558,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ReplaceClipsBtn.CommandLink = true;
 			this.ReplaceClipsBtn.CommandLinkNote = "将多个轨道剪辑替换为指定的新轨道剪辑。\r\n已选中 0 个轨道剪辑。";
 			this.ReplaceClipsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ReplaceClipsBtn.Location = new System.Drawing.Point(5, 655);
+			this.ReplaceClipsBtn.Location = new System.Drawing.Point(5, 648);
 			this.ReplaceClipsBtn.Name = "ReplaceClipsBtn";
-			this.ReplaceClipsBtn.Size = new System.Drawing.Size(1000, 170);
+			this.ReplaceClipsBtn.Size = new System.Drawing.Size(1006, 170);
 			this.ReplaceClipsBtn.TabIndex = 13;
 			this.ReplaceClipsBtn.Text = "替换轨道素材";
 			this.ReplaceClipsBtn.UseVisualStyleBackColor = true;
@@ -9571,9 +9571,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ChangeTuneMethodBtn.CommandLink = true;
 			this.ChangeTuneMethodBtn.CommandLinkNote = "将多个音频轨道剪辑统一更改为指定的调音算法。\r\n已选中 0 个音频轨道剪辑。";
 			this.ChangeTuneMethodBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ChangeTuneMethodBtn.Location = new System.Drawing.Point(5, 831);
+			this.ChangeTuneMethodBtn.Location = new System.Drawing.Point(5, 824);
 			this.ChangeTuneMethodBtn.Name = "ChangeTuneMethodBtn";
-			this.ChangeTuneMethodBtn.Size = new System.Drawing.Size(1000, 170);
+			this.ChangeTuneMethodBtn.Size = new System.Drawing.Size(1006, 170);
 			this.ChangeTuneMethodBtn.TabIndex = 14;
 			this.ChangeTuneMethodBtn.Text = "更改调音算法";
 			this.ChangeTuneMethodBtn.UseVisualStyleBackColor = true;
@@ -9584,9 +9584,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.BatchSubtitleGenerationBtn.CommandLink = true;
 			this.BatchSubtitleGenerationBtn.CommandLinkNote = "预先设定好“字幕和文字”的预设，然后在此添加多行文本。";
 			this.BatchSubtitleGenerationBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BatchSubtitleGenerationBtn.Location = new System.Drawing.Point(5, 1007);
+			this.BatchSubtitleGenerationBtn.Location = new System.Drawing.Point(5, 1000);
 			this.BatchSubtitleGenerationBtn.Name = "BatchSubtitleGenerationBtn";
-			this.BatchSubtitleGenerationBtn.Size = new System.Drawing.Size(1000, 170);
+			this.BatchSubtitleGenerationBtn.Size = new System.Drawing.Size(1006, 170);
 			this.BatchSubtitleGenerationBtn.TabIndex = 15;
 			this.BatchSubtitleGenerationBtn.Text = "批量生成字幕";
 			this.BatchSubtitleGenerationBtn.UseVisualStyleBackColor = true;
@@ -9597,9 +9597,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.FindClipsBtn.CommandLink = true;
 			this.FindClipsBtn.CommandLinkNote = "根据指定的条件（如剪辑名称、与选中剪辑相同的素材等）选中符合条件的所有轨道剪辑。";
 			this.FindClipsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.FindClipsBtn.Location = new System.Drawing.Point(5, 1183);
+			this.FindClipsBtn.Location = new System.Drawing.Point(5, 1176);
 			this.FindClipsBtn.Name = "FindClipsBtn";
-			this.FindClipsBtn.Size = new System.Drawing.Size(1000, 170);
+			this.FindClipsBtn.Size = new System.Drawing.Size(1006, 170);
 			this.FindClipsBtn.TabIndex = 16;
 			this.FindClipsBtn.Text = "查找轨道素材";
 			this.FindClipsBtn.UseVisualStyleBackColor = true;
@@ -9610,9 +9610,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ApplyVisualEffectBtn.CommandLink = true;
 			this.ApplyVisualEffectBtn.CommandLinkNote = "将指定的视频轨道剪辑应用映像节奏视觉效果。\r\n已选中 0 个视频轨道剪辑。";
 			this.ApplyVisualEffectBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ApplyVisualEffectBtn.Location = new System.Drawing.Point(5, 1359);
+			this.ApplyVisualEffectBtn.Location = new System.Drawing.Point(5, 1352);
 			this.ApplyVisualEffectBtn.Name = "ApplyVisualEffectBtn";
-			this.ApplyVisualEffectBtn.Size = new System.Drawing.Size(1000, 170);
+			this.ApplyVisualEffectBtn.Size = new System.Drawing.Size(1006, 170);
 			this.ApplyVisualEffectBtn.TabIndex = 17;
 			this.ApplyVisualEffectBtn.Text = "应用视觉效果";
 			this.ApplyVisualEffectBtn.UseVisualStyleBackColor = true;
@@ -9623,9 +9623,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ConvertMusicBeatsBtn.CommandLink = true;
 			this.ConvertMusicBeatsBtn.CommandLinkNote = "将指定的音乐的节拍在四四拍、四三拍、八六拍等之间进行转换。\r\n必须恰好选择 1 个音频轨道剪辑，不得多选或少选。";
 			this.ConvertMusicBeatsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ConvertMusicBeatsBtn.Location = new System.Drawing.Point(5, 1535);
+			this.ConvertMusicBeatsBtn.Location = new System.Drawing.Point(5, 1528);
 			this.ConvertMusicBeatsBtn.Name = "ConvertMusicBeatsBtn";
-			this.ConvertMusicBeatsBtn.Size = new System.Drawing.Size(1000, 170);
+			this.ConvertMusicBeatsBtn.Size = new System.Drawing.Size(1006, 170);
 			this.ConvertMusicBeatsBtn.TabIndex = 18;
 			this.ConvertMusicBeatsBtn.Text = "转换音乐节拍";
 			this.ConvertMusicBeatsBtn.UseVisualStyleBackColor = true;
@@ -9636,9 +9636,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.CustomFadeGainBtn.CommandLink = true;
 			this.CustomFadeGainBtn.CommandLinkNote = "将多个轨道剪辑根据指定的规则来更改增益值。\r\n已选中 0 个轨道剪辑。";
 			this.CustomFadeGainBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CustomFadeGainBtn.Location = new System.Drawing.Point(5, 1711);
+			this.CustomFadeGainBtn.Location = new System.Drawing.Point(5, 1704);
 			this.CustomFadeGainBtn.Name = "CustomFadeGainBtn";
-			this.CustomFadeGainBtn.Size = new System.Drawing.Size(1000, 170);
+			this.CustomFadeGainBtn.Size = new System.Drawing.Size(1006, 170);
 			this.CustomFadeGainBtn.TabIndex = 19;
 			this.CustomFadeGainBtn.Text = "自定渐入增益";
 			this.CustomFadeGainBtn.UseVisualStyleBackColor = true;
@@ -9651,12 +9651,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel19.Controls.Add(this.HelperLbl, 0, 0);
 			this.tableLayoutPanel19.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel19.Location = new System.Drawing.Point(4, 6);
+			this.tableLayoutPanel19.Location = new System.Drawing.Point(1, 6);
 			this.tableLayoutPanel19.Name = "tableLayoutPanel19";
 			this.tableLayoutPanel19.RowCount = 1;
 			this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-			this.tableLayoutPanel19.Size = new System.Drawing.Size(1010, 40);
+			this.tableLayoutPanel19.Size = new System.Drawing.Size(1016, 40);
 			this.tableLayoutPanel19.TabIndex = 7;
 			//
 			// HelperLbl
@@ -9668,7 +9668,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.HelperLbl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.HelperLbl.Name = "HelperLbl";
 			this.HelperLbl.Padding = new System.Windows.Forms.Padding(0, 8, 0, 0);
-			this.HelperLbl.Size = new System.Drawing.Size(998, 40);
+			this.HelperLbl.Size = new System.Drawing.Size(1004, 40);
 			this.HelperLbl.TabIndex = 2;
 			this.HelperLbl.Text = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。";
 			//
