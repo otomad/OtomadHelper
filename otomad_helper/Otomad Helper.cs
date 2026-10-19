@@ -1,7 +1,7 @@
 /**
  * 音 MAD 助手，旨在使 Vegas Pro 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
  * Vegas Pro 16 及以上的版本支持所有功能，Vegas Pro 13 及以上的版本可以兼容运行。
- * 将本脚本及其它所有附属文件放置在您 Vegas 安装目录下的 Script Menu 文件夹中。
+ * 将本脚本及其它所有附属文件放置在你 Vegas 安装目录下的 Script Menu 文件夹中。
  * 具体说明请参见下方的说明文档链接。
  * 本脚本基于原作者 Chaosinism 的开源代码二次开发，此外使用了 NAudio 库。
  *
@@ -10,7 +10,7 @@
  * 更多详情请见仓库地址：https://github.com/otomad/OtomadHelper
  *
  * 开工时间：公元 2021 年 9 月 5 日 星期日，上午 4:14:26
- * Copyright (c) 2021 ~, Ranne
+ * 版权所有 © 2021 ~ 至今，兰音
  *
  * 本程序是一个自由的软件，你可以重新分发它，可以魔改它，但要遵守 GPL 3.0 版本或者后续其它版本。
  * 我们希望本程序是有用的，但是我们不保证它能用，不保证它好用，我们不提供任何保证。
@@ -22,7 +22,7 @@
  ***********************************************************************************************
  *
  * Otomad Helper for Vegas, which is designed to allow Vegas Pro to accept MIDI files as input,
- * and automatically generate Otomad/YTPMV tracks.
+ * and automatically generate YTPMV/otoMAD tracks.
  * Vegas Pro 16 and above support all features, and Vegas Pro 13 and above are compatible to run.
  * Place this script and all other attached files in the Script Menu folder in your Vegas installation directory.
  * See the documentation link for instructions.
@@ -32,7 +32,7 @@
  * Repository link for more details: https://github.com/otomad/OtomadHelper
  *
  * Project start date: Sun, Sep 5th 2021 A.D., 4:14:26 a.m.
- * Copyright (c) 2021 ~, Ranne
+ * Copyright (c) 2021 – Present
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any
@@ -47,7 +47,8 @@
 #define VEGAS_ENVIRONMENT // Vegas Pro 运行环境。取消定义后避免在 Visual Studio 中调试时因缺少环境而导致报错。
 #define INTERNATIONALIZED // 启用国际化翻译操作。取消定义后可暂时禁用翻译操作并锁定为简体中文，如不需要翻译时也许可以加快脚本启动速度，但其实也没快多少。
 #define PRODUCTION // 用于生产环境。定义后可以吞掉一些无关紧要的错误。取消定义后可以展现一些可能会产生隐患的错误。
-// 以下宏定义为版本号标记。如您的软件本体版本号低于这些标记，应注释掉它们。注意若启用高版本号的标记，比它更低的版本号标记必须同时启用。
+#define SHOW_VERSION_ON_MENU // 取消定义后可以隐藏配置窗体的菜单栏上的当前版本号信息，适用于你想对界面截图时忽略版本号信息。
+// 以下宏定义为版本号标记。如你的软件本体版本号低于这些标记，应注释掉它们。注意若启用高版本号的标记，比它更低的版本号标记必须同时启用。
 #define VER_GEQ_16 // Vegas Pro 版本号大于或等于 16。定义后可正常使用调音算法属性等功能。
 #define VER_GEQ_14 // Vegas Pro 版本号大于或等于 14。定义后将依赖库切换到 Magix / BorisFX 版本。
 
@@ -21505,7 +21506,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				// 此方法与基本方法的唯一区别在于，文本直接替换为属性文本，而不是使用正则表达式。
 				// 现在，我们知道文本框上可能只有我们提供的单位中的字符。因为 NumericUpDown 为我们处理来自用户的无效输入。
 				// 这就是魔法发生的地方。此正则表达式将匹配单位中的所有字符（因此单位不能有数字）。
-				// 您可以更改此正则表达式以满足您的需要。
+				// 你可以更改此正则表达式以满足你的需要。
 				Regex regex = new Regex(string.Format(@"[^(?!{0}{1} )]+", suffix, prefix));
 				Match match = regex.Match(Text);
 				if (match.Success) {
@@ -22132,6 +22133,42 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 		}
 
+		#endregion
+
+		#region 界面重绘
+		// 用于禁止和允许控件重绘的 Win32 API
+		[DllImport("user32.dll", CharSet = CharSet.Auto)]
+		private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+		private const int WM_SETREDRAW = 0x000B;
+		private int updateCount = 0; // 嵌套计数器
+
+		/// <summary>
+		/// 暂停组合框的界面重绘。
+		/// 配合复杂的解锁、判断、再锁定逻辑使用，可完美消除中间状态的视觉闪烁。
+		/// </summary>
+		public new void BeginUpdate() {
+			base.BeginUpdate(); // 调用原生的 BeginUpdate（暂停下拉列表部分的重绘）
+
+			if (updateCount == 0 && IsHandleCreated) {
+				// 关闭整个控件的重绘渲染
+				SendMessage(Handle, WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
+			}
+			updateCount++;
+		}
+
+		/// <summary>
+		/// 恢复组合框的界面重绘并立即刷新界面。
+		/// </summary>
+		public new void EndUpdate() {
+			updateCount--;
+			if (updateCount == 0 && IsHandleCreated) {
+				// 重新开启重绘，并强制控件重绘最终状态
+				SendMessage(Handle, WM_SETREDRAW, new IntPtr(1), IntPtr.Zero);
+				Invalidate(true);
+			}
+
+			base.EndUpdate(); // 调用原生的 EndUpdate
+		}
 		#endregion
 	}
 
@@ -23817,7 +23854,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OkBtn = new System.Windows.Forms.Button();
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.Balloon = new System.Windows.Forms.ToolTip(this.components);
-			this.AudioLockStretchPitchCheck = new System.Windows.Forms.CheckBox();
+			this.AudioLockStretchPitchCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.PreviewTuneAudioCheck = new System.Windows.Forms.CheckBox();
 			this.StaffRelativeValueCheck = new System.Windows.Forms.CheckBox();
 			this.StaffLegacyMethodCheck = new System.Windows.Forms.CheckBox();
@@ -23838,7 +23875,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioAltMethodCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.StaffFreezeAtNoteOffCheck = new System.Windows.Forms.CheckBox();
 			this.PreviewBasePitchBtn = new System.Windows.Forms.Button();
-			this.AudioStretchAttrCombo = new System.Windows.Forms.ComboBox();
+			this.AudioStretchAttrCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.menu = new System.Windows.Forms.MenuStrip();
 			this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -24087,7 +24124,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioStretchAttrLbl = new System.Windows.Forms.Label();
 			this.AudioLockAttrLbl = new System.Windows.Forms.Label();
 			this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
-			this.AudioReserveFormantCheck = new System.Windows.Forms.CheckBox();
+			this.AudioReserveFormantCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.AudioVocalFryCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.AudioNoTuningDrumKitsCheck = new System.Windows.Forms.CheckBox();
 			this.AudioBasePitchLbl = new System.Windows.Forms.Label();
@@ -28244,7 +28281,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel10.Controls.Add(this.AudioLockStretchPitchCheck);
 			this.flowLayoutPanel10.Controls.Add(this.AudioReserveFormantCheck);
 			this.flowLayoutPanel10.Controls.Add(this.AudioVocalFryCheck);
-			this.flowLayoutPanel10.Controls.Add(this.AudioNoTuningDrumKitsCheck);
 			this.flowLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel10.Location = new System.Drawing.Point(116, 216);
 			this.flowLayoutPanel10.Margin = new System.Windows.Forms.Padding(0);
@@ -28282,7 +28318,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioNoTuningDrumKitsCheck.Checked = true;
 			this.AudioNoTuningDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.AudioNoTuningDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(625, 3);
+			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(496, 3);
 			this.AudioNoTuningDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
 			this.AudioNoTuningDrumKitsCheck.Name = "AudioNoTuningDrumKitsCheck";
 			this.AudioNoTuningDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
@@ -28309,6 +28345,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel6.Controls.Add(this.AudioMainOctaveCombo);
 			this.flowLayoutPanel6.Controls.Add(this.AudioBasePitchIntervalLbl);
 			this.flowLayoutPanel6.Controls.Add(this.AudioAutoBasePitchCheck);
+			this.flowLayoutPanel6.Controls.Add(this.AudioNoTuningDrumKitsCheck);
 			this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel6.Location = new System.Drawing.Point(116, 270);
 			this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
@@ -33981,10 +34018,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.Button PreviewAudioBtn;
 		public System.Windows.Forms.TabPage YtpTab;
 		public System.Windows.Forms.ToolStripMenuItem exitDiscardingChangesToolStripMenuItem;
-		public System.Windows.Forms.ComboBox AudioStretchAttrCombo;
+		public RememberedComboBox AudioStretchAttrCombo;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel10;
-		public System.Windows.Forms.CheckBox AudioLockStretchPitchCheck;
-		public System.Windows.Forms.CheckBox AudioReserveFormantCheck;
+		public RememberedCheckBox AudioLockStretchPitchCheck;
+		public RememberedCheckBox AudioReserveFormantCheck;
 		public System.Windows.Forms.Label AudioStretchAttrLbl;
 		public System.Windows.Forms.Label AudioPreviewLbl;
 		public System.Windows.Forms.Label AudioLockAttrLbl;
@@ -34665,6 +34702,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			#region 菜单选项
 			currentVersionMenuItem.Text = "v" + EntryPoint.VERSION.ToString();
+			#if !SHOW_VERSION_ON_MENU
+			currentVersionMenuItem.Visible = false;
+			#endif
 			saveConfigToolStripMenuItem.Click += (sender, e) => SaveIni();
 			exitToolStripMenuItem.Click += new EventHandler(CancelBtn_Click);
 			aboutToolStripMenuItem.Click += new EventHandler(AboutBtn_Click);
@@ -34862,8 +34902,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioAltMethodCombo.SetIndex(configIni.Read("AltTuneMethod", 1), 1);
 			AudioTuneMethodCombo.SetIndex(configIni.Read("TuneMethod", 2), 2);
 			AudioStretchAttrCombo.SetIndex(configIni.Read("StretchAttr", 1), 1);
-			AudioLockStretchPitchCheck.Checked = configIni.Read("LockStretchPitch", false);
-			AudioReserveFormantCheck.Checked = configIni.Read("ReserveFormant", false);
+			AudioLockStretchPitchCheck.UserChecked = configIni.Read("LockStretchPitch", false);
+			AudioReserveFormantCheck.UserChecked = configIni.Read("ReserveFormant", false);
 			AudioVocalFryCheck.UserChecked = configIni.Read("VocalFry", false);
 			AudioStackCheck.Checked = configIni.Read("Stack", false);
 			AudioTimeUnremappingCheck.UserChecked = configIni.Read("TimeUnremapping", false);
@@ -35112,7 +35152,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public void SaveIni() {
 			#region 音频配置
 			configIni.StartSection("Audio");
-			configIni.Write("Stretch", AudioScratchCombo.SelectedIndex);
+			configIni.Write("Stretch", AudioScratchCombo.UserSelectedIndex);
 			configIni.Write("Loop", AudioLoopCheck.Checked);
 			configIni.Write("Normalize", AudioNormalizeCheck.Checked);
 			configIni.Write("FreezeLastFrame", AudioFreezeLastFrameCheck.Checked);
@@ -35137,14 +35177,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("AltTuneMethod", AudioAltMethodCombo.UserSelectedIndex);
 			configIni.Write("TuneMethod", AudioTuneMethodCombo.SelectedIndex);
 			configIni.Write("StretchAttr", AudioStretchAttrCombo.SelectedIndex);
-			configIni.Write("LockStretchPitch", AudioLockStretchPitchCheck.Checked);
-			configIni.Write("ReserveFormant", AudioReserveFormantCheck.Checked);
+			configIni.Write("LockStretchPitch", AudioLockStretchPitchCheck.UserChecked);
+			configIni.Write("ReserveFormant", AudioReserveFormantCheck.UserChecked);
 			configIni.Write("VocalFry", AudioVocalFryCheck.UserChecked);
 			configIni.Write("Stack", AudioStackCheck.Checked);
 			configIni.Write("TimeUnremapping", AudioTimeUnremappingCheck.UserChecked);
 			configIni.Write("CreateEventGroup", CreateEventGroupInAudioCheck.Checked);
 			configIni.Write("AutoBasePitch", AudioAutoBasePitchCheck.Checked);
-			configIni.Write("StretchMethod", AudioStretchMethodCombo.SelectedIndex);
+			configIni.Write("StretchMethod", AudioStretchMethodCombo.UserSelectedIndex);
 			configIni.Write("NoTuningDrumKits", AudioNoTuningDrumKitsCheck.Checked);
 			configIni.Write("PluckSplice", AudioPluckSpliceBox.Value);
 			configIni.Write("PluckDuck", AudioPluckDuckBox.Value);
@@ -35503,7 +35543,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			Balloon.SetToolTip(StaffRelativeValueCheck, str.sheet_relative_tooltip);
 			Balloon.SetToolTip(StaffLineThicknessBox, str.sheet_line_thickness_tooltip);
 			Balloon.SetToolTip(AudioTuneMethodCombo, str.tune_method_tooltip);
-			Balloon.SetToolTip(AudioAltMethodCombo, string.Format(str.alt_tuning_method_tooltip, "±24", "±12/lg2 (≈±39.863137)", "-12/log_20(2)~+24 (≈-51.863137~+24)"));
+			Balloon.SetToolTip(AudioAltMethodCombo, string.Format(str.alt_tuning_method_tooltip, "±24", "±12/lg2 (≈±39.863137)", "-12/log₂₀2~+24 (≈-51.863137~+24)"));
 			Balloon.SetToolTip(AudioLockStretchPitchCheck, str.audio_lock_stretch_pitch_tooltip);
 			Balloon.SetToolTip(PreviewBeepDurationBox, str.preview_beep_duration_tooltip);
 			Balloon.SetToolTip(PreviewTuneAudioCheck, str.preview_tune_audio_tooltip);
@@ -36125,38 +36165,46 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			bool isAConfigOn = AudioConfigCheck.Checked;
 			if (AudioParamsGroup.Enabled != isAConfigOn)
 				SetEnabled(AudioTab, isAConfigOn, new Control[] { AudioConfigCheck });
+			RememberedComboBox[] rememberedComboBoxes = new RememberedComboBox[] { AudioScratchCombo, AudioAltMethodCombo, AudioStretchMethodCombo, AudioStretchAttrCombo };
+			foreach (RememberedComboBox combo in rememberedComboBoxes) combo.BeginUpdate();
 			AudioTuningMethod method = (AudioTuningMethod)AudioTuneMethodCombo.SelectedIndex;
 			if (method == AudioTuningMethod.ELASTIQUE || method == AudioTuningMethod.CLASSIC) AudioStretchMethodCombo.LockSelectedIndex = (int)method;
 			else if (method == AudioTuningMethod.OSCILLATOR) AudioStretchMethodCombo.LockSelectedIndex = (int)AudioStretchMethod.NO_TUNING;
 			else AudioStretchMethodCombo.Unlock();
 			AudioStretchMethod stretchMethod = (AudioStretchMethod)AudioStretchMethodCombo.SelectedIndex;
 			AudioScratchCombo.Unlock();
-			AudioLockStretchPitchCheck.Enabled
-				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING && method != AudioTuningMethod.OSCILLATOR;
-			AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled = PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled = AudioAutoBasePitchCheck.Enabled
+			AudioAltMethodCombo.Unlock();
+			AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled = PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled = AudioAutoBasePitchCheck.Enabled = AudioBasePitchIntervalLbl.Enabled
 				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING;
 			AudioFadeSetAsTimecodeRadio.Enabled = AudioFadeInCurveCombo.Enabled = AudioFadeOutCurveCombo.Enabled = method != AudioTuningMethod.OSCILLATOR;
 			AudioVocalFryCheck.Status = (isAConfigOn && method == AudioTuningMethod.OSCILLATOR) ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
 			if (method == AudioTuningMethod.OSCILLATOR) AudioFadeSetAsPercentRadio.Checked = true;
 			if (method == AudioTuningMethod.FOOL_TUNING || method == AudioTuningMethod.OSCILLATOR) {
-				AudioLockStretchPitchCheck.Enabled = AudioScratchCombo.Enabled = false;
-				AudioLockStretchPitchCheck.Checked = method == AudioTuningMethod.FOOL_TUNING;
-				if (method == AudioTuningMethod.FOOL_TUNING) AudioScratchCombo.LockSelectedIndex = 1;
-			}
-			bool isPitchChangeMethod = stretchMethod == AudioStretchMethod.ELASTIQUE || stretchMethod == AudioStretchMethod.CLASSIC;
-			AudioStretchAttrCombo.Enabled = isPitchChangeMethod;
-			AudioReserveFormantCheck.Enabled = false;
-			if (isPitchChangeMethod && AudioLockStretchPitchCheck.Checked || stretchMethod == AudioStretchMethod.NO_TUNING || method == AudioTuningMethod.FOOL_TUNING)
+				AudioScratchCombo.LockSelectedIndex = method == AudioTuningMethod.FOOL_TUNING ? 1 : 0;
+				AudioLockStretchPitchCheck.Status = method == AudioTuningMethod.FOOL_TUNING ? RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.False;
+			} else AudioLockStretchPitchCheck.Status = method == AudioTuningMethod.NO_TUNING ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
+			bool isPitchChangeMethod = method == AudioTuningMethod.ELASTIQUE || method == AudioTuningMethod.CLASSIC;
+			bool isPitchChangeMethodForStretch = stretchMethod == AudioStretchMethod.ELASTIQUE || stretchMethod == AudioStretchMethod.CLASSIC;
+			AudioStretchAttrCombo.Enabled = isPitchChangeMethodForStretch;
+			if (isPitchChangeMethodForStretch && AudioLockStretchPitchCheck.Checked && method != AudioTuningMethod.PITCH_SHIFT
+				|| stretchMethod == AudioStretchMethod.NO_TUNING || method == AudioTuningMethod.FOOL_TUNING)
 				AudioScratchCombo.LockSelectedIndex = 0;
+			if (method == AudioTuningMethod.PITCH_SHIFT) AudioAltMethodCombo.LockSelectedIndex = 0;
+			else if (!isPitchChangeMethod) AudioAltMethodCombo.LockSelectedIndex = -1;
+			AudioNoTuningDrumKitsCheck.Enabled = method != AudioTuningMethod.NO_TUNING;
 			#if VER_GEQ_16
 			if (method == AudioTuningMethod.ELASTIQUE) {
 				ElastiqueStretchAttributes attr = (ElastiqueStretchAttributes)AudioStretchAttrCombo.SelectedIndex;
-				if (attr == ElastiqueStretchAttributes.Pro) AudioReserveFormantCheck.Enabled = true;
-				else if (attr == ElastiqueStretchAttributes.Soloist_Monophonic) AudioReserveFormantCheck.Checked = true;
-				else AudioReserveFormantCheck.Checked = false;
-			} else AudioReserveFormantCheck.Checked = false;
+				if (attr == ElastiqueStretchAttributes.Pro) AudioReserveFormantCheck.Status = RememberedCheckBox.StatusType.Unlocked;
+				else if (attr == ElastiqueStretchAttributes.Soloist_Monophonic) AudioReserveFormantCheck.Status = RememberedCheckBox.StatusType.True;
+				else AudioReserveFormantCheck.Status = RememberedCheckBox.StatusType.False;
+			} else AudioReserveFormantCheck.Status = RememberedCheckBox.StatusType.False;
 			#endif
-			if (AudioLockStretchPitchCheck.Checked) AudioStretchAttrCombo.Enabled = AudioReserveFormantCheck.Enabled = false;
+			if (AudioLockStretchPitchCheck.Checked) {
+				if (method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.PITCH_SHIFT) AudioStretchAttrCombo.Enabled = false;
+				AudioReserveFormantCheck.Status = RememberedCheckBox.StatusType.False;
+			}
+			foreach (RememberedComboBox combo in rememberedComboBoxes) combo.EndUpdate();
 
 			bool isSheetConfigOn = StaffVisualizerConfigCheck.Checked;
 			bool isVConfigOnButNotSheetConfigOn = isVConfigOn && !isSheetConfigOn;
@@ -36830,11 +36878,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void AudioTuneMethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
 			#if VER_GEQ_16 // Vegas 版本号 15 及以下无法调整。
 			RememberedComboBox alts = AudioAltMethodCombo;
+			alts.BeginUpdate();
 			bool isPitchShift = AudioTuneMethodCombo.SelectedIndex == 1, isElasticOrClassic = AudioTuneMethodCombo.SelectedIndex == 2 || AudioTuneMethodCombo.SelectedIndex == 3;
 			alts.Items[0] = isPitchShift ? Lang.str.alt_multiple : Lang.str.alt_plugin;
 			if (isPitchShift) alts.LockSelectedIndex = 0;
 			else if (isElasticOrClassic) alts.Unlock();
 			else alts.LockSelectedIndex = -1;
+			alts.EndUpdate();
 			#endif
 		}
 
@@ -37680,9 +37730,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 		}
 
-		[DllImport("user32")]
-		private static extern int SendMessage(IntPtr hwnd, int wMsg, int wParam, IntPtr lParam);
-		private const int WM_SETREDRAW = 0xB;
+		[DllImport("user32.dll")]
+		internal static extern int SendMessage(IntPtr hwnd, int wMsg, int wParam, IntPtr lParam);
+		[DllImport("user32.dll")]
+		internal static extern int SendMessage(IntPtr hWnd, int wMsg, bool wParam, int lParam);
+		internal const int WM_SETREDRAW = 0xB;
 
 		public void SetRedraw(bool enabled, Control control = null) {
 			control = control ?? this;
@@ -37963,9 +38015,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			button.Text = (isActive ? "* " : "") + dict[button] + str.dialog_sign;
 			button.ForeColor = isActive ? Color.Green : SystemColors.ControlText;
 		}
-
-		[DllImport("user32.dll")]
-		private static extern int SendMessage(IntPtr hWnd, int wMsg, bool wParam, int lParam);
 
 		/// <summary>
 		/// 暂停刷新。
@@ -39102,12 +39151,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			orchestra_tooltip = "点选多项素材，它们将依次映射到可用的乐曲多音轨（多余的素材或音轨会被剔除）。",
 			consonant_tooltip = "为防止辅音被拉伸或延迟，可以将同一音视频素材的辅音与元音部分分割开，以便于为素材的辅音部分应用特殊优化。\n若至少选中两段音频剪辑或视频剪辑，则第一段被视为首辅音部分，第二段被视为元音部分，第三段（如果有）被视为尾辅音部分。",
 			shupelunker_tooltip = "原音系战法：一种不调音的音 MAD 制作手法。它在不改变音高的情况下，通过使用与旋律音高相同的原素材片段来演奏旋律。\n鞑靼战法：同样不改变音高，它通过切分素材而非调音来使素材与原曲节拍同步。",
-			failed_to_convert_tuning_method_count_warning = "警告：{0} 个音频事件转换调音算法失败！\n\n这些音频事件可能不包含有效的音频流，它们已被跳过执行转换。",
+			failed_to_convert_tuning_method_count_warning = "警告：{0} 段音频事件转换调音算法失败！\n\n这些音频事件可能不包含有效的音频流，它们已被跳过执行转换。",
 			move_cursor_after_completion = "生成完成后将光标移动到",
 			move_cursor_to_original = "原位置",
 			move_cursor_to_where_generate_at = "生成开始位置",
-			move_cursor_before_first_note = "第一个事件之前",
-			move_cursor_after_last_note = "最后一个事件之后",
+			move_cursor_before_first_note = "第一段事件之前",
+			move_cursor_after_last_note = "最后一段事件之后",
 			match_cut_sustain = "相同音高时保持素材",
 			h_flip_interrupt = "水平翻转中断",
 			v_flip_interrupt = "垂直翻转中断",
@@ -39524,14 +39573,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				tune = "Tuning",
 				tune_method = "Tuning method",
 				base_pitch = "Base pitch",
-				preview_listen = "Preview",
-				preview_base_pitch = "Preview the &base pitch",
-				preview_audio = "&Preview audio",
-				stop_preview_audio = "Stop &previewing",
-				preview = "Preview",
-				stop_preview = "Stop previewing",
+				preview_listen = "Prelisten",
+				preview_base_pitch = "Prelisten the &base pitch",
+				preview_audio = "&Prelisten audio",
+				stop_preview_audio = "Stop &prelistening",
+				preview = "Prelisten",
+				stop_preview = "Stop prelistening",
 				lock_attr = "Lock attrs",
-				preview_listen_attr = "Preview attrs",
+				preview_listen_attr = "Prelisten attrs",
 				preview_tune_audio = "Adjust audio to base pitch",
 				reserve_formant = "Preserve formant",
 				stretch_attr = "Stretch attrs",
@@ -39815,7 +39864,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				why_ok_btn_is_disabled_unknown_problem = "Unknown reason.",
 				no_selected_media_warning = "Warning: You have not selected any valid media in the project media window!",
 				no_selected_clip_warning = "Warning: You have not selected any clips in the track window!",
-				preview_audio_track_name = "Preview Audio Track (Should be DELETED!)",
+				preview_audio_track_name = "Prelisten Audio Track (Should be DELETED!)",
 				no_midi_exception = "Error: No MIDI file selected.\n\nPlease reopen the script configuration dialog box, and then click the \"Browse\" button in the \"MIDI Configuration\" group to open a valid MIDI file.",
 				no_media_exception = "Error: No media file selected.\n\nPlease reopen the script configuration dialog box, and then click the \"Browse\" button in the \"Media Configuration\" group to open a valid media file.",
 				no_track_info_exception = "Error: The MIDI file does not contain any tracks.\n\nPossible reasons:\n\n1. There are indeed no tracks in this MIDI file.\nIt is highly likely that you forgot to export any MIDI tracks from the host software. Please double check your original project.\nIf you are using FL Studio, make sure to perform the \"Prepare for MIDI Export\" macro operation before exporting MIDI.\n\n2. The MIDI file format is unsupported or corrupted.\nPlease import the MIDI using the host software and then re-export a new MIDI file.\nDue to the incomplete range of MIDI types supported by the NAudio.Midi library, the script cannot guarantee that they will all be read correctly.",
@@ -40946,12 +40995,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				orchestra_tooltip = "點選多項素材，它們將依次映射到可用的樂曲多音軌（多餘的素材或音軌會被剔除）。",
 				consonant_tooltip = "為防止輔音被拉伸或延遲，可以將同一音視頻素材的輔音與母音部分分割開，以便於為素材的輔音部分應用特殊優化。\n若至少選中兩段音訊剪輯或視訊短片，則第一段被視為首輔音部分，第二段被視為母音部分，第三段（如果有）被視為尾輔音部分。",
 				shupelunker_tooltip = "原音系戰法：一種不調音的音 MAD 製作手法。它在不改變音高的情況下，通過使用與旋律音高相同的原素材片段來演奏旋律。\n韃靼戰法：同樣不改變音高，它通過切分素材而非調音來使素材與原曲節拍同步。",
-				failed_to_convert_tuning_method_count_warning = "警告：{0} 個音訊事件轉換調音演算法失敗！\n\n這些音訊事件可能不包含有效的音訊流，它們已被跳過執行轉換。",
+				failed_to_convert_tuning_method_count_warning = "警告：{0} 段音訊事件轉換調音演算法失敗！\n\n這些音訊事件可能不包含有效的音訊流，它們已被跳過執行轉換。",
 				move_cursor_after_completion = "生成完成後將游標移動到",
 				move_cursor_to_original = "原位置",
 				move_cursor_to_where_generate_at = "生成開始位置",
-				move_cursor_before_first_note = "第一個事件之前",
-				move_cursor_after_last_note = "最後一個事件之後",
+				move_cursor_before_first_note = "第一段事件之前",
+				move_cursor_after_last_note = "最後一段事件之後",
 				match_cut_sustain = "相同音高時保持素材",
 				h_flip_interrupt = "水平翻轉中斷",
 				v_flip_interrupt = "垂直翻轉中斷",

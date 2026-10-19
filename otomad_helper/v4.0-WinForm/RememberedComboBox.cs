@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	public class RememberedComboBox : ComboBox {
@@ -199,6 +200,42 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 		}
 
+		#endregion
+
+		#region 界面重绘
+		// 用于禁止和允许控件重绘的 Win32 API
+		[DllImport("user32.dll", CharSet = CharSet.Auto)]
+		private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+		private const int WM_SETREDRAW = 0x000B;
+		private int updateCount = 0; // 嵌套计数器
+
+		/// <summary>
+		/// 暂停组合框的界面重绘。
+		/// 配合复杂的解锁、判断、再锁定逻辑使用，可完美消除中间状态的视觉闪烁。
+		/// </summary>
+		public new void BeginUpdate() {
+			base.BeginUpdate(); // 调用原生的 BeginUpdate（暂停下拉列表部分的重绘）
+
+			if (updateCount == 0 && IsHandleCreated) {
+				// 关闭整个控件的重绘渲染
+				SendMessage(Handle, WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
+			}
+			updateCount++;
+		}
+
+		/// <summary>
+		/// 恢复组合框的界面重绘并立即刷新界面。
+		/// </summary>
+		public new void EndUpdate() {
+			updateCount--;
+			if (updateCount == 0 && IsHandleCreated) {
+				// 重新开启重绘，并强制控件重绘最终状态
+				SendMessage(this.Handle, WM_SETREDRAW, new IntPtr(1), IntPtr.Zero);
+				Invalidate(true);
+			}
+
+			base.EndUpdate(); // 调用原生的 EndUpdate
+		}
 		#endregion
 	}
 }

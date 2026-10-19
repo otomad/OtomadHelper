@@ -31,7 +31,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OkBtn = new System.Windows.Forms.Button();
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.Balloon = new System.Windows.Forms.ToolTip(this.components);
-			this.AudioLockStretchPitchCheck = new System.Windows.Forms.CheckBox();
+			this.AudioLockStretchPitchCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.PreviewTuneAudioCheck = new System.Windows.Forms.CheckBox();
 			this.StaffRelativeValueCheck = new System.Windows.Forms.CheckBox();
 			this.StaffLegacyMethodCheck = new System.Windows.Forms.CheckBox();
@@ -52,7 +52,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioAltMethodCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.StaffFreezeAtNoteOffCheck = new System.Windows.Forms.CheckBox();
 			this.PreviewBasePitchBtn = new System.Windows.Forms.Button();
-			this.AudioStretchAttrCombo = new System.Windows.Forms.ComboBox();
+			this.AudioStretchAttrCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.menu = new System.Windows.Forms.MenuStrip();
 			this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -301,7 +301,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioStretchAttrLbl = new System.Windows.Forms.Label();
 			this.AudioLockAttrLbl = new System.Windows.Forms.Label();
 			this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
-			this.AudioReserveFormantCheck = new System.Windows.Forms.CheckBox();
+			this.AudioReserveFormantCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.AudioVocalFryCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.AudioNoTuningDrumKitsCheck = new System.Windows.Forms.CheckBox();
 			this.AudioBasePitchLbl = new System.Windows.Forms.Label();
@@ -4458,7 +4458,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel10.Controls.Add(this.AudioLockStretchPitchCheck);
 			this.flowLayoutPanel10.Controls.Add(this.AudioReserveFormantCheck);
 			this.flowLayoutPanel10.Controls.Add(this.AudioVocalFryCheck);
-			this.flowLayoutPanel10.Controls.Add(this.AudioNoTuningDrumKitsCheck);
 			this.flowLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel10.Location = new System.Drawing.Point(116, 216);
 			this.flowLayoutPanel10.Margin = new System.Windows.Forms.Padding(0);
@@ -4496,7 +4495,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioNoTuningDrumKitsCheck.Checked = true;
 			this.AudioNoTuningDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.AudioNoTuningDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(625, 3);
+			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(496, 3);
 			this.AudioNoTuningDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
 			this.AudioNoTuningDrumKitsCheck.Name = "AudioNoTuningDrumKitsCheck";
 			this.AudioNoTuningDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
@@ -4523,6 +4522,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel6.Controls.Add(this.AudioMainOctaveCombo);
 			this.flowLayoutPanel6.Controls.Add(this.AudioBasePitchIntervalLbl);
 			this.flowLayoutPanel6.Controls.Add(this.AudioAutoBasePitchCheck);
+			this.flowLayoutPanel6.Controls.Add(this.AudioNoTuningDrumKitsCheck);
 			this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel6.Location = new System.Drawing.Point(116, 270);
 			this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
@@ -10195,10 +10195,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.Button PreviewAudioBtn;
 		public System.Windows.Forms.TabPage YtpTab;
 		public System.Windows.Forms.ToolStripMenuItem exitDiscardingChangesToolStripMenuItem;
-		public System.Windows.Forms.ComboBox AudioStretchAttrCombo;
+		public RememberedComboBox AudioStretchAttrCombo;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel10;
-		public System.Windows.Forms.CheckBox AudioLockStretchPitchCheck;
-		public System.Windows.Forms.CheckBox AudioReserveFormantCheck;
+		public RememberedCheckBox AudioLockStretchPitchCheck;
+		public RememberedCheckBox AudioReserveFormantCheck;
 		public System.Windows.Forms.Label AudioStretchAttrLbl;
 		public System.Windows.Forms.Label AudioPreviewLbl;
 		public System.Windows.Forms.Label AudioLockAttrLbl;
