@@ -24126,13 +24126,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioReserveFormantCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.AudioVocalFryCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
-			this.AudioNoTuningDrumKitsCheck = new System.Windows.Forms.CheckBox();
 			this.AudioBasePitchLbl = new System.Windows.Forms.Label();
 			this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioMainKeyCombo = new System.Windows.Forms.ComboBox();
 			this.AudioMainOctaveCombo = new System.Windows.Forms.ComboBox();
 			this.AudioBasePitchIntervalLbl = new System.Windows.Forms.Label();
 			this.AudioAutoBasePitchCheck = new System.Windows.Forms.CheckBox();
+			this.AudioNoTuningDrumKitsCheck = new System.Windows.Forms.CheckBox();
 			this.AudioPreviewLbl = new System.Windows.Forms.Label();
 			this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
 			this.PreviewAudioBtn = new System.Windows.Forms.Button();
@@ -24712,6 +24712,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Balloon.ShowAlways = true;
 			this.Balloon.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.Balloon.ToolTipTitle = "填写说明";
+			this.Balloon.Popup += new System.Windows.Forms.PopupEventHandler(this.Balloon_Popup);
 			//
 			// AudioLockStretchPitchCheck
 			//
@@ -28312,20 +28313,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioVocalFryCheck.Text = "气泡音 (1刻模式)";
 			this.AudioVocalFryCheck.UseVisualStyleBackColor = true;
 			//
-			// AudioNoTuningDrumKitsCheck
-			//
-			this.AudioNoTuningDrumKitsCheck.AutoSize = true;
-			this.AudioNoTuningDrumKitsCheck.Checked = true;
-			this.AudioNoTuningDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.AudioNoTuningDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(496, 3);
-			this.AudioNoTuningDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
-			this.AudioNoTuningDrumKitsCheck.Name = "AudioNoTuningDrumKitsCheck";
-			this.AudioNoTuningDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
-			this.AudioNoTuningDrumKitsCheck.TabIndex = 1;
-			this.AudioNoTuningDrumKitsCheck.Text = "不调音鼓组通道";
-			this.AudioNoTuningDrumKitsCheck.UseVisualStyleBackColor = true;
-			//
 			// AudioBasePitchLbl
 			//
 			this.AudioBasePitchLbl.AutoSize = true;
@@ -28423,6 +28410,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioAutoBasePitchCheck.TabIndex = 6;
 			this.AudioAutoBasePitchCheck.Text = "自动校音 (实验性)";
 			this.AudioAutoBasePitchCheck.UseVisualStyleBackColor = true;
+			//
+			// AudioNoTuningDrumKitsCheck
+			//
+			this.AudioNoTuningDrumKitsCheck.AutoSize = true;
+			this.AudioNoTuningDrumKitsCheck.Checked = true;
+			this.AudioNoTuningDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.AudioNoTuningDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(496, 3);
+			this.AudioNoTuningDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioNoTuningDrumKitsCheck.Name = "AudioNoTuningDrumKitsCheck";
+			this.AudioNoTuningDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
+			this.AudioNoTuningDrumKitsCheck.TabIndex = 1;
+			this.AudioNoTuningDrumKitsCheck.Text = "不调音鼓组通道";
+			this.AudioNoTuningDrumKitsCheck.UseVisualStyleBackColor = true;
 			//
 			// AudioPreviewLbl
 			//
@@ -38215,6 +38216,37 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			} else if (Tabs.SelectedTab == SonarTab) {
 				SonarList.Invalidate();
 				SonarList.Update();
+			}
+		}
+
+		[DllImport("user32.dll")]
+		private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+		[DllImport("user32.dll")]
+		private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+		/// <summary>
+		/// 使气球式工具提示<b>点击穿透、无法悬停</b>。
+		/// </summary>
+		private void Balloon_Popup(object sender, PopupEventArgs e) {
+			const int GWL_EXSTYLE = -20;
+			const int WS_EX_TRANSPARENT = 0x00000020; // 核心：允许鼠标穿透
+			const int WS_EX_NOACTIVATE = 0x08000000; // 防止抢占或保持焦点
+
+			// 1. 通过反射获取隐藏在 ToolTip 内部的原生窗口句柄
+			PropertyInfo handleProperty = typeof(ToolTip).GetProperty("Handle", BindingFlags.NonPublic | BindingFlags.Instance);
+
+			if (handleProperty != null) {
+				IntPtr hwnd = (IntPtr)handleProperty.GetValue(Balloon);
+
+				if (hwnd != IntPtr.Zero) {
+					// 2. 获取原有的扩展样式
+					int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+
+					// 3. 注入点击穿透和不激活样式 (相当于 WPF 的 IsHitTestVisible = false)
+					int newExStyle = exStyle | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE;
+
+					SetWindowLong(hwnd, GWL_EXSTYLE, newExStyle);
+				}
 			}
 		}
 	}

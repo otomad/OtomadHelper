@@ -1494,5 +1494,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void AudioStretchMethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
 			Console.WriteLine(DatamoshInfoLbl);
 		}
+
+		private void Balloon_Popup(object sender, PopupEventArgs e) {
+			// 点击穿透、无法悬停
+		}
 	}
 }
