@@ -423,7 +423,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 				return false;
 			}
-			if (_midi.TrackInfos.Length == 0) {
+			if (_midi.TrackInfos.Count == 0) {
 				ShowError(new Exceptions.NoTrackInfoException());
 				return false;
 			}
@@ -1271,7 +1271,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				progressForm.Info = string.Empty;
 			else {
 				string _name = currentChannel.HasName ? Lang.str.colon + name : string.Empty;
-				progressForm.Info = string.Format(Lang.str.processing_tracks, MidiConfigTracks.CurrentChannel + 1, MidiConfigTracks.SelectedChannelCount, currentChannel.Index, _name);
+				progressForm.Info = string.Format(Lang.str.processing_tracks, MidiConfigTracks.CurrentChannel + 1, MidiConfigTracks.SelectedChannelCount, currentChannel.Channel, _name);
 			}
 
 			#region 准备轨道
@@ -1927,7 +1927,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					progressForm.Info = Lang.str.processing_otomad_swirl;
 				else {
 					string _name = currentChannel.HasName ? Lang.str.colon + name : string.Empty;
-					progressForm.Info = string.Format(Lang.str.processing_tracks_swirl, MidiConfigTracks.CurrentChannel + 1, MidiConfigTracks.SelectedChannelCount, currentChannel.Index, _name);
+					progressForm.Info = string.Format(Lang.str.processing_tracks_swirl, MidiConfigTracks.CurrentChannel + 1, MidiConfigTracks.SelectedChannelCount, currentChannel.Channel, _name);
 				}
 				List<PitchWheelChangeEvent> pitchEvents = new List<PitchWheelChangeEvent>();
 				foreach (MidiEvent midiEvent in currentChannel.Events) { // 去重
@@ -6656,7 +6656,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>
 		/// 音轨信息们。
 		/// </summary>
-		public TrackInfo[] TrackInfos { get; private set; }
+		public IReadOnlyList<TrackInfo> TrackInfos { get; private set; }
 		/// <summary>
 		/// 每四分音符有多少刻（基本单位）。<br />0 表示未初始化。
 		/// </summary>
@@ -6716,18 +6716,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>
 		/// 音轨信息。
 		/// </summary>
-		public class TrackInfo {
-			public int Index;
+		public class TrackInfo : ICloneable {
+			public string Index;
+			public int Channel;
 			public string Name = "";
 			public string Instrument = "";
 			public int NotesCount = 0;
 			public string BeginNote = "";
 			public bool HasName { get { return !string.IsNullOrWhiteSpace(Name); } }
 			public bool HasInstrument { get { return !string.IsNullOrWhiteSpace(Instrument); } }
-			public bool HasChannel { get { return Index != -1; } }
+			public bool HasChannel { get { return Channel != -1; } }
 			public override string ToString() {
 				List<string> info = new List<string> {
-					(HasChannel ? Lang.str.midi_channel + ' ' + Index : "") + (HasName ? Lang.str.colon + Name : ""),
+					(HasChannel ? Lang.str.midi_channel + ' ' + Channel : "") + (HasName ? Lang.str.colon + Name : ""),
 				};
 				if (HasInstrument) info.Add(Lang.str.midi_instrument + Lang.str.colon + Instrument);
 				if (IsDrumKit) info.Add(Lang.str.drum_kit);
@@ -6737,6 +6738,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			public IList<MidiEvent> Events;
 			public bool IsDrumKit = false;
+			public bool IsSeparatedDrum = false;
 			public int Pan = INITIAL_PAN;
 			public bool IsVariablePan = false;
 			private bool isResorted = false;
@@ -6767,6 +6769,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				Events = events;
 				isResorted = true;
 			}
+			public TrackInfo Clone() {
+				return (TrackInfo)MemberwiseClone();
+			}
+			object ICloneable.Clone() {
+				return Clone();
+			}
 		}
 		public MIDI(string path) : base(path) {
 			Path = path;
@@ -6774,18 +6782,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			TicksPerQuarter = DeltaTicksPerQuarterNote;
 			MsPerQuarter = 0; // 毫秒每拍
 			TimeSignature = "";
+			int index = 1; // 序号从 1 起始。
 			for (int i = 0; i < Events.Tracks; i++) {
-				TrackInfo info = new TrackInfo { Index = -1, Events = Events[i] };
+				TrackInfo info = new TrackInfo { Channel = -1, Events = Events[i] };
 				foreach (MidiEvent midiEvent in info.Events) {
 					if (midiEvent is NoteEvent && !(midiEvent is NoteOnEvent)) {
 						NoteEvent noteEvent = midiEvent as NoteEvent;
 						if (info.NotesCount++ == 0) info.BeginNote = noteEvent.NoteName; // 起音判断
-						if (!info.HasChannel) info.Index = noteEvent.Channel;
+						if (!info.HasChannel) info.Channel = noteEvent.Channel;
 					}
 					if (midiEvent is PatchChangeEvent) {
 						PatchChangeEvent patchEvent = midiEvent as PatchChangeEvent;
 						if (!info.HasInstrument) info.Instrument = PatchChangeEvent.GetPatchName(patchEvent.Patch); // 乐器名称
-						if (!info.HasChannel) info.Index = patchEvent.Channel;
+						if (!info.HasChannel) info.Channel = patchEvent.Channel;
 					}
 					if (midiEvent is TempoEvent && MsPerQuarter == 0) {
 						TempoEvent tempoEvent = midiEvent as TempoEvent;
@@ -6831,12 +6840,36 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						string beginNote = info.BeginNote.Trim().ToUpper();
 						info.IsDrumKit = !Regex.IsMatch(beginNote, @"^[A-G]#?\d+$");
 					} else
-						info.IsDrumKit = info.Index == 10;
+						info.IsDrumKit = info.Channel == 10;
+					info.Index = (index++).ToString();
 					trackInfos.Add(info);
+					if (info.IsDrumKit) trackInfos.AddRange(SeparateDrumsFromTrack(info));
 				}
 			}
-			TrackInfos = trackInfos.ToArray();
+			TrackInfos = trackInfos;
 		}
+		private static List<TrackInfo> SeparateDrumsFromTrack(TrackInfo drumKitsTrack) {
+			Dictionary<int, TrackInfo> drums = new Dictionary<int, TrackInfo>();
+			if (!drumKitsTrack.IsDrumKit) return drums.Values.ToList();
+			foreach (MidiEvent midiEvent in drumKitsTrack.Events) {
+				NoteOnEvent noteEvent = midiEvent as NoteOnEvent;
+				if (noteEvent == null) continue;
+				int noteNumber = noteEvent.NoteNumber;
+				if (!drums.ContainsKey(noteNumber)) {
+					TrackInfo drum = drumKitsTrack.Clone();
+					drum.Events = drum.Events.Where(note => !(note is NoteEvent) || ((NoteEvent)note).NoteNumber == noteNumber).ToList();
+					drum.NotesCount = drum.Events.Count(note => note is NoteEvent && !(note is NoteOnEvent));
+					drum.BeginNote = noteEvent.NoteName;
+					drum.IsSeparatedDrum = true;
+					drums.Add(noteNumber, drum);
+				}
+			}
+			List<TrackInfo> result = drums.OrderBy(entry => entry.Key).Select(entry => entry.Value).ToList();
+			for (int i = 0; i < result.Count; i++)
+				result[i].Index = drumKitsTrack.Index + "." + (i + 1).ToString();
+			return result;
+		}
+
 		/// <summary>
 		/// 根据指定 MIDI 事件获取当前或在此之前的标记事件。如果没有，返回 null。
 		/// </summary>
@@ -18399,7 +18432,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public override string ToString() {
 			List<string> list = new List<string>();
 			foreach (MIDI.TrackInfo track in this) {
-				StringBuilder text = new StringBuilder(track.Index.ToString());
+				StringBuilder text = new StringBuilder(track.Channel.ToString());
 				if (track.HasName) text.Append(" ").Append(track.Name);
 				list.Add(text.ToString());
 			}
@@ -24454,6 +24487,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.MidiTrackSeparateDrumsCheck = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
@@ -24636,13 +24670,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel1.Controls.Add(this.OkBtn, 3, 0);
 			this.tableLayoutPanel1.Controls.Add(this.CancelBtn, 4, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 1102);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 1262);
 			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(8, 8, 8, 4);
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(1092, 80);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(1166, 80);
 			this.tableLayoutPanel1.TabIndex = 0;
 			//
 			// UserHelpLink
@@ -24650,7 +24684,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.UserHelpLink.AutoSize = true;
 			this.UserHelpLink.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.UserHelpLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(95)))), ((int)(((byte)(184)))));
-			this.UserHelpLink.Location = new System.Drawing.Point(437, 8);
+			this.UserHelpLink.Location = new System.Drawing.Point(511, 8);
 			this.UserHelpLink.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.UserHelpLink.Name = "UserHelpLink";
 			this.UserHelpLink.Size = new System.Drawing.Size(125, 68);
@@ -24665,7 +24699,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.AboutBtn.AutoSize = true;
 			this.AboutBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AboutBtn.Location = new System.Drawing.Point(574, 14);
+			this.AboutBtn.Location = new System.Drawing.Point(648, 14);
 			this.AboutBtn.Margin = new System.Windows.Forms.Padding(6);
 			this.AboutBtn.Name = "AboutBtn";
 			this.AboutBtn.Size = new System.Drawing.Size(160, 56);
@@ -24679,7 +24713,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OkBtn.AutoSize = true;
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(746, 14);
+			this.OkBtn.Location = new System.Drawing.Point(820, 14);
 			this.OkBtn.Margin = new System.Windows.Forms.Padding(6);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(160, 56);
@@ -24693,7 +24727,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.CancelBtn.AutoSize = true;
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(918, 14);
+			this.CancelBtn.Location = new System.Drawing.Point(992, 14);
 			this.CancelBtn.Margin = new System.Windows.Forms.Padding(6);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(160, 56);
@@ -25134,7 +25168,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
 			this.menu.Padding = new System.Windows.Forms.Padding(10, 4, 0, 6);
-			this.menu.Size = new System.Drawing.Size(1092, 46);
+			this.menu.Size = new System.Drawing.Size(1166, 46);
 			this.menu.TabIndex = 2;
 			this.menu.Text = "menuStrip1";
 			//
@@ -25155,7 +25189,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.exitDiscardingChangesToolStripMenuItem,
 			this.exitToolStripMenuItem});
 			this.fileMenuItem.Name = "fileMenuItem";
-			this.fileMenuItem.Size = new System.Drawing.Size(108, 36);
+			this.fileMenuItem.Size = new System.Drawing.Size(108, 38);
 			this.fileMenuItem.Text = "文件(&F)";
 			//
 			// saveConfigToolStripMenuItem
@@ -25311,7 +25345,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.schineseDocsToolStripMenuItem,
 			this.vitenameseDocsToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(113, 36);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(113, 38);
 			this.helpToolStripMenuItem.Text = "帮助(&H)";
 			//
 			// versionToolStripMenuItem
@@ -25531,7 +25565,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.vietnameseToolStripMenuItem,
 			this.indonesianToolStripMenuItem});
 			this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
-			this.languageToolStripMenuItem.Size = new System.Drawing.Size(195, 36);
+			this.languageToolStripMenuItem.Size = new System.Drawing.Size(195, 38);
 			this.languageToolStripMenuItem.Text = "语言/&Language";
 			//
 			// chineseToolStripMenuItem
@@ -25605,7 +25639,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.currentVersionMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this.currentVersionMenuItem.Enabled = false;
 			this.currentVersionMenuItem.Name = "currentVersionMenuItem";
-			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 36);
+			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 38);
 			this.currentVersionMenuItem.Text = "v4";
 			//
 			// panel1
@@ -25616,7 +25650,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.panel1.Location = new System.Drawing.Point(0, 46);
 			this.panel1.Name = "panel1";
 			this.panel1.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
-			this.panel1.Size = new System.Drawing.Size(1092, 1056);
+			this.panel1.Size = new System.Drawing.Size(1166, 1216);
 			this.panel1.TabIndex = 3;
 			//
 			// Tabs
@@ -25636,7 +25670,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Tabs.Multiline = true;
 			this.Tabs.Name = "Tabs";
 			this.Tabs.SelectedIndex = 0;
-			this.Tabs.Size = new System.Drawing.Size(1068, 1056);
+			this.Tabs.Size = new System.Drawing.Size(1142, 1216);
 			this.Tabs.TabIndex = 2;
 			this.Tabs.SelectedIndexChanged += new System.EventHandler(this.Tabs_SelectedIndexChanged);
 			//
@@ -26924,7 +26958,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ScoreTab.Location = new System.Drawing.Point(8, 46);
 			this.ScoreTab.Name = "ScoreTab";
 			this.ScoreTab.Padding = new System.Windows.Forms.Padding(8);
-			this.ScoreTab.Size = new System.Drawing.Size(1052, 1002);
+			this.ScoreTab.Size = new System.Drawing.Size(1126, 1162);
 			this.ScoreTab.TabIndex = 8;
 			this.ScoreTab.Text = "乐曲";
 			this.ScoreTab.UseVisualStyleBackColor = true;
@@ -26951,7 +26985,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackListView.MultiSelect = false;
 			this.MidiTrackListView.Name = "MidiTrackListView";
 			this.MidiTrackListView.ShowItemToolTips = true;
-			this.MidiTrackListView.Size = new System.Drawing.Size(1036, 332);
+			this.MidiTrackListView.Size = new System.Drawing.Size(1110, 492);
 			this.MidiTrackListView.TabIndex = 23;
 			this.MidiTrackListView.UseCompatibleStateImageBehavior = false;
 			this.MidiTrackListView.View = System.Windows.Forms.View.Details;
@@ -26961,7 +26995,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// IndexHeader
 			//
 			this.IndexHeader.Text = "#";
-			this.IndexHeader.Width = 40;
+			this.IndexHeader.Width = 55;
 			//
 			// ChannelHeader
 			//
@@ -26981,7 +27015,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// IsDrumsKitHeader
 			//
 			this.IsDrumsKitHeader.Text = "鼓组";
-			this.IsDrumsKitHeader.Width = 50;
+			this.IsDrumsKitHeader.Width = 40;
 			//
 			// NoteCountHeader
 			//
@@ -27001,16 +27035,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// MidiTrackCommandPanel
 			//
 			this.MidiTrackCommandPanel.AutoSize = true;
-			this.MidiTrackCommandPanel.ColumnCount = 6;
+			this.MidiTrackCommandPanel.ColumnCount = 7;
 			this.MidiTrackCommandPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.MidiTrackCommandPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.MidiTrackCommandPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.MidiTrackCommandPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.MidiTrackCommandPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.MidiTrackCommandPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.MidiTrackCommandPanel.Controls.Add(this.PlaySelectedTrackBtn, 3, 0);
-			this.MidiTrackCommandPanel.Controls.Add(this.MidiTrackMultiSelectRadio, 5, 0);
-			this.MidiTrackCommandPanel.Controls.Add(this.MidiTrackSingleSelectRadio, 4, 0);
+			this.MidiTrackCommandPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.MidiTrackCommandPanel.Controls.Add(this.MidiTrackSeparateDrumsCheck, 3, 0);
+			this.MidiTrackCommandPanel.Controls.Add(this.PlaySelectedTrackBtn, 4, 0);
+			this.MidiTrackCommandPanel.Controls.Add(this.MidiTrackMultiSelectRadio, 6, 0);
+			this.MidiTrackCommandPanel.Controls.Add(this.MidiTrackSingleSelectRadio, 5, 0);
 			this.MidiTrackCommandPanel.Controls.Add(this.MidiTrackSelectInfo, 2, 0);
 			this.MidiTrackCommandPanel.Controls.Add(this.MidiTrackInvertSelectionButton, 1, 0);
 			this.MidiTrackCommandPanel.Controls.Add(this.MidiTrackSelectAllCheck, 0, 0);
@@ -27022,7 +27058,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackCommandPanel.Name = "MidiTrackCommandPanel";
 			this.MidiTrackCommandPanel.RowCount = 1;
 			this.MidiTrackCommandPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.MidiTrackCommandPanel.Size = new System.Drawing.Size(1036, 52);
+			this.MidiTrackCommandPanel.Size = new System.Drawing.Size(1110, 52);
 			this.MidiTrackCommandPanel.TabIndex = 22;
 			//
 			// PlaySelectedTrackBtn
@@ -27030,12 +27066,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.PlaySelectedTrackBtn.AutoSize = true;
 			this.PlaySelectedTrackBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PlaySelectedTrackBtn.Enabled = false;
-			this.PlaySelectedTrackBtn.Location = new System.Drawing.Point(676, 3);
+			this.PlaySelectedTrackBtn.Location = new System.Drawing.Point(780, 3);
 			this.PlaySelectedTrackBtn.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
 			this.PlaySelectedTrackBtn.MaximumSize = new System.Drawing.Size(800, 44);
-			this.PlaySelectedTrackBtn.MinimumSize = new System.Drawing.Size(150, 44);
+			this.PlaySelectedTrackBtn.MinimumSize = new System.Drawing.Size(120, 44);
 			this.PlaySelectedTrackBtn.Name = "PlaySelectedTrackBtn";
-			this.PlaySelectedTrackBtn.Size = new System.Drawing.Size(150, 44);
+			this.PlaySelectedTrackBtn.Size = new System.Drawing.Size(120, 44);
 			this.PlaySelectedTrackBtn.TabIndex = 23;
 			this.PlaySelectedTrackBtn.Text = "播放";
 			this.OverflowToolTip.SetToolTip(this.PlaySelectedTrackBtn, "播放所选音轨");
@@ -27047,7 +27083,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackMultiSelectRadio.AutoSize = true;
 			this.MidiTrackMultiSelectRadio.Checked = true;
 			this.MidiTrackMultiSelectRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MidiTrackMultiSelectRadio.Location = new System.Drawing.Point(940, 3);
+			this.MidiTrackMultiSelectRadio.Location = new System.Drawing.Point(1014, 3);
 			this.MidiTrackMultiSelectRadio.Name = "MidiTrackMultiSelectRadio";
 			this.MidiTrackMultiSelectRadio.Size = new System.Drawing.Size(93, 46);
 			this.MidiTrackMultiSelectRadio.TabIndex = 21;
@@ -27060,7 +27096,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.MidiTrackSingleSelectRadio.AutoSize = true;
 			this.MidiTrackSingleSelectRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MidiTrackSingleSelectRadio.Location = new System.Drawing.Point(841, 3);
+			this.MidiTrackSingleSelectRadio.Location = new System.Drawing.Point(915, 3);
 			this.MidiTrackSingleSelectRadio.Name = "MidiTrackSingleSelectRadio";
 			this.MidiTrackSingleSelectRadio.Size = new System.Drawing.Size(93, 46);
 			this.MidiTrackSingleSelectRadio.TabIndex = 20;
@@ -27072,10 +27108,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.MidiTrackSelectInfo.AutoSize = true;
 			this.MidiTrackSelectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MidiTrackSelectInfo.Location = new System.Drawing.Point(262, 0);
+			this.MidiTrackSelectInfo.Location = new System.Drawing.Point(232, 0);
 			this.MidiTrackSelectInfo.MinimumSize = new System.Drawing.Size(0, 42);
 			this.MidiTrackSelectInfo.Name = "MidiTrackSelectInfo";
-			this.MidiTrackSelectInfo.Size = new System.Drawing.Size(408, 52);
+			this.MidiTrackSelectInfo.Size = new System.Drawing.Size(397, 52);
 			this.MidiTrackSelectInfo.TabIndex = 19;
 			this.MidiTrackSelectInfo.Text = "已选中 1 条音轨";
 			this.MidiTrackSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -27086,9 +27122,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackInvertSelectionButton.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MidiTrackInvertSelectionButton.Location = new System.Drawing.Point(106, 3);
 			this.MidiTrackInvertSelectionButton.MaximumSize = new System.Drawing.Size(800, 44);
-			this.MidiTrackInvertSelectionButton.MinimumSize = new System.Drawing.Size(150, 44);
+			this.MidiTrackInvertSelectionButton.MinimumSize = new System.Drawing.Size(120, 44);
 			this.MidiTrackInvertSelectionButton.Name = "MidiTrackInvertSelectionButton";
-			this.MidiTrackInvertSelectionButton.Size = new System.Drawing.Size(150, 44);
+			this.MidiTrackInvertSelectionButton.Size = new System.Drawing.Size(120, 44);
 			this.MidiTrackInvertSelectionButton.TabIndex = 18;
 			this.MidiTrackInvertSelectionButton.Text = "反选";
 			this.MidiTrackInvertSelectionButton.UseVisualStyleBackColor = true;
@@ -27113,9 +27149,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiAutoLayoutTracksGroup.Controls.Add(this.tableLayoutPanel22);
 			this.MidiAutoLayoutTracksGroup.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.MidiAutoLayoutTracksGroup.Enabled = false;
-			this.MidiAutoLayoutTracksGroup.Location = new System.Drawing.Point(8, 856);
+			this.MidiAutoLayoutTracksGroup.Location = new System.Drawing.Point(8, 1016);
 			this.MidiAutoLayoutTracksGroup.Name = "MidiAutoLayoutTracksGroup";
-			this.MidiAutoLayoutTracksGroup.Size = new System.Drawing.Size(1036, 138);
+			this.MidiAutoLayoutTracksGroup.Size = new System.Drawing.Size(1110, 138);
 			this.MidiAutoLayoutTracksGroup.TabIndex = 20;
 			this.MidiAutoLayoutTracksGroup.TabStop = false;
 			this.MidiAutoLayoutTracksGroup.Text = "自动布局轨道";
@@ -27135,7 +27171,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel22.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel22.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel22.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel22.Size = new System.Drawing.Size(1030, 100);
+			this.tableLayoutPanel22.Size = new System.Drawing.Size(1104, 100);
 			this.tableLayoutPanel22.TabIndex = 0;
 			//
 			// tableLayoutPanel23
@@ -27156,7 +27192,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel23.Name = "tableLayoutPanel23";
 			this.tableLayoutPanel23.RowCount = 1;
 			this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 52F));
-			this.tableLayoutPanel23.Size = new System.Drawing.Size(1014, 52);
+			this.tableLayoutPanel23.Size = new System.Drawing.Size(1088, 52);
 			this.tableLayoutPanel23.TabIndex = 9;
 			//
 			// ResetAutoLayoutTracksBtn
@@ -27215,7 +27251,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiAutoLayoutTracksInfo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MidiAutoLayoutTracksInfo.Location = new System.Drawing.Point(11, 8);
 			this.MidiAutoLayoutTracksInfo.Name = "MidiAutoLayoutTracksInfo";
-			this.MidiAutoLayoutTracksInfo.Size = new System.Drawing.Size(1008, 32);
+			this.MidiAutoLayoutTracksInfo.Size = new System.Drawing.Size(1082, 32);
 			this.MidiAutoLayoutTracksInfo.TabIndex = 0;
 			this.MidiAutoLayoutTracksInfo.Text = "仅在生成视频且不启用五线谱可视化效果时有效。";
 			//
@@ -27227,7 +27263,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigGroup.Location = new System.Drawing.Point(8, 8);
 			this.MidiConfigGroup.Name = "MidiConfigGroup";
 			this.MidiConfigGroup.Padding = new System.Windows.Forms.Padding(8);
-			this.MidiConfigGroup.Size = new System.Drawing.Size(1036, 464);
+			this.MidiConfigGroup.Size = new System.Drawing.Size(1110, 464);
 			this.MidiConfigGroup.TabIndex = 2;
 			this.MidiConfigGroup.TabStop = false;
 			this.MidiConfigGroup.Text = "MIDI 属性";
@@ -27262,7 +27298,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.MidiConfigTablePanel.Size = new System.Drawing.Size(1020, 416);
+			this.MidiConfigTablePanel.Size = new System.Drawing.Size(1094, 416);
 			this.MidiConfigTablePanel.TabIndex = 1;
 			//
 			// RestrictLengthLbl
@@ -27272,7 +27308,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.RestrictLengthLbl.Location = new System.Drawing.Point(4, 336);
 			this.RestrictLengthLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
 			this.RestrictLengthLbl.Name = "RestrictLengthLbl";
-			this.RestrictLengthLbl.Size = new System.Drawing.Size(1012, 32);
+			this.RestrictLengthLbl.Size = new System.Drawing.Size(1086, 32);
 			this.RestrictLengthLbl.TabIndex = 14;
 			this.RestrictLengthLbl.Text = "限制音符长度";
 			this.RestrictLengthLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -27283,7 +27319,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ChooseMidiLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ChooseMidiLbl.Location = new System.Drawing.Point(3, 0);
 			this.ChooseMidiLbl.Name = "ChooseMidiLbl";
-			this.ChooseMidiLbl.Size = new System.Drawing.Size(1014, 32);
+			this.ChooseMidiLbl.Size = new System.Drawing.Size(1088, 32);
 			this.ChooseMidiLbl.TabIndex = 0;
 			this.ChooseMidiLbl.Text = "选择 MIDI 文件";
 			this.ChooseMidiLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -27302,7 +27338,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel6.Name = "tableLayoutPanel6";
 			this.tableLayoutPanel6.RowCount = 1;
 			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel6.Size = new System.Drawing.Size(1020, 50);
+			this.tableLayoutPanel6.Size = new System.Drawing.Size(1094, 50);
 			this.tableLayoutPanel6.TabIndex = 2;
 			//
 			// ChooseMidiText
@@ -27311,7 +27347,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ChooseMidiText.Location = new System.Drawing.Point(3, 3);
 			this.ChooseMidiText.Name = "ChooseMidiText";
 			this.ChooseMidiText.ReadOnly = true;
-			this.ChooseMidiText.Size = new System.Drawing.Size(858, 39);
+			this.ChooseMidiText.Size = new System.Drawing.Size(932, 39);
 			this.ChooseMidiText.TabIndex = 2;
 			this.ChooseMidiText.Text = "<未选择 MIDI 文件>";
 			//
@@ -27319,7 +27355,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.ChooseMidiBtn.AutoSize = true;
 			this.ChooseMidiBtn.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ChooseMidiBtn.Location = new System.Drawing.Point(867, 3);
+			this.ChooseMidiBtn.Location = new System.Drawing.Point(941, 3);
 			this.ChooseMidiBtn.MaximumSize = new System.Drawing.Size(480, 44);
 			this.ChooseMidiBtn.Name = "ChooseMidiBtn";
 			this.ChooseMidiBtn.Size = new System.Drawing.Size(150, 44);
@@ -27338,7 +27374,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
 			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 85);
 			this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-			this.flowLayoutPanel3.Size = new System.Drawing.Size(1014, 45);
+			this.flowLayoutPanel3.Size = new System.Drawing.Size(1088, 45);
 			this.flowLayoutPanel3.TabIndex = 9;
 			//
 			// MidiStartSecondLbl
@@ -27384,7 +27420,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
 			this.tableLayoutPanel3.RowCount = 1;
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(1014, 42);
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(1088, 42);
 			this.tableLayoutPanel3.TabIndex = 7;
 			//
 			// MidiAutoChangeProjectPropertiesLbl
@@ -27426,7 +27462,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.MidiAutoChangeProjectPropertiesApplyBtn.Dock = System.Windows.Forms.DockStyle.Right;
 			this.MidiAutoChangeProjectPropertiesApplyBtn.Enabled = false;
-			this.MidiAutoChangeProjectPropertiesApplyBtn.Location = new System.Drawing.Point(828, 0);
+			this.MidiAutoChangeProjectPropertiesApplyBtn.Location = new System.Drawing.Point(902, 0);
 			this.MidiAutoChangeProjectPropertiesApplyBtn.Margin = new System.Windows.Forms.Padding(0);
 			this.MidiAutoChangeProjectPropertiesApplyBtn.Name = "MidiAutoChangeProjectPropertiesApplyBtn";
 			this.MidiAutoChangeProjectPropertiesApplyBtn.Size = new System.Drawing.Size(186, 42);
@@ -27442,7 +27478,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiBpmLbl.Location = new System.Drawing.Point(4, 141);
 			this.MidiBpmLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
 			this.MidiBpmLbl.Name = "MidiBpmLbl";
-			this.MidiBpmLbl.Size = new System.Drawing.Size(1012, 32);
+			this.MidiBpmLbl.Size = new System.Drawing.Size(1086, 32);
 			this.MidiBpmLbl.TabIndex = 10;
 			this.MidiBpmLbl.Text = "设定 BPM 速度为";
 			this.MidiBpmLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -27458,7 +27494,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiBpmFlowPanel.Location = new System.Drawing.Point(3, 176);
 			this.MidiBpmFlowPanel.Name = "MidiBpmFlowPanel";
 			this.MidiBpmFlowPanel.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.MidiBpmFlowPanel.Size = new System.Drawing.Size(1014, 51);
+			this.MidiBpmFlowPanel.Size = new System.Drawing.Size(1088, 51);
 			this.MidiBpmFlowPanel.TabIndex = 12;
 			//
 			// MidiDynamicTempoFlow
@@ -27601,7 +27637,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel12.Name = "tableLayoutPanel12";
 			this.tableLayoutPanel12.RowCount = 1;
 			this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel12.Size = new System.Drawing.Size(1014, 44);
+			this.tableLayoutPanel12.Size = new System.Drawing.Size(1088, 44);
 			this.tableLayoutPanel12.TabIndex = 13;
 			//
 			// MidiBeatLbl
@@ -27623,7 +27659,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiBeatTxt.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MidiBeatTxt.Location = new System.Drawing.Point(116, 0);
 			this.MidiBeatTxt.Name = "MidiBeatTxt";
-			this.MidiBeatTxt.Size = new System.Drawing.Size(895, 44);
+			this.MidiBeatTxt.Size = new System.Drawing.Size(969, 44);
 			this.MidiBeatTxt.TabIndex = 5;
 			this.MidiBeatTxt.Text = "无";
 			this.MidiBeatTxt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -27639,7 +27675,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.RestrictLengthFlow.Enabled = false;
 			this.RestrictLengthFlow.Location = new System.Drawing.Point(3, 371);
 			this.RestrictLengthFlow.Name = "RestrictLengthFlow";
-			this.RestrictLengthFlow.Size = new System.Drawing.Size(1014, 42);
+			this.RestrictLengthFlow.Size = new System.Drawing.Size(1088, 42);
 			this.RestrictLengthFlow.TabIndex = 15;
 			//
 			// UnrestrictLengthRadio
@@ -31435,16 +31471,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SeparateDrumsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.SeparateDrumsCheck.Location = new System.Drawing.Point(271, 3);
 			this.SeparateDrumsCheck.Name = "SeparateDrumsCheck";
-			this.SeparateDrumsCheck.Size = new System.Drawing.Size(190, 42);
+			this.SeparateDrumsCheck.Size = new System.Drawing.Size(142, 42);
 			this.SeparateDrumsCheck.TabIndex = 6;
-			this.SeparateDrumsCheck.Text = "分离不同鼓声";
+			this.SeparateDrumsCheck.Text = "分离鼓声";
 			this.SeparateDrumsCheck.UseVisualStyleBackColor = true;
 			//
 			// DifferenceCompositeModeCheck
 			//
 			this.DifferenceCompositeModeCheck.AutoSize = true;
 			this.DifferenceCompositeModeCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.DifferenceCompositeModeCheck.Location = new System.Drawing.Point(467, 3);
+			this.DifferenceCompositeModeCheck.Location = new System.Drawing.Point(419, 3);
 			this.DifferenceCompositeModeCheck.Name = "DifferenceCompositeModeCheck";
 			this.DifferenceCompositeModeCheck.Size = new System.Drawing.Size(238, 42);
 			this.DifferenceCompositeModeCheck.TabIndex = 5;
@@ -31457,7 +31493,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel15.Controls.Add(this.TrackShadowCheck);
 			this.flowLayoutPanel15.Controls.Add(this.TrackShadowColorBtn);
 			this.flowLayoutPanel15.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel15.Location = new System.Drawing.Point(708, 0);
+			this.flowLayoutPanel15.Location = new System.Drawing.Point(660, 0);
 			this.flowLayoutPanel15.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel15.Name = "flowLayoutPanel15";
 			this.flowLayoutPanel15.Size = new System.Drawing.Size(280, 48);
@@ -33617,13 +33653,26 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			//
+			// MidiTrackSeparateDrumsCheck
+			//
+			this.MidiTrackSeparateDrumsCheck.AutoSize = true;
+			this.MidiTrackSeparateDrumsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MidiTrackSeparateDrumsCheck.Location = new System.Drawing.Point(635, 3);
+			this.MidiTrackSeparateDrumsCheck.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+			this.MidiTrackSeparateDrumsCheck.Name = "MidiTrackSeparateDrumsCheck";
+			this.MidiTrackSeparateDrumsCheck.Size = new System.Drawing.Size(142, 46);
+			this.MidiTrackSeparateDrumsCheck.TabIndex = 24;
+			this.MidiTrackSeparateDrumsCheck.Text = "分离鼓声";
+			this.MidiTrackSeparateDrumsCheck.UseVisualStyleBackColor = true;
+			this.MidiTrackSeparateDrumsCheck.CheckedChanged += new System.EventHandler(this.MidiTrackSeparateDrumsCheck_CheckedChanged);
+			//
 			// ConfigForm
 			//
 			this.AcceptButton = this.OkBtn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(1092, 1188);
+			this.ClientSize = new System.Drawing.Size(1166, 1348);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.menu);
@@ -34527,6 +34576,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.ToolStripMenuItem vitenameseDocsToolStripMenuItem;
 		public RememberedComboBox AudioStretchMethodCombo;
 		public System.Windows.Forms.Label AudioStretchMethodLbl;
+		public System.Windows.Forms.CheckBox MidiTrackSeparateDrumsCheck;
 	}
 	#endregion
 
@@ -34989,6 +35039,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				else if (parent.SuggestSelectedSourceFrom != MediaSourceFrom.NOTHING_SELECTED) ChooseSourceCombo.SelectedIndex = (int)MediaSourceFrom.SELECTED_CLIP;
 				else ChooseSourceCombo.SelectedIndex = (int)MediaSourceFrom.SELECTED_CLIP; // SELECTED_MEDIA;
 			} else ChooseSourceCombo.SelectedIndex = (int)parent.SuggestSelectedSourceFrom;
+			MidiTrackSeparateDrumsCheck.Checked = configIni.Read("MidiSeparateDrums", false);
 			if (OpenMidiFile(configIni.Read("LastMidiFile", null), true)) {
 				string lastMidiChannelsChecked = configIni.Read("LastMidiChannelsChecked", "");
 				MidiTrackListView_InternalItemChecking = true;
@@ -35277,6 +35328,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("MidiAutoChangeProjectBpm", MidiAutoChangeProjectBpmCheck.Checked);
 			configIni.Write("MidiAutoChangeProjectBeat", MidiAutoChangeProjectBeatCheck.Checked);
 			configIni.Write("MidiAutoChangeProjectBeat", MidiAutoChangeProjectBeatCheck.Checked);
+			configIni.Write("MidiSeparateDrums", MidiTrackSeparateDrumsCheck.Checked);
 			configIni.Write("MoveCursorAfterCompletion", MoveCursorAfterCompletion);
 			configIni.Write("GroupTrackBy", GroupTrackBy);
 			configIni.Write("CollapseTrackGroup", CollapseTrackGroupCheck.Checked);
@@ -35421,10 +35473,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				MidiTracks = new MidiChannels();
 				MidiTrackListView.Enabled = true;
 				MidiTrackListView.Items.Clear();
-				for (int i = 0; i < midi.TrackInfos.Length; i++) {
+				for (int i = 0; i < midi.TrackInfos.Count; i++) {
 					MIDI.TrackInfo info = midi.TrackInfos[i];
 					MidiTracks.Add(info);
-					if (preferredChannel == -1 && !(info.IsDrumKit || info.Index == 10))
+					if (preferredChannel == -1 && !(info.IsDrumKit || info.Channel == 10))
 						preferredChannel = i; // 10 号通道是鼓组专用通道，不要选。
 				}
 				if (preferredChannel == -1) preferredChannel = 0;
@@ -35445,23 +35497,47 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void RefreshMidiTrackListView() {
 			CheckMidiAutoLayoutTracksButtonActived();
-			int i = 0;
+			midiTrackListViewItems = new List<ListViewItem>();
 			foreach (MIDI.TrackInfo midiChannel in MidiTracks) {
-				++i; // 序号从 1 起始。
 				string pan =
 					midiChannel.Pan == MIDI.INITIAL_PAN ? "" : // 轨道不包含声像信息
 					midiChannel.Pan < 60 ? Lang.str.pan_left_abbr :
 					midiChannel.Pan > 68 ? Lang.str.pan_right_abbr :
 					Lang.str.pan_center_abbr; // 60 ~ 68 之间判定为中置声道。
 				if (midiChannel.IsVariablePan) pan += " " + Lang.str.pan_dynamic_abbr;
-				ListViewItem item = MidiTrackListView.Items.Add(new ListViewItem(new string[] {
-					i.ToString(), midiChannel.HasChannel ? midiChannel.Index.ToString() : "", midiChannel.Name, midiChannel.Instrument,
+				ListViewItem item = new ListViewItem(new string[] {
+					midiChannel.Index, midiChannel.HasChannel ? midiChannel.Channel.ToString() : "", midiChannel.Name, midiChannel.Instrument,
 					midiChannel.IsDrumKit ? "√" : "",
 					midiChannel.NotesCount.ToString(), pan, midiChannel.BeginNote
-				}));
-				item.Tag = midiChannel;
+				}) { Tag = midiChannel };
+				midiTrackListViewItems.Add(item);
 			}
+			MidiTrackSeparateDrumsCheck_CheckedChanged();
 			MidiTrackListView.SelectedItems.Clear();
+		}
+
+		private List<ListViewItem> midiTrackListViewItems;
+
+		private void MidiTrackSeparateDrumsCheck_CheckedChanged() {
+			if (midiTrackListViewItems == null || midiTrackListViewItems.Count == 0) return;
+			MidiTrackListView_InternalItemChecking = true;
+			bool singleSelect = MidiTrackSingleSelectRadio.Checked, isAnyTrackChecked = false;
+			MidiTrackListView.Items.Clear();
+			foreach (ListViewItem item in midiTrackListViewItems) {
+				if (singleSelect && isAnyTrackChecked) item.Checked = false;
+				item.Selected = false;
+				isAnyTrackChecked = isAnyTrackChecked || item.Checked;
+				MIDI.TrackInfo track = (MIDI.TrackInfo)item.Tag;
+				if (!track.IsDrumKit || track.IsSeparatedDrum == MidiTrackSeparateDrumsCheck.Checked)
+					MidiTrackListView.Items.Add(item);
+			}
+			SetCheckedEnabled_MidiTrackListView();
+			MidiPlayer_Stop();
+			MidiTrackListView_InternalItemChecking = false;
+		}
+
+		private void MidiTrackSeparateDrumsCheck_CheckedChanged(object sender, EventArgs e) {
+			MidiTrackSeparateDrumsCheck_CheckedChanged();
 		}
 
 		private void RemoveLastMidiConfig() {
@@ -35851,7 +35927,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			YtpSelectInfo.Text = str.select_source_count_info;
 			SonarTab.Text = str.sonar;
 			SonarConfigCheck.Text = str.sonar_config;
-			SeparateDrumsCheck.Text = str.separate_drums;
+			SeparateDrumsCheck.Text = MidiTrackSeparateDrumsCheck.Text = str.separate_drums;
 			DifferenceCompositeModeCheck.Text = str.difference_composite_mode;
 			TrackShadowCheck.Text = str.shadow;
 			TrackShadowColorBtn.Text = str.shadow_color + str.dialog_sign;
@@ -36026,6 +36102,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioAutoBasePitchCheck.Text = str.auto_base_pitch;
 			OverflowToolTip.SetToolTip(AudioAutoBasePitchCheck, str.auto_base_pitch_tooltip);
 			PlaySelectedTrackBtn.Text = str.play;
+			OverflowToolTip.SetToolTip(PlaySelectedTrackBtn, str.play_selected_track);
 			AudioNoTuningDrumKitsCheck.Text = str.no_tuning_drum_kits;
 			AudioPluckGroup.Text = str.chorus_crisp;
 			AudioPluckSpliceLbl.Text = str.splice_position;
@@ -37960,7 +38037,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void MidiTrackListView_SelectedIndexChanged(object sender, EventArgs e) {
 			MidiPlayer_Stop();
-			PlaySelectedTrackBtn.Enabled = MidiTrackListView.SelectedItems.Count == 1;
 			if (MidiTrackListView.SelectedItems.Count == 0 || MidiTrackListView_InternalItemChecking) return;
 			MidiTrackListView_InternalItemChecking = true;
 			ListViewItem selected = MidiTrackListView.SelectedItems[0];
@@ -37975,6 +38051,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void SetCheckedEnabled_MidiTrackListView() {
 			int checkedMidiTrackCount = MidiTrackListView.CheckedItems.Count;
+			PlaySelectedTrackBtn.Enabled = MidiTrackListView.SelectedItems.Count == 1;
 			SetStackAndTimeUnremappingEnabled();
 			MidiTrackSelectInfo.Text = MidiTrackSingleSelectRadio.Checked ? Lang.str.midi_channel_setting :
 				string.Format(checkedMidiTrackCount == 1 ? Lang.str.select_midi_track_count_info : Lang.str.select_midi_tracks_count_info, checkedMidiTrackCount);
@@ -38191,7 +38268,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MIDI.TrackInfo track = MidiTrackListView.SelectedItems.Cast<ListViewItem>().Select(item => item.Tag as MIDI.TrackInfo).FirstOrDefault();
 			if (track == null || track.NotesCount == 0 || track.Events.Count == 0) return;
 
-			PlaySelectedTrackBtn.Text = "停止";
+			PlaySelectedTrackBtn.Text = Lang.str.stop;
+			OverflowToolTip.SetToolTip(PlaySelectedTrackBtn, null);
 			midiPlayer.PlaybackFinished += MidiPlayer_PlaybackFinished;
 
 			double bpm = MidiProjectBpmCheck.Checked ? vegas.Project.Ruler.BeatsPerMinute :
@@ -38201,11 +38279,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void MidiPlayer_Stop() {
 			midiPlayer.Stop();
-			PlaySelectedTrackBtn.Text = "播放";
+			MidiPlayer_PlaybackFinished(null, null);
 		}
 
 		private void MidiPlayer_PlaybackFinished(object sender, EventArgs e) {
-			PlaySelectedTrackBtn.Text = "播放";
+			PlaySelectedTrackBtn.Text = Lang.str.play;
+			OverflowToolTip.SetToolTip(PlaySelectedTrackBtn, Lang.str.play_selected_track);
 		}
 
 		private void Tabs_SelectedIndexChanged(object sender, EventArgs e) {
@@ -38846,7 +38925,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			sure_to_reset = "确定要重置？",
 			sonar = "声呐",
 			sonar_config = "为鼓组启用声呐效果",
-			separate_drums = "分离不同鼓声",
+			separate_drums = "分离鼓声",
 			difference_composite_mode = "差值轨道合成模式",
 			shadow = "阴影",
 			shadow_color = "阴影颜色",
@@ -40690,7 +40769,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				sure_to_reset = "確定要重設？",
 				sonar = "聲呐",
 				sonar_config = "為鼓組啟用聲呐效果",
-				separate_drums = "分離不同鼓聲",
+				separate_drums = "分離鼓聲",
 				difference_composite_mode = "差值軌道合成模式",
 				shadow = "陰影",
 				shadow_color = "陰影顔色",

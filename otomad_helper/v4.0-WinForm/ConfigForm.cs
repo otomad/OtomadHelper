@@ -1498,5 +1498,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void Balloon_Popup(object sender, PopupEventArgs e) {
 			// 点击穿透、无法悬停
 		}
+
+		private void MidiTrackSeparateDrumsCheck_CheckedChanged(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
 	}
 }
