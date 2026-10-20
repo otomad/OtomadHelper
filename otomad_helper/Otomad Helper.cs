@@ -38037,7 +38037,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void MidiTrackListView_SelectedIndexChanged(object sender, EventArgs e) {
 			MidiPlayer_Stop();
-			if (MidiTrackListView.SelectedItems.Count == 0 || MidiTrackListView_InternalItemChecking) return;
+			if (MidiTrackListView.SelectedItems.Count == 0 || MidiTrackListView_InternalItemChecking) {
+				SetCheckedEnabled_MidiTrackListView();
+				return;
+			}
 			MidiTrackListView_InternalItemChecking = true;
 			ListViewItem selected = MidiTrackListView.SelectedItems[0];
 			if (MidiTrackMultiSelectRadio.Checked)
