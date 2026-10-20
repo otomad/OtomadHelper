@@ -1235,7 +1235,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 验证数据合法
 			bool noMidiChannel = MidiConfigTracks == null || MidiConfigTracks.Count == 0;
 			bool isSonarLegal = SonarConfig && !noMidiChannel && MidiConfigTracks[0].IsDrumKit;
-			bool hasTimeSignature = midi.TimeSignatureTrack != null;
+			bool hasTimeSignature = midi != null && midi.TimeSignatureTrack != null;
 			if (!AConfig && !VConfig && !SonarConfig) return false;
 			if (!isSonarLegal) {
 				if (!IsFromBrowseFile) { bool ok = GetSelectedSource(); if (!ok) return false; }
@@ -34996,6 +34996,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		public void ReadIni() {
+			#region 个性化配置
+			configIni.StartSection("Personalize");
+			Tabs.SetIndex(configIni.Read("CurrentTab", 0));
+			CloseAfterOpenHelperCheck.Checked = configIni.Read("CloseAfterOpenHelper", false);
+			CloseAfterOpenMoshCheck.Checked = configIni.Read("CloseAfterOpenMosh", false);
+			if (configIni.HasKey("FormSize")) {
+				rememberFormSizeToolStripMenuItem.Checked = true;
+				string formSize_string = configIni.Read("FormSize", "");
+				Size size;
+				if (ReadSize(formSize_string, out size)) Size = size;
+			}
+			checkUpdateOnStartupToolStripMenuItem.Checked = configIni.Read("CheckUpdateOnStartup", true);
+			enableLegacyProgressDialogToolStripMenuItem.Checked = configIni.Read("EnableLegacyProgressDialog", false);
+			configIni.EndSection();
+			#endregion
+
 			#region 音频配置
 			configIni.StartSection("Audio");
 			AudioScratchCombo.SetIndex(configIni.Read("Stretch", 0), 0);
@@ -35228,22 +35244,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.EndSection();
 			#endregion
 
-			#region 个性化配置
-			configIni.StartSection("Personalize");
-			Tabs.SetIndex(configIni.Read("CurrentTab", 0));
-			CloseAfterOpenHelperCheck.Checked = configIni.Read("CloseAfterOpenHelper", false);
-			CloseAfterOpenMoshCheck.Checked = configIni.Read("CloseAfterOpenMosh", false);
-			if (configIni.HasKey("FormSize")) {
-				rememberFormSizeToolStripMenuItem.Checked = true;
-				string formSize_string = configIni.Read("FormSize", "");
-				Size size;
-				if (ReadSize(formSize_string, out size)) Size = size;
-			}
-			checkUpdateOnStartupToolStripMenuItem.Checked = configIni.Read("CheckUpdateOnStartup", true);
-			enableLegacyProgressDialogToolStripMenuItem.Checked = configIni.Read("EnableLegacyProgressDialog", false);
-			configIni.EndSection();
-			#endregion
-
 			#region 填补轨道间隙配置
 			configIni.StartSection("TracksLegato");
 			effectToSelectedEventsToolStripMenuItem.Checked = configIni.Read("ApplyToSelectedEvents", false);
@@ -35275,6 +35275,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		public void SaveIni() {
+			#region 个性化配置
+			configIni.StartSection("Personalize");
+			configIni.Write("Language", Language);
+			configIni.Write("CurrentTab", Tabs.SelectedIndex);
+			configIni.Write("CloseAfterOpenHelper", CloseAfterOpenHelperCheck.Checked);
+			configIni.Write("CloseAfterOpenMosh", CloseAfterOpenMoshCheck.Checked);
+			if (rememberFormSizeToolStripMenuItem.Checked) configIni.Write("FormSize", WriteSize(Size));
+			configIni.Write("CheckUpdateOnStartup", checkUpdateOnStartupToolStripMenuItem.Checked);
+			configIni.Write("EnableLegacyProgressDialog", enableLegacyProgressDialogToolStripMenuItem.Checked);
+			configIni.EndSection();
+			#endregion
+
 			#region 音频配置
 			configIni.StartSection("Audio");
 			configIni.Write("Stretch", AudioScratchCombo.UserSelectedIndex);
@@ -35475,18 +35487,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("BeepDuration", PreviewBeepDurationBox.Value);
 			configIni.Write("IsTuneAudio", PreviewTuneAudioCheck.Checked);
 			configIni.Write("PreviewBeepEngine", PreviewBeepEngineCombo.SelectedIndex);
-			configIni.EndSection();
-			#endregion
-
-			#region 个性化配置
-			configIni.StartSection("Personalize");
-			configIni.Write("Language", Language);
-			configIni.Write("CurrentTab", Tabs.SelectedIndex);
-			configIni.Write("CloseAfterOpenHelper", CloseAfterOpenHelperCheck.Checked);
-			configIni.Write("CloseAfterOpenMosh", CloseAfterOpenMoshCheck.Checked);
-			if (rememberFormSizeToolStripMenuItem.Checked) configIni.Write("FormSize", WriteSize(Size));
-			configIni.Write("CheckUpdateOnStartup", checkUpdateOnStartupToolStripMenuItem.Checked);
-			configIni.Write("EnableLegacyProgressDialog", enableLegacyProgressDialogToolStripMenuItem.Checked);
 			configIni.EndSection();
 			#endregion
 
