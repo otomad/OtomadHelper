@@ -1776,6 +1776,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 								granulars.ForEach(evt => evt.Length = oneTick);
 						}
 						#endregion
+
+						// 弹拨/脆鸣/合唱清脆
+						if (AConfigPluck && method != AudioTuningMethod.OSCILLATOR) {
+							AudioEvent secondEvent = ChorusCrisp(audioEvent);
+							if (secondEvent != null && tempEventGroup != null) tempEventGroup.Add(secondEvent);
+						}
 					}
 				endAConfig:;
 					#endregion
@@ -2241,6 +2247,43 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 将 Hz 转换为 ms (周期 T = 1/f，再乘以 1000)。
 			double ms = 1 / hz * 1000;
 			return ms;
+		}
+
+		public AudioEvent ChorusCrisp(AudioEvent audio) {
+			return ChorusCrisp(audio, AConfigPluckSplice, AConfigPluckDuck, AConfigPluckOffset, AConfigPluckCurve);
+		}
+
+		public static AudioEvent ChorusCrisp(AudioEvent originalEvent, double spliceTime, double duckPercent, double offsetPercent, CurveType fadeType) {
+			Timecode eventLength = originalEvent.Length;
+			Timecode spliceOffset = Timecode.FromMilliseconds(spliceTime);
+			if (eventLength.ToMilliseconds() < spliceTime + 0.01) return null;
+
+			// STEP 1: Split
+			AudioEvent secondEvent = originalEvent.Split(spliceOffset) as AudioEvent;
+			if (secondEvent == null) return null;
+
+			// STEP 2: Clear ONLY the inner (split-edge) fades — Vegas adds
+			// "quick fades" automatically on every split. Leave the outer
+			// fades alone so the clip's original fade-in at the start and
+			// fade-out at the end survive.
+			originalEvent.FadeOut.Length = secondEvent.FadeIn.Length = Timecode.FromSeconds(0);
+
+			// STEP 3: Position the overlap and apply gain
+			Timecode overlapDuration = Timecode.FromMilliseconds(spliceTime * offsetPercent / 100);
+			if (secondEvent != null) {
+				Timecode newStart = secondEvent.Start - overlapDuration;
+				if (secondEvent.ActiveTake != null) secondEvent.ActiveTake.Offset -= overlapDuration;
+				secondEvent.Start = newStart;
+				secondEvent.Length += overlapDuration;
+				secondEvent.FadeIn.SetGain(duckPercent / 100, true);
+			}
+
+			// STEP 4: Set crossfade on the inner edges.
+			// Set curve type FIRST, then length — prevents Vegas from
+			// applying a default curve when the length gets set.
+			originalEvent.FadeOut.Curve = secondEvent.FadeIn.Curve = fadeType;
+			originalEvent.FadeOut.Length = secondEvent.FadeIn.Length = overlapDuration;
+			return secondEvent;
 		}
 
 		private bool requestRestartScript = false;
