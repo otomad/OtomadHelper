@@ -1673,7 +1673,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if ((AConfigScratch == StretchType.FLEXING_AND_EXTENDING ||
 							AConfigScratch == StretchType.EXTENDING_ONLY && duration > audioLength ||
 							AConfigScratch == StretchType.FLEXING_ONLY && duration < audioLength) &&
-							AConfigMethod != AudioTuningMethod.OSCILLATOR && AConfigStretchMethod != AudioStretchMethod.NO_TUNING)
+							AConfigMethod != AudioTuningMethod.OSCILLATOR && AConfigStretchMethod != AudioStretchMethod.NO_TUNING
+							#if VER_GEQ_16
+							&& !(AConfigStretchMethod == AudioStretchMethod.UNSET && audioEvent.Method == TimeStretchPitchShift.None)
+							#endif
+							)
 							audioEvent.AdjustPlaybackRate(Clamp(audioLength / duration, PitchStretchConstants.MIN_STRETCH_EXP, PitchStretchConstants.MAX_STRETCH_EXP), true);
 						audioEvent.Loop = AConfigLoop;
 						if (AConfigTimeUnremapping && !ShouldMultisource) {
