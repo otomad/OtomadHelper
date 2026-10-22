@@ -4976,6 +4976,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		RADIAL_BLUR,
 		WIPE_IN_THE_RIGHT,
 		SPLIT_VERTICAL_OUT,
+		RANDOM_1,
 	}
 
 	/// <summary>
@@ -5031,6 +5032,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					new string[] { str.effect_init_blur },
 					new string[] { str.effect_init_right },
 					new string[] { str.effect_init_outward },
+					new string[] { str.random },
 				};
 			}
 		}
@@ -5052,6 +5054,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					{ str.swing_class, new PvVisualEffectType[] { PvVisualEffectType.PENDULUM } },
 					{ str.blur_class, new PvVisualEffectType[] { PvVisualEffectType.GAUSSIAN_BLUR, PvVisualEffectType.RADIAL_BLUR } },
 					{ str.wipe_class, new PvVisualEffectType[] { PvVisualEffectType.WIPE_IN_THE_RIGHT, PvVisualEffectType.SPLIT_VERTICAL_OUT } },
+					{ str.random_class, new PvVisualEffectType[] { PvVisualEffectType.RANDOM_1 } },
 				};
 			}
 		}
@@ -5063,19 +5066,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private bool isPitchHold = false;
 		private bool isUsing = false;
 
-		private bool horizontalFlip = false;
-		private bool verticalFlip = false;
-		private bool isNegative = false;
+		[Range()] private bool horizontalFlip = false;
+		[Range()] private bool verticalFlip = false;
+		[Range()] private bool isNegative = false;
 		private bool isReverse = false;
-		private int rotationStep = 0;
-		private int horizontalMirrored = 0;
-		private int verticalMirrored = 0;
-		private bool isInvertLumin = false;
-		private double hue = 0;
-		private bool isGrey = false;
-		private int obliqueDirect = 0;
-		private int swingDirect = 0;
-		private int puyoShape = 0;
+		[Range(0, 1, 2, 3)] private int rotationStep = 0;
+		[Range(1, 2)] private int horizontalMirrored = 0;
+		[Range(1, 2)] private int verticalMirrored = 0;
+		[Range()] private bool isInvertLumin = false;
+		[Range(0d, 1d)] private double hue = 0;
+		[Range()] private bool isGrey = false;
+		[Range(-1, 0, 1)] private int obliqueDirect = 0;
+		[Range(-1, 0, 1)] private int swingDirect = 0;
+		[Range(-1, 0, 1)] private int puyoShape = 0;
+
+		[Range()] private bool isGaussianBlur_forRandomOnly = false;
+		[Range()] private bool isRadialBlur_forRandomOnly = false;
+		[Range()] private bool isZoomOutIn_forRandomOnly = false;
+		[Range()] private bool isSplitVerticalOut_forRandomOnly = false;
 
 		public bool HorizontalFlip { get { return horizontalFlip; } }
 		public bool VerticalFlip { get { return verticalFlip; } }
@@ -5090,17 +5098,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public int ObliqueDirect { get { return obliqueDirect; } }
 		public int SwingDirect { get { return swingDirect; } }
 		public int PuyoShape { get { return puyoShape; } }
-		public bool IsGaussianBlur { get { return fxes.HasEffect(PvVisualEffectType.GAUSSIAN_BLUR); } }
-		public bool IsRadialBlur { get { return fxes.HasEffect(PvVisualEffectType.RADIAL_BLUR); } }
-		public bool IsZoomOutIn { get { return fxes.HasEffect(PvVisualEffectType.ZOOM_OUT_IN); } }
+		public bool IsGaussianBlur { get { return fxes.HasEffect(PvVisualEffectType.GAUSSIAN_BLUR) || isGaussianBlur_forRandomOnly; } }
+		public bool IsRadialBlur { get { return fxes.HasEffect(PvVisualEffectType.RADIAL_BLUR) || isRadialBlur_forRandomOnly; } }
+		public bool IsZoomOutIn { get { return fxes.HasEffect(PvVisualEffectType.ZOOM_OUT_IN) || isZoomOutIn_forRandomOnly; } }
 		public bool IsWipeInTheRight { get { return fxes.HasEffect(PvVisualEffectType.WIPE_IN_THE_RIGHT); } }
-		public bool IsSplitVerticalOut { get { return fxes.HasEffect(PvVisualEffectType.SPLIT_VERTICAL_OUT); } }
+		public bool IsSplitVerticalOut { get { return fxes.HasEffect(PvVisualEffectType.SPLIT_VERTICAL_OUT) || isSplitVerticalOut_forRandomOnly; } }
 		public PvVisualEffectType? VerticalExpansion { get { return GetFirstEffectInRange(PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.VERTICAL_BOUNCE); } }
 		public bool RequirePicInPicDeformEffects { get { return GetFirstEffectInRange(PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.PUYO_PUYO) != null; } }
 		public bool IsVerticalBounce { get { return fxes.HasEffect(PvVisualEffectType.VERTICAL_BOUNCE); } }
 		public PvVisualEffectType? TimeClass2 { get { return GetFirstEffectInRange(PvVisualEffectType.SHARP_REWIND, PvVisualEffectType.WOBBLE_PERIOD); } }
 		public bool IsPitchHoldEffects { get { return GetFirstEffectInRange(PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_INVERT) != null; } }
 		public bool IsPitchNotHoldEffects { get { return fxes.HasEffect(PvVisualEffectType.H_FLIP_INTERRUPT, PvVisualEffectType.V_FLIP_INTERRUPT, PvVisualEffectType.NEGATIVE_INTERRUPT); } }
+		public bool IsRandomly { get { return fxes.HasEffect(PvVisualEffectType.RANDOM_1); } }
 
 		public PvVisualEffect(PvVisualEffectType fx, int initStep = 0) : this(new PrveValue(fx, initStep)) { }
 		public PvVisualEffect(PrveValue fx) : this(new PrveValues { fx }) { }
@@ -5133,6 +5142,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 		private void Update() {
 			isUsing = true;
+			if (IsRandomly) {
+				UpdateRandomly();
+				return;
+			}
 			for (int i = 0; i < fxes.Count; i++) {
 				PvVisualEffectType fx = fxes[i].Effect;
 				int step = steps[i], duration = durations[i];
@@ -5229,6 +5242,31 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 			}
 		}
+		private void UpdateRandomly() {
+			prveFieldRanges = prveFieldRanges ?? typeof(PvVisualEffect).GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Select(field => Range.BindToField(field)).OfType<Range>().ToArray();
+			Func<IEnumerable<object>> GetFieldValues = () => prveFieldRanges.Select(range => range.Field.GetValue(this));
+			IReadOnlyList<object> previousValues = GetFieldValues().ToList(); // 使用 ToList 来固化值。
+			do {
+				// Reset
+				foreach (Range range in prveFieldRanges)
+					range.Field.SetValue(this, range.Type == Range.Types.Bool ? (object)false : (object)0);
+				Range randomOne = prveFieldRanges[random.Next(0, prveFieldRanges.Length)];
+				switch (randomOne.Type) {
+					case Range.Types.Bool:
+						randomOne.Field.SetValue(this, true);
+						break;
+					case Range.Types.Range:
+						randomOne.Field.SetValue(this, random.NextDouble() * (randomOne.Max - randomOne.Min) + randomOne.Min);
+						break;
+					case Range.Types.Enum:
+						randomOne.Field.SetValue(this, randomOne.Enums[random.Next(0, randomOne.Enums.Count)]);
+						break;
+					default: break;
+				}
+			} while (prveFieldRanges.Length > 1 && GetFieldValues().SequenceEqual(previousValues)); // 如果第二次随机和前一次刚好一样，则重新随机，避免连续两次完全相同的效果。
+		}
+		private static Range[] prveFieldRanges;
+		private readonly Random random = new Random();
 
 		/// <summary>
 		/// 在效果列表中获取第一个满足在范围内条件的效果。
@@ -5255,6 +5293,39 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			lastPitch = pitch;
 			if (IsPitchHoldEffects || IsPitchNotHoldEffects) PitchHoldNext(IsPitchHoldEffects);
 			return isPitchHold;
+		}
+
+		[AttributeUsage(AttributeTargets.Field)]
+		public class Range : Attribute {
+			public Types Type { get; private set; }
+			public double Min { get; private set; }
+			public double Max { get; private set; }
+			public IReadOnlyList<int> Enums { get; private set; }
+			public FieldInfo Field { get; private set; }
+
+			public Range() {
+				Type = Types.Bool;
+			}
+
+			public Range(double min, double max) {
+				Min = min;
+				Max = max;
+				Type = Types.Range;
+			}
+
+			public Range(params int[] enums) {
+				Enums = enums;
+				Type = Types.Enum;
+			}
+
+			public enum Types { None, Bool, Range, Enum }
+
+			public static Range BindToField(FieldInfo field) {
+				Range range = field.GetCustomAttribute<Range>();
+				if (range == null) return null;
+				range.Field = field;
+				return range;
+			}
 		}
 	}
 
@@ -19396,6 +19467,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			PrveValues result = new PrveValues();
 			foreach (KeyValuePair<PvVisualEffectType, RadioButton> item in type2radio) {
 				if (item.Key == PvVisualEffectType.NONE) continue;
+				if (item.Key == PvVisualEffectType.RANDOM_1 && item.Value.Checked) {
+					result.Clear();
+					result.Add(new PrveValue(item.Key, 0));
+					break;
+				}
 				if (item.Value.Checked)
 					result.Add(new PrveValue(item.Key, GetInfo(item.Value).InitialCombo.SelectedIndex));
 			}
@@ -35948,6 +36024,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				str.gaussian_blur, str.radial_blur,
 				str.wipe_in_the_right,
 				str.split_vertical_out,
+				str.random_effect + " " + 1,
 			});
 			VideoConfigCheck.Text = str.vconfig;
 			VideoScratchLbl.Text = str.video_stretch;
@@ -39384,6 +39461,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			standard = "标准",
 			snappy = "迅捷",
 			unset = "不改变",
+			random_effect = "随机效果",
+			random = "随机",
+			random_class = "随机类",
 			__eol__ = null;
 
 		static Lang() {
