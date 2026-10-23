@@ -3563,7 +3563,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (!SheetConfig && generatedVideoTracks.Count > 1) {
 				VideoTrack[] videoTracks = generatedVideoTracks.ToArray();
 				AutoLayoutTracksGridForm.Arrange(videoTracks, LayoutInfos.Grid, this);
-				GradientTracksForm.Arrange(videoTracks, LayoutInfos.GradientTracks, this);
+				GradientTracksForm.Arrange(videoTracks, LayoutInfos.GradientTracks, this, generatedTracks);
 			}
 		StartToRemoveSourceTrackEvents:
 			if (succeed && RemoveSourceTrackEvents && SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP && eventSets != null)
@@ -3586,6 +3586,186 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				vegas.Transport.CursorPosition = Timecode.FromMilliseconds(resultCursorPosition.Value);
 				vegas.Transport.ViewCursor(false);
 			}
+		}
+
+		private static MethodInfo duplicateTrackMethod = typeof(Project).GetMethod("DuplicateTrack", new Type[] { typeof(Track), typeof(int) });
+		public static bool HasNativeDuplicateTrackMethod { get { return duplicateTrackMethod != null; } }
+
+		/// <summary>
+		/// 复制轨道。
+		/// </summary>
+		/// <remarks>
+		/// Vegas Pro 23 支持
+		/// </remarks>
+		/// <param name="sourceTrack">源轨道。</param>
+		/// <param name="index">
+		/// 新复制轨道的索引值。
+		/// <list type="bullet">
+		/// <item>
+		/// <term>-2</term>
+		/// <description>源轨道的下一层。默认值。</description>
+		/// </item>
+		/// <item>
+		/// <term>-1</term>
+		/// <description>由 Vegas 自动决定。</description>
+		/// </item>
+		/// </list>
+		/// </param>
+		/// <returns>复制后的新轨道。</returns>
+		public static TTrack DuplicateTrack<TTrack>(TTrack sourceTrack, int index = -2) where TTrack : Track {
+			// 自 Vegas Pro 23 开始内置了复制轨道功能。
+			Vegas vegas = instance.vegas;
+			if (duplicateTrackMethod != null) {
+				//vegas.Project.DuplicateTrack(sourceTrack, index);
+				TTrack duplicatedTrack = duplicateTrackMethod.Invoke(vegas.Project, new object[] { sourceTrack, index }) as TTrack;
+				duplicatedTrack.Name = sourceTrack.Name;
+				return duplicatedTrack;
+			}
+			// 对于 Vegas Pro 22 及以下版本则使用传统逐个复制方法。
+			try {
+				index = index == -2 ? sourceTrack.Index + 1 : index == -1 ? -1 : Math.Min(Math.Max(0, index), vegas.Project.Tracks.Count);
+				Track targetTrack = sourceTrack.IsAudio() ? (Track)new AudioTrack(vegas.Project, index, sourceTrack.Name) : sourceTrack.IsVideo() ? new VideoTrack(vegas.Project, index, sourceTrack.Name) : null;
+				if (targetTrack == null) return null;
+				vegas.Project.Tracks.Add(targetTrack);
+				// 复制通用轨道属性（静音、独奏）。
+				targetTrack.Mute = sourceTrack.Mute;
+				targetTrack.Solo = sourceTrack.Solo;
+				// 复制轨道上的所有事件。
+				foreach (TrackEvent trackEvent in sourceTrack.Events)
+					trackEvent.Copy(targetTrack, trackEvent.Start);
+				// 复制视频轨道运动关键帧。
+				Action<BaseTrackMotionKeyframe, BaseTrackMotionKeyframe> CopyBaseMotionKeyframe = (source, target) => {
+					target.Width = source.Width;
+					target.Height = source.Height;
+					target.RotationOffsetX = source.RotationOffsetX;
+					target.RotationOffsetY = source.RotationOffsetY;
+					target.RotationZ = source.RotationZ;
+					target.OrientationZ = source.OrientationZ;
+					target.PositionX = source.PositionX;
+					target.PositionY = source.PositionY;
+					target.Smoothness = source.Smoothness;
+					target.Type = source.Type;
+				};
+				if (targetTrack is VideoTrack) {
+					VideoTrack sourceVideoTrack = (VideoTrack)(Track)sourceTrack, targetVideoTrack = (VideoTrack)targetTrack;
+					targetVideoTrack.CompositeLevel = sourceVideoTrack.CompositeLevel;
+					targetVideoTrack.CompositeMode = sourceVideoTrack.CompositeMode;
+					targetVideoTrack.TrackMotion.ShadowEnabled = sourceVideoTrack.TrackMotion.ShadowEnabled;
+					targetVideoTrack.TrackMotion.GlowEnabled = sourceVideoTrack.TrackMotion.GlowEnabled;
+					for (int i = 0; i < sourceVideoTrack.TrackMotion.MotionKeyframes.Count; i++) {
+						try {
+							TrackMotionKeyframe sourceFrame = sourceVideoTrack.TrackMotion.MotionKeyframes[i];
+							TrackMotionKeyframe targetFrame = i == 0 ? targetVideoTrack.TrackMotion.MotionKeyframes[0] : targetVideoTrack.TrackMotion.InsertMotionKeyframe(sourceFrame.Position);
+							if (i == 0) targetFrame.Position = sourceFrame.Position;
+							CopyBaseMotionKeyframe(sourceFrame, targetFrame);
+							if (sourceVideoTrack.CompositeMode == CompositeMode.SrcAlpha3D) {
+								targetFrame.RotationOffsetZ = sourceFrame.RotationOffsetZ;
+								targetFrame.RotationX = sourceFrame.RotationX;
+								targetFrame.RotationY = sourceFrame.RotationY;
+								targetFrame.OrientationX = sourceFrame.OrientationX;
+								targetFrame.OrientationY = sourceFrame.OrientationY;
+								targetFrame.PositionZ = sourceFrame.PositionZ;
+								targetFrame.Depth = sourceFrame.Depth;
+							}
+						} catch (Exception) { }
+					}
+					for (int i = 0; i < sourceVideoTrack.TrackMotion.ShadowKeyframes.Count; i++) {
+						try {
+							TrackShadowKeyframe sourceFrame = sourceVideoTrack.TrackMotion.ShadowKeyframes[i];
+							TrackShadowKeyframe targetFrame = i == 0 ? targetVideoTrack.TrackMotion.ShadowKeyframes[0] : targetVideoTrack.TrackMotion.InsertShadowKeyframe(sourceFrame.Position);
+							if (i == 0) targetFrame.Position = sourceFrame.Position;
+							CopyBaseMotionKeyframe(sourceFrame, targetFrame);
+							targetFrame.Blur = sourceFrame.Blur;
+							targetFrame.Intensity = sourceFrame.Intensity;
+							targetFrame.Color = sourceFrame.Color;
+						} catch (Exception) { }
+					}
+					for (int i = 0; i < sourceVideoTrack.TrackMotion.GlowKeyframes.Count; i++) {
+						try {
+							TrackGlowKeyframe sourceFrame = sourceVideoTrack.TrackMotion.GlowKeyframes[i];
+							TrackGlowKeyframe targetFrame = i == 0 ? targetVideoTrack.TrackMotion.GlowKeyframes[0] : targetVideoTrack.TrackMotion.InsertGlowKeyframe(sourceFrame.Position);
+							if (i == 0) targetFrame.Position = sourceFrame.Position;
+							CopyBaseMotionKeyframe(sourceFrame, targetFrame);
+							targetFrame.Blur = sourceFrame.Blur;
+							targetFrame.Intensity = sourceFrame.Intensity;
+							targetFrame.Color = sourceFrame.Color;
+						} catch (Exception) { }
+					}
+				} else if (targetTrack is AudioTrack) {
+					AudioTrack sourceAudioTrack = (AudioTrack)(Track)sourceTrack, targetAudioTrack = (AudioTrack)targetTrack;
+					targetAudioTrack.Volume = sourceAudioTrack.Volume;
+					targetAudioTrack.PanX = sourceAudioTrack.PanX;
+					targetAudioTrack.PanY = sourceAudioTrack.PanY;
+					targetAudioTrack.PanCenter = sourceAudioTrack.PanCenter;
+				}
+				// 复制轨道包络。
+				foreach (Envelope sourceEnvelope in sourceTrack.Envelopes) {
+					try {
+						Envelope targetEnvelope = new Envelope(sourceEnvelope.Type);
+						targetTrack.Envelopes.Add(targetEnvelope);
+						foreach (EnvelopePoint sourcePoint in sourceEnvelope.Points)
+							try {
+								sourceEnvelope.Points.Add(new EnvelopePoint(sourcePoint.X, sourcePoint.Y, sourcePoint.Curve));
+							} catch (Exception) { }
+					} catch (Exception) { }
+				}
+				// 复制轨道效果。
+				targetTrack.Effects.Clear();
+				foreach (Effect sourceEffect in sourceTrack.Effects) {
+					try {
+						Effect targetEffect = targetTrack.Effects.AddEffect(sourceEffect.PlugIn);
+						// OpenFX 效果。
+						if (sourceEffect.IsOFX) {
+							foreach (OFXParameter sourceParameter in sourceEffect.OFXEffect.Parameters) {
+								try {
+									if (sourceParameter.Secret) continue;
+									OFXParameter targetParameter = targetEffect.OFXEffect.FindParameterByName(sourceParameter.Name);
+									Type parameterType = targetParameter.GetType();
+									PropertyInfo valueProperty = parameterType.GetProperty("Value");
+									if (valueProperty == null) continue;
+									if (!sourceParameter.IsAnimated) {
+										//targetParameter.Value = sourceParameter.Value;
+										valueProperty.SetValue(targetParameter, valueProperty.GetValue(sourceParameter));
+									} else {
+										targetParameter.IsAnimated = true;
+										PropertyInfo keyframesProperty = parameterType.GetProperty("Keyframes");
+										MethodInfo setValueAtTimeMethod = parameterType.GetMethods().FirstOrDefault(method => method.Name == "SetValueAtTime" && method.GetParameters().Length == 3);
+										if (keyframesProperty != null && setValueAtTimeMethod != null) {
+											IList sourceFrames = keyframesProperty.GetValue(sourceParameter) as IList;
+											if (sourceFrames != null)
+												foreach (OFXKeyframe sourceFrame in sourceFrames) {
+													try {
+														PropertyInfo frameValueProperty = sourceFrame.GetType().GetProperty("Value");
+														if (frameValueProperty != null)
+															setValueAtTimeMethod.Invoke(targetParameter, new object[] { sourceFrame.Time, frameValueProperty.GetValue(sourceFrame), sourceFrame.Interpolation });
+													} catch (Exception) { }
+												}
+										}
+									}
+								} catch (Exception) { }
+							}
+						// 非 OpenFX 效果无法获取各关键帧下的预设名称，因此暂时不支持动画。
+						} else if (sourceEffect.CurrentPreset != null) {
+							targetEffect.Preset = sourceEffect.CurrentPreset.Name;
+						}
+					} catch (Exception) { }
+				}
+				return targetTrack as TTrack;
+			} catch (Exception) {
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// 移动轨道顺序。
+		/// </summary>
+		/// <param name="track">源轨道。</param>
+		/// <param name="index">新索引值。</param>
+		/// <returns>由于技术限制，移动后的轨道与源轨道不是同一个对象引用，需要重新赋值给变量。</returns>
+		public TTrack MoveTrack<TTrack>(TTrack track, int index) where TTrack : Track {
+			TTrack movedNewTrack = DuplicateTrack(track, index);
+			vegas.Project.Tracks.Remove(track);
+			return movedNewTrack;
 		}
 
 		/// <summary>
@@ -4762,6 +4942,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		ALTERNATELY_CHROMATIC,
 		/// <summary>正负交替。</summary>
 		ALTERNATELY_NEGATIVE,
+		/// <summary>地府调色。</summary>
+		TRIPPY_COLORING,
 	}
 
 	/// <summary>
@@ -5378,6 +5560,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public static PlugInNode cookieCutter;
 		/// <summary> 漩涡 </summary>
 		public static PlugInNode swirl;
+		/// <summary> 电视模拟器 </summary>
+		public static PlugInNode tvSimulator;
+		/// <summary> 色彩平衡 </summary>
+		public static PlugInNode colorBalance;
 
 		/// <summary>
 		/// 初始化所需插件。
@@ -5519,6 +5705,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				?? vegas.VideoFX.FindChildByName("Sony 漩涡")
 				?? vegas.VideoFX.FindChildByName("Sony Swirl")
 				?? vegas.VideoFX.FindChildByUniqueID("{B3A8C4CF-E5AD-4B2F-A603-2F0FCB3B546E}");
+			tvSimulator = vegas.VideoFX.FindChildByName("电视模拟器")
+				?? vegas.VideoFX.FindChildByName("TV Simulator")
+				?? vegas.VideoFX.FindChildByName("VEGAS 电视模拟器")
+				?? vegas.VideoFX.FindChildByName("VEGAS TV Simulator")
+				?? vegas.VideoFX.FindChildByName("Sony 电视模拟器")
+				?? vegas.VideoFX.FindChildByName("Sony TV Simulator")
+				?? vegas.VideoFX.FindChildByUniqueID("{B892D510-9487-4022-B261-738123B55E47}");
+			colorBalance = vegas.VideoFX.FindChildByName("色彩平衡")
+				?? vegas.VideoFX.FindChildByName("Color Balance")
+				?? vegas.VideoFX.FindChildByName("VEGAS 色彩平衡")
+				?? vegas.VideoFX.FindChildByName("VEGAS Color Balance")
+				?? vegas.VideoFX.FindChildByName("Sony 色彩平衡")
+				?? vegas.VideoFX.FindChildByName("Sony Color Balance")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:colorbalance}");
 			#endregion
 
 			#region 媒体发生器
@@ -6067,6 +6267,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				WipeInTheRight_SetInterpolation(scale.Keyframes); // 因为实现一致，临时借用另一效果的子方法。
 				effect.OFXEffect.AllParametersChanged();
 			}
+			public static void SetSwirl(Effect swirl, double amount = 0, double centerX = 0, double centerY = 0, double scaleH = 1, double scaleV = 1) {
+				AddSwirlTempPreset(amount, centerX, centerY, scaleH, scaleV);
+				swirl.Preset = SWIRL_TEMP_PRESET_NAME;
+				RemoveSwirlTempPreset();
+			}
 			/// <summary>
 			/// 在漩涡效果的指定时间码处设置值。
 			/// </summary>
@@ -6253,6 +6458,139 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				AlternatelyBase(tracks, isAlternative, gridColumn, track => {
 					Effect effect = track.Effects.AddEffect(invert);
 				});
+			}
+			/// <summary>
+			/// 地府调色
+			/// </summary>
+			/// <remarks>
+			/// 规则：
+			/// <list type="number">
+			/// <item>10% 概率进入显像管分支。最多只会进入该分支一次。</item>
+			/// <item>10% 概率进入电视模拟器分支。</item>
+			/// <item>5% 概率进入黑白分支。最多只会进入该分支一次。</item>
+			/// <item>15% 概率进入漩涡分支。</item>
+			/// <item>10% 概率进入波浪分支。</item>
+			/// <item>
+			/// 50% 概率进入调色相关分支。该分支内部分支的概率独立计算。
+			/// <list type="number">
+			/// <item>70% 概率进入调整色相分支。该分支与色彩平衡分支互斥。</item>
+			/// <item>15% 概率进入色彩平衡分支。该分支与调整色相分支互斥。</item>
+			/// <item>40% 概率进入颜色反转分支。</item>
+			/// </list>
+			/// </item>
+			/// </list>
+			/// </remarks>
+			/// <param name="tracks">轨道数组</param>
+			public static void TrippyColoring(Track[] tracks, ICollection<Track> additionalTracks = null) {
+				foreach (Track _track in tracks) {
+					VideoTrack track = _track as VideoTrack;
+					if (track == null) continue;
+					bool hasKinescope = false, hasBlackAndWhite = false;
+					double rand = random.NextDouble() * 100;
+					if (rand < 10) {
+						if (!hasKinescope) {
+							hasKinescope = true;
+							Kinescope(track, additionalTracks);
+							goto SkipChangeHue;
+						}
+					} else if (rand < 20) {
+						Effect effect = track.Effects.AddEffect(tvSimulator);
+						ForYtps.GetRandomPreset(effect);
+					} else if (rand < 25) {
+						if (!hasBlackAndWhite) {
+							hasBlackAndWhite = true;
+							Effect effect = track.Effects.AddEffect(blackAndWhite);
+							goto SkipChangeHue;
+						}
+					} else if (rand < 40) {
+						Effect effect = track.Effects.AddEffect(wave);
+						ForYtps.GetRandomPreset(effect);
+					} else if (rand < 50) {
+						Effect effect = track.Effects.AddEffect(swirl);
+						ForYtps.GetRandomPreset(effect);
+					}
+					if (rand >= 50 || rand < 10 /*&& hasKinescope*/ || rand >= 25 && random.NextDouble() < 0.45 || rand < 25 && rand >= 20 /*&& hasBlackAndWhite*/) {
+						double rand2 = random.NextDouble() * 100;
+						if (rand2 < 70) {
+							Effect effect = track.Effects.AddEffect(hslAdjust);
+							(effect.OFXEffect.FindParameterByName("AddToHue") as OFXDoubleParameter).Value = random.NextDouble();
+						} else if (rand2 >= 85)  {
+							double h = random.NextDouble();
+							h = 2 * h - 3 * Math.Pow(h, 2) + 2 * Math.Pow(h, 3); // f(x)=2x−3x^2+2x^3 的概率密度曲线。
+							ColorBalance(track, h * 360);
+						}
+						if (random.NextDouble() < 0.4) {
+							Effect effect = track.Effects.AddEffect(invert);
+						}
+					}
+				SkipChangeHue:;
+				}
+			}
+			/// <summary>
+			/// 色彩平衡
+			/// </summary>
+			/// <param name="track">视频轨道。</param>
+			/// <param name="red">红色平衡值。范围 -0.5 ~ 0.5。</param>
+			/// <param name="green">绿色平衡值。范围 -0.5 ~ 0.5。</param>
+			/// <param name="blue">蓝色平衡值。范围 -0.5 ~ 0.5。</param>
+			public static void ColorBalance(Track track, double red, double green, double blue) {
+				Effect effect = track.Effects.AddEffect(colorBalance);
+				(effect.OFXEffect.FindParameterByName("Red") as OFXDoubleParameter).Value = red;
+				(effect.OFXEffect.FindParameterByName("Green") as OFXDoubleParameter).Value = green;
+				(effect.OFXEffect.FindParameterByName("Blue") as OFXDoubleParameter).Value = blue;
+			}
+			/// <summary>
+			/// 色彩平衡
+			/// </summary>
+			/// <param name="track">视频轨道。</param>
+			/// <param name="hue">色相值。范围 0 ~ 360。<br />转换后的饱和度固定为 1，亮度固定为 0.5。</param>
+			public static void ColorBalance(Track track, double hue) {
+				// 将 Hue 限制在 0.0 - 360.0 范围内
+				hue = (hue % 360d + 360d) % 360d;
+				// 计算 60 度区间内的动态通道值 (取值范围 0.0 - 1.0)
+				double x = 1d - Math.Abs(hue % 120d / 60d - 1d);
+				// 3. 使用嵌套三元运算符直接映射并返回 RGB 元组 (范围 0.0 - 1.0)
+				int i = (int)(hue / 60d);
+				Tuple<double, double, double> rgb =
+					i == 0 ? Tuple.Create(1d, x, 0d) :
+					i == 1 ? Tuple.Create(1d - x, 1d, 0d) :
+					i == 2 ? Tuple.Create(0d, 1d, x) :
+					i == 3 ? Tuple.Create(0d, 1d - x, 1d) :
+					i == 4 ? Tuple.Create(x, 0d, 1d) :
+					Tuple.Create(1d, 0d, 1d - x);
+				ColorBalance(track, rgb.Item1 * 0.5, rgb.Item2 * 0.5, rgb.Item3 * 0.5);
+			}
+			/// <summary>
+			/// 色彩平衡
+			/// </summary>
+			/// <param name="track">视频轨道。</param>
+			/// <param name="rgb">表示 <c>'R'</c>、<c>'G'</c> 或 <c>'B'</c> 的字符。</param>
+			/// <param name="scale">设置缩放值。默认为 1，即不缩放。</param>
+			private static void ColorBalance(Track track, char rgb, double scale = 1) {
+				if (rgb != 'R' && rgb != 'G' && rgb != 'B') return;
+				ColorBalance(track, rgb == 'R' ? 0.5 : 0, rgb == 'G' ? 0.5 : 0, rgb == 'B' ? 0.5 : 0);
+				if (scale != 1) {
+					Effect picFx = track.Effects.AddEffect(picInPic);
+					OFXDoubleParameter scaleX = picFx.OFXEffect.FindParameterByName("Scale") as OFXDoubleParameter;
+					scaleX.Value = scale;
+					OFXDoubleParameter scaleY = picFx.OFXEffect.FindParameterByName("DistortionScaleY") as OFXDoubleParameter;
+					if (scaleY != null) scaleY.Value = scale;
+				}
+			}
+			/// <summary>
+			/// 显像管
+			/// </summary>
+			public static void Kinescope(Track track, ICollection<Track> additionalTracks = null) {
+				List<char> order = "RGB".ToList();
+				order.Sort((x, y) => random.Next(2) * 2 - 1);
+				Track track1 = EntryPoint.DuplicateTrack(track, track.Index - 1), track2 = EntryPoint.DuplicateTrack(track, track.Index - 2);
+				ColorBalance(track, order[0]);
+				if (track1 != null) ColorBalance(track1, order[1], 0.8);
+				if (track2 != null) ColorBalance(track2, order[2], 0.64);
+				if (additionalTracks != null) {
+					if (track1 != null) additionalTracks.Add(track1);
+					if (track2 != null) additionalTracks.Add(track2);
+				}
 			}
 		}
 		/// <summary>
@@ -6631,11 +6969,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				else {
 					do {
 						randomPreset = presets[random.Next(presets.Count)].Name;
-					} while (randomPreset == DEFAULT_PARAMETER || randomPreset.StartsWith("("));
+					} while (randomPreset == DEFAULT_PARAMETER || randomPreset.StartsWith("(") || resetToNonePresets.Contains(randomPreset));
 				}
 				effect.Preset = randomPreset;
 			}
 			private const string DEFAULT_PARAMETER = "[Sys] Default all parameters";
+			private static readonly IReadOnlyList<string> resetToNonePresets = new List<string> {
+				"Reset to None", // 英语
+				"Auf \"Kein\" zurücksetzen", // 德语
+				"Restablecer en ninguno", // 西班牙语
+				"Réinitialiser sur aucun", // 法语
+				"なしにリセット", // 日语
+				"없음으로 초기화", // 韩语
+				"Resetuj do braku", // 波兰语
+				"Redefinir para zero", // 巴西葡萄牙语
+				"重置为“无”", // 简体中文
+				"无特效", // Vegas Pro 13 民间汉化版简体中文
+			};
 			/// <summary>
 			/// 针对 Vegas Pro 15 及以下版本兼容而使用的传统移调插件调音方式。
 			/// </summary>
@@ -15506,6 +15856,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (j < _count) combo.SelectedIndex = j;
 				else combo.SelectedIndex = 0;
 			}
+			if (EntryPoint.HasNativeDuplicateTrackMethod) // Vegas Pro 23 开始内置复制轨道 API。
+				DelOrigTrackCheck.Visible = false;
 			((Action)ReadIni).OnErrorBreak();
 			FormClosing += (sender, e) => SaveIni();
 		}
@@ -15572,9 +15924,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			string name = orig.Name;
 			string extendedName = SideName[(int)side];
 			if (!string.IsNullOrWhiteSpace(name)) extendedName += Lang.str.colon + name;
-			VideoTrack track = new VideoTrack(vegas.Project, index, extendedName);
-			vegas.Project.Tracks.Add(track);
-			while (orig.Events.Count != 0) orig.Events[0].Track = track;
+			VideoTrack track;
+			if (EntryPoint.HasNativeDuplicateTrackMethod) {
+				track = EntryPoint.DuplicateTrack(orig, index);
+				track.Name = extendedName;
+			} else {
+				track = new VideoTrack(vegas.Project, index, extendedName);
+				vegas.Project.Tracks.Add(track);
+				while (orig.Events.Count != 0) orig.Events[0].Track = track;
+			}
 			track.CompositeNestingLevel = childNestLevel;
 			track.CompositeMode = CompositeMode.SrcAlpha3D;
 			TrackMotionKeyframe frame = track.TrackMotion.MotionKeyframes[0];
@@ -15611,7 +15969,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					break;
 			}
 
-			if (DelOrigTrackCheck.Checked) vegas.Project.Tracks.Remove(orig);
+			if (DelOrigTrackCheck.Checked || EntryPoint.HasNativeDuplicateTrackMethod) vegas.Project.Tracks.Remove(orig);
 			return track;
 		}
 
@@ -15892,7 +16250,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (_info != null) info = null;
 		}
 
-		public void Arrange() {
+		public void Arrange(ICollection<Track> additionalTracks = null) {
 			Plugin.Init(vegas);
 			VideoTrackGradientEffectType effect = (VideoTrackGradientEffectType)EffectsCombo.SelectedIndex;
 			bool isReversed = ReverseCheck.Checked;
@@ -15924,16 +16282,29 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (Plugin.invert == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.invert)); return; }
 					Plugin.ForVideoTracks.Negative(tracks, isReversed, gridColumn);
 					break;
+				case VideoTrackGradientEffectType.TRIPPY_COLORING:
+					if (Plugin.invert == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.invert)); return; }
+					if (Plugin.blackAndWhite == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.black_and_white)); return; }
+					if (Plugin.hslAdjust == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return; }
+					if (Plugin.swirl == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.swirl)); return; }
+					if (Plugin.wave == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.wave)); return; }
+					if (Plugin.picInPic == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return; }
+					if (Plugin.tvSimulator == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.tv_simulator)); return; }
+					if (Plugin.colorBalance == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.color_balance)); return; }
+					Plugin.ForVideoTracks.TrippyColoring(tracks, additionalTracks);
+					break;
 				default:
 					break;
 			}
 		}
 
-		public static void Arrange(VideoTrack[] tracks, AutoLayoutTracksInfos.GradientTracksInfo info, EntryPoint entryPoint) {
+		public void Arrange() { Arrange(null); }
+
+		public static void Arrange(VideoTrack[] tracks, AutoLayoutTracksInfos.GradientTracksInfo info, EntryPoint entryPoint, ICollection<Track> additionalTracks = null) {
 			if (!info.enabled) return;
 			GradientTracksForm me = new GradientTracksForm(entryPoint, null, tracks);
 			me.ReadFromInfo(info);
-			me.Arrange();
+			me.Arrange(additionalTracks);
 		}
 
 		public void Translate() {
@@ -15945,7 +16316,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			EffectsCombo.Items.Clear();
 			EffectsCombo.Items.AddRange(new string[] {
 				str.rainbow_color, str.gradually_saturated, str.gradually_contrasted,
-				str.threshold, str.alternately_chromatic, str.alternately_negative
+				str.threshold, str.alternately_chromatic, str.alternately_negative,
+				str.trippy_coloring,
 			});
 			ReverseCheck.Text = IsToolMode ? str.descending : str.ascending;
 			Text = str.gradient_tracks;
@@ -39464,6 +39836,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			random_effect = "随机效果",
 			random = "随机",
 			random_class = "随机类",
+			trippy_coloring = "地府调色",
+			tv_simulator = "电视模拟器",
+			color_balance = "色彩平衡",
 			__eol__ = null;
 
 		static Lang() {
