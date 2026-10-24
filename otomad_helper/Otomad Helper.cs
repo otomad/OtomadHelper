@@ -6490,8 +6490,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public static void TrippyColoring(Track[] tracks, ICollection<Track> additionalTracks = null) {
 				bool hasKinescope = false, hasBlackAndWhite = false;
 				// 以下集合表示已使用过了的预设名称，如果相应效果的所有预设均被使用完毕，则该集合变量会自动被赋值为 null，并且不再进入该分支。
-				HashSet<string> usedTvPresets = new HashSet<string>(), usedWavePresets = new HashSet<string>(), usedSwirlPresets = new HashSet<string>(ForYtps.halfScaleSwirlPresets);
-				IEnumerator<double> hueSequence = GenerateRandomHueSequence().GetEnumerator();
+				HashSet<string> usedTvPresets = new HashSet<string>(), usedWavePresets = new HashSet<string>(), usedSwirlPresets = new HashSet<string>();
+				IEnumerator<double> hueSequence = GenerateRandomHueSequence(36).GetEnumerator();
 				foreach (Track _track in tracks) {
 					VideoTrack track = _track as VideoTrack;
 					if (track == null) continue;
@@ -6524,7 +6524,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					} else if (rand < 50) {
 						if (usedSwirlPresets != null) {
 							Effect effect = track.Effects.AddEffect(swirl);
-							string preset = ForYtps.GetRandomPreset(effect, usedSwirlPresets, areUsedPresetsSegments: true);
+							string preset = ForYtps.GetRandomPreset(effect, usedSwirlPresets, excludeHalfScaleSwirlPresets: true);
 							if (preset == "") { track.Effects.Remove(effect); usedSwirlPresets = null; goto RepickRandom; }
 						} else goto RepickRandom;
 					}
@@ -6994,30 +6994,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// </summary>
 			/// <param name="effect">插件效果。</param>
 			/// <param name="usedPresets">已使用过了的预设名称，位于此集合中的预设名称不会被使用，如果所有预设全被使用了则函数返回 <see langword="null" />。</param>
-			/// <param name="autoAddToUsedPreset">如果 <paramref name="usedPresets" /> 不为 <see langword="null" />，要自动将新添加的预设也放入 <paramref name="usedPresets" /> 其中吗？默认为 <see langword="true" />。</param>
-			/// <param name="areUsedPresetsSegments"><paramref name="usedPresets" /> 中的字符串是否仅为预设名称的一部分片段而不是完整名称？默认为 <see langword="false" />。</param>
+			/// <param name="excludeHalfScaleSwirlPresets">特殊：是否也要排除“漩涡”预设中带有“半缩放”的预设名称？默认为 <see langword="false" />。</param>
 			/// <returns>随机预设名称。</returns>
-			public static string GetRandomPreset(Effect effect, HashSet<string> usedPresets = null, bool autoAddToUsedPresets = true, bool areUsedPresetsSegments = false) {
+			public static string GetRandomPreset(Effect effect, HashSet<string> usedPresets = null, bool excludeHalfScaleSwirlPresets = false) {
 				List<string> presets = effect.Presets.Select(preset => preset.Name).Where(name =>
-					!(resetToNonePresets.Contains(name)
+					!(defaultPresets.Contains(name)
 					|| name.StartsWith("(") // “(默认)”、“(无)” 等。
-					|| usedPresets != null && (!areUsedPresetsSegments ? usedPresets.Contains(name) : usedPresets.Any(preset => preset.Contains(name))))).ToList();
+					|| usedPresets != null && usedPresets.Contains(name)
+					|| excludeHalfScaleSwirlPresets && halfScaleSwirlPresets.Any(preset => name.Contains(preset)))).ToList();
 				int count = presets.Count;
 				string randomPreset;
 				if (count == 0) return "";
 				else if (count == 1) randomPreset = presets[0];
 				else randomPreset = presets[random.Next(presets.Count)];
-				//else {
-				//	do {
-				//		randomPreset = presets[random.Next(presets.Count)];
-				//	} while (randomPreset == DEFAULT_PARAMETER || randomPreset.StartsWith("(") || resetToNonePresets.Contains(randomPreset));
-				//}
 				effect.Preset = randomPreset;
-				if (usedPresets != null && autoAddToUsedPresets) usedPresets.Add(randomPreset);
+				if (usedPresets != null) usedPresets.Add(randomPreset);
 				return randomPreset;
 			}
-			private const string DEFAULT_PARAMETER = "[Sys] Default all parameters";
-			private static readonly IReadOnlyList<string> resetToNonePresets = new List<string> {
+			private static readonly IReadOnlyList<string> defaultPresets = new List<string> {
 				// 视频效果预设：重置为“无”
 				"Reset to None", // 英语
 				"Auf \"Kein\" zurücksetzen", // 德语
@@ -7027,20 +7021,35 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				"없음으로 초기화", // 韩语
 				"Resetuj do braku", // 波兰语
 				"Redefinir para zero", // 巴西葡萄牙语
+				"Возвращение к исходному", // 俄语
 				"重置为“无”", // 简体中文
 				"无特效", // Vegas Pro 13 民间汉化版简体中文
+				// 音频效果预设：所有参数为默认值
+				"[Sys] Default all parameters", // 英语
+				"[Sys] Alle Parameter auf Standard", // 德语
+				"[Sys] Todos los parámetros predeterminados", // 西班牙语
+				"[Sys] Réglage par défaut pour tous les paramètres", // 法语
+				"[Sys] パラメータをすべてデフォルトにする", // 日语
+				"[Sys] 모든 매개변수 기본값", // 韩语
+				"[Sys] Ustaw wszystkie parametry na domyślne", // 波兰语
+				"[Sys] Predefinição de todos os parâmetros", // 巴西葡萄牙语
+				"[Sys] Сбросить на значения по умолчанию", // 俄语
+				"[Sys] 所有参数为默认值", // 简体中文
+				"[Sys] 所有参数使用默认值", // Vegas Pro 13 民间汉化版简体中文
 			};
-			internal static readonly IReadOnlyList<string> halfScaleSwirlPresets = new List<string> {
+			private static readonly IReadOnlyList<string> halfScaleSwirlPresets = new List<string> {
 				// 避免在使用漩涡预设时使用到“半缩放”的小漩涡预设。
-				"Half Scale",
-				"halbe Skalierung",
-				"media escala",
-				"demi-échelle",
-				"ハーフ スケール",
-				"1/2 배율",
-				"połowa skali",
-				"meia escala",
-				"半缩放",
+				"Half Scale", // 英语
+				"halbe Skalierung", // 德语
+				"media escala", // 西班牙语
+				"demi-échelle", // 法语
+				"ハーフ スケール", // 日语
+				"1/2 배율", // 韩语
+				"połowa skali", // 波兰语
+				"meia escala", // 巴西葡萄牙语
+				"полумасштабирование", // 俄语
+				"半缩放", // 简体中文
+				"一半比例", // Vegas Pro 13 民间汉化版简体中文
 			};
 			/// <summary>
 			/// 针对 Vegas Pro 15 及以下版本兼容而使用的传统移调插件调音方式。
@@ -7157,41 +7166,63 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 		/// <summary>
 		/// 生成带随机性的高区分度色相序列（初始色相固定为0，首次迭代不返回初始色相）
+		/// 采用绝对度数约束：颜色少时严格保证最小间距，塞不下时自动逐步放宽阈值
 		/// </summary>
+		/// <param name="initialMinDistance">初始最小色相间距（禁区角度），单位度，默认18度</param>
+		/// <param name="decayFactor">阈值放宽的衰减系数，范围(0,1)，越小放宽越快</param>
+		/// <param name="minDistanceFloor">最小间距下限，避免无限制缩小到无区分意义</param>
 		/// <returns>无限生成的随机色相枚举序列，值范围 [0, 360)</returns>
-		public static IEnumerable<double> GenerateRandomHueSequence() {
-			// 间隙两端保留的比例：新颜色至少距离间隙两端 25% 的间隙长度
-			// 数值越大，颜色区分度越高，可生成的最大颜色数越少
-			const double MarginRatio = 0.25;
-
-			// 已使用的色相列表，始终保持升序，初始固定为0
+		public static IEnumerable<double> GenerateRandomHueSequence(
+			double initialMinDistance = 18, double decayFactor = 0.75, double minDistanceFloor = 1) {
+			// 已使用的色相列表，始终保持升序，初始固定为0度
 			List<double> usedHues = new List<double> { 0 };
+			Random random = new Random();
+			double currentMinDistance = initialMinDistance;
 
 			// 初始色相返回代码（默认注释，取消注释即可让首次迭代返回0）
 			// yield return 0;
 
 			while (true) {
-				List<HueValidRange> validRanges = new List<HueValidRange>();
-				double totalValidLength = 0;
-				int hueCount = usedHues.Count;
+				List<HueValidRange> validRanges;
+				double totalValidLength;
 
-				// 遍历所有相邻间隙（环形处理：首尾相连）
-				for (int i = 0; i < hueCount; i++) {
-					double gapStart = usedHues[i];
-					// 最后一个间隙绕回起点+360，处理环形特性
-					double gapEnd = i == hueCount - 1 ? usedHues[0] + 360 : usedHues[i + 1];
-					double gapLength = gapEnd - gapStart;
+				// 循环检查：若当前阈值下无有效可插区间，则放宽最小间距，直到有可用区间
+				do {
+					validRanges = new List<HueValidRange>();
+					totalValidLength = 0;
+					int hueCount = usedHues.Count;
 
-					// 计算间隙内的有效可选区间（去掉两端的保留区域）
-					double validStart = gapStart + gapLength * MarginRatio;
-					double validEnd = gapEnd - gapLength * MarginRatio;
-					double validLength = validEnd - validStart;
+					// 遍历所有相邻间隙（环形处理：首尾相连）
+					for (int i = 0; i < hueCount; i++) {
+						double gapStart = usedHues[i];
+						// 最后一个间隙绕回起点+360，处理环形特性
+						double gapEnd = i == hueCount - 1 ? usedHues[0] + 360 : usedHues[i + 1];
+						double gapLength = gapEnd - gapStart;
 
-					validRanges.Add(new HueValidRange(validStart, validEnd, validLength));
-					totalValidLength += validLength;
-				}
+						// 绝对间距约束：间隙两端各预留 currentMinDistance 的禁区
+						double validStart = gapStart + currentMinDistance;
+						double validEnd = gapEnd - currentMinDistance;
+						double validLength = validEnd - validStart;
 
-				// 按区间长度加权随机选择一个有效区间
+						// 只保留有有效空间的间隙
+						if (validLength > 0) {
+							validRanges.Add(new HueValidRange(validStart, validEnd, validLength));
+							totalValidLength += validLength;
+						}
+					}
+
+					// 所有间隙都塞不下，放宽阈值
+					if (totalValidLength <= 0) {
+						currentMinDistance *= decayFactor;
+						// 触碰下限后不再继续缩小
+						if (currentMinDistance < minDistanceFloor) {
+							currentMinDistance = minDistanceFloor;
+							break;
+						}
+					}
+				} while (totalValidLength <= 0);
+
+				// 按有效区间长度加权随机选择一个间隙
 				double randomOffset = random.NextDouble() * totalValidLength;
 				double selectedStart = 0;
 				double selectedEnd = 0;
@@ -7206,14 +7237,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					accumulated += range.length;
 				}
 
-				// 在选中的区间内随机生成具体色相值
+				// 在选中的有效区间内随机生成具体色相
 				double newHue = selectedStart + random.NextDouble() * (selectedEnd - selectedStart);
 				// 归一化到 [0, 360) 区间
 				newHue %= 360;
 
 				// 插入到已用列表，保持升序以便后续计算间隙
 				int insertIndex = usedHues.BinarySearch(newHue);
-				if (insertIndex < 0) insertIndex = ~insertIndex;
+				if (insertIndex < 0)
+					insertIndex = ~insertIndex;
 				usedHues.Insert(insertIndex, newHue);
 
 				yield return newHue;
