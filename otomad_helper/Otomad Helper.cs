@@ -6473,9 +6473,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// <item>
 			/// 50% 概率进入调色相关分支。该分支内部分支的概率独立计算。
 			/// <list type="number">
-			/// <item>75% 概率进入调整色相分支。该分支与色彩平衡分支互斥。</item>
+			/// <item>80% 概率进入调整色相分支。该分支与色彩平衡分支互斥。</item>
 			/// <item>15% 概率进入色彩平衡分支。该分支与调整色相分支互斥。</item>
 			/// <item>40% 概率进入颜色反转分支。</item>
+			/// <item><i>意味着若未进入颜色反转分支则有 5% 概率保持正常不添加任何效果。</i></item>
 			/// </list>
 			/// </item>
 			/// </list>
@@ -6485,6 +6486,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				bool hasKinescope = false, hasBlackAndWhite = false;
 				// 以下集合表示已使用过了的预设名称，如果相应效果的所有预设均被使用完毕，则该集合变量会自动被赋值为 null，并且不再进入该分支。
 				HashSet<string> usedTvPresets = new HashSet<string>(), usedWavePresets = new HashSet<string>(), usedSwirlPresets = new HashSet<string>(ForYtps.halfScaleSwirlPresets);
+				IEnumerator<double> hueSequence = GenerateRandomHueSequence().GetEnumerator();
 				foreach (Track _track in tracks) {
 					VideoTrack track = _track as VideoTrack;
 					if (track == null) continue;
@@ -6527,19 +6529,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (isInverted) {
 							Effect effect = track.Effects.AddEffect(invert);
 						}
-						if (rand2 < 75) {
+						if (rand2 < 80) {
 							Effect effect = track.Effects.AddEffect(hslAdjust);
-							double h = random.NextDouble();
-							if (!isInverted) {
-								// f(x)=2x−3x^2+2x^3 的概率密度曲线。
-								// 如果需要调节“中间平缓、两端陡峭”的程度，可以增加一个强度参数 strength（建议范围 [0, 2)）。
-								// 这样，strength 越大，中间越平缓、两端越陡峭；strength = 1 时即为上述标准形式。
-								const double STRENGTH = 1;
-								// 基础形式：f(x) = x + strength * x * (1 - x) * (1 - 2x)
-								// 当 strength = 1 时，化简为 2x - 3x^2 + 2x^3
-								h = h + STRENGTH * h * (1d - h) * (1d - 2d * h);
-							}
-							(effect.OFXEffect.FindParameterByName("AddToHue") as OFXDoubleParameter).Value = random.NextDouble();
+							// 基于随机色相的代码。
+							//double h = random.NextDouble();
+							//if (!isInverted) {
+							//	// f(x)=2x−3x^2+2x^3 的概率密度曲线。
+							//	// 如果需要调节“中间平缓、两端陡峭”的程度，可以增加一个强度参数 strength（建议范围 [0, 2)）。
+							//	// 这样，strength 越大，中间越平缓、两端越陡峭；strength = 1 时即为上述标准形式。
+							//	const double STRENGTH = 1;
+							//	// 基础形式：f(x) = x + strength * x * (1 - x) * (1 - 2x)
+							//	// 当 strength = 1 时，化简为 2x - 3x^2 + 2x^3
+							//	h = h + STRENGTH * h * (1d - h) * (1d - 2d * h);
+							//}
+							//(effect.OFXEffect.FindParameterByName("AddToHue") as OFXDoubleParameter).Value = random.NextDouble();
+							hueSequence.MoveNext();
+							double h = hueSequence.Current;
+							if (isInverted) h = (h + 180) % 360;
+							(effect.OFXEffect.FindParameterByName("AddToHue") as OFXDoubleParameter).Value = h / 360;
 						} else if (rand2 >= 85) {
 							ColorBalance(track, random.NextDouble() * 360);
 						}
@@ -7110,6 +7117,102 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				x, y, x + width, y,
 				x + width, y + height, x, y + height
 			);
+		}
+		/// <summary>
+		/// 生成最大区分度的色相序列（基于HSL空间，饱和度1、亮度0.5）
+		/// </summary>
+		/// <param name="initialHue">可选初始色相值，范围 [0, 360)；未传入则随机生成</param>
+		/// <returns>无限生成的色相枚举序列</returns>
+		public static IEnumerable<double> GenerateHueSequence(double? initialHue = null) {
+			// 处理初始色相：归一化到 [0, 360) 区间，兼容负数与超出范围的值
+			double baseHue = initialHue.HasValue ? (initialHue.Value % 360 + 360) % 360 : random.NextDouble() * 360;
+
+			// 第一个颜色：初始色相（默认注释禁用，取消注释即可恢复“首项返回初始色”的行为）
+			// yield return baseHue;
+
+			// 逐轮二分插入：第 round 轮会插入 2^(round-1) 个新色相
+			int round = 1;
+			while (true) {
+				double step = 360 / Math.Pow(2, round);
+				int count = (int)Math.Pow(2, round - 1);
+				for (int t = 1; t <= count; t++) {
+					double hue = (baseHue + (2 * t - 1) * step) % 360;
+					yield return hue;
+				}
+				round++;
+			}
+		}
+		private struct HueValidRange {
+			public double start;
+			public double end;
+			public double length;
+			public HueValidRange(double start, double end, double length) {
+				this.start = start; this.end = end; this.length = length;
+			}
+		}
+		/// <summary>
+		/// 生成带随机性的高区分度色相序列（初始色相固定为0，首次迭代不返回初始色相）
+		/// </summary>
+		/// <returns>无限生成的随机色相枚举序列，值范围 [0, 360)</returns>
+		public static IEnumerable<double> GenerateRandomHueSequence() {
+			// 间隙两端保留的比例：新颜色至少距离间隙两端 25% 的间隙长度
+			// 数值越大，颜色区分度越高，可生成的最大颜色数越少
+			const double MarginRatio = 0.25;
+
+			// 已使用的色相列表，始终保持升序，初始固定为0
+			List<double> usedHues = new List<double> { 0 };
+
+			// 初始色相返回代码（默认注释，取消注释即可让首次迭代返回0）
+			// yield return 0;
+
+			while (true) {
+				List<HueValidRange> validRanges = new List<HueValidRange>();
+				double totalValidLength = 0;
+				int hueCount = usedHues.Count;
+
+				// 遍历所有相邻间隙（环形处理：首尾相连）
+				for (int i = 0; i < hueCount; i++) {
+					double gapStart = usedHues[i];
+					// 最后一个间隙绕回起点+360，处理环形特性
+					double gapEnd = i == hueCount - 1 ? usedHues[0] + 360 : usedHues[i + 1];
+					double gapLength = gapEnd - gapStart;
+
+					// 计算间隙内的有效可选区间（去掉两端的保留区域）
+					double validStart = gapStart + gapLength * MarginRatio;
+					double validEnd = gapEnd - gapLength * MarginRatio;
+					double validLength = validEnd - validStart;
+
+					validRanges.Add(new HueValidRange(validStart, validEnd, validLength));
+					totalValidLength += validLength;
+				}
+
+				// 按区间长度加权随机选择一个有效区间
+				double randomOffset = random.NextDouble() * totalValidLength;
+				double selectedStart = 0;
+				double selectedEnd = 0;
+				double accumulated = 0;
+
+				foreach (HueValidRange range in validRanges) {
+					if (randomOffset < accumulated + range.length) {
+						selectedStart = range.start;
+						selectedEnd = range.end;
+						break;
+					}
+					accumulated += range.length;
+				}
+
+				// 在选中的区间内随机生成具体色相值
+				double newHue = selectedStart + random.NextDouble() * (selectedEnd - selectedStart);
+				// 归一化到 [0, 360) 区间
+				newHue %= 360;
+
+				// 插入到已用列表，保持升序以便后续计算间隙
+				int insertIndex = usedHues.BinarySearch(newHue);
+				if (insertIndex < 0) insertIndex = ~insertIndex;
+				usedHues.Insert(insertIndex, newHue);
+
+				yield return newHue;
+			}
 		}
 	}
 
