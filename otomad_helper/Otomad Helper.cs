@@ -16108,8 +16108,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			string name = orig.Name;
 			string extendedName = SideName[(int)side];
 			if (!string.IsNullOrWhiteSpace(name)) extendedName += Lang.str.colon + name;
+			bool doNotNeedToMove = orig.Index == index;
 			VideoTrack track;
-			if (EntryPoint.HasNativeDuplicateTrackMethod) {
+			if (doNotNeedToMove) track = orig;
+			else if (EntryPoint.HasNativeDuplicateTrackMethod) {
 				track = EntryPoint.DuplicateTrack(orig, index);
 				track.Name = extendedName;
 			} else {
@@ -16153,7 +16155,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					break;
 			}
 
-			if (DelOrigTrackCheck.Checked || EntryPoint.HasNativeDuplicateTrackMethod) vegas.Project.Tracks.Remove(orig);
+			if (!doNotNeedToMove && (DelOrigTrackCheck.Checked || EntryPoint.HasNativeDuplicateTrackMethod)) vegas.Project.Tracks.Remove(orig);
 			return track;
 		}
 
