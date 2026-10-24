@@ -6465,15 +6465,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// <remarks>
 			/// 规则：
 			/// <list type="number">
-			/// <item>10% 概率进入显像管分支。最多只会进入该分支一次。</item>
-			/// <item>10% 概率进入电视模拟器分支。</item>
-			/// <item>5% 概率进入黑白分支。最多只会进入该分支一次。</item>
-			/// <item>15% 概率进入漩涡分支。</item>
-			/// <item>10% 概率进入波浪分支。</item>
+			/// <item>10% 概率进入显像管分支。最多只会进入该分支一次，重复进入会直接跳转到调色相关分支。</item>
+			/// <item>5% 概率进入黑白分支。最多只会进入该分支一次，重复进入会直接跳转到调色相关分支。</item>
+			/// <item>10% 概率进入电视模拟器分支。不会使用重复的预设名称。</item>
+			/// <item>10% 概率进入波浪分支。不会使用重复的预设名称，此时仍有 45% 概率同时进入调色相关分支。如所有预设已用完必须重复，则移除该效果然后重新随机抽取分支，下次不再进入此分支。</item>
+			/// <item>15% 概率进入漩涡分支。不会使用重复的预设名称和所有带有“半缩放”的默认预设，此时仍有 45% 概率同时进入调色相关分支。如所有预设已用完必须重复，则移除该效果然后重新随机抽取分支，下次不再进入此分支。</item>
 			/// <item>
 			/// 50% 概率进入调色相关分支。该分支内部分支的概率独立计算。
 			/// <list type="number">
-			/// <item>70% 概率进入调整色相分支。该分支与色彩平衡分支互斥。</item>
+			/// <item>75% 概率进入调整色相分支。该分支与色彩平衡分支互斥。</item>
 			/// <item>15% 概率进入色彩平衡分支。该分支与调整色相分支互斥。</item>
 			/// <item>40% 概率进入颜色反转分支。</item>
 			/// </list>
@@ -6482,10 +6482,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// </remarks>
 			/// <param name="tracks">轨道数组</param>
 			public static void TrippyColoring(Track[] tracks, ICollection<Track> additionalTracks = null) {
+				bool hasKinescope = false, hasBlackAndWhite = false;
+				// 以下集合表示已使用过了的预设名称，如果相应效果的所有预设均被使用完毕，则该集合变量会自动被赋值为 null，并且不再进入该分支。
+				HashSet<string> usedTvPresets = new HashSet<string>(), usedWavePresets = new HashSet<string>(), usedSwirlPresets = new HashSet<string>(ForYtps.halfScaleSwirlPresets);
 				foreach (Track _track in tracks) {
 					VideoTrack track = _track as VideoTrack;
 					if (track == null) continue;
-					bool hasKinescope = false, hasBlackAndWhite = false;
+				RepickRandom:
 					double rand = random.NextDouble() * 100;
 					if (rand < 10) {
 						if (!hasKinescope) {
@@ -6493,34 +6496,52 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							Kinescope(track, additionalTracks);
 							goto SkipChangeHue;
 						}
-					} else if (rand < 20) {
-						Effect effect = track.Effects.AddEffect(tvSimulator);
-						ForYtps.GetRandomPreset(effect);
-					} else if (rand < 25) {
+					} else if (rand < 15) {
 						if (!hasBlackAndWhite) {
 							hasBlackAndWhite = true;
 							Effect effect = track.Effects.AddEffect(blackAndWhite);
 							goto SkipChangeHue;
 						}
-					} else if (rand < 40) {
-						Effect effect = track.Effects.AddEffect(wave);
-						ForYtps.GetRandomPreset(effect);
+					} else if (rand < 25) {
+						if (usedTvPresets != null) {
+							Effect effect = track.Effects.AddEffect(tvSimulator);
+							string preset = ForYtps.GetRandomPreset(effect, usedTvPresets);
+							if (preset == "") { track.Effects.Remove(effect); usedTvPresets = null; goto RepickRandom; }
+						} else goto RepickRandom;
+					} else if (rand < 35) {
+						if (usedWavePresets != null) {
+							Effect effect = track.Effects.AddEffect(wave);
+							string preset = ForYtps.GetRandomPreset(effect, usedWavePresets);
+							if (preset == "") { track.Effects.Remove(effect); usedWavePresets = null; goto RepickRandom; }
+						} else goto RepickRandom;
 					} else if (rand < 50) {
-						Effect effect = track.Effects.AddEffect(swirl);
-						ForYtps.GetRandomPreset(effect);
+						if (usedSwirlPresets != null) {
+							Effect effect = track.Effects.AddEffect(swirl);
+							string preset = ForYtps.GetRandomPreset(effect, usedSwirlPresets, areUsedPresetsSegments: true);
+							if (preset == "") { track.Effects.Remove(effect); usedSwirlPresets = null; goto RepickRandom; }
+						} else goto RepickRandom;
 					}
-					if (rand >= 50 || rand < 10 /*&& hasKinescope*/ || rand >= 25 && random.NextDouble() < 0.45 || rand < 25 && rand >= 20 /*&& hasBlackAndWhite*/) {
+					if (rand >= 50 || rand < 15 || rand >= 25 && random.NextDouble() < 0.45) {
 						double rand2 = random.NextDouble() * 100;
-						if (rand2 < 70) {
-							Effect effect = track.Effects.AddEffect(hslAdjust);
-							(effect.OFXEffect.FindParameterByName("AddToHue") as OFXDoubleParameter).Value = random.NextDouble();
-						} else if (rand2 >= 85)  {
-							double h = random.NextDouble();
-							h = 2 * h - 3 * Math.Pow(h, 2) + 2 * Math.Pow(h, 3); // f(x)=2x−3x^2+2x^3 的概率密度曲线。
-							ColorBalance(track, h * 360);
-						}
-						if (random.NextDouble() < 0.4) {
+						bool isInverted = random.NextDouble() < 0.4;
+						if (isInverted) {
 							Effect effect = track.Effects.AddEffect(invert);
+						}
+						if (rand2 < 75) {
+							Effect effect = track.Effects.AddEffect(hslAdjust);
+							double h = random.NextDouble();
+							if (!isInverted) {
+								// f(x)=2x−3x^2+2x^3 的概率密度曲线。
+								// 如果需要调节“中间平缓、两端陡峭”的程度，可以增加一个强度参数 strength（建议范围 [0, 2)）。
+								// 这样，strength 越大，中间越平缓、两端越陡峭；strength = 1 时即为上述标准形式。
+								const double STRENGTH = 1;
+								// 基础形式：f(x) = x + strength * x * (1 - x) * (1 - 2x)
+								// 当 strength = 1 时，化简为 2x - 3x^2 + 2x^3
+								h = h + STRENGTH * h * (1d - h) * (1d - 2d * h);
+							}
+							(effect.OFXEffect.FindParameterByName("AddToHue") as OFXDoubleParameter).Value = random.NextDouble();
+						} else if (rand2 >= 85) {
+							ColorBalance(track, random.NextDouble() * 360);
 						}
 					}
 				SkipChangeHue:;
@@ -6583,7 +6604,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public static void Kinescope(Track track, ICollection<Track> additionalTracks = null) {
 				List<char> order = "RGB".ToList();
 				order.Sort((x, y) => random.Next(2) * 2 - 1);
-				Track track1 = EntryPoint.DuplicateTrack(track, track.Index - 1), track2 = EntryPoint.DuplicateTrack(track, track.Index - 2);
+				Track track1 = EntryPoint.DuplicateTrack(track, track.Index), track2 = EntryPoint.DuplicateTrack(track, track.Index - 1);
 				ColorBalance(track, order[0]);
 				if (track1 != null) ColorBalance(track1, order[1], 0.8);
 				if (track2 != null) ColorBalance(track2, order[2], 0.64);
@@ -6959,22 +6980,33 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// <summary>
 			/// 指定插件效果应用随机预设。
 			/// </summary>
-			/// <param name="effect">插件效果</param>
-			public static void GetRandomPreset(Effect effect) {
-				EffectPresets presets = effect.Presets;
+			/// <param name="effect">插件效果。</param>
+			/// <param name="usedPresets">已使用过了的预设名称，位于此集合中的预设名称不会被使用，如果所有预设全被使用了则函数返回 <see langword="null" />。</param>
+			/// <param name="autoAddToUsedPreset">如果 <paramref name="usedPresets" /> 不为 <see langword="null" />，要自动将新添加的预设也放入 <paramref name="usedPresets" /> 其中吗？默认为 <see langword="true" />。</param>
+			/// <param name="areUsedPresetsSegments"><paramref name="usedPresets" /> 中的字符串是否仅为预设名称的一部分片段而不是完整名称？默认为 <see langword="false" />。</param>
+			/// <returns>随机预设名称。</returns>
+			public static string GetRandomPreset(Effect effect, HashSet<string> usedPresets = null, bool autoAddToUsedPresets = true, bool areUsedPresetsSegments = false) {
+				List<string> presets = effect.Presets.Select(preset => preset.Name).Where(name =>
+					!(resetToNonePresets.Contains(name)
+					|| name.StartsWith("(") // “(默认)”、“(无)” 等。
+					|| usedPresets != null && (!areUsedPresetsSegments ? usedPresets.Contains(name) : usedPresets.Any(preset => preset.Contains(name))))).ToList();
 				int count = presets.Count;
 				string randomPreset;
-				if (count == 0) return;
-				else if (count == 1) randomPreset = presets[0].Name;
-				else {
-					do {
-						randomPreset = presets[random.Next(presets.Count)].Name;
-					} while (randomPreset == DEFAULT_PARAMETER || randomPreset.StartsWith("(") || resetToNonePresets.Contains(randomPreset));
-				}
+				if (count == 0) return "";
+				else if (count == 1) randomPreset = presets[0];
+				else randomPreset = presets[random.Next(presets.Count)];
+				//else {
+				//	do {
+				//		randomPreset = presets[random.Next(presets.Count)];
+				//	} while (randomPreset == DEFAULT_PARAMETER || randomPreset.StartsWith("(") || resetToNonePresets.Contains(randomPreset));
+				//}
 				effect.Preset = randomPreset;
+				if (usedPresets != null && autoAddToUsedPresets) usedPresets.Add(randomPreset);
+				return randomPreset;
 			}
 			private const string DEFAULT_PARAMETER = "[Sys] Default all parameters";
 			private static readonly IReadOnlyList<string> resetToNonePresets = new List<string> {
+				// 视频效果预设：重置为“无”
 				"Reset to None", // 英语
 				"Auf \"Kein\" zurücksetzen", // 德语
 				"Restablecer en ninguno", // 西班牙语
@@ -6985,6 +7017,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				"Redefinir para zero", // 巴西葡萄牙语
 				"重置为“无”", // 简体中文
 				"无特效", // Vegas Pro 13 民间汉化版简体中文
+			};
+			internal static readonly IReadOnlyList<string> halfScaleSwirlPresets = new List<string> {
+				// 避免在使用漩涡预设时使用到“半缩放”的小漩涡预设。
+				"Half Scale",
+				"halbe Skalierung",
+				"media escala",
+				"demi-échelle",
+				"ハーフ スケール",
+				"1/2 배율",
+				"połowa skali",
+				"meia escala",
+				"半缩放",
 			};
 			/// <summary>
 			/// 针对 Vegas Pro 15 及以下版本兼容而使用的传统移调插件调音方式。
