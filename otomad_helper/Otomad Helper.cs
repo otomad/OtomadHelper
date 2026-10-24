@@ -3311,9 +3311,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			bool reuse = reuseBusTrack == null ? AudioBusTrackReuse : reuseBusTrack.Value;
 			AudioBusTrack busTrack = null;
 			if (reuse && !string.IsNullOrEmpty(name))
-				busTrack = vegas.Project.BusTracks.OfType<AudioBusTrack>().FirstOrDefault(bus => bus.Description == name && !bus.IsMaster());
+				busTrack = vegas.Project.BusTracks.OfType<AudioBusTrack>().FirstOrDefault(bus => (bus.Description == name || bus.Name == name) && !bus.IsMaster());
 			if (busTrack == null) {
-				busTrack = vegas.Project.AddAudioBusTrack();
+				try {
+					busTrack = vegas.Project.AddAudioBusTrack();
+				} catch (Exception) {
+					// 此时音频总线轨道数目已达到上限（上限 26 个字母），无法再添加新的总线轨道。
+					return null;
+				}
 				busTrack.Description = name;
 			}
 			foreach (AudioTrack track in tracks)
