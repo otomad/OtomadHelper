@@ -333,6 +333,9 @@
       <DependentUpon>ConfigForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </None>
+    <EmbeddedResource Include="CameraShakeForm.resx">
+      <DependentUpon>CameraShakeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomFadeGainForm.resx">
       <DependentUpon>CustomFadeGainForm.cs</DependentUpon>
     </EmbeddedResource>
