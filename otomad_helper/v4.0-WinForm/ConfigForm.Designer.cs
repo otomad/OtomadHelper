@@ -62,12 +62,25 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.rememberOnceFormSizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.restoreDefaultFormSizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+			this.setToDefaultFormSizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.setToMinFormSizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.pitchShiftPresetMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.unloadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.enableLegacyProgressDialogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.titleBarMaterialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lightAcrylicMaterialToolStripMenuItem = new Otomad.VegasScripts.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
+			this.lightMicaMaterialToolStripMenuItem = new Otomad.VegasScripts.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
+			this.lightMicaAltMaterialToolStripMenuItem = new Otomad.VegasScripts.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
+			this.lightSolidMaterialToolStripMenuItem = new Otomad.VegasScripts.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
+			this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+			this.darkAcrylicMaterialToolStripMenuItem = new Otomad.VegasScripts.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
+			this.darkMicaMaterialToolStripMenuItem = new Otomad.VegasScripts.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
+			this.darkMicaAltMaterialToolStripMenuItem = new Otomad.VegasScripts.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
+			this.darkSolidMaterialToolStripMenuItem = new Otomad.VegasScripts.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
 			this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
 			this.exportConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.importConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,6 +92,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.whyOkBtnIsDisabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.experimentalThemeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.hideVersionOnMenuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
 			this.checkUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.checkUpdateOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1313,7 +1327,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
 			this.menu.Padding = new System.Windows.Forms.Padding(10, 4, 0, 6);
-			this.menu.Size = new System.Drawing.Size(1166, 46);
+			this.menu.Size = new System.Drawing.Size(1166, 48);
 			this.menu.TabIndex = 2;
 			this.menu.Text = "menuStrip1";
 			//
@@ -1327,6 +1341,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.pitchShiftPresetMenuItem,
 			this.toolStripSeparator1,
 			this.enableLegacyProgressDialogToolStripMenuItem,
+			this.titleBarMaterialToolStripMenuItem,
 			this.toolStripSeparator12,
 			this.exportConfigToolStripMenuItem,
 			this.importConfigToolStripMenuItem,
@@ -1334,7 +1349,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.exitDiscardingChangesToolStripMenuItem,
 			this.exitToolStripMenuItem});
 			this.fileMenuItem.Name = "fileMenuItem";
-			this.fileMenuItem.Size = new System.Drawing.Size(108, 36);
+			this.fileMenuItem.Size = new System.Drawing.Size(108, 38);
 			this.fileMenuItem.Text = "文件(&F)";
 			//
 			// saveConfigToolStripMenuItem
@@ -1357,7 +1372,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.rememberFormSizeToolStripMenuItem,
 			this.toolStripSeparator2,
 			this.rememberOnceFormSizeToolStripMenuItem,
-			this.restoreDefaultFormSizeToolStripMenuItem});
+			this.restoreDefaultFormSizeToolStripMenuItem,
+			this.toolStripSeparator4,
+			this.setToDefaultFormSizeToolStripMenuItem,
+			this.setToMinFormSizeToolStripMenuItem});
 			this.formSizeToolStripMenuItem.Name = "formSizeToolStripMenuItem";
 			this.formSizeToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
 			this.formSizeToolStripMenuItem.Text = "窗体大小(&F)";
@@ -1387,6 +1405,25 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.restoreDefaultFormSizeToolStripMenuItem.Size = new System.Drawing.Size(387, 44);
 			this.restoreDefaultFormSizeToolStripMenuItem.Text = "下次恢复默认窗体大小";
 			this.restoreDefaultFormSizeToolStripMenuItem.Click += new System.EventHandler(this.RestoreDefaultFormSizeToolStripMenuItem_Click);
+			//
+			// toolStripSeparator4
+			//
+			this.toolStripSeparator4.Name = "toolStripSeparator4";
+			this.toolStripSeparator4.Size = new System.Drawing.Size(384, 6);
+			//
+			// setToDefaultFormSizeToolStripMenuItem
+			//
+			this.setToDefaultFormSizeToolStripMenuItem.Name = "setToDefaultFormSizeToolStripMenuItem";
+			this.setToDefaultFormSizeToolStripMenuItem.Size = new System.Drawing.Size(387, 44);
+			this.setToDefaultFormSizeToolStripMenuItem.Text = "立即恢复默认窗体大小";
+			this.setToDefaultFormSizeToolStripMenuItem.Click += new System.EventHandler(this.SetFormSizeNowToolStripMenuItem_Click);
+			//
+			// setToMinFormSizeToolStripMenuItem
+			//
+			this.setToMinFormSizeToolStripMenuItem.Name = "setToMinFormSizeToolStripMenuItem";
+			this.setToMinFormSizeToolStripMenuItem.Size = new System.Drawing.Size(387, 44);
+			this.setToMinFormSizeToolStripMenuItem.Text = "立即设为最小窗体大小";
+			this.setToMinFormSizeToolStripMenuItem.Click += new System.EventHandler(this.SetFormSizeNowToolStripMenuItem_Click);
 			//
 			// toolStripSeparator6
 			//
@@ -1427,6 +1464,101 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.enableLegacyProgressDialogToolStripMenuItem.Name = "enableLegacyProgressDialogToolStripMenuItem";
 			this.enableLegacyProgressDialogToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
 			this.enableLegacyProgressDialogToolStripMenuItem.Text = "启用旧版进度对话框";
+			//
+			// titleBarMaterialToolStripMenuItem
+			//
+			this.titleBarMaterialToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.lightAcrylicMaterialToolStripMenuItem,
+			this.lightMicaMaterialToolStripMenuItem,
+			this.lightMicaAltMaterialToolStripMenuItem,
+			this.lightSolidMaterialToolStripMenuItem,
+			this.toolStripSeparator13,
+			this.darkAcrylicMaterialToolStripMenuItem,
+			this.darkMicaMaterialToolStripMenuItem,
+			this.darkMicaAltMaterialToolStripMenuItem,
+			this.darkSolidMaterialToolStripMenuItem});
+			this.titleBarMaterialToolStripMenuItem.Name = "titleBarMaterialToolStripMenuItem";
+			this.titleBarMaterialToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.titleBarMaterialToolStripMenuItem.Text = "标题栏材质样式";
+			//
+			// lightAcrylicMaterialToolStripMenuItem
+			//
+			this.lightAcrylicMaterialToolStripMenuItem.Checked = true;
+			this.lightAcrylicMaterialToolStripMenuItem.CheckOnClick = true;
+			this.lightAcrylicMaterialToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.lightAcrylicMaterialToolStripMenuItem.Name = "lightAcrylicMaterialToolStripMenuItem";
+			this.lightAcrylicMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+			this.lightAcrylicMaterialToolStripMenuItem.Tag = "3,1";
+			this.lightAcrylicMaterialToolStripMenuItem.Text = "浅色 - 亚克力";
+			this.lightAcrylicMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
+			//
+			// lightMicaMaterialToolStripMenuItem
+			//
+			this.lightMicaMaterialToolStripMenuItem.CheckOnClick = true;
+			this.lightMicaMaterialToolStripMenuItem.Name = "lightMicaMaterialToolStripMenuItem";
+			this.lightMicaMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+			this.lightMicaMaterialToolStripMenuItem.Tag = "2,1";
+			this.lightMicaMaterialToolStripMenuItem.Text = "浅色 - 云母";
+			this.lightMicaMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
+			//
+			// lightMicaAltMaterialToolStripMenuItem
+			//
+			this.lightMicaAltMaterialToolStripMenuItem.CheckOnClick = true;
+			this.lightMicaAltMaterialToolStripMenuItem.Name = "lightMicaAltMaterialToolStripMenuItem";
+			this.lightMicaAltMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+			this.lightMicaAltMaterialToolStripMenuItem.Tag = "4,1";
+			this.lightMicaAltMaterialToolStripMenuItem.Text = "浅色 - 云母平替";
+			this.lightMicaAltMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
+			//
+			// lightSolidMaterialToolStripMenuItem
+			//
+			this.lightSolidMaterialToolStripMenuItem.CheckOnClick = true;
+			this.lightSolidMaterialToolStripMenuItem.Name = "lightSolidMaterialToolStripMenuItem";
+			this.lightSolidMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+			this.lightSolidMaterialToolStripMenuItem.Tag = "1,1";
+			this.lightSolidMaterialToolStripMenuItem.Text = "浅色 - 纯色";
+			this.lightSolidMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
+			//
+			// toolStripSeparator13
+			//
+			this.toolStripSeparator13.Name = "toolStripSeparator13";
+			this.toolStripSeparator13.Size = new System.Drawing.Size(356, 6);
+			//
+			// darkAcrylicMaterialToolStripMenuItem
+			//
+			this.darkAcrylicMaterialToolStripMenuItem.CheckOnClick = true;
+			this.darkAcrylicMaterialToolStripMenuItem.Name = "darkAcrylicMaterialToolStripMenuItem";
+			this.darkAcrylicMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+			this.darkAcrylicMaterialToolStripMenuItem.Tag = "3,0";
+			this.darkAcrylicMaterialToolStripMenuItem.Text = "深色 - 亚克力";
+			this.darkAcrylicMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
+			//
+			// darkMicaMaterialToolStripMenuItem
+			//
+			this.darkMicaMaterialToolStripMenuItem.CheckOnClick = true;
+			this.darkMicaMaterialToolStripMenuItem.Name = "darkMicaMaterialToolStripMenuItem";
+			this.darkMicaMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+			this.darkMicaMaterialToolStripMenuItem.Tag = "2,0";
+			this.darkMicaMaterialToolStripMenuItem.Text = "深色 - 云母";
+			this.darkMicaMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
+			//
+			// darkMicaAltMaterialToolStripMenuItem
+			//
+			this.darkMicaAltMaterialToolStripMenuItem.CheckOnClick = true;
+			this.darkMicaAltMaterialToolStripMenuItem.Name = "darkMicaAltMaterialToolStripMenuItem";
+			this.darkMicaAltMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+			this.darkMicaAltMaterialToolStripMenuItem.Tag = "4,0";
+			this.darkMicaAltMaterialToolStripMenuItem.Text = "深色 - 云母平替";
+			this.darkMicaAltMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
+			//
+			// darkSolidMaterialToolStripMenuItem
+			//
+			this.darkSolidMaterialToolStripMenuItem.CheckOnClick = true;
+			this.darkSolidMaterialToolStripMenuItem.Name = "darkSolidMaterialToolStripMenuItem";
+			this.darkSolidMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+			this.darkSolidMaterialToolStripMenuItem.Tag = "1,0";
+			this.darkSolidMaterialToolStripMenuItem.Text = "深色 - 纯色";
+			this.darkSolidMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
 			//
 			// toolStripSeparator12
 			//
@@ -1474,6 +1606,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.aboutToolStripMenuItem,
 			this.whyOkBtnIsDisabledToolStripMenuItem,
 			this.experimentalThemeToolStripMenuItem,
+			this.hideVersionOnMenuToolStripMenuItem,
 			this.toolStripSeparator7,
 			this.checkUpdateToolStripMenuItem,
 			this.checkUpdateOnStartupToolStripMenuItem,
@@ -1490,7 +1623,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.schineseDocsToolStripMenuItem,
 			this.vitenameseDocsToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(113, 36);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(113, 38);
 			this.helpToolStripMenuItem.Text = "帮助(&H)";
 			//
 			// versionToolStripMenuItem
@@ -1522,6 +1655,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.experimentalThemeToolStripMenuItem.Text = "实验性主题";
 			this.experimentalThemeToolStripMenuItem.Visible = false;
 			this.experimentalThemeToolStripMenuItem.Click += new System.EventHandler(this.ExperimentalThemeToolStripMenuItem_Click);
+			//
+			// hideVersionOnMenuToolStripMenuItem
+			//
+			this.hideVersionOnMenuToolStripMenuItem.CheckOnClick = true;
+			this.hideVersionOnMenuToolStripMenuItem.Name = "hideVersionOnMenuToolStripMenuItem";
+			this.hideVersionOnMenuToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
+			this.hideVersionOnMenuToolStripMenuItem.Text = "暂时隐藏菜单栏上的版本号";
+			this.hideVersionOnMenuToolStripMenuItem.CheckedChanged += new System.EventHandler(this.HideVersionOnMenuToolStripMenuItem_CheckedChanged);
 			//
 			// toolStripSeparator7
 			//
@@ -1710,7 +1851,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.vietnameseToolStripMenuItem,
 			this.indonesianToolStripMenuItem});
 			this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
-			this.languageToolStripMenuItem.Size = new System.Drawing.Size(195, 36);
+			this.languageToolStripMenuItem.Size = new System.Drawing.Size(195, 38);
 			this.languageToolStripMenuItem.Text = "语言/&Language";
 			//
 			// chineseToolStripMenuItem
@@ -1775,7 +1916,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.latestVersionToolStripMenuItemInBar.ForeColor = System.Drawing.Color.Red;
 			this.latestVersionToolStripMenuItemInBar.Name = "latestVersionToolStripMenuItemInBar";
-			this.latestVersionToolStripMenuItemInBar.Size = new System.Drawing.Size(178, 36);
+			this.latestVersionToolStripMenuItemInBar.Size = new System.Drawing.Size(178, 38);
 			this.latestVersionToolStripMenuItemInBar.Text = "下载最新版本";
 			this.latestVersionToolStripMenuItemInBar.Visible = false;
 			//
@@ -1784,7 +1925,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.currentVersionMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
 			this.currentVersionMenuItem.Enabled = false;
 			this.currentVersionMenuItem.Name = "currentVersionMenuItem";
-			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 36);
+			this.currentVersionMenuItem.Size = new System.Drawing.Size(59, 38);
 			this.currentVersionMenuItem.Text = "v4";
 			//
 			// panel1
@@ -1792,10 +1933,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.panel1.BackColor = System.Drawing.Color.Transparent;
 			this.panel1.Controls.Add(this.Tabs);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(0, 46);
+			this.panel1.Location = new System.Drawing.Point(0, 48);
 			this.panel1.Name = "panel1";
 			this.panel1.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
-			this.panel1.Size = new System.Drawing.Size(1166, 1216);
+			this.panel1.Size = new System.Drawing.Size(1166, 1214);
 			this.panel1.TabIndex = 3;
 			//
 			// Tabs
@@ -1815,7 +1956,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Tabs.Multiline = true;
 			this.Tabs.Name = "Tabs";
 			this.Tabs.SelectedIndex = 0;
-			this.Tabs.Size = new System.Drawing.Size(1142, 1216);
+			this.Tabs.Size = new System.Drawing.Size(1142, 1214);
 			this.Tabs.TabIndex = 2;
 			this.Tabs.SelectedIndexChanged += new System.EventHandler(this.Tabs_SelectedIndexChanged);
 			//
@@ -1827,7 +1968,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTab.Location = new System.Drawing.Point(8, 46);
 			this.SourceTab.Margin = new System.Windows.Forms.Padding(0);
 			this.SourceTab.Name = "SourceTab";
-			this.SourceTab.Size = new System.Drawing.Size(1126, 1162);
+			this.SourceTab.Size = new System.Drawing.Size(1126, 1160);
 			this.SourceTab.TabIndex = 0;
 			this.SourceTab.Text = "素材";
 			this.SourceTab.UseVisualStyleBackColor = true;
@@ -1842,7 +1983,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTabScrollPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.SourceTabScrollPanel.Name = "SourceTabScrollPanel";
 			this.SourceTabScrollPanel.Padding = new System.Windows.Forms.Padding(8);
-			this.SourceTabScrollPanel.Size = new System.Drawing.Size(1126, 1106);
+			this.SourceTabScrollPanel.Size = new System.Drawing.Size(1126, 1104);
 			this.SourceTabScrollPanel.TabIndex = 5;
 			//
 			// MultiSourceConfigGroup
@@ -1907,7 +2048,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipTab.Controls.Add(this.LuckyDipPanel);
 			this.LuckyDipTab.Location = new System.Drawing.Point(8, 46);
 			this.LuckyDipTab.Name = "LuckyDipTab";
-			this.LuckyDipTab.Size = new System.Drawing.Size(970, 353);
+			this.LuckyDipTab.Size = new System.Drawing.Size(1078, 353);
 			this.LuckyDipTab.TabIndex = 1;
 			this.LuckyDipTab.Text = "素材盲盒";
 			this.LuckyDipTab.ToolTipText = "无需有意挑选多项素材，只需点选至少一段长素材，它将自动随机挑取片段的入点。";
@@ -1929,7 +2070,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipPanel.Location = new System.Drawing.Point(0, 0);
 			this.LuckyDipPanel.Name = "LuckyDipPanel";
 			this.LuckyDipPanel.Padding = new System.Windows.Forms.Padding(3);
-			this.LuckyDipPanel.Size = new System.Drawing.Size(970, 353);
+			this.LuckyDipPanel.Size = new System.Drawing.Size(1078, 353);
 			this.LuckyDipPanel.TabIndex = 8;
 			this.LuckyDipPanel.WrapContents = false;
 			//
@@ -2139,7 +2280,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutTab.Controls.Add(this.MatchCutPanel);
 			this.MatchCutTab.Location = new System.Drawing.Point(8, 46);
 			this.MatchCutTab.Name = "MatchCutTab";
-			this.MatchCutTab.Size = new System.Drawing.Size(970, 353);
+			this.MatchCutTab.Size = new System.Drawing.Size(1078, 353);
 			this.MatchCutTab.TabIndex = 2;
 			this.MatchCutTab.Text = "踩点";
 			this.MatchCutTab.ToolTipText = "点选多项素材，将通过自动踩点依次轮流应用这些素材。";
@@ -2162,7 +2303,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutPanel.Location = new System.Drawing.Point(0, 0);
 			this.MatchCutPanel.Name = "MatchCutPanel";
 			this.MatchCutPanel.Padding = new System.Windows.Forms.Padding(3);
-			this.MatchCutPanel.Size = new System.Drawing.Size(970, 353);
+			this.MatchCutPanel.Size = new System.Drawing.Size(1078, 353);
 			this.MatchCutPanel.TabIndex = 6;
 			this.MatchCutPanel.WrapContents = false;
 			//
@@ -2419,7 +2560,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LinearMapTab.Controls.Add(this.LinearMapPanel);
 			this.LinearMapTab.Location = new System.Drawing.Point(8, 46);
 			this.LinearMapTab.Name = "LinearMapTab";
-			this.LinearMapTab.Size = new System.Drawing.Size(970, 353);
+			this.LinearMapTab.Size = new System.Drawing.Size(1078, 353);
 			this.LinearMapTab.TabIndex = 3;
 			this.LinearMapTab.Text = "素材乐团";
 			this.LinearMapTab.ToolTipText = "点选多项素材，它们将依次映射到可用音轨（多余的素材或音轨会被剔除）。";
@@ -2437,7 +2578,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LinearMapPanel.Location = new System.Drawing.Point(0, 0);
 			this.LinearMapPanel.Name = "LinearMapPanel";
 			this.LinearMapPanel.Padding = new System.Windows.Forms.Padding(3);
-			this.LinearMapPanel.Size = new System.Drawing.Size(970, 353);
+			this.LinearMapPanel.Size = new System.Drawing.Size(1078, 353);
 			this.LinearMapPanel.TabIndex = 9;
 			this.LinearMapPanel.WrapContents = false;
 			//
@@ -2516,7 +2657,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.ConsonantTab.Location = new System.Drawing.Point(8, 46);
 			this.ConsonantTab.Name = "ConsonantTab";
-			this.ConsonantTab.Size = new System.Drawing.Size(970, 353);
+			this.ConsonantTab.Size = new System.Drawing.Size(1078, 353);
 			this.ConsonantTab.TabIndex = 4;
 			this.ConsonantTab.Text = "辅音时间";
 			this.ConsonantTab.ToolTipText = "为防止辅音被拉伸或延迟，可以将同一音视频素材的辅音与元音部分分割开，以便于为素材的辅音部分应用特殊优化。";
@@ -2526,7 +2667,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.ShupelunkerTab.Location = new System.Drawing.Point(8, 46);
 			this.ShupelunkerTab.Name = "ShupelunkerTab";
-			this.ShupelunkerTab.Size = new System.Drawing.Size(970, 353);
+			this.ShupelunkerTab.Size = new System.Drawing.Size(1078, 353);
 			this.ShupelunkerTab.TabIndex = 5;
 			this.ShupelunkerTab.Text = "原音系战法 / 鞑靼战法";
 			this.ShupelunkerTab.ToolTipText = "一种不调音的音MAD制作手法。它在不改变音高的情况下，通过使用与旋律音高相同的原素材片段来演奏旋律。";
@@ -3087,7 +3228,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.WarningInfoLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.WarningInfoLabel.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
 			this.WarningInfoLabel.ForeColor = System.Drawing.Color.Red;
-			this.WarningInfoLabel.Location = new System.Drawing.Point(0, 1106);
+			this.WarningInfoLabel.Location = new System.Drawing.Point(0, 1104);
 			this.WarningInfoLabel.MaximumSize = new System.Drawing.Size(864, 0);
 			this.WarningInfoLabel.Name = "WarningInfoLabel";
 			this.WarningInfoLabel.Padding = new System.Windows.Forms.Padding(8);
@@ -10693,7 +10834,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public GroupedRadioButton AudioBusTrackByTrackRadio;
 		public GroupedRadioButton AudioBusTrackBySessionRadio;
 		public System.Windows.Forms.Label AudioBusTrackLbl;
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
 		public System.Windows.Forms.Button MidiAutoChangeProjectPropertiesApplyBtn;
 		public System.Windows.Forms.TableLayoutPanel MatchCutRepeatRoundPanel;
 		public System.Windows.Forms.Label MatchCutRepeatRoundLbl;
@@ -10722,6 +10863,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public RememberedComboBox AudioStretchMethodCombo;
 		public System.Windows.Forms.Label AudioStretchMethodLbl;
 		public System.Windows.Forms.CheckBox MidiTrackSeparateDrumsCheck;
+		public System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+		public System.Windows.Forms.ToolStripMenuItem setToDefaultFormSizeToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem setToMinFormSizeToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem titleBarMaterialToolStripMenuItem;
+		public ToolStripRadioButtonMenuItem lightMicaMaterialToolStripMenuItem;
+		public ToolStripRadioButtonMenuItem lightAcrylicMaterialToolStripMenuItem;
+		public ToolStripRadioButtonMenuItem lightMicaAltMaterialToolStripMenuItem;
+		public ToolStripRadioButtonMenuItem lightSolidMaterialToolStripMenuItem;
+		public System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
+		public ToolStripRadioButtonMenuItem darkAcrylicMaterialToolStripMenuItem;
+		public ToolStripRadioButtonMenuItem darkMicaMaterialToolStripMenuItem;
+		public ToolStripRadioButtonMenuItem darkMicaAltMaterialToolStripMenuItem;
+		public ToolStripRadioButtonMenuItem darkSolidMaterialToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem hideVersionOnMenuToolStripMenuItem;
 	}
 }
 

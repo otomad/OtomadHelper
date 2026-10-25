@@ -1502,5 +1502,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void MidiTrackSeparateDrumsCheck_CheckedChanged(object sender, EventArgs e) {
 			Console.WriteLine(DatamoshInfoLbl);
 		}
+
+		private void SetFormSizeNowToolStripMenuItem_Click(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void SetMaterialToolStripMenuItem_CheckedChanged(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void HideVersionOnMenuToolStripMenuItem_CheckedChanged(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
 	}
 }
