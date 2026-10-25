@@ -12161,6 +12161,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public ProgressForm(bool isNativeStyle) {
 			InitializeComponent();
 			Icon = ConfigForm.icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			Translate();
 			this.isNativeStyle = isNativeStyle;
 			if (!isNativeStyle) {
@@ -13360,6 +13361,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			((Action)ReadIni).OnErrorBreak();
 			Translate();
@@ -14240,6 +14242,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			Height = table.Height + dock.Height + MARGIN;
@@ -15339,6 +15342,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			parent = entryPoint;
 			this.info = info;
 			Icon = ConfigForm.icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			Height = table.Height + dock.Height + SelectIntervalForm.MARGIN;
@@ -16011,6 +16015,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			Height = table.Height + dock.Height + SelectIntervalForm.MARGIN;
@@ -16403,6 +16408,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			parent = entryPoint;
 			this.info = info;
 			Icon = ConfigForm.icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			EffectsCombo.SelectedIndex = 0;
@@ -16889,6 +16895,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			Height = table.Height + dock.Height + SelectIntervalForm.MARGIN;
@@ -17340,6 +17347,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.DeleteSystemMenuItems(SystemMenuItemType.MINIMIZE);
 			Translate();
 			FormClosing += (sender, e) => SaveIni();
@@ -17787,6 +17795,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			Translate();
 			((Action)ReadIni).OnErrorBreak();
@@ -19285,6 +19294,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			RefreshDisabled(null, null);
 			foreach (CheckBox check in this.GetChildrenOfType<CheckBox>())
@@ -19741,6 +19751,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InitializeComponent();
 			this.configForm = configForm;
 			Icon = configForm.Icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			((Action)ReadIni).OnErrorBreak();
@@ -20001,6 +20012,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InitializeComponent();
 			this.parent = parent;
 			Icon = configForm.Icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			for (int i = 0; i < PrveLength; i++)
@@ -20259,6 +20271,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InitializeComponent();
 			this.configForm = configForm;
 			Icon = configForm.Icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			int groupIndex = 0;
 			PrveValues existPrves = null;
@@ -20725,6 +20738,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InitializeComponent();
 			this.parent = parent;
 			Icon = parent.configForm.Icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			((Action)ReadIni).OnErrorBreak();
@@ -21827,6 +21841,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InitializeComponent();
 			this.parent = parent;
 			Icon = parent.configForm.Icon;
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			cursor = vegas.Transport.CursorPosition;
@@ -22804,14 +22819,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			protected override void OnShown(EventArgs e) {
 				base.OnShown(e);
 				//把自己藏起来，在任务列表里也看不到
-				NativeWin32API.SetWindowPos(this.Handle, IntPtr.Zero, 0, 0, 0, 0, 659);
+				NativeWin32API.SetWindowPos(Handle, IntPtr.Zero, 0, 0, 0, 0, 659);
 			}
 
-			protected override void WndProc(ref System.Windows.Forms.Message m) {
+			protected override void WndProc(ref Message m) {
 				if (_watchForActivate && m.Msg == 0x0006) {
 					_watchForActivate = false;
 					_handle = m.LParam;
 					CheckMsgbox();
+					ConfigForm.LoadToRevertWhiteTitleBar(_handle);
 				}
 				base.WndProc(ref m);
 			}
@@ -23674,6 +23690,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				dialogAlpha.BringToFront();
 				dialogAlpha.Focus();
 			}
+
+			ConfigForm.LoadToRevertWhiteTitleBar(handle);
+			ConfigForm.LoadToRevertWhiteTitleBar(dialogAlpha);
 		}
 
 		void panelAlpha_AlphaChanged(object sender, EventArgs e) {
@@ -24416,6 +24435,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public AutomatorForm(Datamosh.Automator.ParameterDataList parameters) {
 			InitializeComponent();
 			Icon = ImageBase64.GetIcon(ImageBase64.AutomatorIcon);
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			Translate();
 			CheckedParams = parameters;
@@ -24818,6 +24838,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public CameraShakeForm(EntryPoint parent) {
 			this.parent = parent;
 			InitializeComponent();
+			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			ReadIni();
@@ -35690,6 +35711,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			parent = entryPoint;
 			originalCursorPosition = vegas.Transport.CursorPosition;
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
+			LoadToRevertWhiteTitleBar();
 
 			#region 修复数字旋钮在高分屏边距异常、列表视图列宽不足
 			foreach (NumericUpDown control in this.GetChildrenOfType<NumericUpDown>())
@@ -38417,7 +38439,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		[Flags]
 		public enum DwmWindowAttribute : uint {
 			DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
-			DWMWA_MICA_EFFECT = 1029
+			DWMWA_SYSTEMBACKDROP_TYPE = 38,
+		}
+		public enum SystemBackdropType {
+			Auto,
+			None,
+			MainWindow,
+			TransientWindow,
+			TabbedWindow,
 		}
 
 		private void ThemeAllControls(Control parent = null) {
@@ -38425,8 +38454,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			Action<Control> Theme = new Action<Control>(control => {
 				int trueValue = 0x01;
 				SetWindowTheme(control.Handle, "DarkMode_Explorer", null);
-				DwmSetWindowAttribute(control.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref trueValue, Marshal.SizeOf(typeof(int)));
-				DwmSetWindowAttribute(control.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue, Marshal.SizeOf(typeof(int)));
+				DwmSetWindowAttribute(control.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref trueValue, sizeof(int));
 				control.BackColor = Color.FromArgb(32, 32, 32);
 				control.ForeColor = Color.White;
 			});
@@ -38443,6 +38471,35 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			ToolStripMenuItem me = experimentalThemeToolStripMenuItem;
 			me.Checked = true;
 			me.Enabled = false;
+		}
+
+		/// <summary>
+		/// 移除 Vegas Pro 2026 为所有脚本窗体添加的黑色标题栏。
+		/// </summary>
+		/// <param name="form">窗体。</param>
+		public static void LoadToRevertWhiteTitleBar(Form form) {
+			System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer() { Interval = 1 };
+			form.Load += (sender, e) => timer.Start();
+			timer.Tick += (sender, e) => {
+				timer.Stop();
+				LoadToRevertWhiteTitleBar(form.Handle);
+			};
+		}
+		/// <summary>
+		/// 移除 Vegas Pro 2026 为所有脚本窗体添加的黑色标题栏。
+		/// </summary>
+		/// <param name="handle">窗体把手。</param>
+		public static void LoadToRevertWhiteTitleBar(IntPtr handle) {
+			int useImmersiveDarkMode = 0;
+			DwmSetWindowAttribute(handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref useImmersiveDarkMode, sizeof(int));
+			int systemBackdropType = (int)SystemBackdropType.TransientWindow;
+			DwmSetWindowAttribute(handle, DwmWindowAttribute.DWMWA_SYSTEMBACKDROP_TYPE, ref systemBackdropType, sizeof(int));
+		}
+		/// <summary>
+		/// 移除 Vegas Pro 2026 为所有脚本窗体添加的黑色标题栏。
+		/// </summary>
+		public void LoadToRevertWhiteTitleBar() {
+			LoadToRevertWhiteTitleBar(this);
 		}
 
 		public void QuickEnableAllMidiAutoLayoutTracks() {
