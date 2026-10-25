@@ -283,10 +283,10 @@ public static class PInvoke {
 		DwmExtendFrameIntoClientArea(hWnd, ref margins);
 
 	public static HResult SetWindowAttribute(nint hWnd, DwmWindowAttribute attribute, uint parameter) =>
-		DwmSetWindowAttribute(hWnd, attribute, ref parameter, Marshal.SizeOf<uint>());
+		DwmSetWindowAttribute(hWnd, attribute, ref parameter, sizeof(uint));
 
 	private static bool CheckSupportSystemBackdropType() {
-		HResult error = DwmGetWindowAttribute(0, DwmWindowAttribute.SystemBackdropType, out _, Marshal.SizeOf<uint>());
+		HResult error = DwmGetWindowAttribute(0, DwmWindowAttribute.SystemBackdropType, out _, sizeof(uint));
 		return error != HResult.InvalidArg;
 	}
 
@@ -652,7 +652,7 @@ public static class PInvoke {
 			AnimationId = 0,
 			GradientColor = gradientColor,
 		};
-		int accentStructSize = Marshal.SizeOf(accent);
+		int accentStructSize = Marshal.SizeOf<AccentPolicy>();
 		nint accentPtr = Marshal.AllocHGlobal(accentStructSize);
 		Marshal.StructureToPtr(accent, accentPtr, false);
 		WindowCompositionAttributeData data = new() {
@@ -880,7 +880,7 @@ public static class PInvoke {
 	/// Get the screen real bounds (size and position) without DPI scale.
 	/// </summary>
 	public static Rectangle GetPhysicalBounds(this Screen screen) {
-		DevModeW devMode = new() { dmSize = (ushort)Marshal.SizeOf(typeof(DevModeW)) };
+		DevModeW devMode = new() { dmSize = (ushort)Marshal.SizeOf<DevModeW>() };
 		EnumDisplaySettingsW(screen.DeviceName, ~0u, ref devMode);
 		return new(devMode.dmPositionX, devMode.dmPositionY, (int)devMode.dmPelsWidth, (int)devMode.dmPelsHeight);
 	}
@@ -1107,7 +1107,7 @@ public static class PInvoke {
 			Flags = WindowThemeNonClientAttributes.NoDrawCaption | WindowThemeNonClientAttributes.NoDrawIcon | WindowThemeNonClientAttributes.NoSysMenu,
 			Mask = WindowThemeNonClientAttributes.ValidBits,
 		};
-		return SetWindowThemeAttribute(hWnd, WindowThemeAttributeType.NonClient, ref options, (uint)Marshal.SizeOf(typeof(WindowThemeAttributeOptions))) == HResult.OK;
+		return SetWindowThemeAttribute(hWnd, WindowThemeAttributeType.NonClient, ref options, (uint)Marshal.SizeOf<WindowThemeAttributeOptions>()) == HResult.OK;
 		// FIXME: Not work in Windows 8/8.1 high contrast theme.
 	}
 }
