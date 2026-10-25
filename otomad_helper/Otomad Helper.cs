@@ -819,8 +819,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 			}
 			private double _lastOffset = 0;
-			private int? _autoBasePitch = -1;
-			public int? GetAutoBasePitch(double offset) {
+			private double? _autoBasePitch = -1;
+			public double? GetAutoBasePitch(double offset) {
 				if (_autoBasePitch == -1 || offset != _lastOffset) {
 					_lastOffset = offset;
 					if (audioEvent == null || audioEvent.Takes.Count == 0 || !audioEvent.ActiveTake.Media.IsLocalMedia()) return null;
@@ -1695,29 +1695,30 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (AConfigVelocity) audioEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Audio), AConfigVelocityMultiplyGain);
 
 						#region 应用变调
-						int basePitch = AConfigBasePitch;
+						double basePitch = AConfigBasePitch;
 						if (AConfigAutoBasePitch) {
-							int? autoBasePitch = activeSource.GetAutoBasePitch(adjustTime ? sourceStartTime : 0);
+							double? autoBasePitch = activeSource.GetAutoBasePitch(adjustTime ? sourceStartTime : 0);
 							if (autoBasePitch != null) basePitch = autoBasePitch.Value;
 						}
-						int pitchDelta = pitch - basePitch;
+						double pitchDelta = pitch - basePitch;
 						bool backToUsePlugin = false;
 					BackToUsePlugin:
 						#pragma warning disable CS0642
 						if (method == AudioTuningMethod.NO_TUNING || AConfigNoTuningDrumKits && noteEvent.Channel == 10); // 不调音。
 						else if (method == AudioTuningMethod.PITCH_SHIFT || backToUsePlugin) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
 							if (Plugin.pitchShift == null) { ShowError(new Exceptions.NoPluginPitchShiftException()); return false; }
-							double stretchRate = Pitch2Stretch(pitchDelta);
+							int pitchDelta_int = (int)Math.Round(pitchDelta, MidpointRounding.AwayFromZero);
+							double stretchRate = Pitch2Stretch(pitchDelta_int);
 							if (AConfigLockStretchPitch && audioFreezeLastFrameCondition && duration > audioLength / stretchRate)
 								audioEvent.Length = Timecode.FromMilliseconds(audioLength / stretchRate);
-							int pitchDeltaTimes = pitchDelta > 0 ? 12 : -12;
-							while (pitchDeltaTimes * pitchDelta > 0) { // pitchDeltaTimes > 0 ? pitchDelta > 0 : pitchDelta < 0
+							int pitchDeltaTimes = pitchDelta_int > 0 ? 12 : -12;
+							while (pitchDeltaTimes * pitchDelta_int > 0) { // pitchDeltaTimes > 0 ? pitchDelta_int > 0 : pitchDelta_int < 0
 								Effect effect = audioEvent.Effects.AddEffect(Plugin.pitchShift);
+								string presetName = (Math.Abs(pitchDelta_int) <= 12 ? pitchDelta_int : pitchDeltaTimes).ToString() + (AConfigLockStretchPitch ? "~" : "");
 								try {
-									effect.Preset = (Math.Abs(pitchDelta) <= 12 ? pitchDelta : pitchDeltaTimes).ToString()
-										+ (AConfigLockStretchPitch ? "~" : "");
+									effect.Preset = presetName;
 								} catch (Exception e) { ShowError(new Exceptions.NoPluginPresetsException(), e); return false; }
-								pitchDelta -= pitchDeltaTimes;
+								pitchDelta_int -= pitchDeltaTimes;
 							}
 						} else if (method == AudioTuningMethod.ELASTIQUE || method == AudioTuningMethod.CLASSIC) {
 							#if VER_GEQ_16
@@ -8939,7 +8940,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 若目标窗口内无法获得音高，则向后续最多 maxLookAheadMs 毫秒内搜索第一个有效音高。
 		/// 中值滤波与跳跃平滑的结果会被缓存，相同文件与参数再次调用时直接复用。
 		/// </summary>
-		public static int? GetPitchAt(
+		public static double? GetPitchAt(
 			string filePath,
 			double timeMs,
 			int windowMs = 50,
@@ -8977,7 +8978,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					validInWindow.Add(midiValues[i]);
 				}
 			}
-			int? median = ComputeMedian(validInWindow);
+			double? median = ComputeMedian(validInWindow);
 			if (median != null) {
 				return median;
 			}
@@ -8993,7 +8994,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					break;
 				}
 				if (!double.IsNaN(midiValues[i])) {
-					return (int)Math.Round(midiValues[i], MidpointRounding.AwayFromZero);
+					return midiValues[i];
 				}
 			}
 
@@ -9150,7 +9151,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 		}
 
-		private static int? ComputeMedian(List<double> values) {
+		private static double? ComputeMedian(List<double> values) {
 			if (values.Count == 0) {
 				return null;
 			}
@@ -9163,7 +9164,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			} else {
 				median = (values[mid - 1] + values[mid]) / 2.0;
 			}
-			return (int)Math.Round(median, MidpointRounding.AwayFromZero);
+			return median;
 		}
 
 		private static void SaveTrimmedAudioToWav(
@@ -17990,6 +17991,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioSetGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.AudioMultiplyGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.AudioGainBox = new System.Windows.Forms.NumericUpDown();
+			this.horizontalDivider9 = new Otomad.VegasScripts.OtomadHelper.V4.HorizontalDivider();
+			this.AudioFadeTable = new System.Windows.Forms.TableLayoutPanel();
+			this.AudioFadeOutReciprocalCurveCombo = new System.Windows.Forms.ComboBox();
+			this.AudioFadeOutCurveCombo = new System.Windows.Forms.ComboBox();
+			this.AudioFadeOutLbl = new System.Windows.Forms.Label();
+			this.AudioFadeInReciprocalCurveCombo = new System.Windows.Forms.ComboBox();
+			this.AudioFadeInCurveCombo = new System.Windows.Forms.ComboBox();
+			this.AudioFadeInLbl = new System.Windows.Forms.Label();
 			this.VideoGroup = new System.Windows.Forms.GroupBox();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.VideoMuteCheck = new System.Windows.Forms.CheckBox();
@@ -18015,6 +18024,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoSetGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.VideoMultiplyGainRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.VideoGainBox = new System.Windows.Forms.NumericUpDown();
+			this.horizontalDivider8 = new Otomad.VegasScripts.OtomadHelper.V4.HorizontalDivider();
+			this.VideoFadeTable = new System.Windows.Forms.TableLayoutPanel();
+			this.VideoFadeOutResetCheck = new System.Windows.Forms.CheckBox();
+			this.VideoFadeOutReciprocalCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoFadeInResetCheck = new System.Windows.Forms.CheckBox();
+			this.VideoFadeOutCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoFadeOutLbl = new System.Windows.Forms.Label();
+			this.VideoFadeInReciprocalCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoFadeInCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoFadeInLbl = new System.Windows.Forms.Label();
 			this.dock.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.AudioGroup.SuspendLayout();
@@ -18024,6 +18043,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			((System.ComponentModel.ISupportInitialize)(this.AudioRateBox)).BeginInit();
 			this.flowLayoutPanel6.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.AudioGainBox)).BeginInit();
+			this.AudioFadeTable.SuspendLayout();
 			this.VideoGroup.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.flowLayoutPanel3.SuspendLayout();
@@ -18031,6 +18051,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			((System.ComponentModel.ISupportInitialize)(this.VideoUnderSampleRateBox)).BeginInit();
 			this.flowLayoutPanel5.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.VideoGainBox)).BeginInit();
+			this.VideoFadeTable.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// dock
@@ -18043,7 +18064,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 872);
+			this.dock.Location = new System.Drawing.Point(0, 1090);
 			this.dock.Margin = new System.Windows.Forms.Padding(6);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(13, 10, 13, 10);
@@ -18086,11 +18107,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel1.Controls.Add(this.AudioGroup, 1, 0);
 			this.tableLayoutPanel1.Controls.Add(this.VideoGroup, 0, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 3);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(756, 872);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(756, 1087);
 			this.tableLayoutPanel1.TabIndex = 11;
 			//
 			// AudioGroup
@@ -18100,7 +18121,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioGroup.Location = new System.Drawing.Point(384, 12);
 			this.AudioGroup.Margin = new System.Windows.Forms.Padding(6, 12, 12, 12);
 			this.AudioGroup.Name = "AudioGroup";
-			this.AudioGroup.Size = new System.Drawing.Size(360, 848);
+			this.AudioGroup.Size = new System.Drawing.Size(360, 1063);
 			this.AudioGroup.TabIndex = 12;
 			this.AudioGroup.TabStop = false;
 			this.AudioGroup.Text = "音频剪辑";
@@ -18118,12 +18139,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel2.Controls.Add(this.flowLayoutPanel4);
 			this.flowLayoutPanel2.Controls.Add(this.horizontalDivider7);
 			this.flowLayoutPanel2.Controls.Add(this.flowLayoutPanel6);
+			this.flowLayoutPanel2.Controls.Add(this.horizontalDivider9);
+			this.flowLayoutPanel2.Controls.Add(this.AudioFadeTable);
 			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 35);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
 			this.flowLayoutPanel2.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-			this.flowLayoutPanel2.Size = new System.Drawing.Size(354, 810);
+			this.flowLayoutPanel2.Size = new System.Drawing.Size(354, 1025);
 			this.flowLayoutPanel2.TabIndex = 1;
 			this.flowLayoutPanel2.WrapContents = false;
 			//
@@ -18135,7 +18158,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioMuteCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioMuteCheck.Location = new System.Drawing.Point(6, 3);
 			this.AudioMuteCheck.Name = "AudioMuteCheck";
-			this.AudioMuteCheck.Size = new System.Drawing.Size(309, 36);
+			this.AudioMuteCheck.Size = new System.Drawing.Size(336, 36);
 			this.AudioMuteCheck.TabIndex = 3;
 			this.AudioMuteCheck.Text = "静音";
 			this.AudioMuteCheck.ThreeState = true;
@@ -18149,7 +18172,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioLockCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioLockCheck.Location = new System.Drawing.Point(6, 45);
 			this.AudioLockCheck.Name = "AudioLockCheck";
-			this.AudioLockCheck.Size = new System.Drawing.Size(309, 36);
+			this.AudioLockCheck.Size = new System.Drawing.Size(336, 36);
 			this.AudioLockCheck.TabIndex = 4;
 			this.AudioLockCheck.Text = "锁定";
 			this.AudioLockCheck.ThreeState = true;
@@ -18163,7 +18186,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioLoopCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioLoopCheck.Location = new System.Drawing.Point(6, 87);
 			this.AudioLoopCheck.Name = "AudioLoopCheck";
-			this.AudioLoopCheck.Size = new System.Drawing.Size(309, 36);
+			this.AudioLoopCheck.Size = new System.Drawing.Size(336, 36);
 			this.AudioLoopCheck.TabIndex = 5;
 			this.AudioLoopCheck.Text = "循环";
 			this.AudioLoopCheck.ThreeState = true;
@@ -18177,7 +18200,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioInvertPhaseCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioInvertPhaseCheck.Location = new System.Drawing.Point(6, 129);
 			this.AudioInvertPhaseCheck.Name = "AudioInvertPhaseCheck";
-			this.AudioInvertPhaseCheck.Size = new System.Drawing.Size(309, 36);
+			this.AudioInvertPhaseCheck.Size = new System.Drawing.Size(336, 36);
 			this.AudioInvertPhaseCheck.TabIndex = 6;
 			this.AudioInvertPhaseCheck.Text = "反相";
 			this.AudioInvertPhaseCheck.ThreeState = true;
@@ -18191,7 +18214,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.horizontalDivider4.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.horizontalDivider4.MaximumSize = new System.Drawing.Size(0, 2);
 			this.horizontalDivider4.Name = "horizontalDivider4";
-			this.horizontalDivider4.Size = new System.Drawing.Size(315, 2);
+			this.horizontalDivider4.Size = new System.Drawing.Size(342, 2);
 			this.horizontalDivider4.TabIndex = 29;
 			//
 			// AudioNormalizeCheck
@@ -18203,7 +18226,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioNormalizeCheck.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.AudioNormalizeCheck.Location = new System.Drawing.Point(6, 179);
 			this.AudioNormalizeCheck.Name = "AudioNormalizeCheck";
-			this.AudioNormalizeCheck.Size = new System.Drawing.Size(309, 36);
+			this.AudioNormalizeCheck.Size = new System.Drawing.Size(336, 36);
 			this.AudioNormalizeCheck.TabIndex = 30;
 			this.AudioNormalizeCheck.Text = "规范化音量";
 			this.AudioNormalizeCheck.ThreeState = true;
@@ -18221,7 +18244,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioRecalcNormGainPanel.Location = new System.Drawing.Point(3, 218);
 			this.AudioRecalcNormGainPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.AudioRecalcNormGainPanel.Name = "AudioRecalcNormGainPanel";
-			this.AudioRecalcNormGainPanel.Size = new System.Drawing.Size(315, 126);
+			this.AudioRecalcNormGainPanel.Size = new System.Drawing.Size(342, 126);
 			this.AudioRecalcNormGainPanel.TabIndex = 31;
 			this.AudioRecalcNormGainPanel.WrapContents = false;
 			//
@@ -18271,7 +18294,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.horizontalDivider5.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.horizontalDivider5.MaximumSize = new System.Drawing.Size(0, 2);
 			this.horizontalDivider5.Name = "horizontalDivider5";
-			this.horizontalDivider5.Size = new System.Drawing.Size(315, 2);
+			this.horizontalDivider5.Size = new System.Drawing.Size(342, 2);
 			this.horizontalDivider5.TabIndex = 27;
 			//
 			// flowLayoutPanel4
@@ -18286,7 +18309,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 352);
 			this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-			this.flowLayoutPanel4.Size = new System.Drawing.Size(315, 171);
+			this.flowLayoutPanel4.Size = new System.Drawing.Size(342, 171);
 			this.flowLayoutPanel4.TabIndex = 33;
 			this.flowLayoutPanel4.WrapContents = false;
 			//
@@ -18367,7 +18390,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.horizontalDivider7.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.horizontalDivider7.MaximumSize = new System.Drawing.Size(0, 2);
 			this.horizontalDivider7.Name = "horizontalDivider7";
-			this.horizontalDivider7.Size = new System.Drawing.Size(315, 2);
+			this.horizontalDivider7.Size = new System.Drawing.Size(342, 2);
 			this.horizontalDivider7.TabIndex = 34;
 			//
 			// flowLayoutPanel6
@@ -18382,7 +18405,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 531);
 			this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel6.Name = "flowLayoutPanel6";
-			this.flowLayoutPanel6.Size = new System.Drawing.Size(315, 171);
+			this.flowLayoutPanel6.Size = new System.Drawing.Size(342, 171);
 			this.flowLayoutPanel6.TabIndex = 35;
 			this.flowLayoutPanel6.WrapContents = false;
 			//
@@ -18451,6 +18474,132 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			0,
 			0});
 			//
+			// horizontalDivider9
+			//
+			this.horizontalDivider9.AutoSize = true;
+			this.horizontalDivider9.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider9.Location = new System.Drawing.Point(3, 705);
+			this.horizontalDivider9.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider9.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider9.Name = "horizontalDivider9";
+			this.horizontalDivider9.Size = new System.Drawing.Size(342, 2);
+			this.horizontalDivider9.TabIndex = 36;
+			//
+			// AudioFadeTable
+			//
+			this.AudioFadeTable.AutoSize = true;
+			this.AudioFadeTable.ColumnCount = 3;
+			this.AudioFadeTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.AudioFadeTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.AudioFadeTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.AudioFadeTable.Controls.Add(this.AudioFadeOutReciprocalCurveCombo, 2, 1);
+			this.AudioFadeTable.Controls.Add(this.AudioFadeOutCurveCombo, 1, 1);
+			this.AudioFadeTable.Controls.Add(this.AudioFadeOutLbl, 0, 1);
+			this.AudioFadeTable.Controls.Add(this.AudioFadeInReciprocalCurveCombo, 2, 0);
+			this.AudioFadeTable.Controls.Add(this.AudioFadeInCurveCombo, 1, 0);
+			this.AudioFadeTable.Controls.Add(this.AudioFadeInLbl, 0, 0);
+			this.AudioFadeTable.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioFadeTable.Location = new System.Drawing.Point(3, 710);
+			this.AudioFadeTable.Margin = new System.Windows.Forms.Padding(0);
+			this.AudioFadeTable.Name = "AudioFadeTable";
+			this.AudioFadeTable.RowCount = 2;
+			this.AudioFadeTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.AudioFadeTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.AudioFadeTable.Size = new System.Drawing.Size(342, 102);
+			this.AudioFadeTable.TabIndex = 37;
+			//
+			// AudioFadeOutReciprocalCurveCombo
+			//
+			this.AudioFadeOutReciprocalCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioFadeOutReciprocalCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.AudioFadeOutReciprocalCurveCombo.FormattingEnabled = true;
+			this.AudioFadeOutReciprocalCurveCombo.Items.AddRange(new object[] {
+			"不改变",
+			"线性",
+			"快速",
+			"慢速",
+			"平滑",
+			"急剧"});
+			this.AudioFadeOutReciprocalCurveCombo.Location = new System.Drawing.Point(208, 54);
+			this.AudioFadeOutReciprocalCurveCombo.Name = "AudioFadeOutReciprocalCurveCombo";
+			this.AudioFadeOutReciprocalCurveCombo.Size = new System.Drawing.Size(131, 40);
+			this.AudioFadeOutReciprocalCurveCombo.TabIndex = 28;
+			//
+			// AudioFadeOutCurveCombo
+			//
+			this.AudioFadeOutCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioFadeOutCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.AudioFadeOutCurveCombo.FormattingEnabled = true;
+			this.AudioFadeOutCurveCombo.Items.AddRange(new object[] {
+			"不改变",
+			"线性",
+			"快速",
+			"慢速",
+			"平滑",
+			"急剧"});
+			this.AudioFadeOutCurveCombo.Location = new System.Drawing.Point(71, 54);
+			this.AudioFadeOutCurveCombo.Name = "AudioFadeOutCurveCombo";
+			this.AudioFadeOutCurveCombo.Size = new System.Drawing.Size(131, 40);
+			this.AudioFadeOutCurveCombo.TabIndex = 27;
+			//
+			// AudioFadeOutLbl
+			//
+			this.AudioFadeOutLbl.AutoSize = true;
+			this.AudioFadeOutLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioFadeOutLbl.Location = new System.Drawing.Point(3, 51);
+			this.AudioFadeOutLbl.MinimumSize = new System.Drawing.Size(0, 51);
+			this.AudioFadeOutLbl.Name = "AudioFadeOutLbl";
+			this.AudioFadeOutLbl.Size = new System.Drawing.Size(62, 51);
+			this.AudioFadeOutLbl.TabIndex = 26;
+			this.AudioFadeOutLbl.Text = "渐出";
+			this.AudioFadeOutLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// AudioFadeInReciprocalCurveCombo
+			//
+			this.AudioFadeInReciprocalCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioFadeInReciprocalCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.AudioFadeInReciprocalCurveCombo.FormattingEnabled = true;
+			this.AudioFadeInReciprocalCurveCombo.Items.AddRange(new object[] {
+			"不改变",
+			"线性",
+			"快速",
+			"慢速",
+			"平滑",
+			"急剧"});
+			this.AudioFadeInReciprocalCurveCombo.Location = new System.Drawing.Point(208, 3);
+			this.AudioFadeInReciprocalCurveCombo.Name = "AudioFadeInReciprocalCurveCombo";
+			this.AudioFadeInReciprocalCurveCombo.Size = new System.Drawing.Size(131, 40);
+			this.AudioFadeInReciprocalCurveCombo.TabIndex = 25;
+			//
+			// AudioFadeInCurveCombo
+			//
+			this.AudioFadeInCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioFadeInCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.AudioFadeInCurveCombo.FormattingEnabled = true;
+			this.AudioFadeInCurveCombo.Items.AddRange(new object[] {
+			"不改变",
+			"线性",
+			"快速",
+			"慢速",
+			"平滑",
+			"急剧"});
+			this.AudioFadeInCurveCombo.Location = new System.Drawing.Point(71, 3);
+			this.AudioFadeInCurveCombo.Name = "AudioFadeInCurveCombo";
+			this.AudioFadeInCurveCombo.Size = new System.Drawing.Size(131, 40);
+			this.AudioFadeInCurveCombo.TabIndex = 24;
+			//
+			// AudioFadeInLbl
+			//
+			this.AudioFadeInLbl.AutoSize = true;
+			this.AudioFadeInLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioFadeInLbl.Location = new System.Drawing.Point(3, 0);
+			this.AudioFadeInLbl.MinimumSize = new System.Drawing.Size(0, 51);
+			this.AudioFadeInLbl.Name = "AudioFadeInLbl";
+			this.AudioFadeInLbl.Size = new System.Drawing.Size(62, 51);
+			this.AudioFadeInLbl.TabIndex = 1;
+			this.AudioFadeInLbl.Text = "渐入";
+			this.AudioFadeInLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
 			// VideoGroup
 			//
 			this.VideoGroup.Controls.Add(this.flowLayoutPanel1);
@@ -18458,7 +18607,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoGroup.Location = new System.Drawing.Point(12, 12);
 			this.VideoGroup.Margin = new System.Windows.Forms.Padding(12, 12, 6, 12);
 			this.VideoGroup.Name = "VideoGroup";
-			this.VideoGroup.Size = new System.Drawing.Size(360, 848);
+			this.VideoGroup.Size = new System.Drawing.Size(360, 1063);
 			this.VideoGroup.TabIndex = 11;
 			this.VideoGroup.TabStop = false;
 			this.VideoGroup.Text = "视频剪辑";
@@ -18480,13 +18629,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel1.Controls.Add(this.VideoUnderSampleRateBox);
 			this.flowLayoutPanel1.Controls.Add(this.horizontalDivider6);
 			this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel5);
+			this.flowLayoutPanel1.Controls.Add(this.horizontalDivider8);
+			this.flowLayoutPanel1.Controls.Add(this.VideoFadeTable);
 			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 35);
 			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
 			this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(354, 810);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(354, 1025);
 			this.flowLayoutPanel1.TabIndex = 0;
 			this.flowLayoutPanel1.WrapContents = false;
 			//
@@ -18498,7 +18649,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoMuteCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoMuteCheck.Location = new System.Drawing.Point(6, 3);
 			this.VideoMuteCheck.Name = "VideoMuteCheck";
-			this.VideoMuteCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoMuteCheck.Size = new System.Drawing.Size(336, 36);
 			this.VideoMuteCheck.TabIndex = 0;
 			this.VideoMuteCheck.Text = "隐藏";
 			this.VideoMuteCheck.ThreeState = true;
@@ -18512,7 +18663,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoLockCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoLockCheck.Location = new System.Drawing.Point(6, 45);
 			this.VideoLockCheck.Name = "VideoLockCheck";
-			this.VideoLockCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoLockCheck.Size = new System.Drawing.Size(336, 36);
 			this.VideoLockCheck.TabIndex = 1;
 			this.VideoLockCheck.Text = "锁定";
 			this.VideoLockCheck.ThreeState = true;
@@ -18526,7 +18677,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoLoopCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoLoopCheck.Location = new System.Drawing.Point(6, 87);
 			this.VideoLoopCheck.Name = "VideoLoopCheck";
-			this.VideoLoopCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoLoopCheck.Size = new System.Drawing.Size(336, 36);
 			this.VideoLoopCheck.TabIndex = 2;
 			this.VideoLoopCheck.Text = "循环";
 			this.VideoLoopCheck.ThreeState = true;
@@ -18540,7 +18691,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoMaintainAspectRatioCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoMaintainAspectRatioCheck.Location = new System.Drawing.Point(6, 129);
 			this.VideoMaintainAspectRatioCheck.Name = "VideoMaintainAspectRatioCheck";
-			this.VideoMaintainAspectRatioCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoMaintainAspectRatioCheck.Size = new System.Drawing.Size(336, 36);
 			this.VideoMaintainAspectRatioCheck.TabIndex = 3;
 			this.VideoMaintainAspectRatioCheck.Text = "保持宽高比";
 			this.VideoMaintainAspectRatioCheck.ThreeState = true;
@@ -18554,7 +18705,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoReduceInterlaceCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoReduceInterlaceCheck.Location = new System.Drawing.Point(6, 171);
 			this.VideoReduceInterlaceCheck.Name = "VideoReduceInterlaceCheck";
-			this.VideoReduceInterlaceCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoReduceInterlaceCheck.Size = new System.Drawing.Size(336, 36);
 			this.VideoReduceInterlaceCheck.TabIndex = 4;
 			this.VideoReduceInterlaceCheck.Text = "减少隔行扫描闪烁";
 			this.VideoReduceInterlaceCheck.ThreeState = true;
@@ -18568,7 +18719,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.horizontalDivider1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.horizontalDivider1.MaximumSize = new System.Drawing.Size(0, 2);
 			this.horizontalDivider1.Name = "horizontalDivider1";
-			this.horizontalDivider1.Size = new System.Drawing.Size(326, 2);
+			this.horizontalDivider1.Size = new System.Drawing.Size(342, 2);
 			this.horizontalDivider1.TabIndex = 23;
 			//
 			// VideoResampleModeLbl
@@ -18578,7 +18729,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoResampleModeLbl.Location = new System.Drawing.Point(3, 218);
 			this.VideoResampleModeLbl.Margin = new System.Windows.Forms.Padding(0);
 			this.VideoResampleModeLbl.Name = "VideoResampleModeLbl";
-			this.VideoResampleModeLbl.Size = new System.Drawing.Size(326, 32);
+			this.VideoResampleModeLbl.Size = new System.Drawing.Size(342, 32);
 			this.VideoResampleModeLbl.TabIndex = 13;
 			this.VideoResampleModeLbl.Text = "重新采样模式";
 			this.VideoResampleModeLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -18598,7 +18749,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoResampleModeCombo.Location = new System.Drawing.Point(6, 253);
 			this.VideoResampleModeCombo.MinimumSize = new System.Drawing.Size(320, 0);
 			this.VideoResampleModeCombo.Name = "VideoResampleModeCombo";
-			this.VideoResampleModeCombo.Size = new System.Drawing.Size(320, 40);
+			this.VideoResampleModeCombo.Size = new System.Drawing.Size(336, 40);
 			this.VideoResampleModeCombo.TabIndex = 14;
 			//
 			// horizontalDivider2
@@ -18609,7 +18760,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.horizontalDivider2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.horizontalDivider2.MaximumSize = new System.Drawing.Size(0, 2);
 			this.horizontalDivider2.Name = "horizontalDivider2";
-			this.horizontalDivider2.Size = new System.Drawing.Size(326, 2);
+			this.horizontalDivider2.Size = new System.Drawing.Size(342, 2);
 			this.horizontalDivider2.TabIndex = 24;
 			//
 			// flowLayoutPanel3
@@ -18624,7 +18775,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 304);
 			this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-			this.flowLayoutPanel3.Size = new System.Drawing.Size(326, 171);
+			this.flowLayoutPanel3.Size = new System.Drawing.Size(342, 171);
 			this.flowLayoutPanel3.TabIndex = 32;
 			this.flowLayoutPanel3.WrapContents = false;
 			//
@@ -18705,7 +18856,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.horizontalDivider3.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.horizontalDivider3.MaximumSize = new System.Drawing.Size(0, 2);
 			this.horizontalDivider3.Name = "horizontalDivider3";
-			this.horizontalDivider3.Size = new System.Drawing.Size(326, 2);
+			this.horizontalDivider3.Size = new System.Drawing.Size(342, 2);
 			this.horizontalDivider3.TabIndex = 25;
 			//
 			// VideoUnderSampleRateCheck
@@ -18714,7 +18865,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoUnderSampleRateCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoUnderSampleRateCheck.Location = new System.Drawing.Point(6, 486);
 			this.VideoUnderSampleRateCheck.Name = "VideoUnderSampleRateCheck";
-			this.VideoUnderSampleRateCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoUnderSampleRateCheck.Size = new System.Drawing.Size(336, 36);
 			this.VideoUnderSampleRateCheck.TabIndex = 22;
 			this.VideoUnderSampleRateCheck.Text = "设置欠采样率";
 			this.VideoUnderSampleRateCheck.UseVisualStyleBackColor = true;
@@ -18756,7 +18907,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.horizontalDivider6.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.horizontalDivider6.MaximumSize = new System.Drawing.Size(0, 2);
 			this.horizontalDivider6.Name = "horizontalDivider6";
-			this.horizontalDivider6.Size = new System.Drawing.Size(326, 2);
+			this.horizontalDivider6.Size = new System.Drawing.Size(342, 2);
 			this.horizontalDivider6.TabIndex = 33;
 			//
 			// flowLayoutPanel5
@@ -18771,7 +18922,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 578);
 			this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-			this.flowLayoutPanel5.Size = new System.Drawing.Size(326, 171);
+			this.flowLayoutPanel5.Size = new System.Drawing.Size(342, 171);
 			this.flowLayoutPanel5.TabIndex = 34;
 			this.flowLayoutPanel5.WrapContents = false;
 			//
@@ -18839,6 +18990,162 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			0,
 			0});
 			//
+			// horizontalDivider8
+			//
+			this.horizontalDivider8.AutoSize = true;
+			this.horizontalDivider8.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider8.Location = new System.Drawing.Point(3, 752);
+			this.horizontalDivider8.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider8.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider8.Name = "horizontalDivider8";
+			this.horizontalDivider8.Size = new System.Drawing.Size(342, 2);
+			this.horizontalDivider8.TabIndex = 34;
+			//
+			// VideoFadeTable
+			//
+			this.VideoFadeTable.AutoSize = true;
+			this.VideoFadeTable.ColumnCount = 3;
+			this.VideoFadeTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.VideoFadeTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.VideoFadeTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.VideoFadeTable.Controls.Add(this.VideoFadeOutResetCheck, 0, 2);
+			this.VideoFadeTable.Controls.Add(this.VideoFadeOutReciprocalCurveCombo, 2, 3);
+			this.VideoFadeTable.Controls.Add(this.VideoFadeInResetCheck, 0, 0);
+			this.VideoFadeTable.Controls.Add(this.VideoFadeOutCurveCombo, 1, 3);
+			this.VideoFadeTable.Controls.Add(this.VideoFadeOutLbl, 0, 3);
+			this.VideoFadeTable.Controls.Add(this.VideoFadeInReciprocalCurveCombo, 2, 1);
+			this.VideoFadeTable.Controls.Add(this.VideoFadeInCurveCombo, 1, 1);
+			this.VideoFadeTable.Controls.Add(this.VideoFadeInLbl, 0, 1);
+			this.VideoFadeTable.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeTable.Location = new System.Drawing.Point(3, 757);
+			this.VideoFadeTable.Margin = new System.Windows.Forms.Padding(0);
+			this.VideoFadeTable.Name = "VideoFadeTable";
+			this.VideoFadeTable.RowCount = 4;
+			this.VideoFadeTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoFadeTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.VideoFadeTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoFadeTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.VideoFadeTable.Size = new System.Drawing.Size(342, 186);
+			this.VideoFadeTable.TabIndex = 24;
+			//
+			// VideoFadeOutResetCheck
+			//
+			this.VideoFadeOutResetCheck.AutoSize = true;
+			this.VideoFadeTable.SetColumnSpan(this.VideoFadeOutResetCheck, 3);
+			this.VideoFadeOutResetCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeOutResetCheck.Location = new System.Drawing.Point(3, 96);
+			this.VideoFadeOutResetCheck.Name = "VideoFadeOutResetCheck";
+			this.VideoFadeOutResetCheck.Size = new System.Drawing.Size(336, 36);
+			this.VideoFadeOutResetCheck.TabIndex = 29;
+			this.VideoFadeOutResetCheck.Text = "恢复渐出交叉淡化过渡";
+			this.VideoFadeOutResetCheck.UseVisualStyleBackColor = true;
+			this.VideoFadeOutResetCheck.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// VideoFadeOutReciprocalCurveCombo
+			//
+			this.VideoFadeOutReciprocalCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeOutReciprocalCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoFadeOutReciprocalCurveCombo.FormattingEnabled = true;
+			this.VideoFadeOutReciprocalCurveCombo.Items.AddRange(new object[] {
+			"不改变",
+			"线性",
+			"快速",
+			"慢速",
+			"平滑",
+			"急剧"});
+			this.VideoFadeOutReciprocalCurveCombo.Location = new System.Drawing.Point(208, 138);
+			this.VideoFadeOutReciprocalCurveCombo.Name = "VideoFadeOutReciprocalCurveCombo";
+			this.VideoFadeOutReciprocalCurveCombo.Size = new System.Drawing.Size(131, 40);
+			this.VideoFadeOutReciprocalCurveCombo.TabIndex = 28;
+			//
+			// VideoFadeInResetCheck
+			//
+			this.VideoFadeInResetCheck.AutoSize = true;
+			this.VideoFadeTable.SetColumnSpan(this.VideoFadeInResetCheck, 3);
+			this.VideoFadeInResetCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeInResetCheck.Location = new System.Drawing.Point(3, 3);
+			this.VideoFadeInResetCheck.Name = "VideoFadeInResetCheck";
+			this.VideoFadeInResetCheck.Size = new System.Drawing.Size(336, 36);
+			this.VideoFadeInResetCheck.TabIndex = 22;
+			this.VideoFadeInResetCheck.Text = "恢复渐入交叉淡化过渡";
+			this.VideoFadeInResetCheck.UseVisualStyleBackColor = true;
+			this.VideoFadeInResetCheck.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// VideoFadeOutCurveCombo
+			//
+			this.VideoFadeOutCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeOutCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoFadeOutCurveCombo.FormattingEnabled = true;
+			this.VideoFadeOutCurveCombo.Items.AddRange(new object[] {
+			"不改变",
+			"线性",
+			"快速",
+			"慢速",
+			"平滑",
+			"急剧"});
+			this.VideoFadeOutCurveCombo.Location = new System.Drawing.Point(71, 138);
+			this.VideoFadeOutCurveCombo.Name = "VideoFadeOutCurveCombo";
+			this.VideoFadeOutCurveCombo.Size = new System.Drawing.Size(131, 40);
+			this.VideoFadeOutCurveCombo.TabIndex = 27;
+			//
+			// VideoFadeOutLbl
+			//
+			this.VideoFadeOutLbl.AutoSize = true;
+			this.VideoFadeOutLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeOutLbl.Location = new System.Drawing.Point(3, 135);
+			this.VideoFadeOutLbl.MinimumSize = new System.Drawing.Size(0, 51);
+			this.VideoFadeOutLbl.Name = "VideoFadeOutLbl";
+			this.VideoFadeOutLbl.Size = new System.Drawing.Size(62, 51);
+			this.VideoFadeOutLbl.TabIndex = 26;
+			this.VideoFadeOutLbl.Text = "渐出";
+			this.VideoFadeOutLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// VideoFadeInReciprocalCurveCombo
+			//
+			this.VideoFadeInReciprocalCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeInReciprocalCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoFadeInReciprocalCurveCombo.FormattingEnabled = true;
+			this.VideoFadeInReciprocalCurveCombo.Items.AddRange(new object[] {
+			"不改变",
+			"线性",
+			"快速",
+			"慢速",
+			"平滑",
+			"急剧"});
+			this.VideoFadeInReciprocalCurveCombo.Location = new System.Drawing.Point(208, 45);
+			this.VideoFadeInReciprocalCurveCombo.Name = "VideoFadeInReciprocalCurveCombo";
+			this.VideoFadeInReciprocalCurveCombo.Size = new System.Drawing.Size(131, 40);
+			this.VideoFadeInReciprocalCurveCombo.TabIndex = 25;
+			//
+			// VideoFadeInCurveCombo
+			//
+			this.VideoFadeInCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeInCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoFadeInCurveCombo.FormattingEnabled = true;
+			this.VideoFadeInCurveCombo.Items.AddRange(new object[] {
+			"不改变",
+			"线性",
+			"快速",
+			"慢速",
+			"平滑",
+			"急剧"});
+			this.VideoFadeInCurveCombo.Location = new System.Drawing.Point(71, 45);
+			this.VideoFadeInCurveCombo.Name = "VideoFadeInCurveCombo";
+			this.VideoFadeInCurveCombo.Size = new System.Drawing.Size(131, 40);
+			this.VideoFadeInCurveCombo.TabIndex = 24;
+			//
+			// VideoFadeInLbl
+			//
+			this.VideoFadeInLbl.AutoSize = true;
+			this.VideoFadeInLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeInLbl.Location = new System.Drawing.Point(3, 42);
+			this.VideoFadeInLbl.MinimumSize = new System.Drawing.Size(0, 51);
+			this.VideoFadeInLbl.Name = "VideoFadeInLbl";
+			this.VideoFadeInLbl.Size = new System.Drawing.Size(62, 51);
+			this.VideoFadeInLbl.TabIndex = 1;
+			this.VideoFadeInLbl.Text = "渐入";
+			this.VideoFadeInLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
 			// QuickConfigPropertiesForm
 			//
 			this.AcceptButton = this.OkBtn;
@@ -18846,7 +19153,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(756, 955);
+			this.ClientSize = new System.Drawing.Size(756, 1176);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.dock);
 			this.DoubleBuffered = true;
@@ -18854,8 +19161,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Location = new System.Drawing.Point(60, 60);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(782, 1026);
+			this.MinimumSize = new System.Drawing.Size(782, 1247);
 			this.Name = "QuickConfigPropertiesForm";
+			this.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "快速配置属性";
@@ -18872,6 +19180,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel6.ResumeLayout(false);
 			this.flowLayoutPanel6.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.AudioGainBox)).EndInit();
+			this.AudioFadeTable.ResumeLayout(false);
+			this.AudioFadeTable.PerformLayout();
 			this.VideoGroup.ResumeLayout(false);
 			this.flowLayoutPanel1.ResumeLayout(false);
 			this.flowLayoutPanel1.PerformLayout();
@@ -18882,6 +19192,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel5.ResumeLayout(false);
 			this.flowLayoutPanel5.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.VideoGainBox)).EndInit();
+			this.VideoFadeTable.ResumeLayout(false);
+			this.VideoFadeTable.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -18941,6 +19253,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private GroupedRadioButton AudioSetGainRadio;
 		private GroupedRadioButton AudioMultiplyGainRadio;
 		private System.Windows.Forms.NumericUpDown AudioGainBox;
+		private HorizontalDivider horizontalDivider8;
+		private System.Windows.Forms.CheckBox VideoFadeInResetCheck;
+		private System.Windows.Forms.TableLayoutPanel VideoFadeTable;
+		public System.Windows.Forms.ComboBox VideoFadeInCurveCombo;
+		public System.Windows.Forms.Label VideoFadeInLbl;
+		public System.Windows.Forms.ComboBox VideoFadeInReciprocalCurveCombo;
+		public System.Windows.Forms.Label VideoFadeOutLbl;
+		public System.Windows.Forms.ComboBox VideoFadeOutReciprocalCurveCombo;
+		public System.Windows.Forms.ComboBox VideoFadeOutCurveCombo;
+		private HorizontalDivider horizontalDivider9;
+		private System.Windows.Forms.TableLayoutPanel AudioFadeTable;
+		public System.Windows.Forms.ComboBox AudioFadeOutReciprocalCurveCombo;
+		public System.Windows.Forms.ComboBox AudioFadeOutCurveCombo;
+		public System.Windows.Forms.Label AudioFadeOutLbl;
+		public System.Windows.Forms.ComboBox AudioFadeInReciprocalCurveCombo;
+		public System.Windows.Forms.ComboBox AudioFadeInCurveCombo;
+		public System.Windows.Forms.Label AudioFadeInLbl;
+		private System.Windows.Forms.CheckBox VideoFadeOutResetCheck;
 	}
 
 	public partial class QuickConfigPropertiesForm : Form, IInterpret {
@@ -18949,6 +19279,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private readonly IEnumerable<VideoEvent> videoEvents;
 		private readonly IEnumerable<AudioEvent> audioEvents;
 		private readonly int videoCount, audioCount;
+		private readonly ComboBox[] fadeComboBoxes;
 
 		public QuickConfigPropertiesForm(EntryPoint entryPoint) {
 			InitializeComponent();
@@ -18964,11 +19295,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			audioCount = audioEvents.Count();
 			if (videoCount == 0) VideoGroup.Enabled = false;
 			if (audioCount == 0) AudioGroup.Enabled = false;
-			Translate();
 			VideoResampleModeCombo.SelectedIndex = 0;
 			bool supportsOpticalFlow = Enum.IsDefined(typeof(VideoResampleMode), VideoResampleMode_OpticalFlow);
 			if (!supportsOpticalFlow)
 				VideoResampleModeCombo.Items.RemoveAt(VideoResampleMode_OpticalFlow + SelectedIndexToEnumOffset);
+			fadeComboBoxes = new ComboBox[] {
+				VideoFadeInCurveCombo, VideoFadeInReciprocalCurveCombo, VideoFadeOutCurveCombo, VideoFadeOutReciprocalCurveCombo,
+				AudioFadeInCurveCombo, AudioFadeInReciprocalCurveCombo, AudioFadeOutCurveCombo, AudioFadeOutReciprocalCurveCombo,
+			};
+			foreach (ComboBox combo in fadeComboBoxes)
+				combo.SelectedIndex = 0;
+			Translate();
 		}
 
 		private const int VideoResampleMode_OpticalFlow = 3; //= VideoResampleMode.OpticalFlow
@@ -18985,6 +19322,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (AudioRateBox.Enabled) AudioRateBox.Maximum = AudioMultiplyRateRadio.Checked ? 16 : 4;
 			if (VideoGainBox.Enabled) VideoGainBox.Maximum = VideoMultiplyGainRadio.Checked ? 100 : 1;
 			if (AudioGainBox.Enabled) AudioGainBox.Maximum = AudioMultiplyGainRadio.Checked ? 100 : 1;
+			VideoFadeInCurveCombo.Enabled = VideoFadeInReciprocalCurveCombo.Enabled = VideoFadeInResetCheck.Checked;
+			VideoFadeOutCurveCombo.Enabled = VideoFadeOutReciprocalCurveCombo.Enabled = VideoFadeOutResetCheck.Checked;
 		}
 
 		private static void ChangeThreeStateCheckBoxStateChangeOrder_Click(object sender, EventArgs e) {
@@ -19023,10 +19362,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return check.CheckState != CheckState.Indeterminate;
 		}
 
+		private static CurveType GetCurve(ComboBox comboBox) {
+			int index = comboBox.SelectedIndex - 1;
+			return index < 0 ? INVALID : EntryPoint.GetCurveType(index);
+		}
+
+		private const CurveType INVALID = CurveType.Invalid;
 		private VideoResampleMode ResampleMode { get { return (VideoResampleMode)(VideoResampleModeCombo.SelectedIndex - SelectedIndexToEnumOffset); } }
 
 		private void Apply() {
 			Cursor = Cursors.WaitCursor;
+			CurveType curve;
 			foreach (VideoEvent e in videoEvents) {
 				if (NotInd(VideoMuteCheck)) e.Mute = VideoMuteCheck.Checked;
 				if (NotInd(VideoLockCheck)) e.Locked = VideoLockCheck.Checked;
@@ -19037,6 +19383,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (VideoUnderSampleRateCheck.Checked) e.UnderSampleRate = EntryPoint.Clamp((double)VideoUnderSampleRateBox.Value, 0.1, 1);
 				if (VideoSetRateRadio.Checked || VideoMultiplyRateRadio.Checked) e.PlaybackRate = (VideoMultiplyRateRadio.Checked ? e.PlaybackRate : 1) * (double)VideoRateBox.Value;
 				if (VideoSetGainRadio.Checked || VideoMultiplyGainRadio.Checked) e.FadeIn.SetGain((float)VideoGainBox.Value, VideoMultiplyGainRadio.Checked);
+				if (VideoFadeInResetCheck.Checked) {
+					e.FadeIn.RemoveTransition();
+					if ((curve = GetCurve(VideoFadeInCurveCombo)) != INVALID) e.FadeIn.Curve = curve;
+					if ((curve = GetCurve(VideoFadeInReciprocalCurveCombo)) != INVALID) e.FadeIn.ReciprocalCurve = curve;
+				}
+				if (VideoFadeOutResetCheck.Checked) {
+					e.FadeOut.RemoveTransition();
+					if ((curve = GetCurve(VideoFadeOutCurveCombo)) != INVALID) e.FadeOut.Curve = curve;
+					if ((curve = GetCurve(VideoFadeOutReciprocalCurveCombo)) != INVALID) e.FadeOut.ReciprocalCurve = curve;
+				}
 			}
 			foreach (AudioEvent e in audioEvents) {
 				if (NotInd(AudioMuteCheck)) e.Mute = AudioMuteCheck.Checked;
@@ -19052,6 +19408,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					e.Normalize = true;
 					if (AudioRecalcAllNormGainRadio.Checked || AudioRecalcNewNormGainRadio.Checked && !originalNormalize) e.RecalculateNorm();
 				}
+				if ((curve = GetCurve(AudioFadeInCurveCombo)) != INVALID) e.FadeIn.Curve = curve;
+				if ((curve = GetCurve(AudioFadeInReciprocalCurveCombo)) != INVALID) e.FadeIn.ReciprocalCurve = curve;
+				if ((curve = GetCurve(AudioFadeOutCurveCombo)) != INVALID) e.FadeOut.Curve = curve;
+				if ((curve = GetCurve(AudioFadeOutReciprocalCurveCombo)) != INVALID) e.FadeOut.ReciprocalCurve = curve;
 			}
 			Cursor = Cursors.Default;
 		}
@@ -19096,6 +19456,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioNoRecalcNormGainRadio.Text = str.no_recalc_norm_gain;
 			AudioRecalcNewNormGainRadio.Text = str.recalc_new_norm_gain;
 			AudioRecalcAllNormGainRadio.Text = str.recalc_all_norm_gain;
+			VideoFadeInLbl.Text = AudioFadeInLbl.Text = str.fade_in.Trim();
+			VideoFadeOutLbl.Text = AudioFadeOutLbl.Text = str.fade_out.Trim();
+			VideoFadeInResetCheck.Text = str.reset_fade_in_crossfade;
+			VideoFadeOutResetCheck.Text = str.reset_fade_out_crossfade;
+			string[] fadeComboItems = new string[] { str.unset, str.linear, str.fast, str.slow, str.smooth, str.sharp };
+			foreach (ComboBox combo in fadeComboBoxes)
+				for (int i = 0; i < fadeComboItems.Length; i++)
+					combo.Items[i] = fadeComboItems[i];
 		}
 	}
 
@@ -36980,7 +37348,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			bool isPitchChangeMethod = method == AudioTuningMethod.ELASTIQUE || method == AudioTuningMethod.CLASSIC;
 			bool isPitchChangeMethodForStretch = stretchMethod == AudioStretchMethod.ELASTIQUE || stretchMethod == AudioStretchMethod.CLASSIC;
 			AudioStretchAttrCombo.Enabled = isPitchChangeMethodForStretch;
-			if (isPitchChangeMethodForStretch && AudioLockStretchPitchCheck.Checked && method != AudioTuningMethod.PITCH_SHIFT
+			if (stretchMethod != AudioStretchMethod.NO_TUNING && AudioLockStretchPitchCheck.Checked
 				|| stretchMethod == AudioStretchMethod.NO_TUNING || method == AudioTuningMethod.FOOL_TUNING)
 				AudioScratchCombo.LockSelectedIndex = 0;
 			if (method == AudioTuningMethod.PITCH_SHIFT) AudioAltMethodCombo.LockSelectedIndex = 0;
@@ -40027,6 +40395,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			trippy_coloring = "地府调色",
 			tv_simulator = "电视模拟器",
 			color_balance = "色彩平衡",
+			reset_fade_in_crossfade = "恢复渐入交叉淡化过渡",
+			reset_fade_out_crossfade = "恢复渐出交叉淡化过渡",
 			__eol__ = null;
 
 		static Lang() {

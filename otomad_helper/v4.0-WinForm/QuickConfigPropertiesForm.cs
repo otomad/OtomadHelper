@@ -38,6 +38,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (AudioRateBox.Enabled) AudioRateBox.Maximum = AudioMultiplyRateRadio.Checked ? 16 : 4;
 			if (VideoGainBox.Enabled) VideoGainBox.Maximum = VideoMultiplyGainRadio.Checked ? 100 : 1;
 			if (AudioGainBox.Enabled) AudioGainBox.Maximum = AudioMultiplyGainRadio.Checked ? 100 : 1;
+			VideoFadeTable.Enabled = VideoFadeInResetCheck.Checked;
 		}
 
 		private void ChangeThreeStateCheckBoxStateChangeOrder(object sender, EventArgs e) {
