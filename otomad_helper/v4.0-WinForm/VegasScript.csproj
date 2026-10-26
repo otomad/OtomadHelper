@@ -295,7 +295,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="RememberedComboBox.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReplaceClipsForm.cs">
       <SubType>Form</SubType>

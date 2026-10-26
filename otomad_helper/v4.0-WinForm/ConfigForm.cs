@@ -1514,5 +1514,29 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void HideVersionOnMenuToolStripMenuItem_CheckedChanged(object sender, EventArgs e) {
 			Console.WriteLine(DatamoshInfoLbl);
 		}
+
+		private void MidiTrackListView_ColumnClick(object sender, ColumnClickEventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void MidiTrackListView_ItemDrag(object sender, ItemDragEventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void MidiTrackListView_DragEnter(object sender, DragEventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void MidiTrackListView_DragOver(object sender, DragEventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void MidiTrackListView_DragLeave(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void MidiTrackListView_DragDrop(object sender, DragEventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
 	}
 }
