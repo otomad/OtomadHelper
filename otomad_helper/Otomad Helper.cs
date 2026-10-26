@@ -1702,8 +1702,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						double pitchDelta = pitch - basePitch;
 						bool backToUsePlugin = false;
 					BackToUsePlugin:
-						#pragma warning disable CS0642
+						#pragma warning disable CS0642 // 空语句可能有错误
 						if (method == AudioTuningMethod.NO_TUNING || AConfigNoTuningDrumKits && noteEvent.Channel == 10); // 不调音。
+						#pragma warning restore CS0642 // 空语句可能有错误
 						else if (method == AudioTuningMethod.PITCH_SHIFT || backToUsePlugin) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
 							if (Plugin.pitchShift == null) { ShowError(new Exceptions.NoPluginPitchShiftException()); return false; }
 							int pitchDelta_int = (int)Math.Round(pitchDelta, MidpointRounding.AwayFromZero);
@@ -7420,8 +7421,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return string.Join(Lang.str.semicolon, info);
 			}
 			public IList<MidiEvent> Events;
-			public bool IsDrumKit = false;
-			public bool IsSeparatedDrum = false;
+			public DrumKitState DrumKit = DrumKitState.Not;
+			public bool IsDrumKit { get { return DrumKit != DrumKitState.Not; } }
 			public int Pan = INITIAL_PAN;
 			public bool IsVariablePan = false;
 			private bool isResorted = false;
@@ -7519,21 +7520,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						info.HasPitchWheelEvents = true;
 				}
 				if (info.NotesCount != 0) {
+					bool isDrumKit;
 					if (!info.HasChannel) {
 						string beginNote = info.BeginNote.Trim().ToUpper();
-						info.IsDrumKit = !Regex.IsMatch(beginNote, @"^[A-G]#?\d+$");
+						isDrumKit = !Regex.IsMatch(beginNote, @"^[A-G]#?\d+$");
 					} else
-						info.IsDrumKit = info.Channel == 10;
-					info.Index = (index++).ToString();
+						isDrumKit = info.Channel == 10;
+					if (isDrumKit) info.DrumKit = DrumKitState.DrumKitTrack;
+					info.Index = index++.ToString();
 					trackInfos.Add(info);
-					if (info.IsDrumKit) trackInfos.AddRange(SeparateDrumsFromTrack(info));
+					if (isDrumKit) trackInfos.AddRange(SeparateDrumsFromTrack(info));
 				}
 			}
 			TrackInfos = trackInfos;
 		}
 		private static List<TrackInfo> SeparateDrumsFromTrack(TrackInfo drumKitsTrack) {
 			Dictionary<int, TrackInfo> drums = new Dictionary<int, TrackInfo>();
-			if (!drumKitsTrack.IsDrumKit) return drums.Values.ToList();
+			List<TrackInfo> empty = new List<TrackInfo>();
+			if (!drumKitsTrack.IsDrumKit) return empty;
 			foreach (MidiEvent midiEvent in drumKitsTrack.Events) {
 				NoteOnEvent noteEvent = midiEvent as NoteOnEvent;
 				if (noteEvent == null) continue;
@@ -7543,14 +7547,32 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					drum.Events = drum.Events.Where(note => !(note is NoteEvent) || ((NoteEvent)note).NoteNumber == noteNumber).ToList();
 					drum.NotesCount = drum.Events.Count(note => note is NoteEvent && !(note is NoteOnEvent));
 					drum.BeginNote = noteEvent.NoteName;
-					drum.IsSeparatedDrum = true;
+					drum.DrumKit = DrumKitState.SeparatedDrum;
 					drums.Add(noteNumber, drum);
 				}
+			}
+			if (drums.Count <= 1) { // Count is 0 or 1.
+				if (drums.Count == 1) drumKitsTrack.DrumKit = DrumKitState.SingleDrumTrack;
+				return empty;
 			}
 			List<TrackInfo> result = drums.OrderBy(entry => entry.Key).Select(entry => entry.Value).ToList();
 			for (int i = 0; i < result.Count; i++)
 				result[i].Index = drumKitsTrack.Index + "." + (i + 1).ToString();
 			return result;
+		}
+
+		/// <summary>
+		/// 指示该音轨是否是鼓组音轨。
+		/// </summary>
+		public enum DrumKitState {
+			/// <summary>该音轨不是鼓组音轨。</summary>
+			Not,
+			/// <summary>该音轨是鼓组音轨，未拆分鼓声。</summary>
+			DrumKitTrack,
+			/// <summary>该音轨是对鼓组音轨拆分后的单鼓声子音轨。</summary>
+			SeparatedDrum,
+			/// <summary>该音轨既是是鼓组音轨本身，也是单鼓声子音轨，因为该音轨仅包含一个鼓声。</summary>
+			SingleDrumTrack,
 		}
 
 		/// <summary>
@@ -36810,7 +36832,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				item.Selected = false;
 				isAnyTrackChecked = isAnyTrackChecked || item.Checked;
 				MIDI.TrackInfo track = (MIDI.TrackInfo)item.Tag;
-				if (!track.IsDrumKit || track.IsSeparatedDrum == MidiTrackSeparateDrumsCheck.Checked)
+				if (track.DrumKit == MIDI.DrumKitState.Not ||
+					track.DrumKit == MIDI.DrumKitState.DrumKitTrack && !MidiTrackSeparateDrumsCheck.Checked ||
+					track.DrumKit == MIDI.DrumKitState.SeparatedDrum && MidiTrackSeparateDrumsCheck.Checked ||
+					track.DrumKit == MIDI.DrumKitState.SingleDrumTrack)
 					MidiTrackListView.Items.Add(item);
 			}
 			SetCheckedEnabled_MidiTrackListView();
@@ -39704,7 +39729,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			try {
 				string[] tags = ((string)item.Tag).Split(',');
 				titleBarBackdrop = (SystemBackdropType)int.Parse(tags[0]);
-				isTitleBarLight = int.Parse(tags[1]) == 1 ? true : false;
+				isTitleBarLight = int.Parse(tags[1]) == 1;
 				RevertWhiteTitleBar(Handle);
 			} catch (Exception) { }
 		}
