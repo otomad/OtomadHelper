@@ -20,16 +20,39 @@ hero:
       link: ./v4/introduction
 
 features:
-  - icon: 🆅️
-    title: Vegas Pro
-    details: Enables Vegas to accept scores such as MIDI sequence files as input and automatically generate YTPMV tracks.
-  - icon: 🎞️
-    title: Audio & Visual
-    details: Both audio and visuals can be generated.
-  - icon: 🔄
-    title: YTP
-    details: YTP is also able to be generated.
+  - icon: 🎼
+    title: MIDI-Powered Generation
+    details: Feed it a MIDI sequence and it lays out every note as perfectly synced audio & visual clips.
+    link: ./v4/score
+    linkText: Learn more
+  - icon: 🎚️
+    title: Studio-Grade Tuning
+    details: Elastic pitch, formant lock and a granular oscillator — sculpt any sample with surgical precision.
+    link: ./v4/audio
+    linkText: Learn more
+  - icon: 🎨
+    title: Motion-Graphic Visuals
+    details: Flip, rotate, scale and hue with 13+ effect classes, all keyframed from your notes.
+    link: ./v4/visual
+    linkText: Learn more
+  - icon: 🎬
+    title: Multisource Magic
+    details: Mystery Box, Syncopator and Orchestra mix any number of sources together automatically.
+    link: ./v4/source
+    linkText: Learn more
+  - icon: 🧰
+    title: A Tool for Every Chore
+    details: Grid layouts, 3D boxes, batch subtitles, track legato and dozens more quality-of-life tools.
+    link: ./v4/tools
+    linkText: Learn more
+  - icon: 🌀
+    title: Moshes & YTP
+    details: Datamosh, scramble, stutter and shake, plus the full classic YTP effect arsenal.
+    link: ./v4/mosh
+    linkText: Learn more
 ---
+
+<HomeShowcase />
 
 <TeamMembers />
 <ProjectsView />
