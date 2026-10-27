@@ -417,6 +417,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endregion
 		}
 
+		/// <summary>
+		/// 打开一个 MIDI 文件。
+		/// </summary>
+		/// <param name="filePath">文件路径。</param>
+		/// <param name="outMidi">打开后的 MIDI 对象。</param>
+		/// <param name="inSilence">
+		/// <list type="bullet">
+		/// <item>如果是以用户点击按钮形式打开，请传入 <see langword="true" />，此时如果 MIDI 有问题会显示报错警告。</item>
+		/// <item>如果是以程序初始化时自动加载上次打开的文件形式打开，请传入 <see langword="false" />，此时不会显示报错警告。</item>
+		/// </list>
+		/// </param>
+		/// <returns>是否成功打开？</returns>
 		internal bool OpenMidiFile(string filePath, out MIDI outMidi, bool inSilence = false) {
 			outMidi = null;
 			if (string.IsNullOrWhiteSpace(filePath)) return false;
@@ -26425,7 +26437,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
 			this.menu.Padding = new System.Windows.Forms.Padding(10, 4, 0, 6);
-			this.menu.Size = new System.Drawing.Size(1166, 48);
+			this.menu.Size = new System.Drawing.Size(1166, 46);
 			this.menu.TabIndex = 2;
 			this.menu.Text = "menuStrip1";
 			//
@@ -27031,10 +27043,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.panel1.BackColor = System.Drawing.Color.Transparent;
 			this.panel1.Controls.Add(this.Tabs);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(0, 48);
+			this.panel1.Location = new System.Drawing.Point(0, 46);
 			this.panel1.Name = "panel1";
 			this.panel1.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
-			this.panel1.Size = new System.Drawing.Size(1166, 1214);
+			this.panel1.Size = new System.Drawing.Size(1166, 1216);
 			this.panel1.TabIndex = 3;
 			//
 			// Tabs
@@ -27054,7 +27066,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Tabs.Multiline = true;
 			this.Tabs.Name = "Tabs";
 			this.Tabs.SelectedIndex = 0;
-			this.Tabs.Size = new System.Drawing.Size(1142, 1214);
+			this.Tabs.Size = new System.Drawing.Size(1142, 1216);
 			this.Tabs.TabIndex = 2;
 			this.Tabs.SelectedIndexChanged += new System.EventHandler(this.Tabs_SelectedIndexChanged);
 			//
@@ -28342,7 +28354,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ScoreTab.Location = new System.Drawing.Point(8, 46);
 			this.ScoreTab.Name = "ScoreTab";
 			this.ScoreTab.Padding = new System.Windows.Forms.Padding(8);
-			this.ScoreTab.Size = new System.Drawing.Size(1126, 1160);
+			this.ScoreTab.Size = new System.Drawing.Size(1126, 1162);
 			this.ScoreTab.TabIndex = 8;
 			this.ScoreTab.Text = "乐曲";
 			this.ScoreTab.UseVisualStyleBackColor = true;
@@ -28370,7 +28382,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackListView.MultiSelect = false;
 			this.MidiTrackListView.Name = "MidiTrackListView";
 			this.MidiTrackListView.ShowItemToolTips = true;
-			this.MidiTrackListView.Size = new System.Drawing.Size(1110, 490);
+			this.MidiTrackListView.Size = new System.Drawing.Size(1110, 492);
 			this.MidiTrackListView.TabIndex = 23;
 			this.MidiTrackListView.UseCompatibleStateImageBehavior = false;
 			this.MidiTrackListView.View = System.Windows.Forms.View.Details;
@@ -28382,6 +28394,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackListView.DragEnter += new System.Windows.Forms.DragEventHandler(this.MidiTrackListView_DragEnter);
 			this.MidiTrackListView.DragOver += new System.Windows.Forms.DragEventHandler(this.MidiTrackListView_DragOver);
 			this.MidiTrackListView.DragLeave += new System.EventHandler(this.MidiTrackListView_DragLeave);
+			this.MidiTrackListView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MidiTrackListView_MouseUp);
 			//
 			// IndexHeader
 			//
@@ -28552,7 +28565,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiAutoLayoutTracksGroup.Controls.Add(this.tableLayoutPanel22);
 			this.MidiAutoLayoutTracksGroup.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.MidiAutoLayoutTracksGroup.Enabled = false;
-			this.MidiAutoLayoutTracksGroup.Location = new System.Drawing.Point(8, 1014);
+			this.MidiAutoLayoutTracksGroup.Location = new System.Drawing.Point(8, 1016);
 			this.MidiAutoLayoutTracksGroup.Name = "MidiAutoLayoutTracksGroup";
 			this.MidiAutoLayoutTracksGroup.Size = new System.Drawing.Size(1110, 138);
 			this.MidiAutoLayoutTracksGroup.TabIndex = 20;
@@ -29146,7 +29159,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTab.Location = new System.Drawing.Point(8, 46);
 			this.AudioTab.Name = "AudioTab";
 			this.AudioTab.Padding = new System.Windows.Forms.Padding(8);
-			this.AudioTab.Size = new System.Drawing.Size(1126, 1160);
+			this.AudioTab.Size = new System.Drawing.Size(1126, 1162);
 			this.AudioTab.TabIndex = 1;
 			this.AudioTab.Text = "音频";
 			this.AudioTab.UseVisualStyleBackColor = true;
@@ -30456,7 +30469,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab.Location = new System.Drawing.Point(8, 46);
 			this.VideoTab.Name = "VideoTab";
 			this.VideoTab.Padding = new System.Windows.Forms.Padding(8);
-			this.VideoTab.Size = new System.Drawing.Size(1126, 1160);
+			this.VideoTab.Size = new System.Drawing.Size(1126, 1162);
 			this.VideoTab.TabIndex = 2;
 			this.VideoTab.Text = "画面";
 			this.VideoTab.UseVisualStyleBackColor = true;
@@ -32392,7 +32405,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SheetTab.Location = new System.Drawing.Point(8, 46);
 			this.SheetTab.Name = "SheetTab";
 			this.SheetTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SheetTab.Size = new System.Drawing.Size(1126, 1160);
+			this.SheetTab.Size = new System.Drawing.Size(1126, 1162);
 			this.SheetTab.TabIndex = 3;
 			this.SheetTab.Text = "五线谱";
 			this.SheetTab.UseVisualStyleBackColor = true;
@@ -32813,7 +32826,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarTab.Location = new System.Drawing.Point(8, 46);
 			this.SonarTab.Name = "SonarTab";
 			this.SonarTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SonarTab.Size = new System.Drawing.Size(1126, 1160);
+			this.SonarTab.Size = new System.Drawing.Size(1126, 1162);
 			this.SonarTab.TabIndex = 6;
 			this.SonarTab.Text = "声呐";
 			this.SonarTab.UseVisualStyleBackColor = true;
@@ -32835,7 +32848,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(1110, 1144);
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(1110, 1146);
 			this.tableLayoutPanel11.TabIndex = 0;
 			//
 			// SonarSwitchesFlow
@@ -32938,7 +32951,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarList.Location = new System.Drawing.Point(3, 58);
 			this.SonarList.Name = "SonarList";
 			this.SonarList.ShowItemToolTips = true;
-			this.SonarList.Size = new System.Drawing.Size(1104, 485);
+			this.SonarList.Size = new System.Drawing.Size(1104, 487);
 			this.SonarList.TabIndex = 1;
 			this.SonarList.UseCompatibleStateImageBehavior = false;
 			this.SonarList.View = System.Windows.Forms.View.Details;
@@ -32974,7 +32987,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarButtonsTable.Controls.Add(this.SonarDeleteBtn, 1, 0);
 			this.SonarButtonsTable.Controls.Add(this.SonarResetBtn, 0, 0);
 			this.SonarButtonsTable.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 549);
+			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 551);
 			this.SonarButtonsTable.Name = "SonarButtonsTable";
 			this.SonarButtonsTable.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.SonarButtonsTable.RowCount = 1;
@@ -33053,7 +33066,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarParamsGroup.AutoSize = true;
 			this.SonarParamsGroup.Controls.Add(this.SonarParamsPanel);
 			this.SonarParamsGroup.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 623);
+			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 625);
 			this.SonarParamsGroup.Name = "SonarParamsGroup";
 			this.SonarParamsGroup.Size = new System.Drawing.Size(1104, 518);
 			this.SonarParamsGroup.TabIndex = 3;
@@ -34036,7 +34049,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.YtpTab.Location = new System.Drawing.Point(8, 46);
 			this.YtpTab.Name = "YtpTab";
 			this.YtpTab.Padding = new System.Windows.Forms.Padding(8);
-			this.YtpTab.Size = new System.Drawing.Size(1126, 1160);
+			this.YtpTab.Size = new System.Drawing.Size(1126, 1162);
 			this.YtpTab.TabIndex = 5;
 			this.YtpTab.Text = "YTP";
 			this.YtpTab.UseVisualStyleBackColor = true;
@@ -34239,7 +34252,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MoshTab.Location = new System.Drawing.Point(8, 46);
 			this.MoshTab.Name = "MoshTab";
 			this.MoshTab.Padding = new System.Windows.Forms.Padding(3);
-			this.MoshTab.Size = new System.Drawing.Size(1126, 1160);
+			this.MoshTab.Size = new System.Drawing.Size(1126, 1162);
 			this.MoshTab.TabIndex = 7;
 			this.MoshTab.Text = "抹失";
 			this.MoshTab.UseVisualStyleBackColor = true;
@@ -34536,7 +34549,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.HelperTab.Location = new System.Drawing.Point(8, 46);
 			this.HelperTab.Name = "HelperTab";
 			this.HelperTab.Padding = new System.Windows.Forms.Padding(1, 6, 1, 6);
-			this.HelperTab.Size = new System.Drawing.Size(1126, 1160);
+			this.HelperTab.Size = new System.Drawing.Size(1126, 1162);
 			this.HelperTab.TabIndex = 4;
 			this.HelperTab.Text = "工具";
 			this.HelperTab.UseVisualStyleBackColor = true;
@@ -36463,7 +36476,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				else ChooseSourceCombo.SelectedIndex = (int)MediaSourceFrom.SELECTED_CLIP; // SELECTED_MEDIA;
 			} else ChooseSourceCombo.SelectedIndex = (int)parent.SuggestSelectedSourceFrom;
 			MidiTrackSeparateDrumsCheck.Checked = configIni.Read("MidiSeparateDrums", false);
-			if (OpenMidiFile(configIni.Read("LastMidiFile", null), true)) {
+			if (OpenMidiFile(configIni.Read("LastMidiFile", null), true, false)) {
 				string lastMidiTrackCheckedAndSorted = configIni.Read("LastMidiTrackCheckedAndSorted", "");
 				MidiTrackListView_InternalItemChecking = true;
 				DeserializeMidiTrackListViewItems(lastMidiTrackCheckedAndSorted);
@@ -36874,7 +36887,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			ConfigForm_Resize(null, null); // 原先位于 SetCheckedEnabled 方法中，为了节省性能移至这里。
 		}
 
-		private bool OpenMidiFile(string filePath, bool inSilence = false) {
+		/// <inheritdoc cref="EntryPoint.OpenMidiFile(string, out MIDI, bool)" />
+		/// <param name="initSortIcon">是否在打开 MIDI 文件后自动对列表视图的序号列添加升序图标？</param>
+		private bool OpenMidiFile(string filePath, bool inSilence = false, bool initSortIcon = true) {
 			MIDI midi;
 			bool ok = parent.OpenMidiFile(filePath, out midi, inSilence);
 			if (ok) {
@@ -36898,6 +36913,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					MidiTrackListView.Items[preferredChannel].Checked = true;
 				MidiTrackListView_InternalItemChecking = false;
 				ChooseMidiText.Text = filePath;
+				if (initSortIcon) {
+					currentSortColumn = IndexHeader;
+					currentSortOrder = SortOrder.Ascending;
+					SetMidiTrackListViewSortIcon();
+				}
 				UpdateMidiInfo(midi);
 				SetCheckedEnabled(null, null);
 				#endregion
@@ -37001,6 +37021,31 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		[DllImport("user32.dll", CharSet = CharSet.Auto)]
 		private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
+		/// <summary>
+		/// 为 MidiTrackListView 的表头添加排序三角图标。
+		/// </summary>
+		/// <param name="column">ListView 的表头列。</param>
+		/// <param name="order">升序还是降序。</param>
+		private void SetMidiTrackListViewSortIcon(ColumnHeader column, SortOrder order) {
+			int columnIndex = MidiTrackListView.Columns.IndexOf(column);
+			if (columnIndex == -1) return;
+			ListViewHeaderIconHelper.SetSortIcon(MidiTrackListView, columnIndex, order);
+		}
+
+		/// <summary>
+		/// 为 MidiTrackListView 的表头添加排序三角图标。
+		/// </summary>
+		private void SetMidiTrackListViewSortIcon() {
+			SetMidiTrackListViewSortIcon(currentSortColumn, currentSortOrder);
+		}
+
+		/// <summary>
+		/// 移除 MidiTrackListView 表头的排序三角图标。
+		/// </summary>
+		private void ClearMidiTrackListViewSortIcon() {
+			ListViewHeaderIconHelper.ClearAllSortIcons(MidiTrackListView);
+		}
+
 		private void MidiTrackListView_ColumnClick(object sender, ColumnClickEventArgs e) {
 			if (e.Column >= MidiTrackListView.Columns.Count) return;
 			ColumnHeader column = MidiTrackListView.Columns[e.Column];
@@ -37012,7 +37057,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 
 			// 更新系统原生小三角
-			ListViewHeaderIconHelper.SetSortIcon(MidiTrackListView, e.Column, currentSortOrder);
+			SetMidiTrackListViewSortIcon();
 
 			// 直接对内存中的 midiTrackListViewItems 进行排序
 			MidiTrackListComparer comparer = new MidiTrackListComparer(this, currentSortColumn, currentSortOrder);
@@ -37025,9 +37070,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		// 拖拽相关变量
 		private ListViewItem draggedItem = null;
 		private int insertionIndex = -1; // 黑色指示线对应的 midiTrackListViewItems 索引位置
+		private bool isMidiTrackItemDragging = false; // 避免拖拽和 MouseUp 事件冲突。
 
 		private void MidiTrackListView_ItemDrag(object sender, ItemDragEventArgs e) {
 			draggedItem = (ListViewItem)e.Item;
+			isMidiTrackItemDragging = true;
 			MidiTrackListView.DoDragDrop(e.Item, DragDropEffects.Move);
 		}
 
@@ -37072,6 +37119,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 鼠标移出时，必须重置原生指示线
 			MidiTrackListView.InsertionMark.Index = -1;
 			insertionIndex = -1;
+			isMidiTrackItemDragging = false;
 		}
 
 		private void MidiTrackListView_DragDrop(object sender, DragEventArgs e) {
@@ -37083,7 +37131,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 1. 用户手动排序，断开之前的表头排序状态
 			currentSortColumn = null;
 			currentSortOrder = SortOrder.None;
-			ListViewHeaderIconHelper.ClearAllSortIcons(MidiTrackListView);
+			ClearMidiTrackListViewSortIcon();
 
 			// 2. 在 midiTrackListViewItems 中计算原索引和目标插入位置
 			int oldMasterIndex = midiTrackListViewItems.IndexOf(draggedItem);
@@ -37133,8 +37181,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					result = orderX.CompareTo(orderY);
 				} else if (Column == Form.IndexHeader) {
 					result = CompareIndex(x.Text, y.Text);
-				} else
+				} else if (Column == Form.IsDrumsKitHeader)
 					result = textCompare.Compare(x.Text, y.Text);
+				else
+					result = CompareTextButEmptyLast(x.Text, y.Text);
 				if (result == 0 && Column != Form.IndexHeader && indexCellX != null && indexCellY != null)
 					result = CompareIndex(indexCellX.Text, indexCellY.Text);
 				return Order == SortOrder.Ascending ? result : -result;
@@ -37151,6 +37201,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				} catch (Exception) { }
 				if (vX == null || vY == null) return vX == null && vY == null ? 0 : vX == null ? 1 : -1;
 				return vX.CompareTo(vY);
+			}
+			private int CompareTextButEmptyLast(string x, string y) {
+				bool isXEmpty = string.IsNullOrWhiteSpace(x), isYEmpty = string.IsNullOrWhiteSpace(y);
+				if (isXEmpty || isYEmpty) return isXEmpty && isYEmpty ? 0 : isXEmpty ? 1 : -1;
+				return textCompare.Compare(x, y);
 			}
 
 			public enum PanOrder {
@@ -39795,16 +39850,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				SetCheckedEnabled_MidiTrackListView();
 				return;
 			}
-			// 单击项目就勾选相关代码
-			/*MidiTrackListView_InternalItemChecking = true;
-			ListViewItem selected = MidiTrackListView.SelectedItems[0];
-			if (MidiTrackMultiSelectRadio.Checked)
-				selected.Checked = !selected.Checked;
-			else
-				foreach (ListViewItem item in MidiTrackListView.Items)
-					item.Checked = item == selected;
-			SetCheckedEnabled_MidiTrackListView();
-			MidiTrackListView_InternalItemChecking = false;*/
 		}
 
 		private void SetCheckedEnabled_MidiTrackListView() {
@@ -39814,6 +39859,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				string.Format(checkedMidiTrackCount == 1 ? Lang.str.select_midi_track_count_info : Lang.str.select_midi_tracks_count_info, checkedMidiTrackCount);
 			MidiTrackSelectAllCheck.CheckState = checkedMidiTrackCount == 0 ? CheckState.Unchecked : checkedMidiTrackCount == MidiTrackListView.Items.Count ? CheckState.Checked : CheckState.Indeterminate;
 			SetCheckedEnabled_OkBtn();
+		}
+
+		private void MidiTrackListView_MouseUp(object sender, MouseEventArgs e) {
+			// 单击项目就勾选
+			if (e.Button != MouseButtons.Left) return;
+			if (isMidiTrackItemDragging) {
+				isMidiTrackItemDragging = false;
+				return;
+			}
+			ListViewHitTestInfo hitInfo = MidiTrackListView.HitTest(e.Location);
+			if (hitInfo.Item == null) return;
+			if (hitInfo.Location == ListViewHitTestLocations.StateImage) return;
+			ListViewItem targetItem = hitInfo.Item;
+			targetItem.Checked = !targetItem.Checked;
 		}
 
 		private void MidiAutoLayoutTracksGridBtn_Click(object sender, EventArgs e) {

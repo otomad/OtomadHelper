@@ -1538,5 +1538,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void MidiTrackListView_DragDrop(object sender, DragEventArgs e) {
 			Console.WriteLine(DatamoshInfoLbl);
 		}
+
+		private void MidiTrackListView_MouseUp(object sender, MouseEventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl); // 实现单击项目就可以改变勾选状态。
+		}
 	}
 }
