@@ -323,6 +323,9 @@
     </Compile>
     <Compile Include="Windows10StyledContextMenuStripRenderer.cs" />
     <Compile Include="WindowUtils.cs" />
+    <EmbeddedResource Include="AutoLayoutTracksBox3dForm.resx">
+      <DependentUpon>AutoLayoutTracksBox3dForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AutomatorForm.resx">
       <DependentUpon>AutomatorForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -35,5 +35,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 			}
 		}
+
+		private void ReverseOrderBtn_Click(object sender, EventArgs e) {
+			List<ComboBox> comboBoxes = table.Controls.OfType<ComboBox>().ToList();
+			List<int> selectedIndexes = comboBoxes.Select(combo => combo.SelectedIndex).Reverse().ToList();
+			for (int i = 0; i < comboBoxes.Count; i++)
+				comboBoxes[i].SelectedIndex = selectedIndexes.ElementAtOrDefault(i);
+		}
 	}
 }

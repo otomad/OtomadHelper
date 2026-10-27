@@ -48,6 +48,7 @@
 #define INTERNATIONALIZED // 启用国际化翻译操作。取消定义后可暂时禁用翻译操作并锁定为简体中文，如不需要翻译时也许可以加快脚本启动速度，但其实也没快多少。
 #define PRODUCTION // 用于生产环境。定义后可以吞掉一些无关紧要的错误。取消定义后可以展现一些可能会产生隐患的错误。
 // 以下宏定义为版本号标记。如你的软件本体版本号低于这些标记，应注释掉它们。注意若启用高版本号的标记，比它更低的版本号标记必须同时启用。
+#define VER_GEQ_23 // Vegas Pro 版本号大于或等于 23。定义后使用自带的复制/移动轨道方法，而不是修改内存底层方法。
 #define VER_GEQ_16 // Vegas Pro 版本号大于或等于 16。定义后可正常使用调音算法属性等功能。
 #define VER_GEQ_14 // Vegas Pro 版本号大于或等于 14。定义后将依赖库切换到 Magix / BorisFX 版本。
 
@@ -525,11 +526,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <param name="mediaPoolOnly">是否仅添加媒体到项目媒体中？</param>
 		/// <param name="enablePromptMatchFirstVideo">如果导入第一个媒体，则显示提示？（仅 Vegas Pro 22 Build 122 可用）</param>
 		internal void ImportFile(string fileName, bool mediaPoolOnly, bool enablePromptMatchFirstVideo = false) {
+			#if VER_GEQ_23
+			vegas.ImportFile(fileName, mediaPoolOnly, enablePromptMatchFirstVideo);
+			#else
 			MethodInfo importFileMethod;
 			if ((importFileMethod = typeof(Vegas).GetMethod("ImportFile", new Type[] { typeof(string), typeof(bool), typeof(bool) })) != null)
 				importFileMethod.Invoke(vegas, new object[] { fileName, mediaPoolOnly, enablePromptMatchFirstVideo });
 			else if ((importFileMethod = typeof(Vegas).GetMethod("ImportFile", new Type[] { typeof(string), typeof(bool) })) != null)
 				importFileMethod.Invoke(vegas, new object[] { fileName, mediaPoolOnly });
+			#endif
 		}
 
 		/// <summary>
@@ -1714,9 +1719,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						double pitchDelta = pitch - basePitch;
 						bool backToUsePlugin = false;
 					BackToUsePlugin:
-						#pragma warning disable CS0642 // 空语句可能有错误
-						if (method == AudioTuningMethod.NO_TUNING || AConfigNoTuningDrumKits && noteEvent.Channel == 10); // 不调音。
-						#pragma warning restore CS0642 // 空语句可能有错误
+						if (method == AudioTuningMethod.NO_TUNING || AConfigNoTuningDrumKits && noteEvent.Channel == 10) { } // 不调音。
 						else if (method == AudioTuningMethod.PITCH_SHIFT || backToUsePlugin) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
 							if (Plugin.pitchShift == null) { ShowError(new Exceptions.NoPluginPitchShiftException()); return false; }
 							int pitchDelta_int = (int)Math.Round(pitchDelta, MidpointRounding.AwayFromZero);
@@ -3105,12 +3108,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <param name="track">要检测的轨道。</param>
 		/// <returns>该轨道是否是调整轨道。</returns>
 		public static bool IsAdjustmentTrack(Track track) {
+			#if VER_GEQ_23
+			return track is VideoTrack && ((VideoTrack)track).IsAdjustmentTrack;
+			#else
 			if (!(track is VideoTrack)) return false;
 			VideoTrack videoTrack = track as VideoTrack;
 			Type videoTrackType = typeof(VideoTrack); // 为了避免再分出一个 Vegas Pro 19 专用脚本，使用反射来执行操作更为方便一些。
 			PropertyInfo isAdjustProp = videoTrackType.GetProperty("IsAdjustmentTrack");
 			if (isAdjustProp == null) return false; // 认为是低于 Vegas Pro 19 的版本，自然也不可能是调整轨道了。
 			return (bool)isAdjustProp.GetValue(videoTrack);
+			#endif
 		}
 
 		/// <summary>
@@ -3118,7 +3125,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </summary>
 		/// <returns>仅在 Vegas Pro 19 及更高版本返回 <c>true</c>。</returns>
 		public static bool SupportAdjustmentTrack() {
+			#if VER_GEQ_23
+			return true;
+			#else
 			return typeof(VideoTrack).GetProperty("IsAdjustmentTrack") != null;
+			#endif
 		}
 
 		/// <summary>
@@ -3606,16 +3617,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 		}
 
-		private static MethodInfo duplicateTrackMethod = typeof(Project).GetMethod("DuplicateTrack", new Type[] { typeof(Track), typeof(int) });
-		public static bool HasNativeDuplicateTrackMethod { get { return duplicateTrackMethod != null; } }
-
 		/// <summary>
 		/// 复制轨道。
 		/// </summary>
 		/// <remarks>
 		/// Vegas Pro 23 支持
 		/// </remarks>
-		/// <param name="sourceTrack">源轨道。</param>
+		/// <param name="track">源轨道。</param>
 		/// <param name="index">
 		/// 新复制轨道的索引值。
 		/// <list type="bullet">
@@ -3630,148 +3638,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </list>
 		/// </param>
 		/// <returns>复制后的新轨道。</returns>
-		public static TTrack DuplicateTrack<TTrack>(TTrack sourceTrack, int index = -2) where TTrack : Track {
+		public static TTrack DuplicateTrack<TTrack>(TTrack track, int index = -2) where TTrack : Track {
 			// 自 Vegas Pro 23 开始内置了复制轨道功能。
 			Vegas vegas = instance.vegas;
-			if (duplicateTrackMethod != null) {
-				//vegas.Project.DuplicateTrack(sourceTrack, index);
-				TTrack duplicatedTrack = duplicateTrackMethod.Invoke(vegas.Project, new object[] { sourceTrack, index }) as TTrack;
-				duplicatedTrack.Name = sourceTrack.Name;
-				return duplicatedTrack;
-			}
-			// 对于 Vegas Pro 22 及以下版本则使用传统逐个复制方法。
+			#if VER_GEQ_23
+			return vegas.Project.DuplicateTrack(track, index) as TTrack;
+			#else
+			// 对于 Vegas Pro 22 及以下版本则调用底层代码修改内存。
 			try {
-				index = index == -2 ? sourceTrack.Index + 1 : index == -1 ? -1 : Math.Min(Math.Max(0, index), vegas.Project.Tracks.Count);
-				Track targetTrack = sourceTrack.IsAudio() ? (Track)new AudioTrack(vegas.Project, index, sourceTrack.Name) : sourceTrack.IsVideo() ? new VideoTrack(vegas.Project, index, sourceTrack.Name) : null;
-				if (targetTrack == null) return null;
-				vegas.Project.Tracks.Add(targetTrack);
-				// 复制通用轨道属性（静音、独奏）。
-				targetTrack.Mute = sourceTrack.Mute;
-				targetTrack.Solo = sourceTrack.Solo;
-				// 复制轨道上的所有事件。
-				foreach (TrackEvent trackEvent in sourceTrack.Events)
-					trackEvent.Copy(targetTrack, trackEvent.Start);
-				// 复制视频轨道运动关键帧。
-				Action<BaseTrackMotionKeyframe, BaseTrackMotionKeyframe> CopyBaseMotionKeyframe = (source, target) => {
-					target.Width = source.Width;
-					target.Height = source.Height;
-					target.RotationOffsetX = source.RotationOffsetX;
-					target.RotationOffsetY = source.RotationOffsetY;
-					target.RotationZ = source.RotationZ;
-					target.OrientationZ = source.OrientationZ;
-					target.PositionX = source.PositionX;
-					target.PositionY = source.PositionY;
-					target.Smoothness = source.Smoothness;
-					target.Type = source.Type;
-				};
-				if (targetTrack is VideoTrack) {
-					VideoTrack sourceVideoTrack = (VideoTrack)(Track)sourceTrack, targetVideoTrack = (VideoTrack)targetTrack;
-					targetVideoTrack.CompositeLevel = sourceVideoTrack.CompositeLevel;
-					targetVideoTrack.CompositeMode = sourceVideoTrack.CompositeMode;
-					targetVideoTrack.TrackMotion.ShadowEnabled = sourceVideoTrack.TrackMotion.ShadowEnabled;
-					targetVideoTrack.TrackMotion.GlowEnabled = sourceVideoTrack.TrackMotion.GlowEnabled;
-					for (int i = 0; i < sourceVideoTrack.TrackMotion.MotionKeyframes.Count; i++) {
-						try {
-							TrackMotionKeyframe sourceFrame = sourceVideoTrack.TrackMotion.MotionKeyframes[i];
-							TrackMotionKeyframe targetFrame = i == 0 ? targetVideoTrack.TrackMotion.MotionKeyframes[0] : targetVideoTrack.TrackMotion.InsertMotionKeyframe(sourceFrame.Position);
-							if (i == 0) targetFrame.Position = sourceFrame.Position;
-							CopyBaseMotionKeyframe(sourceFrame, targetFrame);
-							if (sourceVideoTrack.CompositeMode == CompositeMode.SrcAlpha3D) {
-								targetFrame.RotationOffsetZ = sourceFrame.RotationOffsetZ;
-								targetFrame.RotationX = sourceFrame.RotationX;
-								targetFrame.RotationY = sourceFrame.RotationY;
-								targetFrame.OrientationX = sourceFrame.OrientationX;
-								targetFrame.OrientationY = sourceFrame.OrientationY;
-								targetFrame.PositionZ = sourceFrame.PositionZ;
-								targetFrame.Depth = sourceFrame.Depth;
-							}
-						} catch (Exception) { }
-					}
-					for (int i = 0; i < sourceVideoTrack.TrackMotion.ShadowKeyframes.Count; i++) {
-						try {
-							TrackShadowKeyframe sourceFrame = sourceVideoTrack.TrackMotion.ShadowKeyframes[i];
-							TrackShadowKeyframe targetFrame = i == 0 ? targetVideoTrack.TrackMotion.ShadowKeyframes[0] : targetVideoTrack.TrackMotion.InsertShadowKeyframe(sourceFrame.Position);
-							if (i == 0) targetFrame.Position = sourceFrame.Position;
-							CopyBaseMotionKeyframe(sourceFrame, targetFrame);
-							targetFrame.Blur = sourceFrame.Blur;
-							targetFrame.Intensity = sourceFrame.Intensity;
-							targetFrame.Color = sourceFrame.Color;
-						} catch (Exception) { }
-					}
-					for (int i = 0; i < sourceVideoTrack.TrackMotion.GlowKeyframes.Count; i++) {
-						try {
-							TrackGlowKeyframe sourceFrame = sourceVideoTrack.TrackMotion.GlowKeyframes[i];
-							TrackGlowKeyframe targetFrame = i == 0 ? targetVideoTrack.TrackMotion.GlowKeyframes[0] : targetVideoTrack.TrackMotion.InsertGlowKeyframe(sourceFrame.Position);
-							if (i == 0) targetFrame.Position = sourceFrame.Position;
-							CopyBaseMotionKeyframe(sourceFrame, targetFrame);
-							targetFrame.Blur = sourceFrame.Blur;
-							targetFrame.Intensity = sourceFrame.Intensity;
-							targetFrame.Color = sourceFrame.Color;
-						} catch (Exception) { }
-					}
-				} else if (targetTrack is AudioTrack) {
-					AudioTrack sourceAudioTrack = (AudioTrack)(Track)sourceTrack, targetAudioTrack = (AudioTrack)targetTrack;
-					targetAudioTrack.Volume = sourceAudioTrack.Volume;
-					targetAudioTrack.PanX = sourceAudioTrack.PanX;
-					targetAudioTrack.PanY = sourceAudioTrack.PanY;
-					targetAudioTrack.PanCenter = sourceAudioTrack.PanCenter;
-				}
-				// 复制轨道包络。
-				foreach (Envelope sourceEnvelope in sourceTrack.Envelopes) {
-					try {
-						Envelope targetEnvelope = new Envelope(sourceEnvelope.Type);
-						targetTrack.Envelopes.Add(targetEnvelope);
-						foreach (EnvelopePoint sourcePoint in sourceEnvelope.Points)
-							try {
-								sourceEnvelope.Points.Add(new EnvelopePoint(sourcePoint.X, sourcePoint.Y, sourcePoint.Curve));
-							} catch (Exception) { }
-					} catch (Exception) { }
-				}
-				// 复制轨道效果。
-				targetTrack.Effects.Clear();
-				foreach (Effect sourceEffect in sourceTrack.Effects) {
-					try {
-						Effect targetEffect = targetTrack.Effects.AddEffect(sourceEffect.PlugIn);
-						// OpenFX 效果。
-						if (sourceEffect.IsOFX) {
-							foreach (OFXParameter sourceParameter in sourceEffect.OFXEffect.Parameters) {
-								try {
-									if (sourceParameter.Secret) continue;
-									OFXParameter targetParameter = targetEffect.OFXEffect.FindParameterByName(sourceParameter.Name);
-									Type parameterType = targetParameter.GetType();
-									PropertyInfo valueProperty = parameterType.GetProperty("Value");
-									if (valueProperty == null) continue;
-									if (!sourceParameter.IsAnimated) {
-										//targetParameter.Value = sourceParameter.Value;
-										valueProperty.SetValue(targetParameter, valueProperty.GetValue(sourceParameter));
-									} else {
-										targetParameter.IsAnimated = true;
-										PropertyInfo keyframesProperty = parameterType.GetProperty("Keyframes");
-										MethodInfo setValueAtTimeMethod = parameterType.GetMethods().FirstOrDefault(method => method.Name == "SetValueAtTime" && method.GetParameters().Length == 3);
-										if (keyframesProperty != null && setValueAtTimeMethod != null) {
-											IList sourceFrames = keyframesProperty.GetValue(sourceParameter) as IList;
-											if (sourceFrames != null)
-												foreach (OFXKeyframe sourceFrame in sourceFrames) {
-													try {
-														PropertyInfo frameValueProperty = sourceFrame.GetType().GetProperty("Value");
-														if (frameValueProperty != null)
-															setValueAtTimeMethod.Invoke(targetParameter, new object[] { sourceFrame.Time, frameValueProperty.GetValue(sourceFrame), sourceFrame.Interpolation });
-													} catch (Exception) { }
-												}
-										}
-									}
-								} catch (Exception) { }
-							}
-						// 非 OpenFX 效果无法获取各关键帧下的预设名称，因此暂时不支持动画。
-						} else if (sourceEffect.CurrentPreset != null) {
-							targetEffect.Preset = sourceEffect.CurrentPreset.Name;
-						}
-					} catch (Exception) { }
-				}
-				return targetTrack as TTrack;
-			} catch (Exception) {
-				return null;
-			}
+				int trackIndex = vegas.Project.Tracks.IndexOf(track);
+				return NativeTrackLocators.TrackDuplicator.Duplicate(vegas.Project, trackIndex != -1 ? trackIndex : track.Index, index) as TTrack;
+			} catch (Exception) { return null; }
+			#endif
 		}
 
 		/// <summary>
@@ -3779,11 +3657,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </summary>
 		/// <param name="track">源轨道。</param>
 		/// <param name="index">新索引值。</param>
-		/// <returns>由于技术限制，移动后的轨道与源轨道不是同一个对象引用，需要重新赋值给变量。</returns>
-		public TTrack MoveTrack<TTrack>(TTrack track, int index) where TTrack : Track {
+		/// <returns>由于技术限制，移动后的轨道与源轨道可能不是同一个对象引用，需要重新赋值给变量。</returns>
+		public static TTrack MoveTrack<TTrack>(TTrack track, int index) where TTrack : Track {
+			// 自 Vegas Pro 23 开始内置了复制轨道功能，可以先复制轨道到目标位置再删除原轨道。
+			Vegas vegas = instance.vegas;
+			#if VER_GEQ_23
 			TTrack movedNewTrack = DuplicateTrack(track, index);
 			vegas.Project.Tracks.Remove(track);
 			return movedNewTrack;
+			#else
+			// 对于 Vegas Pro 22 及以下版本则调用底层代码修改内存。
+			try {
+				int trackIndex = vegas.Project.Tracks.IndexOf(track);
+				NativeTrackLocators.TrackMover.Move(vegas.Project, trackIndex != -1 ? trackIndex : track.Index, 1, index);
+				return track;
+			} catch (Exception) { return track; }
+			#endif
 		}
 
 		/// <summary>
@@ -6506,72 +6395,73 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				bool hasKinescope = false, hasBlackAndWhite = false;
 				// 以下集合表示已使用过了的预设名称，如果相应效果的所有预设均被使用完毕，则该集合变量会自动被赋值为 null，并且不再进入该分支。
 				HashSet<string> usedTvPresets = new HashSet<string>(), usedWavePresets = new HashSet<string>(), usedSwirlPresets = new HashSet<string>();
-				IEnumerator<double> hueSequence = GenerateRandomHueSequence(36).GetEnumerator();
-				foreach (Track _track in tracks) {
-					VideoTrack track = _track as VideoTrack;
-					if (track == null) continue;
-				RepickRandom:
-					double rand = random.NextDouble() * 100;
-					if (rand < 10) {
-						if (!hasKinescope) {
-							hasKinescope = true;
-							Kinescope(track, additionalTracks);
-							goto SkipChangeHue;
+				using (IEnumerator<double> hueSequence = GenerateRandomHueSequence(36).GetEnumerator()) {
+					foreach (Track _track in tracks) {
+						VideoTrack track = _track as VideoTrack;
+						if (track == null) continue;
+					RepickRandom:
+						double rand = random.NextDouble() * 100;
+						if (rand < 10) {
+							if (!hasKinescope) {
+								hasKinescope = true;
+								Kinescope(track, additionalTracks);
+								goto SkipChangeHue;
+							}
+						} else if (rand < 15) {
+							if (!hasBlackAndWhite) {
+								hasBlackAndWhite = true;
+								Effect effect = track.Effects.AddEffect(blackAndWhite);
+								goto SkipChangeHue;
+							}
+						} else if (rand < 25) {
+							if (usedTvPresets != null) {
+								Effect effect = track.Effects.AddEffect(tvSimulator);
+								string preset = ForYtps.GetRandomPreset(effect, usedTvPresets);
+								if (preset == "") { track.Effects.Remove(effect); usedTvPresets = null; goto RepickRandom; }
+							} else goto RepickRandom;
+						} else if (rand < 35) {
+							if (usedWavePresets != null) {
+								Effect effect = track.Effects.AddEffect(wave);
+								string preset = ForYtps.GetRandomPreset(effect, usedWavePresets);
+								if (preset == "") { track.Effects.Remove(effect); usedWavePresets = null; goto RepickRandom; }
+							} else goto RepickRandom;
+						} else if (rand < 50) {
+							if (usedSwirlPresets != null) {
+								Effect effect = track.Effects.AddEffect(swirl);
+								string preset = ForYtps.GetRandomPreset(effect, usedSwirlPresets, excludeHalfScaleSwirlPresets: true);
+								if (preset == "") { track.Effects.Remove(effect); usedSwirlPresets = null; goto RepickRandom; }
+							} else goto RepickRandom;
 						}
-					} else if (rand < 15) {
-						if (!hasBlackAndWhite) {
-							hasBlackAndWhite = true;
-							Effect effect = track.Effects.AddEffect(blackAndWhite);
-							goto SkipChangeHue;
+						if (rand >= 50 || rand < 15 || rand >= 25 && random.NextDouble() < 0.45) {
+							double rand2 = random.NextDouble() * 100;
+							bool isInverted = random.NextDouble() < 0.4;
+							if (isInverted) {
+								Effect effect = track.Effects.AddEffect(invert);
+							}
+							if (rand2 < 80) {
+								Effect effect = track.Effects.AddEffect(hslAdjust);
+								// 基于随机色相的代码。
+								//double h = random.NextDouble();
+								//if (!isInverted) {
+								//	// f(x)=2x−3x^2+2x^3 的概率密度曲线。
+								//	// 如果需要调节“中间平缓、两端陡峭”的程度，可以增加一个强度参数 strength（建议范围 [0, 2)）。
+								//	// 这样，strength 越大，中间越平缓、两端越陡峭；strength = 1 时即为上述标准形式。
+								//	const double STRENGTH = 1;
+								//	// 基础形式：f(x) = x + strength * x * (1 - x) * (1 - 2x)
+								//	// 当 strength = 1 时，化简为 2x - 3x^2 + 2x^3
+								//	h = h + STRENGTH * h * (1d - h) * (1d - 2d * h);
+								//}
+								//(effect.OFXEffect.FindParameterByName("AddToHue") as OFXDoubleParameter).Value = random.NextDouble();
+								hueSequence.MoveNext();
+								double h = hueSequence.Current;
+								if (isInverted) h = (h + 180) % 360;
+								(effect.OFXEffect.FindParameterByName("AddToHue") as OFXDoubleParameter).Value = h / 360;
+							} else if (rand2 >= 85) {
+								ColorBalance(track, random.NextDouble() * 360);
+							}
 						}
-					} else if (rand < 25) {
-						if (usedTvPresets != null) {
-							Effect effect = track.Effects.AddEffect(tvSimulator);
-							string preset = ForYtps.GetRandomPreset(effect, usedTvPresets);
-							if (preset == "") { track.Effects.Remove(effect); usedTvPresets = null; goto RepickRandom; }
-						} else goto RepickRandom;
-					} else if (rand < 35) {
-						if (usedWavePresets != null) {
-							Effect effect = track.Effects.AddEffect(wave);
-							string preset = ForYtps.GetRandomPreset(effect, usedWavePresets);
-							if (preset == "") { track.Effects.Remove(effect); usedWavePresets = null; goto RepickRandom; }
-						} else goto RepickRandom;
-					} else if (rand < 50) {
-						if (usedSwirlPresets != null) {
-							Effect effect = track.Effects.AddEffect(swirl);
-							string preset = ForYtps.GetRandomPreset(effect, usedSwirlPresets, excludeHalfScaleSwirlPresets: true);
-							if (preset == "") { track.Effects.Remove(effect); usedSwirlPresets = null; goto RepickRandom; }
-						} else goto RepickRandom;
+					SkipChangeHue:;
 					}
-					if (rand >= 50 || rand < 15 || rand >= 25 && random.NextDouble() < 0.45) {
-						double rand2 = random.NextDouble() * 100;
-						bool isInverted = random.NextDouble() < 0.4;
-						if (isInverted) {
-							Effect effect = track.Effects.AddEffect(invert);
-						}
-						if (rand2 < 80) {
-							Effect effect = track.Effects.AddEffect(hslAdjust);
-							// 基于随机色相的代码。
-							//double h = random.NextDouble();
-							//if (!isInverted) {
-							//	// f(x)=2x−3x^2+2x^3 的概率密度曲线。
-							//	// 如果需要调节“中间平缓、两端陡峭”的程度，可以增加一个强度参数 strength（建议范围 [0, 2)）。
-							//	// 这样，strength 越大，中间越平缓、两端越陡峭；strength = 1 时即为上述标准形式。
-							//	const double STRENGTH = 1;
-							//	// 基础形式：f(x) = x + strength * x * (1 - x) * (1 - 2x)
-							//	// 当 strength = 1 时，化简为 2x - 3x^2 + 2x^3
-							//	h = h + STRENGTH * h * (1d - h) * (1d - 2d * h);
-							//}
-							//(effect.OFXEffect.FindParameterByName("AddToHue") as OFXDoubleParameter).Value = random.NextDouble();
-							hueSequence.MoveNext();
-							double h = hueSequence.Current;
-							if (isInverted) h = (h + 180) % 360;
-							(effect.OFXEffect.FindParameterByName("AddToHue") as OFXDoubleParameter).Value = h / 360;
-						} else if (rand2 >= 85) {
-							ColorBalance(track, random.NextDouble() * 360);
-						}
-					}
-				SkipChangeHue:;
 				}
 			}
 			/// <summary>
@@ -11165,6 +11055,654 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	}
 	#endregion
 
+	#region 原生复制/移动轨道方法（适用于 Vegas Pro 22 及以下版本）
+	#if !VER_GEQ_23
+	namespace NativeTrackLocators {
+		/// <summary>解析旧版复制命令的完整处理入口，不调用底层流克隆函数。</summary>
+		internal sealed class NativeDuplicateLocator {
+			private readonly NativeImage _image;
+			internal uint Handler { get; private set; }
+			internal uint Dispatcher { get; private set; }
+			internal uint CloneCore { get; private set; }
+			internal int ProjectOffset { get; private set; }
+			internal NativeDuplicateLocator(NativeImage image) { _image = image; }
+			internal void Resolve(int commandId) {
+				var roots = new HashSet<uint>();
+				foreach (var section in _image.CodeSections) {
+					var bytes = _image.Read(section.Start, checked((int)section.Size));
+					for (int i = 0; i + 4 <= bytes.Length; i++)
+						if (BitConverter.ToUInt32(bytes, i) == (uint)commandId) {
+							var root = _image.ContainingRoot(section.Start + (uint)i);
+							if (root.HasValue)
+								roots.Add(root.Value);
+						}
+				}
+				var matches = new List<Tuple<uint, uint, uint, int>>();
+				foreach (var root in roots) {
+					List<Iced.Intel.Instruction> code;
+					try { code = Decode(root); } catch (NotSupportedException) { continue; }
+					for (int i = 0; i + 1 < code.Count; i++) {
+						var sub = code[i];
+						var jump = code[i + 1];
+						if (sub.Mnemonic != Iced.Intel.Mnemonic.Sub || sub.Op0Kind != Iced.Intel.OpKind.Register || !Immediate(sub, (uint)commandId) ||
+							jump.Mnemonic != Iced.Intel.Mnemonic.Je || jump.Op0Kind != Iced.Intel.OpKind.NearBranch64)
+							continue;
+						var branch = code.FindIndex(x => x.IP == jump.NearBranchTarget);
+						if (branch < 0 || branch + 2 >= code.Count)
+							continue;
+						var source = code[branch];
+						var context = code[branch + 1];
+						var call = code[branch + 2];
+						if (!RegisterMove(source, Iced.Intel.Register.RDX) || !RegisterMove(context, Iced.Intel.Register.RCX) || !DirectCall(call))
+							continue;
+						if (!code.Take(80).Any(x => RegisterMove(x, context.Op1Register) && x.Op1Register == Iced.Intel.Register.RCX) ||
+							!code.Take(80).Any(x => RegisterMove(x, sub.Op0Register) && x.Op1Register == Iced.Intel.Register.R8D))
+							continue;
+						uint clone;
+						int offset;
+						if (ValidateHandler((uint)call.NearBranchTarget, out clone, out offset))
+							matches.Add(Tuple.Create(root, (uint)call.NearBranchTarget, clone, offset));
+					}
+				}
+				var unique = matches.Distinct().ToArray();
+				if (unique.Length != 1)
+					throw Unsupported();
+				Dispatcher = unique[0].Item1;
+				Handler = unique[0].Item2;
+				CloneCore = unique[0].Item3;
+				ProjectOffset = unique[0].Item4;
+			}
+			private bool ValidateHandler(uint start, out uint clone, out int offset) {
+				clone = 0;
+				offset = 0;
+				List<Iced.Intel.Instruction> code;
+				try { code = Decode(start); } catch (NotSupportedException) { return false; }
+				var view = code.Take(30).Where(x => x.Mnemonic == Iced.Intel.Mnemonic.Mov && x.Op0Kind == Iced.Intel.OpKind.Register &&
+					x.Op1Kind == Iced.Intel.OpKind.Register && x.Op1Register == Iced.Intel.Register.RCX).ToArray();
+				if (view.Length != 1)
+					return false;
+				var project = code.Take(45).Where(x => x.Mnemonic == Iced.Intel.Mnemonic.Mov && x.Op0Kind == Iced.Intel.OpKind.Register &&
+					x.Op1Kind == Iced.Intel.OpKind.Memory && x.MemoryBase == view[0].Op0Register && x.MemoryIndex == Iced.Intel.Register.None &&
+					x.MemoryDisplacement64 >= 0x100 && x.MemoryDisplacement64 < 0x4000 && x.MemoryDisplacement64 % 8 == 0).ToArray();
+				if (project.Length != 1 || !code.Take(45).Any(x => RegisterMove(x, Iced.Intel.Register.RBX) && x.Op1Register == Iced.Intel.Register.RDX) ||
+					!code.Any(x => x.Mnemonic == Iced.Intel.Mnemonic.Test && x.Op0Register == Iced.Intel.Register.RBX && x.Op1Register == Iced.Intel.Register.RBX))
+					return false;
+				var calls = new List<uint>();
+				for (int i = 0; i < code.Count; i++) {
+					if (!DirectCall(code[i]))
+						continue;
+					var before = code.Skip(Math.Max(0, i - 12)).Take(Math.Min(i, 12)).ToArray();
+					if (before.Any(x => x.Mnemonic == Iced.Intel.Mnemonic.Lea && x.Op0Register == Iced.Intel.Register.R8 && x.MemoryBase == Iced.Intel.Register.RSP) &&
+						before.Any(x => RegisterMove(x, Iced.Intel.Register.RCX) && x.Op1Register == project[0].Op0Register) &&
+						before.Any(x => RegisterMove(x, Iced.Intel.Register.RDX)))
+						calls.Add((uint)code[i].NearBranchTarget);
+				}
+				var clones = calls.GroupBy(x => x).Where(g => g.Count() == 2).Select(g => g.Key).Where(ValidateClone).ToArray();
+				if (clones.Length != 1)
+					return false;
+				clone = clones[0];
+				offset = checked((int)project[0].MemoryDisplacement64);
+				return true;
+			}
+			private bool ValidateClone(uint start) {
+				List<Iced.Intel.Instruction> code;
+				try { code = Decode(start); } catch (NotSupportedException) { return false; }
+				// 同时验证名称资源、流虚调用和输出对象写回，拒绝仅凭单条指令命中的候选。
+				return code.Any(x => x.Mnemonic == Iced.Intel.Mnemonic.Mov && Immediate(x, 0x42a3)) &&
+					code.Any(x => x.FlowControl == Iced.Intel.FlowControl.IndirectCall && x.Op0Kind == Iced.Intel.OpKind.Memory && x.MemoryDisplacement64 == 0x28) &&
+					code.Any(x => x.Mnemonic == Iced.Intel.Mnemonic.Mov && x.Op0Kind == Iced.Intel.OpKind.Memory && x.MemoryBase == Iced.Intel.Register.R15 &&
+						x.MemoryDisplacement64 == 0 && x.Op1Register == Iced.Intel.Register.RAX) &&
+					code.Count(DirectCall) >= 7 && code.Last().FlowControl == Iced.Intel.FlowControl.Return;
+			}
+			private List<Iced.Intel.Instruction> Decode(uint start) {
+				var bytes = _image.ReadLogicalFunction(start);
+				var decoder = Iced.Intel.Decoder.Create(64, bytes, start);
+				var code = new List<Iced.Intel.Instruction>();
+				while (decoder.IP < (ulong)start + (uint)bytes.Length) {
+					var instruction = decoder.Decode();
+					if (instruction.IsInvalid || instruction.NextIP > (ulong)start + (uint)bytes.Length)
+						throw Unsupported();
+					code.Add(instruction);
+					// 当前支持布局只有一个共享返回；后面的内联 switch 表不能作为指令解码。
+					if (instruction.FlowControl == Iced.Intel.FlowControl.Return)
+						break;
+				}
+				return code;
+			}
+			private static bool DirectCall(Iced.Intel.Instruction i) { return i.FlowControl == Iced.Intel.FlowControl.Call && i.Op0Kind == Iced.Intel.OpKind.NearBranch64; }
+			private static bool RegisterMove(Iced.Intel.Instruction i, Iced.Intel.Register dest) { return i.Mnemonic == Iced.Intel.Mnemonic.Mov && i.Op0Kind == Iced.Intel.OpKind.Register && i.Op0Register == dest && i.Op1Kind == Iced.Intel.OpKind.Register; }
+			private static bool Immediate(Iced.Intel.Instruction i, uint n) { return (i.Op1Kind == Iced.Intel.OpKind.Immediate32 && i.Immediate32 == n) || (i.Op1Kind == Iced.Intel.OpKind.Immediate8to32 && i.Immediate8to32 == n); }
+			private static NotSupportedException Unsupported() { return new NotSupportedException("Cannot uniquely resolve the complete native track duplicate entry for this VEGAS version."); }
+		}
+		/// <summary>共享的 x64 PE 读取器：校验节区、函数边界及 unwind 链，不执行代码。</summary>
+		internal sealed class NativeImage {
+			private readonly IntPtr _base;
+			private readonly int _size;
+			private readonly List<Section> _sections = new List<Section>();
+			private readonly List<Function> _functions = new List<Function>();
+			private readonly Dictionary<uint, Function> _byStart = new Dictionary<uint, Function>();
+			private readonly Dictionary<uint, uint> _roots = new Dictionary<uint, uint>();
+			private readonly Dictionary<Section, byte[]> _unwindSections = new Dictionary<Section, byte[]>();
+			private Dictionary<uint, uint> _logicalEnds;
+			internal NativeImage(ProcessModule module) : this(module.BaseAddress, module.ModuleMemorySize) { }
+			internal NativeImage(IntPtr imageBase, int imageSize) {
+				_base = imageBase;
+				_size = imageSize;
+				var pe = checked((uint)ReadInt32(0x3c));
+				if ((ReadInt32(0) & 0xffff) != 0x5a4d || ReadInt32(pe) != 0x4550 ||
+					(ReadInt32(pe + 4) & 0xffff) != 0x8664 || (ReadInt32(pe + 24) & 0xffff) != 0x20b)
+					throw Unsupported();
+				var count = (ReadInt32(pe + 4) >> 16) & 0xffff;
+				var table = pe + 24 + (uint)(ReadInt32(pe + 20) & 0xffff);
+				for (int i = 0; i < count; i++) {
+					var p = table + (uint)(i * 40);
+					_sections.Add(new Section { Start = U32(p + 12), Size = U32(p + 8), Flags = U32(p + 36) });
+				}
+				var pdata = U32(pe + 24 + 136);
+				var bytes = ReadInt32(pe + 24 + 140);
+				if (bytes <= 0 || bytes % 12 != 0)
+					throw Unsupported();
+				var entries = Read(pdata, bytes);
+				for (uint i = 0; i < bytes; i += 12) {
+					var f = new Function {
+						Begin = BitConverter.ToUInt32(entries, (int)i),
+						End = BitConverter.ToUInt32(entries, (int)i + 4),
+						Unwind = BitConverter.ToUInt32(entries, (int)i + 8)
+					};
+					if (f.End <= f.Begin || (_functions.Count > 0 && _functions[_functions.Count - 1].End > f.Begin))
+						throw Unsupported();
+					_functions.Add(f);
+					_byStart.Add(f.Begin, f);
+				}
+			}
+			internal IEnumerable<Section> CodeSections { get { return _sections.Where(s => (s.Flags & 0xA0000000) == 0x20000000); } }
+			internal uint Rva(IntPtr pointer) {
+				var value = pointer.ToInt64() - _base.ToInt64();
+				if (value < 0 || value >= _size)
+					throw Unsupported();
+				return (uint)value;
+			}
+			internal IntPtr Address(uint rva, int length = 1) {
+				if (length < 1 || (ulong)rva + (uint)length > (ulong)_size)
+					throw Unsupported();
+				return IntPtr.Add(_base, checked((int)rva));
+			}
+			private int ReadInt32(uint rva) {
+				var pointer = Address(rva, 4);
+				RequireReadable(pointer, 4);
+				return Marshal.ReadInt32(pointer);
+			}
+			private uint U32(uint rva) { return unchecked((uint)ReadInt32(rva)); }
+			internal byte[] Read(uint rva, int length) {
+				var pointer = Address(rva, length);
+				RequireReadable(pointer, length);
+				var bytes = new byte[length];
+				Marshal.Copy(pointer, bytes, 0, length);
+				return bytes;
+			}
+			internal byte[] ReadFunction(uint start) {
+				var end = FunctionEnd(start);
+				if (end - start > 8192)
+					throw Unsupported();
+				return ReadCode(start, end);
+			}
+			internal uint FunctionEnd(uint start) {
+				Function f;
+				if (!_byStart.TryGetValue(start, out f))
+					throw Unsupported();
+				Address(start, checked((int)(f.End - start)));
+				return f.End;
+			}
+			internal uint? ContainingRoot(uint rva) {
+				int lo = 0, hi = _functions.Count - 1;
+				while (lo <= hi) {
+					int mid = lo + (hi - lo) / 2;
+					var f = _functions[mid];
+					if (rva < f.Begin)
+						hi = mid - 1;
+					else if (rva >= f.End)
+						lo = mid + 1;
+					else
+						return Root(f);
+				}
+				return null;
+			}
+			internal byte[] ReadLogicalFunction(uint start) {
+				if (_logicalEnds == null) {
+					_logicalEnds = new Dictionary<uint, uint>();
+					foreach (var group in _functions.GroupBy(Root)) {
+						uint end = group.Key;
+						bool contiguous = true;
+						foreach (var f in group) { if (f.Begin != end) contiguous = false; end = f.End; }
+						if (contiguous)
+							_logicalEnds.Add(group.Key, end);
+					}
+				}
+				uint last;
+				if (!_logicalEnds.TryGetValue(start, out last) || last - start > 65536)
+					throw Unsupported();
+				return ReadCode(start, last);
+			}
+			private byte[] ReadCode(uint start, uint end) {
+				int length = checked((int)(end - start));
+				RequireSection(start, length, 0x20000000, 0x80000000);
+				return Read(start, length);
+			}
+			private uint Root(Function f) {
+				uint root;
+				if (_roots.TryGetValue(f.Begin, out root))
+					return root;
+				var visited = new HashSet<uint>();
+				while (true) {
+					if (!visited.Add(f.Begin) || visited.Count > 16)
+						throw Unsupported();
+					var header = Unwind32(f.Unwind);
+					if ((header & 7) != 1)
+						throw Unsupported();
+					if ((header & 0x20) == 0) { foreach (var begin in visited) _roots[begin] = f.Begin; return f.Begin; }
+					var extra = (4u + 2u * ((header >> 16) & 0xff) + 3u) & ~3u;
+					if (!_byStart.TryGetValue(Unwind32(f.Unwind + extra), out f))
+						throw Unsupported();
+				}
+			}
+			private uint Unwind32(uint rva) {
+				// unwind 元数据所在只读节可整段读取，避免逐字段重复查询内存页。
+				// 轨道视图和工程指针不走此缓存，执行时仍然重新读取。
+				var section = _sections.FirstOrDefault(s => rva >= s.Start && (ulong)rva + 4 <= (ulong)s.Start + s.Size && (s.Flags & 0xA0000000) == 0);
+				if (section == null)
+					throw Unsupported();
+				byte[] bytes;
+				if (!_unwindSections.TryGetValue(section, out bytes))
+					_unwindSections.Add(section, bytes = Read(section.Start, checked((int)section.Size)));
+				return BitConverter.ToUInt32(bytes, checked((int)(rva - section.Start)));
+			}
+			internal void RequireSection(uint rva, int length, uint required, uint forbidden) {
+				Address(rva, length);
+				if (!_sections.Any(s => rva >= s.Start && (ulong)rva + (uint)length <= (ulong)s.Start + s.Size &&
+					(s.Flags & required) == required && (s.Flags & forbidden) == 0))
+					throw Unsupported();
+			}
+			internal static void RequireReadable(IntPtr pointer, int length) {
+				if (pointer == IntPtr.Zero || length < 1)
+					throw Unsupported();
+				while (length > 0) {
+					MemoryInfo memory;
+					if (VirtualQuery(pointer, out memory, (UIntPtr)Marshal.SizeOf(typeof(MemoryInfo))) == UIntPtr.Zero ||
+						memory.State != 0x1000 || (memory.Protect & 0x101) != 0 || (memory.Protect & 0xEE) == 0)
+						throw Unsupported();
+					var offset = (ulong)(pointer.ToInt64() - memory.BaseAddress.ToInt64());
+					if (offset >= memory.RegionSize.ToUInt64())
+						throw Unsupported();
+					var part = (int)Math.Min((ulong)length, memory.RegionSize.ToUInt64() - offset);
+					pointer = IntPtr.Add(pointer, part);
+					length -= part;
+				}
+			}
+			internal sealed class Section { internal uint Start, Size, Flags; }
+			private sealed class Function { internal uint Begin, End, Unwind; }
+			[StructLayout(LayoutKind.Sequential)]
+			private struct MemoryInfo {
+				internal IntPtr BaseAddress, AllocationBase;
+				internal uint AllocationProtect;
+				internal UIntPtr RegionSize;
+				internal uint State, Protect, Type;
+			}
+			[DllImport("kernel32.dll")] private static extern UIntPtr VirtualQuery(IntPtr address, out MemoryInfo info, UIntPtr length);
+			private static NotSupportedException Unsupported() { return new NotSupportedException("Unsupported VEGAS native image or memory layout."); }
+		}
+		internal sealed class NativeTrackDuplicate {
+			[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+			private delegate int DuplicateSelected(IntPtr view, IntPtr sourceOrNull);
+			private readonly NativeTrackView _view;
+			private readonly DuplicateSelected _duplicate;
+			private readonly int _projectOffset;
+			private NativeTrackDuplicate(NativeTrackView view, IntPtr entry, int projectOffset) {
+				_view = view;
+				_projectOffset = projectOffset;
+				_duplicate = (DuplicateSelected)Marshal.GetDelegateForFunctionPointer(entry, typeof(DuplicateSelected));
+			}
+			internal static NativeTrackDuplicate Resolve(Track source) {
+				var view = NativeTrackView.Resolve(source);
+				using (var process = Process.GetCurrentProcess()) {
+					var image = new NativeImage(process.MainModule);
+					var locator = new NativeDuplicateLocator(image);
+					locator.Resolve(ReadCommand(image.Address(0)));
+					return new NativeTrackDuplicate(view, image.Address(locator.Handler), locator.ProjectOffset);
+				}
+			}
+			internal void Duplicate() {
+				var view = _view.Current;
+				NativeImage.RequireReadable(IntPtr.Add(view, _projectOffset), IntPtr.Size);
+				NativeImage.RequireReadable(Marshal.ReadIntPtr(view, _projectOffset), 64);
+				// 按当前选择执行完整处理及后处理；内部事务不能替代调用方的 UndoBlock。
+				Marshal.ThrowExceptionForHR(_duplicate(view, IntPtr.Zero));
+			}
+			internal static int ReadCommand(IntPtr module) {
+				// 这是经校验的资源标识，不是写死的命令号或函数地址。
+				var title = new StringBuilder(256);
+				if (LoadString(module, 16194, title, title.Capacity) == 0)
+					throw Unsupported();
+				var menu = LoadMenu(module, new IntPtr(1007));
+				if (menu == IntPtr.Zero)
+					throw Unsupported();
+				try {
+					var ids = new HashSet<int>();
+					FindMenu(menu, Normalize(title.ToString()), ids);
+					if (ids.Count != 1)
+						throw Unsupported();
+					return ids.Single();
+				} finally { DestroyMenu(menu); }
+			}
+			private static void FindMenu(IntPtr menu, string title, HashSet<int> ids) {
+				for (int i = 0; i < GetMenuItemCount(menu); i++) {
+					var label = new StringBuilder(512);
+					GetMenuString(menu, (uint)i, label, label.Capacity, 0x400);
+					var child = GetSubMenu(menu, i);
+					if (child != IntPtr.Zero)
+						FindMenu(child, title, ids);
+					else if (Normalize(label.ToString()) == title)
+						ids.Add(unchecked((int)GetMenuItemID(menu, i)));
+				}
+			}
+			private static string Normalize(string text) { return Regex.Replace(text, @"\(&.\)", "").Replace("&", "").Trim(); }
+			private static NotSupportedException Unsupported() { return new NotSupportedException("Cannot identify the native duplicate-track command in this VEGAS version."); }
+			[DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int LoadString(IntPtr module, uint id, StringBuilder text, int count);
+			[DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern IntPtr LoadMenu(IntPtr module, IntPtr id);
+			[DllImport("user32.dll")] private static extern bool DestroyMenu(IntPtr menu);
+			[DllImport("user32.dll")] private static extern int GetMenuItemCount(IntPtr menu);
+			[DllImport("user32.dll")] private static extern IntPtr GetSubMenu(IntPtr menu, int position);
+			[DllImport("user32.dll")] private static extern uint GetMenuItemID(IntPtr menu, int position);
+			[DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int GetMenuString(IntPtr menu, uint item, StringBuilder text, int count, uint flags);
+		}
+		internal sealed class NativeTrackMove {
+			[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+			private delegate int Reorder(IntPtr view, int insertionGap, int mode);
+			private readonly NativeTrackView _view;
+			private readonly Reorder _move;
+			private NativeTrackMove(NativeTrackView view) {
+				_view = view;
+				_move = (Reorder)Marshal.GetDelegateForFunctionPointer(view.MoveEntry, typeof(Reorder));
+			}
+			internal static NativeTrackMove Resolve(Track track) { return new NativeTrackMove(NativeTrackView.Resolve(track)); }
+			internal void Move(int gap) { Marshal.ThrowExceptionForHR(_move(_view.Current, gap, 1)); }
+		}
+		// 移动与复制共用的 COM 槽位锚点；只保存代码和全局指针槽，不缓存工程对象。
+		internal sealed class NativeTrackView {
+			internal readonly IntPtr MoveEntry;
+			private readonly IntPtr _slot;
+			private NativeTrackView(IntPtr moveEntry, IntPtr slot) { MoveEntry = moveEntry; _slot = slot; }
+			internal IntPtr Current {
+				get { var view = Marshal.ReadIntPtr(_slot); NativeImage.RequireReadable(view, 64); return view; }
+			}
+			internal static NativeTrackView Resolve(Track track) {
+				if (IntPtr.Size != 8)
+					throw Unsupported();
+				var assembly = typeof(Track).Assembly;
+				var contract = assembly.GetType("ScriptPortal.Vegas.ITrackCOM");
+				var getter = typeof(Track).GetMethod("GetCOM", BindingFlags.Instance | BindingFlags.NonPublic);
+				var method = contract != null ? contract.GetMethod("InsertTrackIntoGroup") : null;
+				if (getter == null || method == null || method.ReturnType != typeof(int) ||
+					!method.GetParameters().Select(p => p.ParameterType).SequenceEqual(
+						new[] { typeof(uint), typeof(uint), typeof(int) }))
+					throw Unsupported();
+				var slot = Marshal.GetComSlotForMethodInfo(method);
+				if (slot < 3 || slot > 4096)
+					throw Unsupported();
+				var com = getter.Invoke(track, null);
+				var pointer = Marshal.GetComInterfaceForObject(com, contract);
+				IntPtr entry;
+				try {
+					var table = Marshal.ReadIntPtr(pointer);
+					NativeImage.RequireReadable(table, checked((slot + 1) * IntPtr.Size));
+					entry = Marshal.ReadIntPtr(table, slot * IntPtr.Size);
+				} finally {
+					Marshal.Release(pointer);
+				}
+				using (var process = Process.GetCurrentProcess()) {
+					var image = new NativeImage(process.MainModule);
+					var wrapper = image.Rva(entry);
+					var visited = new HashSet<uint>();
+					for (var hop = 0; ; hop++) {
+						if (hop == 5 || !visited.Add(wrapper))
+							throw Unsupported();
+						var first = Iced.Intel.Decoder.Create(64, image.Read(wrapper, 15), wrapper).Decode();
+						if (first.FlowControl != Iced.Intel.FlowControl.UnconditionalBranch)
+							break;
+						if (first.Op0Kind != Iced.Intel.OpKind.NearBranch64)
+							throw Unsupported();
+						wrapper = checked((uint)first.NearBranchTarget);
+					}
+					var code = image.ReadFunction(wrapper);
+					var call = FindCall(code, wrapper);
+					image.FunctionEnd(call.Function);
+					image.RequireSection(call.Function, 1, 0x20000000, 0x80000000);
+					image.RequireSection(call.ViewSlot, 8, 0x80000000, 0x20000000);
+					if (call.ViewSlot % 8 != 0)
+						throw Unsupported();
+					return new NativeTrackView(image.Address(call.Function), image.Address(call.ViewSlot));
+				}
+			}
+			internal struct CallSite {
+				internal uint Function;
+				internal uint ViewSlot;
+			}
+			internal static CallSite FindCall(byte[] bytes, uint address) {
+				var decoder = Iced.Intel.Decoder.Create(64, bytes, address);
+				var code = new List<Iced.Intel.Instruction>();
+				var end = (ulong)address + (uint)bytes.Length;
+				while (decoder.IP < end) {
+					var instruction = decoder.Decode();
+					if (instruction.IsInvalid || instruction.NextIP > end)
+						throw Unsupported();
+					code.Add(instruction);
+				}
+				var boundaries = new HashSet<ulong>(code.Select(i => i.IP));
+				foreach (var instruction in code) {
+					if ((instruction.FlowControl == Iced.Intel.FlowControl.ConditionalBranch ||
+						instruction.FlowControl == Iced.Intel.FlowControl.UnconditionalBranch) &&
+						(instruction.Op0Kind != Iced.Intel.OpKind.NearBranch64 || !boundaries.Contains(instruction.NearBranchTarget)))
+						throw Unsupported();
+					if (instruction.FlowControl == Iced.Intel.FlowControl.IndirectBranch ||
+						instruction.FlowControl == Iced.Intel.FlowControl.Exception || instruction.FlowControl == Iced.Intel.FlowControl.Interrupt)
+						throw Unsupported();
+				}
+				if (code.Count == 0 || code[code.Count - 1].FlowControl != Iced.Intel.FlowControl.Return ||
+					code.Count(i => i.FlowControl == Iced.Intel.FlowControl.Return) != 1)
+					throw Unsupported();
+				var matches = new List<CallSite>();
+				for (var i = 3; i < code.Count; i++) {
+					var view = code[i - 3];
+					var mode = code[i - 2];
+					var gap = code[i - 1];
+					var call = code[i];
+					if (view.Mnemonic != Iced.Intel.Mnemonic.Mov || view.Op0Register != Iced.Intel.Register.RCX || !view.IsIPRelativeMemoryOperand ||
+						!RegisterMove(mode, Iced.Intel.Register.R8D) || !RegisterMove(gap, Iced.Intel.Register.EDX) ||
+						call.FlowControl != Iced.Intel.FlowControl.Call || call.Op0Kind != Iced.Intel.OpKind.NearBranch64)
+						continue;
+					var source = mode.Op1Register;
+					var before = code.Take(i - 3).ToArray();
+					if (!before.Any(p => p.Mnemonic == Iced.Intel.Mnemonic.Xor && p.Op0Register == source && p.Op1Register == source) ||
+						!before.Any(p => p.Mnemonic == Iced.Intel.Mnemonic.Setne && p.Op0Kind == Iced.Intel.OpKind.Register &&
+							Iced.Intel.RegisterExtensions.GetFullRegister(p.Op0Register) == Iced.Intel.RegisterExtensions.GetFullRegister(source)) ||
+						!before.Any(p => p.Mnemonic == Iced.Intel.Mnemonic.Add && p.Op0Register == source && Immediate(p, 3)) ||
+						!before.Any(p => p.Mnemonic == Iced.Intel.Mnemonic.Mov && p.Op0Register == source && Immediate(p, 2)))
+						continue;
+					matches.Add(new CallSite {
+						Function = checked((uint)call.NearBranchTarget),
+						ViewSlot = checked((uint)view.IPRelativeMemoryAddress)
+					});
+				}
+				if (matches.Count != 1)
+					throw Unsupported();
+				return matches[0];
+			}
+			private static bool RegisterMove(Iced.Intel.Instruction instruction, Iced.Intel.Register destination) {
+				return instruction.Mnemonic == Iced.Intel.Mnemonic.Mov && instruction.Op0Kind == Iced.Intel.OpKind.Register &&
+					instruction.Op0Register == destination && instruction.Op1Kind == Iced.Intel.OpKind.Register &&
+					Iced.Intel.RegisterExtensions.GetSize(instruction.Op1Register) == 4;
+			}
+			private static bool Immediate(Iced.Intel.Instruction instruction, uint value) {
+				return (instruction.Op1Kind == Iced.Intel.OpKind.Immediate32 && instruction.Immediate32 == value) ||
+					(instruction.Op1Kind == Iced.Intel.OpKind.Immediate8to32 && instruction.Immediate8to32 == value);
+			}
+			private static NotSupportedException Unsupported() { return new NotSupportedException("Cannot resolve the native track-view entry for this VEGAS version."); }
+		}
+		public static class TrackDuplicator {
+			private delegate Track DuplicateCall(Project project, Track source, int index);
+			private static readonly DuplicateCall Copy = ApiCompatibility.Resolve<DuplicateCall>(
+				"DuplicateTrack", DuplicateLegacy);
+			private static NativeTrackDuplicate _native;
+			/// <summary>复制单条平铺轨道到源轨道后面，保留原轨道及事件的选择。</summary>
+			/// <remarks>在 VEGAS UI 线程、调用方的 UndoBlock 内调用，与移动轨道一致。</remarks>
+			public static Track Duplicate(Project project, int trackIndex, int newIndex = -2) {
+				if (project == null)
+					throw new ArgumentNullException("project");
+				if (trackIndex < 0 || trackIndex >= project.Tracks.Count)
+					throw new ArgumentOutOfRangeException("trackIndex");
+				// 首版沿用 demo 的已限定范围，不把复杂分组或嵌套的未验证行为暴露为成功。（已剔除）
+				//if (project.TrackGroups.Count != 0 || project.Tracks.OfType<VideoTrack>().Any(t => t.CompositeNestingLevel != 0))
+				//	throw new NotSupportedException("Track duplication currently requires flat tracks without track groups.");
+				var tracks = project.Tracks.ToArray();
+				var selected = tracks.Select(t => t.Selected).ToArray();
+				var events = tracks.SelectMany(t => t.Events).ToArray();
+				var eventSelection = events.Select(e => e.Selected).ToArray();
+				var source = tracks[trackIndex];
+				try {
+					int newTrackIndex = newIndex == -2 ? trackIndex + 1 :
+						newIndex == -1 ? source.IsAudio() ? tracks.Length : 0 :
+						Math.Min(Math.Max(0, newIndex), tracks.Length);
+					var result = Copy(project, source, newTrackIndex);
+					var expected = tracks.ToList();
+					if (result == null || tracks.Contains(result))
+						throw new InvalidOperationException("VEGAS did not return an independent track copy.");
+					expected.Insert(newTrackIndex, result);
+					if (!expected.SequenceEqual(project.Tracks))
+						throw new InvalidOperationException("VEGAS returned an unexpected track order after duplication.");
+					return result;
+				} finally {
+					foreach (var added in project.Tracks.Except(tracks)) {
+						added.Selected = false;
+						foreach (TrackEvent e in added.Events)
+							e.Selected = false;
+					}
+					for (int i = 0; i < tracks.Length; i++)
+						tracks[i].Selected = selected[i];
+					for (int i = 0; i < events.Length; i++)
+						events[i].Selected = eventSelection[i];
+				}
+			}
+			private static Track DuplicateLegacy(Project project, Track source, int index) {
+				// 先完成解析，随后才临时改变选择并进入宿主完整复制流程。
+				var native = _native ?? (_native = NativeTrackDuplicate.Resolve(source));
+				foreach (Track track in project.Tracks)
+					track.Selected = track.Equals(source);
+				if (!source.Selected || project.Tracks.Count(t => t.Selected) != 1)
+					throw new InvalidOperationException("Cannot isolate the source track selection.");
+				native.Duplicate();
+				if (project.Tracks.Count <= index)
+					throw new InvalidOperationException("VEGAS did not create a track copy.");
+				return project.Tracks[index];
+			}
+		}
+		public static class TrackMover {
+			private static NativeTrackMove _native;
+			/// <summary>Moves a contiguous block to its final zero-based starting index.</summary>
+			/// <remarks>
+			/// Call on the VEGAS UI thread inside the caller's undo scope.
+			/// Existing compositing parents and nesting levels are preserved.
+			/// Include complete compositing subtrees and track groups in the block.
+			/// </remarks>
+			public static void Move(Project project, int first, int count, int finalIndex) {
+				if (project == null)
+					throw new ArgumentNullException("project");
+				var total = project.Tracks.Count;
+				if (first < 0 || first >= total)
+					throw new ArgumentOutOfRangeException("first");
+				if (count < 1 || count > total - first)
+					throw new ArgumentOutOfRangeException("count");
+				finalIndex = Math.Min(Math.Max(0, finalIndex), total - count);
+				if (first == finalIndex)
+					return;
+				var tracks = new Track[total];
+				var selected = new bool[total];
+				for (var i = 0; i < total; i++) {
+					tracks[i] = project.Tracks[i];
+					selected[i] = tracks[i].Selected;
+				}
+				var levels = tracks.OfType<VideoTrack>()
+					.ToDictionary(track => track, track => track.CompositeNestingLevel);
+				var reordered = tracks.ToList();
+				var block = reordered.GetRange(first, count);
+				reordered.RemoveRange(first, count);
+				reordered.InsertRange(finalIndex, block);
+				var parents = CompositeParents(tracks, levels);
+				var newParents = CompositeParents(reordered, levels);
+				if (parents.Any(pair => !ReferenceEquals(pair.Value, newParents[pair.Key])))
+					throw new InvalidOperationException("Move would change compositing parents. Include the complete subtree and choose a destination within the same parent.");
+				var native = _native ?? (_native = NativeTrackMove.Resolve(project.Tracks[first]));
+				var gap = finalIndex > first ? finalIndex + count : finalIndex;
+				try {
+					for (var i = 0; i < total; i++)
+						tracks[i].Selected = i >= first && i < first + count;
+					native.Move(gap);
+					// Native dragging can promote a nested parent; restore levels before selection.
+					foreach (var track in reordered.OfType<VideoTrack>())
+						if (track.CompositeNestingLevel != levels[track])
+							track.CompositeNestingLevel = levels[track];
+				} finally {
+					for (var i = 0; i < total; i++)
+						tracks[i].Selected = selected[i];
+				}
+			}
+			private static Dictionary<VideoTrack, VideoTrack> CompositeParents(
+				IEnumerable<Track> tracks, Dictionary<VideoTrack, int> levels) {
+				var result = new Dictionary<VideoTrack, VideoTrack>();
+				var ancestors = new List<VideoTrack>();
+				foreach (var track in tracks) {
+					VideoTrack video = track as VideoTrack;
+					if (video == null) {
+						ancestors.Clear();
+						continue;
+					}
+					var level = levels[video];
+					if (level < 0 || level > ancestors.Count)
+						throw new InvalidOperationException("Move would split a compositing subtree.");
+					if (ancestors.Count > level)
+						ancestors.RemoveRange(level, ancestors.Count - level);
+					result.Add(video, level == 0 ? null : ancestors[level - 1]);
+					ancestors.Add(video);
+				}
+				return result;
+			}
+		}
+		/// <summary>按宿主公开方法的实际签名选择实现，不依赖版本号。</summary>
+		public static class ApiCompatibility {
+			/// <summary>
+			/// 绑定开放实例委托：首个参数是宿主对象，其余参数和返回值必须与 API 一致。
+			/// API 存在时直接绑定；仅在 API 缺失时选择 fallback。
+			/// 执行失败不会重试 fallback，避免重复产生副作用。
+			/// </summary>
+			public static TDelegate Resolve<TDelegate>(string methodName, TDelegate fallback) {
+				if (string.IsNullOrWhiteSpace(methodName))
+					throw new ArgumentException("Method name is required.", "methodName");
+				if (fallback == null)
+					throw new ArgumentNullException("fallback");
+				var signature = typeof(TDelegate).GetMethod("Invoke");
+				var parameters = signature.GetParameters();
+				if (parameters.Length == 0)
+					throw new ArgumentException("An open instance delegate must include its receiver.", "TDelegate");
+				var method = parameters[0].ParameterType.GetMethod(methodName,
+					BindingFlags.Public | BindingFlags.Instance, null,
+					parameters.Skip(1).Select(p => p.ParameterType).ToArray(), null);
+				if (method == null || method.ContainsGenericParameters || method.ReturnType != signature.ReturnType)
+					return fallback;
+				return (TDelegate)(object)Delegate.CreateDelegate(typeof(TDelegate), method);
+			}
+		}
+	}
+	#endif
+	#endregion
+
 	#region 其它自定义控件部分
 	partial class IntegerTrackWithBox {
 		/// <summary>
@@ -15731,8 +16269,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.InfoLbl = new System.Windows.Forms.Label();
 			this.FrontLbl = new System.Windows.Forms.Label();
 			this.FrontCombo = new System.Windows.Forms.ComboBox();
-			this.DelOrigTrackCheck = new System.Windows.Forms.CheckBox();
 			this.UseVideoLongerSideCheck = new System.Windows.Forms.CheckBox();
+			this.ReverseOrderBtn = new System.Windows.Forms.Button();
 			this.dock.SuspendLayout();
 			this.table.SuspendLayout();
 			this.SuspendLayout();
@@ -15741,10 +16279,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(374, 10);
-			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.OkBtn.Location = new System.Drawing.Point(600, 16);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(6);
 			this.OkBtn.Name = "OkBtn";
-			this.OkBtn.Size = new System.Drawing.Size(94, 32);
+			this.OkBtn.Size = new System.Drawing.Size(150, 51);
 			this.OkBtn.TabIndex = 1;
 			this.OkBtn.Text = "完成(&O)";
 			this.OkBtn.UseVisualStyleBackColor = true;
@@ -15754,10 +16292,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(476, 10);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.CancelBtn.Location = new System.Drawing.Point(762, 16);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(6);
 			this.CancelBtn.Name = "CancelBtn";
-			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
+			this.CancelBtn.Size = new System.Drawing.Size(150, 51);
 			this.CancelBtn.TabIndex = 2;
 			this.CancelBtn.Text = "取消(&C)";
 			this.CancelBtn.UseVisualStyleBackColor = true;
@@ -15773,13 +16311,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 421);
-			this.dock.Margin = new System.Windows.Forms.Padding(4);
+			this.dock.Location = new System.Drawing.Point(0, 691);
+			this.dock.Margin = new System.Windows.Forms.Padding(6);
 			this.dock.Name = "dock";
-			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
+			this.dock.Padding = new System.Windows.Forms.Padding(13, 10, 13, 10);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(582, 52);
+			this.dock.Size = new System.Drawing.Size(931, 83);
 			this.dock.TabIndex = 10;
 			//
 			// table
@@ -15801,13 +16339,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.table.Controls.Add(this.InfoLbl, 0, 0);
 			this.table.Controls.Add(this.FrontLbl, 0, 1);
 			this.table.Controls.Add(this.FrontCombo, 1, 1);
-			this.table.Controls.Add(this.DelOrigTrackCheck, 0, 7);
-			this.table.Controls.Add(this.UseVideoLongerSideCheck, 0, 8);
+			this.table.Controls.Add(this.UseVideoLongerSideCheck, 0, 7);
+			this.table.Controls.Add(this.ReverseOrderBtn, 0, 8);
 			this.table.Dock = System.Windows.Forms.DockStyle.Top;
 			this.table.Location = new System.Drawing.Point(0, 0);
-			this.table.Margin = new System.Windows.Forms.Padding(5);
+			this.table.Margin = new System.Windows.Forms.Padding(8);
 			this.table.Name = "table";
-			this.table.Padding = new System.Windows.Forms.Padding(12, 14, 12, 14);
+			this.table.Padding = new System.Windows.Forms.Padding(19, 22, 19, 22);
 			this.table.RowCount = 9;
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -15818,8 +16356,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.table.Size = new System.Drawing.Size(582, 388);
+			this.table.Size = new System.Drawing.Size(931, 589);
 			this.table.TabIndex = 12;
 			//
 			// BottomCombo
@@ -15827,69 +16364,64 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.BottomCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.BottomCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.BottomCombo.FormattingEnabled = true;
-			this.BottomCombo.Location = new System.Drawing.Point(63, 274);
-			this.BottomCombo.Margin = new System.Windows.Forms.Padding(4);
+			this.BottomCombo.Location = new System.Drawing.Point(99, 410);
+			this.BottomCombo.Margin = new System.Windows.Forms.Padding(6);
 			this.BottomCombo.Name = "BottomCombo";
-			this.BottomCombo.Size = new System.Drawing.Size(503, 28);
+			this.BottomCombo.Size = new System.Drawing.Size(807, 40);
 			this.BottomCombo.TabIndex = 12;
-			this.BottomCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			//
 			// TopCombo
 			//
 			this.TopCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TopCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.TopCombo.FormattingEnabled = true;
-			this.TopCombo.Location = new System.Drawing.Point(63, 238);
-			this.TopCombo.Margin = new System.Windows.Forms.Padding(4);
+			this.TopCombo.Location = new System.Drawing.Point(99, 358);
+			this.TopCombo.Margin = new System.Windows.Forms.Padding(6);
 			this.TopCombo.Name = "TopCombo";
-			this.TopCombo.Size = new System.Drawing.Size(503, 28);
+			this.TopCombo.Size = new System.Drawing.Size(807, 40);
 			this.TopCombo.TabIndex = 11;
-			this.TopCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			//
 			// RightCombo
 			//
 			this.RightCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.RightCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.RightCombo.FormattingEnabled = true;
-			this.RightCombo.Location = new System.Drawing.Point(63, 202);
-			this.RightCombo.Margin = new System.Windows.Forms.Padding(4);
+			this.RightCombo.Location = new System.Drawing.Point(99, 306);
+			this.RightCombo.Margin = new System.Windows.Forms.Padding(6);
 			this.RightCombo.Name = "RightCombo";
-			this.RightCombo.Size = new System.Drawing.Size(503, 28);
+			this.RightCombo.Size = new System.Drawing.Size(807, 40);
 			this.RightCombo.TabIndex = 10;
-			this.RightCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			//
 			// LeftCombo
 			//
 			this.LeftCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LeftCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.LeftCombo.FormattingEnabled = true;
-			this.LeftCombo.Location = new System.Drawing.Point(63, 166);
-			this.LeftCombo.Margin = new System.Windows.Forms.Padding(4);
+			this.LeftCombo.Location = new System.Drawing.Point(99, 254);
+			this.LeftCombo.Margin = new System.Windows.Forms.Padding(6);
 			this.LeftCombo.Name = "LeftCombo";
-			this.LeftCombo.Size = new System.Drawing.Size(503, 28);
+			this.LeftCombo.Size = new System.Drawing.Size(807, 40);
 			this.LeftCombo.TabIndex = 9;
-			this.LeftCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			//
 			// BackCombo
 			//
 			this.BackCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.BackCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.BackCombo.FormattingEnabled = true;
-			this.BackCombo.Location = new System.Drawing.Point(63, 130);
-			this.BackCombo.Margin = new System.Windows.Forms.Padding(4);
+			this.BackCombo.Location = new System.Drawing.Point(99, 202);
+			this.BackCombo.Margin = new System.Windows.Forms.Padding(6);
 			this.BackCombo.Name = "BackCombo";
-			this.BackCombo.Size = new System.Drawing.Size(503, 28);
+			this.BackCombo.Size = new System.Drawing.Size(807, 40);
 			this.BackCombo.TabIndex = 8;
-			this.BackCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			//
 			// BottomLbl
 			//
 			this.BottomLbl.AutoSize = true;
 			this.BottomLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BottomLbl.Location = new System.Drawing.Point(16, 270);
-			this.BottomLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.BottomLbl.Location = new System.Drawing.Point(25, 404);
+			this.BottomLbl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.BottomLbl.Name = "BottomLbl";
-			this.BottomLbl.Size = new System.Drawing.Size(39, 36);
+			this.BottomLbl.Size = new System.Drawing.Size(62, 52);
 			this.BottomLbl.TabIndex = 6;
 			this.BottomLbl.Text = "底面";
 			this.BottomLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -15898,10 +16430,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.TopLbl.AutoSize = true;
 			this.TopLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TopLbl.Location = new System.Drawing.Point(16, 234);
-			this.TopLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.TopLbl.Location = new System.Drawing.Point(25, 352);
+			this.TopLbl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.TopLbl.Name = "TopLbl";
-			this.TopLbl.Size = new System.Drawing.Size(39, 36);
+			this.TopLbl.Size = new System.Drawing.Size(62, 52);
 			this.TopLbl.TabIndex = 5;
 			this.TopLbl.Text = "顶面";
 			this.TopLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -15910,10 +16442,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.RightLbl.AutoSize = true;
 			this.RightLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RightLbl.Location = new System.Drawing.Point(16, 198);
-			this.RightLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.RightLbl.Location = new System.Drawing.Point(25, 300);
+			this.RightLbl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.RightLbl.Name = "RightLbl";
-			this.RightLbl.Size = new System.Drawing.Size(39, 36);
+			this.RightLbl.Size = new System.Drawing.Size(62, 52);
 			this.RightLbl.TabIndex = 4;
 			this.RightLbl.Text = "右面";
 			this.RightLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -15922,10 +16454,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.LeftLbl.AutoSize = true;
 			this.LeftLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LeftLbl.Location = new System.Drawing.Point(16, 162);
-			this.LeftLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.LeftLbl.Location = new System.Drawing.Point(25, 248);
+			this.LeftLbl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.LeftLbl.Name = "LeftLbl";
-			this.LeftLbl.Size = new System.Drawing.Size(39, 36);
+			this.LeftLbl.Size = new System.Drawing.Size(62, 52);
 			this.LeftLbl.TabIndex = 3;
 			this.LeftLbl.Text = "左面";
 			this.LeftLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -15934,10 +16466,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.BackLbl.AutoSize = true;
 			this.BackLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BackLbl.Location = new System.Drawing.Point(16, 126);
-			this.BackLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.BackLbl.Location = new System.Drawing.Point(25, 196);
+			this.BackLbl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.BackLbl.Name = "BackLbl";
-			this.BackLbl.Size = new System.Drawing.Size(39, 36);
+			this.BackLbl.Size = new System.Drawing.Size(62, 52);
 			this.BackLbl.TabIndex = 2;
 			this.BackLbl.Text = "后面";
 			this.BackLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -15947,10 +16479,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.InfoLbl.AutoSize = true;
 			this.table.SetColumnSpan(this.InfoLbl, 2);
 			this.InfoLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.InfoLbl.Location = new System.Drawing.Point(16, 22);
-			this.InfoLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 8);
+			this.InfoLbl.Location = new System.Drawing.Point(25, 35);
+			this.InfoLbl.Margin = new System.Windows.Forms.Padding(6, 13, 6, 13);
 			this.InfoLbl.Name = "InfoLbl";
-			this.InfoLbl.Size = new System.Drawing.Size(550, 60);
+			this.InfoLbl.Size = new System.Drawing.Size(881, 96);
 			this.InfoLbl.TabIndex = 0;
 			this.InfoLbl.Text = "由于脚本功能限制，将会新建轨道并将选定轨道中的剪辑移动过去，原轨道中的轨道运动、效果等信息将会丢失。\r\n请在下方选定立方体的各个面所使用的轨道，如果为空则表示不设" +
 	"定该面。";
@@ -15960,10 +16492,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.FrontLbl.AutoSize = true;
 			this.FrontLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.FrontLbl.Location = new System.Drawing.Point(16, 90);
-			this.FrontLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.FrontLbl.Location = new System.Drawing.Point(25, 144);
+			this.FrontLbl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.FrontLbl.Name = "FrontLbl";
-			this.FrontLbl.Size = new System.Drawing.Size(39, 36);
+			this.FrontLbl.Size = new System.Drawing.Size(62, 52);
 			this.FrontLbl.TabIndex = 1;
 			this.FrontLbl.Text = "前面";
 			this.FrontLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -15973,55 +16505,53 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.FrontCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FrontCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.FrontCombo.FormattingEnabled = true;
-			this.FrontCombo.Location = new System.Drawing.Point(63, 94);
-			this.FrontCombo.Margin = new System.Windows.Forms.Padding(4);
+			this.FrontCombo.Location = new System.Drawing.Point(99, 150);
+			this.FrontCombo.Margin = new System.Windows.Forms.Padding(6);
 			this.FrontCombo.Name = "FrontCombo";
-			this.FrontCombo.Size = new System.Drawing.Size(503, 28);
+			this.FrontCombo.Size = new System.Drawing.Size(807, 40);
 			this.FrontCombo.TabIndex = 7;
-			this.FrontCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
-			//
-			// DelOrigTrackCheck
-			//
-			this.DelOrigTrackCheck.AutoSize = true;
-			this.DelOrigTrackCheck.Checked = true;
-			this.DelOrigTrackCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.table.SetColumnSpan(this.DelOrigTrackCheck, 2);
-			this.DelOrigTrackCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.DelOrigTrackCheck.Location = new System.Drawing.Point(16, 314);
-			this.DelOrigTrackCheck.Margin = new System.Windows.Forms.Padding(4, 8, 4, 4);
-			this.DelOrigTrackCheck.Name = "DelOrigTrackCheck";
-			this.DelOrigTrackCheck.Size = new System.Drawing.Size(550, 24);
-			this.DelOrigTrackCheck.TabIndex = 13;
-			this.DelOrigTrackCheck.Text = "删除原轨道";
-			this.DelOrigTrackCheck.UseVisualStyleBackColor = true;
 			//
 			// UseVideoLongerSideCheck
 			//
 			this.UseVideoLongerSideCheck.AutoSize = true;
 			this.table.SetColumnSpan(this.UseVideoLongerSideCheck, 2);
 			this.UseVideoLongerSideCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.UseVideoLongerSideCheck.Location = new System.Drawing.Point(16, 346);
-			this.UseVideoLongerSideCheck.Margin = new System.Windows.Forms.Padding(4);
+			this.UseVideoLongerSideCheck.Location = new System.Drawing.Point(25, 468);
+			this.UseVideoLongerSideCheck.Margin = new System.Windows.Forms.Padding(6, 12, 6, 6);
 			this.UseVideoLongerSideCheck.Name = "UseVideoLongerSideCheck";
-			this.UseVideoLongerSideCheck.Size = new System.Drawing.Size(550, 24);
+			this.UseVideoLongerSideCheck.Size = new System.Drawing.Size(881, 36);
 			this.UseVideoLongerSideCheck.TabIndex = 14;
 			this.UseVideoLongerSideCheck.Text = "使用视频的长边作为立方体的棱长";
 			this.UseVideoLongerSideCheck.UseVisualStyleBackColor = true;
 			//
+			// ReverseOrderBtn
+			//
+			this.table.SetColumnSpan(this.ReverseOrderBtn, 2);
+			this.ReverseOrderBtn.Dock = System.Windows.Forms.DockStyle.Left;
+			this.ReverseOrderBtn.Location = new System.Drawing.Point(22, 513);
+			this.ReverseOrderBtn.MaximumSize = new System.Drawing.Size(99999, 51);
+			this.ReverseOrderBtn.MinimumSize = new System.Drawing.Size(150, 51);
+			this.ReverseOrderBtn.Name = "ReverseOrderBtn";
+			this.ReverseOrderBtn.Size = new System.Drawing.Size(175, 51);
+			this.ReverseOrderBtn.TabIndex = 15;
+			this.ReverseOrderBtn.Text = "反转顺序";
+			this.ReverseOrderBtn.UseVisualStyleBackColor = true;
+			this.ReverseOrderBtn.Click += new System.EventHandler(this.ReverseOrderBtn_Click);
+			//
 			// AutoLayoutTracksBox3dForm
 			//
 			this.AcceptButton = this.OkBtn;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(582, 473);
+			this.ClientSize = new System.Drawing.Size(931, 774);
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Location = new System.Drawing.Point(60, 60);
-			this.Margin = new System.Windows.Forms.Padding(5);
+			this.Margin = new System.Windows.Forms.Padding(8);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "AutoLayoutTracksBox3dForm";
@@ -16055,8 +16585,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private System.Windows.Forms.Label InfoLbl;
 		private System.Windows.Forms.Label FrontLbl;
 		private System.Windows.Forms.ComboBox FrontCombo;
-		private System.Windows.Forms.CheckBox DelOrigTrackCheck;
 		private System.Windows.Forms.CheckBox UseVideoLongerSideCheck;
+		private System.Windows.Forms.Button ReverseOrderBtn;
 	}
 
 	public partial class AutoLayoutTracksBox3dForm : Form, IAutoLayoutTracks, IConfigIniUser, IInterpret {
@@ -16103,8 +16633,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (j < _count) combo.SelectedIndex = j;
 				else combo.SelectedIndex = 0;
 			}
-			if (EntryPoint.HasNativeDuplicateTrackMethod) // Vegas Pro 23 开始内置复制轨道 API。
-				DelOrigTrackCheck.Visible = false;
 			((Action)ReadIni).OnErrorBreak();
 			FormClosing += (sender, e) => SaveIni();
 		}
@@ -16120,30 +16648,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void ReadIni() {
 			configIni.StartSection("AutoLayoutTracksBox3d");
-			DelOrigTrackCheck.Checked = configIni.Read("DeleteOriginalTracks", true);
 			UseVideoLongerSideCheck.Checked = configIni.Read("UseVideoLongerSide", false);
 			configIni.EndSection();
 		}
 
 		public void SaveIni() {
 			configIni.StartSection("AutoLayoutTracksBox3d");
-			configIni.Write("DeleteOriginalTracks", DelOrigTrackCheck.Checked);
 			configIni.Write("UseVideoLongerSide", UseVideoLongerSideCheck.Checked);
 			configIni.EndSection();
-		}
-
-		private void Combo_SelectedIndexChanged(object sender, EventArgs e) {
-			if (!(sender is ComboBox)) return;
-			ComboBox combo = sender as ComboBox;
-			int selected = combo.SelectedIndex;
-			if (selected == 0 || selected == -1) return;
-			foreach (Control control in table.Controls) {
-				if (control is ComboBox) {
-					ComboBox comboBox = control as ComboBox;
-					if (comboBox == combo) continue;
-					if (comboBox.SelectedIndex == selected) comboBox.SelectedIndex = 0;
-				}
-			}
 		}
 
 		private enum Side {
@@ -16159,31 +16671,28 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private const int NONE_TRACKS_USED = -1;
 
 		/// <summary>
-		/// 移动轨道。<br />
-		/// 由于功能限制，只能移动轨道剪辑，不能移动轨道运动和轨道效果等信息。
+		/// 移动轨道。
 		/// </summary>
 		/// <param name="orig">原轨道</param>
 		/// <param name="side">是立方体的哪一边</param>
 		/// <param name="index">移动到哪个序号</param>
+		/// <param name="duplicate">复制原轨道？</param>
 		/// <returns></returns>
-		private VideoTrack MoveTrack(VideoTrack orig, Side side, int index = 1) {
+		private VideoTrack MoveTrack(VideoTrack orig, Side side, int index, bool duplicate) {
 			if (orig == null) return null;
 			string name = orig.Name;
 			string extendedName = SideName[(int)side];
 			if (!string.IsNullOrWhiteSpace(name)) extendedName += Lang.str.colon + name;
 			bool doNotNeedToMove = orig.Index == index;
 			VideoTrack track;
-			if (doNotNeedToMove) track = orig;
-			else if (EntryPoint.HasNativeDuplicateTrackMethod) {
-				track = EntryPoint.DuplicateTrack(orig, index);
+			if (doNotNeedToMove && !duplicate) track = orig;
+			else {
+				track = duplicate ? EntryPoint.DuplicateTrack(orig, index) : EntryPoint.MoveTrack(orig, index);
+				if (track == null) return null;
 				track.Name = extendedName;
-			} else {
-				track = new VideoTrack(vegas.Project, index, extendedName);
-				vegas.Project.Tracks.Add(track);
-				while (orig.Events.Count != 0) orig.Events[0].Track = track;
 			}
-			track.CompositeNestingLevel = childNestLevel;
 			track.CompositeMode = CompositeMode.SrcAlpha3D;
+			track.TrackMotion.MotionKeyframes.Clear();
 			TrackMotionKeyframe frame = track.TrackMotion.MotionKeyframes[0];
 			double trans = (
 				!UseVideoLongerSideCheck.Checked ?
@@ -16211,14 +16720,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					frame.OrientationX = -90;
 					break;
 				case Side.BOTTOM:
-					frame.PositionY = trans;
+					frame.PositionY = -trans;
 					frame.OrientationX = -90;
 					break;
 				default:
 					break;
 			}
 
-			if (!doNotNeedToMove && (DelOrigTrackCheck.Checked || EntryPoint.HasNativeDuplicateTrackMethod)) vegas.Project.Tracks.Remove(orig);
 			return track;
 		}
 
@@ -16231,10 +16739,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 			}
 			if (parentNestLevel == NONE_TRACKS_USED) return;
+			Dictionary<VideoTrack, int> origTracksUsedCount = GetOrigTracksUsedCount(origTracks);
 			vegas.Project.Tracks.Add(parentTrack = new VideoTrack(vegas.Project, firstTrackIndex++, ""));
 			parentTrack.CompositeNestingLevel = parentNestLevel;
-			for (int i = newTracks.Length - 1; i >= 0; i--)
-				newTracks[i] = MoveTrack(origTracks[i], (Side)i, firstTrackIndex);
+			for (int i = newTracks.Length - 1; i >= 0; i--) {
+				VideoTrack origTrack = origTracks[i];
+				if (origTrack == null) continue;
+				int usedCount;
+				if (!origTracksUsedCount.TryGetValue(origTrack, out usedCount)) usedCount = 1;
+				newTracks[i] = MoveTrack(origTracks[i], (Side)i, firstTrackIndex, usedCount != 1);
+				origTracksUsedCount[origTrack] = --usedCount;
+			}
+			foreach (VideoTrack track in newTracks)
+				if (track != null) track.CompositeNestingLevel = childNestLevel;
 			parentTrack.CompositeMode = CompositeMode.SrcAlpha3D;
 			parentTrack.ParentCompositeMode = CompositeMode.SrcAlpha3D;
 			TrackMotionKeyframe example = parentTrack.ParentTrackMotion.MotionKeyframes[0];
@@ -16242,6 +16759,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			example.OrientationX = 35;
 			example.OrientationY = 30;
 			example.OrientationZ = -20;
+		}
+
+		public static Dictionary<VideoTrack, int> GetOrigTracksUsedCount(IEnumerable<VideoTrack> origTracks) {
+			Dictionary<VideoTrack, int> usedCount = new Dictionary<VideoTrack, int>();
+			foreach (VideoTrack track in origTracks) {
+				if (track == null) continue;
+				if (!usedCount.ContainsKey(track)) usedCount[track] = 1;
+				else usedCount[track]++;
+			}
+			return usedCount;
+		}
+
+		private void ReverseOrderBtn_Click(object sender, EventArgs e) {
+			List<ComboBox> comboBoxes = table.Controls.OfType<ComboBox>().ToList();
+			List<int> selectedIndexes = comboBoxes.Select(combo => combo.SelectedIndex).Reverse().ToList();
+			for (int i = 0; i < comboBoxes.Count; i++)
+				comboBoxes[i].SelectedIndex = selectedIndexes.ElementAtOrDefault(i);
 		}
 
 		public void Translate() {
@@ -16256,13 +16790,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			BackLbl.Text = str.back_surface;
 			FrontLbl.Text = str.front_surface;
 			InfoLbl.Text = str.box_3d_layout_info;
-			DelOrigTrackCheck.Text =str.delete_original_tracks;
 			UseVideoLongerSideCheck.Text = str.use_video_longer_side;
+			ReverseOrderBtn.Text = str.reverse_the_order;
 			Text = str.auto_layout_tracks + " - " + str.box_3d_layout;
-		}
-
-		private void ReadFromInfo() {
-			throw new NotImplementedException();
 		}
 	}
 
@@ -40390,7 +40920,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			left_surface = "左面",
 			back_surface = "后面",
 			front_surface = "前面",
-			box_3d_layout_info = "由于脚本功能限制，将会新建轨道并将选定轨道中的剪辑移动过去，原轨道中的轨道运动、效果等信息将会丢失。\n请在下方选定立方体的各个面所使用的轨道，如果为空则表示不设定该面。",
+			box_3d_layout_info = "请在下方选定立方体的各个面所使用的轨道，如果为空则表示不设定该面。",
 			delete_original_tracks = "删除原轨道",
 			use_video_longer_side = "使用视频的长边作为立方体的棱长",
 			use_video_longer_side_tooltip = "勾选后，将以项目设置中视频最长的一条边（即宽度与高度的最大值）作为立方体的棱长。",
@@ -41170,6 +41700,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			theme_mica = "云母",
 			theme_mica_alt = "云母平替",
 			theme_solid = "纯色",
+			reverse_the_order = "反转顺序",
 			__eol__ = null;
 
 		static Lang() {
@@ -41342,7 +41873,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				left_surface = "Left",
 				back_surface = "Back",
 				front_surface = "Front",
-				box_3d_layout_info = "Due to the limitation of the script function, a new track will be created and the clips in the selected track will be moved over, and the track motion, effects or other in the original track will be lost.\nPlease select the track used by each face of the cube below. If it is empty, it means that the face is unset.",
+				box_3d_layout_info = "Please select the track used by each face of the cube below. If it is empty, it means that the face is unset.",
 				delete_original_tracks = "Delete original tracks",
 				use_video_longer_side = "Use longer side of edge length",
 				use_video_longer_side_tooltip = "After checking, the longest side of the video in the project settings (that is, the maximum of width and height) will be used as the edge length of the cube.",
@@ -42256,7 +42787,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				left_surface = "左面",
 				back_surface = "後面",
 				front_surface = "前面",
-				box_3d_layout_info = "由於腳本功能限制，將會新建軌道並將選定軌道中的剪輯移動過去，原軌道中的軌道運動、效果等訊息將會遺失。\n請在下方選定立方體的各個面所使用的軌道，如果為空則表示不設定該面。",
+				box_3d_layout_info = "請在下方選定立方體的各個面所使用的軌道，如果為空則表示不設定該面。",
 				delete_original_tracks = "删除原軌道",
 				use_video_longer_side = "使用視訊的長邊作為立方體的棱長",
 				use_video_longer_side_tooltip = "勾選後，將以專案設定中視訊最長的一條邊（即寬度與高度的最大值）作為立方體的棱長。",
@@ -43169,7 +43700,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				left_surface = "左の方",
 				back_surface = "後の方",
 				front_surface = "前の方",
-				box_3d_layout_info = "スクリプト機能の制限により、新しいトラックが作成され、選択したトラックのクリップが移動し、元のトラックのトラックモーション、エフェクトなどが失われます。\n以下の立方体の各面で使用されるトラックを選択してください。空の場合は、顔が設定されていないことを意味します。",
+				box_3d_layout_info = "以下の立方体の各面で使用されるトラックを選択してください。空の場合は、顔が設定されていないことを意味します。",
 				delete_original_tracks = "元のトラックを削除",
 				use_video_longer_side = "立方体のエッジの長さとして長い方の辺を使用します",
 				use_video_longer_side_tooltip = "チェック後、プロジェクト設定のビデオの最も長い辺（つまり、幅と高さの最大値）が立方体のエッジの長さとして使用されます。",
@@ -44084,7 +44615,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				left_surface = "левый",
 				back_surface = "Назад",
 				front_surface = "Передний",
-				box_3d_layout_info = "Из-за ограничений функции скрипта будет создана новая дорожка, и клипы на выбранной дорожке будут перемещены, а движение дорожки, эффекты и другие эффекты в исходной дорожке будут потеряны.\nПожалуйста, выберите дорожку, используемую каждой гранью куба ниже. Если он пустой, это означает, что лицо не установлено.",
+				box_3d_layout_info = "Пожалуйста, выберите дорожку, используемую каждой гранью куба ниже. Если он пустой, это означает, что лицо не установлено.",
 				delete_original_tracks = "Удалить исходную дорожку",
 				use_video_longer_side = "Используйте более длинную сторону как длину ребра куба.",
 				use_video_longer_side_tooltip = "После проверки самая длинная сторона видео в настройках проекта (то есть максимальная ширина и высота) будет использоваться в качестве длины ребра куба.",
@@ -44999,7 +45530,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				left_surface = "Phải",
 				back_surface = "Sau",
 				front_surface = "Trước",
-				box_3d_layout_info = "Do giới hạn chức năng của script, một track mới sẽ được tạo và các clip trong track đã chọn sẽ được di chuyển qua, và track motion, hiệu ứng hoặc những thứ khác của track gốc sẽ mất.\nVui lòng chọn track được sử dụng bởi mỗi mặt của khối lập phương bên dưới. Nếu nó trống, nghĩa là phần mặt chưa đặt.",
+				box_3d_layout_info = "Vui lòng chọn track được sử dụng bởi mỗi mặt của khối lập phương bên dưới. Nếu nó trống, nghĩa là phần mặt chưa đặt.",
 				delete_original_tracks = "Xoá các track gốc",
 				use_video_longer_side = "Sử dụng cạnh dài hơn của chiều dài cạnh",
 				use_video_longer_side_tooltip = "Sau khi kiểm tra, phần dài nhất của video trong project setting (là độ dài và độ rộng tối đa) sẽ được sử dụng là chiều dài cạnh của khối lập phương.",
@@ -45913,7 +46444,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				left_surface = "Kiri",
 				back_surface = "Belakang",
 				front_surface = "Depan",
-				box_3d_layout_info = "Karena keterbatasan fungsi skrip, trek baru akan dibuat dan klip di trek yang dipilih akan dipindahkan, dan gerakan trek, efek, atau lainnya di trek asli akan hilang.\nSilakan pilih trek yang digunakan oleh setiap sisi kubus di bawah ini. Jika kosong, berarti wajah tidak disetel.",
+				box_3d_layout_info = "Silakan pilih trek yang digunakan oleh setiap sisi kubus di bawah ini. Jika kosong, berarti wajah tidak disetel.",
 				delete_original_tracks = "Hapus trek asli",
 				use_video_longer_side = "Gunakan sisi panjang tepi yang lebih panjang",
 				use_video_longer_side_tooltip = "Setelah diperiksa, sisi terpanjang video dalam pengaturan proyek (yaitu, lebar dan tinggi maks) akan digunakan sebagai panjang tepi kubus.",
