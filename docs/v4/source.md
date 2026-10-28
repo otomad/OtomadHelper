@@ -10,7 +10,7 @@
 @en ### Select source from
 @zh ### 选择素材来源
 
-@en _Allows selecting a media file or a track event chosen to be used._
+@en `Allows selecting a media file or a track event chosen to be used.`
 @zh _允许选择要使用的媒体文件或轨道事件。_
 
 ::: info {.italic-list}
@@ -33,7 +33,7 @@
 @en ### Generate at
 @zh ### 设定生成开始位置
 
-@en _Controls where the MIDI can be generated._
+@en `Controls where the MIDI can be generated.`
 @zh _控制要生成MIDI的位置。_
 
 @en * **Project Start**
@@ -52,8 +52,8 @@
 @en ### Below Top Adjustment Tracks
 @zh ### 生成在顶层调整轨道的下方
 
-@en _Places the Generated Tracks below the Adjustment Tracks._
-@zh _将生成的轨道放置在调整轨道的下方。_
+@en * Places the Generated Tracks below the Adjustment Tracks.
+@zh * 将生成的轨道放置在调整轨道的下方。
 
 ::: warning
 @en *This is available in Vegas Pro 19 and up.*
@@ -63,14 +63,14 @@
 @en ### Remove track events assigned as source material after the generation completes
 @zh ### 生成完成后移除作为源素材的轨道事件
 
-@en _Deletes the original source clip after the MIDI has been generated._
-@zh _生成MIDI后删除源剪辑。_
+@en * Deletes the original source clip after the MIDI has been generated.
+@zh * 生成MIDI后删除源剪辑。
 
 @en ### Select all generated events after the generation completes
 @zh ### 生成完成后选中生成的所有事件
 
-@en _Selects all events generated after the MIDI has been generated._
-@zh _MIDI生成后选中生成的所有事件。_
+@en * Selects all events generated after the MIDI has been generated.
+@zh * MIDI生成后选中生成的所有事件。
 
 @en ### Move the Cursor to
 @zh ### 生成完成后将光标移动到
@@ -165,38 +165,39 @@
 @en ![Multisource Comb](/img/v4/source/comb.png)
 @zh ![Multisource Comb](/img/v4/source/comb_zh-CN.png)
 
-@en ### Off
+@en ### **Off**
 @zh ### 关
 
 @en _Disables the multisource features._
 @zh _禁用多素材功能。_
 
-@en ### Mystery Box
+@en ### **Mystery Box** 
 @zh ### 素材盲盒
 
-@en _Automatically picks from multiple selected sources in unpredictable ways._
-@zh _以不可预测的方式自动从多个选定素材中选挑选。_
+@en * Automatically picks from multiple selected sources in unpredictable ways.
+@zh * 以不可预测的方式自动从多个选定素材中选挑选。
 
-@en #### Limited to selected sources
-@zh #### 限制在所选素材
-@en _Only uses the sources selected in the timeline/project media._
-@zh _仅使用在时间线/项目媒体中的所选素材。_
-@en #### Make each track different
-@zh #### 使每条音轨不同
-@en _Each track will generate with a different clip._
-@zh _各音轨会使用一个不同的剪辑来生成。_
-@en #### Switch once per marker
-@zh #### 每处标记切换一次
-@en _Changes the source when a MIDI marker is reached._
-@zh _到达MIDI标记时更换素材。_
-@en #### Switch once per bar or beat
-@zh #### 每小节或每拍切换一次
-@en _Changes the source when a beat or bar has passed._
-@zh _通过拍或小节时更换素材。_
-@en #### Lotion Bath Tactics
-@zh #### 润肤浴战法（[ローション風呂戦法]{lang=ja}）
-@en _Forces the source to sequentially change at your specified duration._
-@zh _强制素材在指定的持续时间内顺序更改。_
+@en ##### Limited to selected sources
+@zh ##### 限制在所选素材
+
+@en * Only uses the sources selected in the timeline/project media.
+@zh * 仅使用在时间线/项目媒体中的所选素材。
+@en ##### Make each track different
+@zh ##### 使每条音轨不同
+@en * Each track will generate with a different clip.
+@zh * 各音轨会使用一个不同的剪辑来生成。
+@en ##### Switch once per marker
+@zh ##### 每处标记切换一次
+@en * Changes the source when a MIDI marker is reached.
+@zh * 到达MIDI标记时更换素材。
+@en ##### Switch once per bar or beat
+@zh ##### 每小节或每拍切换一次
+@en * Changes the source when a beat or bar has passed.
+@zh * 通过拍或小节时更换素材。
+@en ##### Lotion Bath Tactics
+@zh ##### 润肤浴战法（[ローション風呂戦法]{lang=ja}）
+@en * Forces the source to sequentially change at your specified duration.
+@zh * 强制素材在指定的持续时间内顺序更改。
 ::: important
 @en If [_limited to selected sources_](#limited-to-selected-sources) is enabled, Lotion Bath Tactics will use sources in sequential order
 @zh 如果[_限制在所选素材_](#限制在所选素材)已开启，润肤浴战法将按顺序依次使用素材。
@@ -208,8 +209,8 @@
 @en _Applies sources in a patterned, musical way._
 @zh _以音乐模式应用素材。_
 
-@en #### Order
-@zh #### 次序
+@en ##### Order
+@zh ##### 次序
 @en - **Sequential**
 @zh - **顺序**
 @en   * Uses clips in the order they were selected.
@@ -222,38 +223,38 @@
 @zh - **乱序**
 @en   * Shuffles the order of the generation.
 @zh   * 以打乱的顺序生成。
-@en #### Repetitions per clip
-@zh #### 每段重复次数
-@en _Specifies the amount of times a source can be used before switching to the next clip._
-@zh _指定在切换到下一个剪辑之前可以使用素材的次数。_
-@en #### Total repetition rounds
-@zh #### 每轮重复总数
-@en _Specifies the amount of times to loop._
-@zh _指定循环的次数。_
+@en ##### Repetitions per clip
+@zh ##### 每段重复次数
+@en * Specifies the amount of times a source can be used before switching to the next clip.
+@zh * 指定在切换到下一个剪辑之前可以使用素材的次数。
+@en ##### Total repetition rounds
+@zh ##### 每轮重复总数
+@en * Specifies the amount of times to loop.
+@zh * 指定循环的次数。
 @en ::: info
 @en Setting to 0 loops infinitely.
 @zh 设为0表示可以无限循环。
 @en :::
-@en #### Apply visual effects by rounds
-@zh #### 按轮次应用视觉效果
-@en _Applies video effects in cycles rather than every clip._
-@zh _按周期而不是各剪辑应用视频视觉效果。_
-@en #### Mystery Box
-@zh #### 素材盲盒
-@en _Combines the [Mystery Box](#mystery-box) behavior to the generation._
-@zh _将[素材盲盒](#素材盲盒)的行为与生成相结合。_
-@en #### Accumulate overtones of chords separately
-@zh #### 对和弦的泛音列独立累加
-@en _Makes use of multiple sources when a chord is generated._
-@zh _生成和弦时使用多个素材。_
-@en #### Sustain source at same pitch
-@zh #### 相同音高时保持素材
-@en _Uses the same source for the next note with the same pitch._
-@zh _下一个音高相同的音符将使用相同的素材。_
+@en ##### Apply visual effects by rounds
+@zh ##### 按轮次应用视觉效果
+@en * Applies video effects in cycles rather than every clip.
+@zh * 按周期而不是各剪辑应用视频视觉效果。
+@en ##### Mystery Box
+@zh ##### 素材盲盒
+@en * Combines the [Mystery Box](#mystery-box) behavior to the generation.
+@zh * 将[素材盲盒](#素材盲盒)的行为与生成相结合。
+@en ##### Accumulate overtones of chords separately
+@zh ##### 对和弦的泛音列独立累加
+@en * Makes use of multiple sources when a chord is generated.
+@zh * 生成和弦时使用多个素材。
+@en ##### Sustain source at same pitch
+@zh ##### 相同音高时保持素材
+@en * Uses the same source for the next note with the same pitch.
+@zh * 下一个音高相同的音符将使用相同的素材。
 @en ##### Pitch cache capacity
 @zh ##### 音高缓存容量
-@en _Specifies the amount of times it will repeat the source._
-@zh _指定它将重用素材的数量_
+@en * Specifies the amount of times it will repeat the source.
+@zh * 指定它将重用素材的数量
 ::: important
 @en Disables repetitions per clip.
 @zh 将禁用每段重复次数。
@@ -265,8 +266,8 @@
 @en _Assigns source clips to MIDI tracks, like assigning instruments to an orchestra._
 @zh _将素材剪辑分配给MIDI音轨，就像将乐器分配给管弦乐队一样。_
 
-@en #### Selection Mode
-@zh #### 挑取模式
+@en ##### Selection Mode
+@zh ##### 挑取模式
 @en * **Mystery Box**
 @zh * **素材盲盒**
 @en   * Uses the [Mystery Box](#mystery-box) behavior
@@ -275,14 +276,14 @@
 @zh * **踩点**
 @en   * Uses the [Source Syncopator](#source-syncopator) behavior
 @zh   * 使用[踩点](#踩点)的行为
-@en #### Descending
-@zh #### 递减次序
-@en _Reverses the order of sources used on each track._
-@zh _反转各音轨上使用的素材的顺序。_
-@en #### Allow reuse
-@zh #### 允许重用
-@en _Allows the same clips to be used across different MIDI tracks multiple tracks._
-@zh _允许在不同的MIDI多轨道中使用相同的剪辑。_
+@en ##### Descending
+@zh ##### 递减次序
+@en * Reverses the order of sources used on each track.
+@zh * 反转各音轨上使用的素材的顺序。
+@en ##### Allow reuse
+@zh ##### 允许重用
+@en * Allows the same clips to be used across different MIDI tracks multiple tracks.
+@zh * 允许在不同的MIDI多轨道中使用相同的剪辑。
 ::: info
 @en *This is useful when you have fewer sources than tracks.*
 @zh *当素材少于轨道数时很有用。*
