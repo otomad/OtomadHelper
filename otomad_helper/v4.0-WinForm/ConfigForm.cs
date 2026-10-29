@@ -1542,5 +1542,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void MidiTrackListView_MouseUp(object sender, MouseEventArgs e) {
 			Console.WriteLine(DatamoshInfoLbl); // 实现单击项目就可以改变勾选状态。
 		}
+
+		private void VideoFreezeLastFrameBtn_Click(object sender, EventArgs e) {
+			new VisualTruncateOptionsForm().ShowDialog();
+		}
+
+		private void ConfigForm_HelpButtonClicked(object sender, CancelEventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl); // 直接上网。
+		}
 	}
 }

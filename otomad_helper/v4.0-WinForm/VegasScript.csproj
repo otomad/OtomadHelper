@@ -321,6 +321,12 @@
     <Compile Include="ToolStripRadioButtonMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="VisualTruncateOptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VisualTruncateOptionsForm.Designer.cs">
+      <DependentUpon>VisualTruncateOptionsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows10StyledContextMenuStripRenderer.cs" />
     <Compile Include="WindowUtils.cs" />
     <EmbeddedResource Include="AutoLayoutTracksBox3dForm.resx">
@@ -331,6 +337,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CameraShakeForm.resx">
       <DependentUpon>CameraShakeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QuickConfigPropertiesForm.resx">
+      <DependentUpon>QuickConfigPropertiesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VisualTruncateOptionsForm.resx">
+      <DependentUpon>VisualTruncateOptionsForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>

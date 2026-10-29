@@ -123,6 +123,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			set { Numeric.DecimalPlaces = value; }
 		}
 
+		[Description("指示轨道是否从右向左绘制。"), Category("Appearance"), DefaultValue(false)]
+		public bool TrackRightToLeft {
+			get { return Track.RightToLeft == RightToLeft.Yes; }
+			set { Track.RightToLeft = value ? RightToLeft.Yes : RightToLeft.No; }
+		}
+
 		/// <summary>
 		/// 右键/中键滑动条，可以重置其值。
 		/// </summary>

@@ -105,7 +105,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>拉　　伸</summary>*/ private StretchType VConfigScratch { get { return (StretchType)configForm.VideoScratchCombo.SelectedIndex; } }
 		/**<summary>循　　环</summary>*/ private bool VConfigLoop { get { return configForm.VideoLoopCheck.Checked; } }
 		/**<summary>定格首帧</summary>*/ private bool VConfigFreezeFirstFrame { get { return configForm.VideoFreezeFirstFrameCheck.Checked; } }
-		/**<summary>定格尾帧</summary>*/ private bool VConfigFreezeLastFrame { get { return configForm.VideoFreezeLastFrameCheck.Checked; } }
+		/**<summary>定格尾帧</summary>*/ private bool VConfigFreezeLastFrame { get { return false/*configForm.VideoFreezeLastFrameCheck.Checked*/; } }
 		/**<summary>削除空隙</summary>*/ private LegatoMaxGapType VConfigLegato { get { return (LegatoMaxGapType)configForm.VideoLegatoCombo.SelectedIndex; } }
 		/**<summary>映射力度</summary>*/ private bool VConfigVelocity { get { return configForm.VideoVelocityCheck.Checked; } }
 		/**<summary>乘以增益</summary>*/ private bool VConfigVelocityMultiplyGain { get { return configForm.VideoVelocityMultiplyGainCheck.Checked; } }
@@ -175,6 +175,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>调音方法</summary>*/ private AudioStretchMethod AConfigStretchMethod { get { return (AudioStretchMethod)configForm.AudioStretchMethodCombo.SelectedIndex; } }
 		/**<summary>超出音域替代方法</summary>*/ private AudioAltTuningMethod AConfigAltMethod { get { return (AudioAltTuningMethod)configForm.AudioAltMethodCombo.SelectedIndex; } }
 		/**<summary>不调鼓组</summary>*/ private bool AConfigNoTuningDrumKits { get { return configForm.AudioNoTuningDrumKitsCheck.Checked; } }
+		/**<summary>静音鼓组</summary>*/ private bool AConfigMuteDrumKits { get { return configForm.AudioMuteDrumKitsCheck.Checked; } }
+		/**<summary>整体偏移</summary>*/ private int AConfigOverallShift { get { return configForm.AudioOverallShift; } }
 		#if VER_GEQ_16
 		/**<summary>弹性属性</summary>*/ private ElastiqueStretchAttributes? AConfigElastiqueAttr { get { return AConfigMethod == AudioTuningMethod.ELASTIQUE ?
 			(ElastiqueStretchAttributes?)configForm.AudioStretchAttrCombo.SelectedIndex : null; } }
@@ -1485,6 +1487,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
 				bool isHarmonicInChords = prevNoteOnEvent != null && noteOnEvent.AbsoluteTime == prevNoteOnEvent.AbsoluteTime;
 				if (!isHarmonicInChords) currentUpperNoteNumber = noteOnEvent.NoteNumber;
+				bool isDrumKit = noteEvent.Channel == 10;
 
 				#region 素材盲盒
 				if (CombConfigLuckyDip) {
@@ -1654,6 +1657,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					double audioLength = activeSource.audioLength, videoLength = activeSource.videoLength;
 					#region 生成音频事件
 					if (AConfig) {
+						if (AConfigMuteDrumKits && isDrumKit) goto endAConfig;
 						int indexInAudioTracks;
 						AudioEvent audioEvent = trackHelper.AddEvent(activeSource.audioEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(duration), out indexInAudioTracks);
 						if (audioEvent == null) goto endAConfig;
@@ -1716,10 +1720,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							double? autoBasePitch = activeSource.GetAutoBasePitch(adjustTime ? sourceStartTime : 0);
 							if (autoBasePitch != null) basePitch = autoBasePitch.Value;
 						}
-						double pitchDelta = pitch - basePitch;
+						double pitchDelta = pitch - basePitch + AConfigOverallShift;
 						bool backToUsePlugin = false;
 					BackToUsePlugin:
-						if (method == AudioTuningMethod.NO_TUNING || AConfigNoTuningDrumKits && noteEvent.Channel == 10) { } // 不调音。
+						if (method == AudioTuningMethod.NO_TUNING || AConfigNoTuningDrumKits && isDrumKit) { } // 不调音。
 						else if (method == AudioTuningMethod.PITCH_SHIFT || backToUsePlugin) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
 							if (Plugin.pitchShift == null) { ShowError(new Exceptions.NoPluginPitchShiftException()); return false; }
 							int pitchDelta_int = (int)Math.Round(pitchDelta, MidpointRounding.AwayFromZero);
@@ -3740,7 +3744,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		/// <summary>支持 Vegas 版本号的下限（含端点）。</summary>
 		public static readonly Version LOWER_BOUND_SUPPORTED_VERSION =
-			#if VER_GEQ_16
+			#if VER_GEQ_23
+				new Version(23, 0);
+			#elif VER_GEQ_16
 				new Version(16, 0);
 			#elif VER_GEQ_14
 				new Version(14, 0);
@@ -3749,8 +3755,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endif
 		/// <summary>支持 Vegas 版本号的上限极限值（不含端点）。</summary>
 		public static readonly Version UPPER_LIMIT_EXCLUSIVE_SUPPORTED_VERSION =
-			#if VER_GEQ_16
+			#if VER_GEQ_23
 				null;
+			#elif VER_GEQ_16
+				new Version(23, 0);
 			#elif VER_GEQ_14
 				new Version(16, 0);
 			#else
@@ -11056,6 +11064,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	#endregion
 
 	#region 原生复制/移动轨道方法（适用于 Vegas Pro 22 及以下版本）
+	// See: https://github.com/wcz123694578/Cutie
 	#if !VER_GEQ_23
 	namespace NativeTrackLocators {
 		/// <summary>解析旧版复制命令的完整处理入口，不调用底层流克隆函数。</summary>
@@ -11926,10 +11935,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		/// <summary>
-		/// 双击滑动条，也可以重置其值。
+		/// 双击滑动条，也可以重置其值。（现已弃用双击重置行为。）
 		/// </summary>
 		private void Track_MouseDown(object sender, MouseEventArgs e) {
-			if (e.Button == MouseButtons.Left && e.Clicks == 1) {
+			// pass
+			/*if (e.Button == MouseButtons.Left && e.Clicks == 1) {
 				if (!isWaitingDoubleClick) {
 					isWaitingDoubleClick = true;
 					doubleClickTimer.Start();
@@ -11938,7 +11948,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					isWaitingDoubleClick = false;
 					ResetDefaultValue();
 				}
-			}
+			}*/
 		}
 
 		private const int DOUBLE_CLICK_DURATION = 500;
@@ -22742,8 +22752,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			LoopRegionOnlyCheck.Text = str.export_loop_region_only;
 			Text = str.export_midi_file;
 
-			if (Lang.str != Lang.SChinese && Lang.str != Lang.TChinese && Lang.str != Lang.Japanese &&
-				Lang.str != Lang.Vietnamese) {
+			if (Lang.str != Lang.SChinese && Lang.str != Lang.TChinese && Lang.str != Lang.Japanese && Lang.str != Lang.Vietnamese) {
 				AddToEachNewTrackBtn.Font = AddToSameNewTrackBtn.Font = AddToCurrentTrackBtn.Font =
 				AddNewTrackBtn.Font = InsertNewTrackBtn.Font = new Font(str.ui_font, 7F);
 			}
@@ -25637,6 +25646,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 		}
 	}
+
+	public class AudioOverallShiftComboBoxItem {
+		public int Value { get; set; }
+
+		public AudioOverallShiftComboBoxItem(int value) {
+			Value = value;
+		}
+
+		public override string ToString() {
+			string value = (Value > 0 ? "+" : Value < 0 ? "−" : "±") + Math.Abs(Value);
+			return value + " " + Lang.str.semitone_attr;
+		}
+	}
 	#endregion
 
 	#region 设计器部分
@@ -25949,6 +25971,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioFadeSetAsTimecodeRadio = new System.Windows.Forms.RadioButton();
 			this.AudioTuneGroup = new System.Windows.Forms.GroupBox();
 			this.AudioTuneTablePanel = new System.Windows.Forms.TableLayoutPanel();
+			this.flowLayoutPanel19 = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioOverallShiftCombo = new System.Windows.Forms.ComboBox();
+			this.AudioNoTuningDrumKitsCheck = new System.Windows.Forms.CheckBox();
+			this.AudioMuteDrumKitsCheck = new System.Windows.Forms.CheckBox();
+			this.AudioOverallShiftLbl = new System.Windows.Forms.Label();
 			this.AudioStretchMethodCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.AudioStretchMethodLbl = new System.Windows.Forms.Label();
 			this.AudioAltMethodLbl = new System.Windows.Forms.Label();
@@ -25964,7 +25991,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioMainOctaveCombo = new System.Windows.Forms.ComboBox();
 			this.AudioBasePitchIntervalLbl = new System.Windows.Forms.Label();
 			this.AudioAutoBasePitchCheck = new System.Windows.Forms.CheckBox();
-			this.AudioNoTuningDrumKitsCheck = new System.Windows.Forms.CheckBox();
 			this.AudioPreviewLbl = new System.Windows.Forms.Label();
 			this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
 			this.PreviewAudioBtn = new System.Windows.Forms.Button();
@@ -26098,11 +26124,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoScratchCombo = new System.Windows.Forms.ComboBox();
 			this.VideoLegatoLbl = new System.Windows.Forms.Label();
 			this.VideoLegatoCombo = new System.Windows.Forms.ComboBox();
+			this.VideoFreezeLastFrameLbl = new System.Windows.Forms.Label();
+			this.VideoFreezeLastFrameBtn = new System.Windows.Forms.Button();
 			this.VideoTogglePanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.VideoConfigCheck = new System.Windows.Forms.CheckBox();
 			this.VideoLoopCheck = new System.Windows.Forms.CheckBox();
 			this.VideoFreezeFirstFrameCheck = new System.Windows.Forms.CheckBox();
-			this.VideoFreezeLastFrameCheck = new System.Windows.Forms.CheckBox();
 			this.VideoMultitrackForChordsCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.CreateEventGroupInVideoCheck = new System.Windows.Forms.CheckBox();
 			this.VideoStackCheck = new System.Windows.Forms.CheckBox();
@@ -26362,6 +26389,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel20.SuspendLayout();
 			this.AudioTuneGroup.SuspendLayout();
 			this.AudioTuneTablePanel.SuspendLayout();
+			this.flowLayoutPanel19.SuspendLayout();
 			this.flowLayoutPanel10.SuspendLayout();
 			this.flowLayoutPanel6.SuspendLayout();
 			this.tableLayoutPanel17.SuspendLayout();
@@ -29699,7 +29727,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioPluckGroup.AutoSize = true;
 			this.AudioPluckGroup.Controls.Add(this.AudioPluckTable);
 			this.AudioPluckGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AudioPluckGroup.Location = new System.Drawing.Point(8, 1110);
+			this.AudioPluckGroup.Location = new System.Drawing.Point(8, 1164);
 			this.AudioPluckGroup.Name = "AudioPluckGroup";
 			this.AudioPluckGroup.Padding = new System.Windows.Forms.Padding(8);
 			this.AudioPluckGroup.Size = new System.Drawing.Size(1076, 300);
@@ -29905,7 +29933,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioParamsGroup.AutoSize = true;
 			this.AudioParamsGroup.Controls.Add(this.AudioParamsTable);
 			this.AudioParamsGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AudioParamsGroup.Location = new System.Drawing.Point(8, 888);
+			this.AudioParamsGroup.Location = new System.Drawing.Point(8, 942);
 			this.AudioParamsGroup.Name = "AudioParamsGroup";
 			this.AudioParamsGroup.Padding = new System.Windows.Forms.Padding(8);
 			this.AudioParamsGroup.Size = new System.Drawing.Size(1076, 222);
@@ -30138,7 +30166,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneGroup.Location = new System.Drawing.Point(8, 404);
 			this.AudioTuneGroup.Name = "AudioTuneGroup";
 			this.AudioTuneGroup.Padding = new System.Windows.Forms.Padding(8);
-			this.AudioTuneGroup.Size = new System.Drawing.Size(1076, 484);
+			this.AudioTuneGroup.Size = new System.Drawing.Size(1076, 538);
 			this.AudioTuneGroup.TabIndex = 4;
 			this.AudioTuneGroup.TabStop = false;
 			this.AudioTuneGroup.Text = "调音";
@@ -30149,6 +30177,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneTablePanel.ColumnCount = 2;
 			this.AudioTuneTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.AudioTuneTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.AudioTuneTablePanel.Controls.Add(this.flowLayoutPanel19, 1, 8);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioOverallShiftLbl, 0, 8);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioStretchMethodCombo, 1, 1);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioStretchMethodLbl, 0, 1);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioAltMethodCombo, 1, 3);
@@ -30169,7 +30199,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneTablePanel.Location = new System.Drawing.Point(8, 40);
 			this.AudioTuneTablePanel.Margin = new System.Windows.Forms.Padding(6);
 			this.AudioTuneTablePanel.Name = "AudioTuneTablePanel";
-			this.AudioTuneTablePanel.RowCount = 8;
+			this.AudioTuneTablePanel.RowCount = 9;
 			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -30178,9 +30208,91 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.AudioTuneTablePanel.Size = new System.Drawing.Size(1060, 436);
+			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.AudioTuneTablePanel.Size = new System.Drawing.Size(1060, 490);
 			this.AudioTuneTablePanel.TabIndex = 2;
+			//
+			// flowLayoutPanel19
+			//
+			this.flowLayoutPanel19.AutoSize = true;
+			this.flowLayoutPanel19.Controls.Add(this.AudioOverallShiftCombo);
+			this.flowLayoutPanel19.Controls.Add(this.AudioNoTuningDrumKitsCheck);
+			this.flowLayoutPanel19.Controls.Add(this.AudioMuteDrumKitsCheck);
+			this.flowLayoutPanel19.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel19.Location = new System.Drawing.Point(116, 436);
+			this.flowLayoutPanel19.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel19.Name = "flowLayoutPanel19";
+			this.flowLayoutPanel19.Size = new System.Drawing.Size(944, 54);
+			this.flowLayoutPanel19.TabIndex = 18;
+			//
+			// AudioOverallShiftCombo
+			//
+			this.AudioOverallShiftCombo.Dock = System.Windows.Forms.DockStyle.Left;
+			this.AudioOverallShiftCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.AudioOverallShiftCombo.FormattingEnabled = true;
+			this.AudioOverallShiftCombo.Items.AddRange(new object[] {
+			"-96 st",
+			"-84 st",
+			"-72 st",
+			"-60 st",
+			"-48 st",
+			"-36 st",
+			"-24 st",
+			"-12 st",
+			"±0 st",
+			"+12 st",
+			"+24 st",
+			"+36 st",
+			"+48 st",
+			"+60 st",
+			"+72 st",
+			"+84 st",
+			"+96 st"});
+			this.AudioOverallShiftCombo.Location = new System.Drawing.Point(3, 3);
+			this.AudioOverallShiftCombo.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
+			this.AudioOverallShiftCombo.Name = "AudioOverallShiftCombo";
+			this.AudioOverallShiftCombo.Size = new System.Drawing.Size(200, 40);
+			this.AudioOverallShiftCombo.TabIndex = 4;
+			//
+			// AudioNoTuningDrumKitsCheck
+			//
+			this.AudioNoTuningDrumKitsCheck.AutoSize = true;
+			this.AudioNoTuningDrumKitsCheck.Checked = true;
+			this.AudioNoTuningDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.AudioNoTuningDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(218, 3);
+			this.AudioNoTuningDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioNoTuningDrumKitsCheck.Name = "AudioNoTuningDrumKitsCheck";
+			this.AudioNoTuningDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
+			this.AudioNoTuningDrumKitsCheck.TabIndex = 2;
+			this.AudioNoTuningDrumKitsCheck.Text = "鼓组通道不调音";
+			this.AudioNoTuningDrumKitsCheck.UseVisualStyleBackColor = true;
+			//
+			// AudioMuteDrumKitsCheck
+			//
+			this.AudioMuteDrumKitsCheck.AutoSize = true;
+			this.AudioMuteDrumKitsCheck.Checked = true;
+			this.AudioMuteDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.AudioMuteDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioMuteDrumKitsCheck.Location = new System.Drawing.Point(438, 3);
+			this.AudioMuteDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioMuteDrumKitsCheck.Name = "AudioMuteDrumKitsCheck";
+			this.AudioMuteDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
+			this.AudioMuteDrumKitsCheck.TabIndex = 3;
+			this.AudioMuteDrumKitsCheck.Text = "鼓组通道不发声";
+			this.AudioMuteDrumKitsCheck.UseVisualStyleBackColor = true;
+			//
+			// AudioOverallShiftLbl
+			//
+			this.AudioOverallShiftLbl.AutoSize = true;
+			this.AudioOverallShiftLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioOverallShiftLbl.Location = new System.Drawing.Point(3, 436);
+			this.AudioOverallShiftLbl.MinimumSize = new System.Drawing.Size(0, 54);
+			this.AudioOverallShiftLbl.Name = "AudioOverallShiftLbl";
+			this.AudioOverallShiftLbl.Size = new System.Drawing.Size(110, 54);
+			this.AudioOverallShiftLbl.TabIndex = 17;
+			this.AudioOverallShiftLbl.Text = "整体偏移";
+			this.AudioOverallShiftLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
 			// AudioStretchMethodCombo
 			//
@@ -30314,7 +30426,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel6.Controls.Add(this.AudioMainOctaveCombo);
 			this.flowLayoutPanel6.Controls.Add(this.AudioBasePitchIntervalLbl);
 			this.flowLayoutPanel6.Controls.Add(this.AudioAutoBasePitchCheck);
-			this.flowLayoutPanel6.Controls.Add(this.AudioNoTuningDrumKitsCheck);
 			this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel6.Location = new System.Drawing.Point(116, 270);
 			this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
@@ -30324,6 +30435,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			// AudioMainKeyCombo
 			//
+			this.AudioMainKeyCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioMainKeyCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.AudioMainKeyCombo.FormattingEnabled = true;
 			this.AudioMainKeyCombo.Items.AddRange(new object[] {
@@ -30347,6 +30459,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			// AudioMainOctaveCombo
 			//
+			this.AudioMainOctaveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioMainOctaveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.AudioMainOctaveCombo.FormattingEnabled = true;
 			this.AudioMainOctaveCombo.Items.AddRange(new object[] {
@@ -30392,20 +30505,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioAutoBasePitchCheck.TabIndex = 6;
 			this.AudioAutoBasePitchCheck.Text = "自动校音 (实验性)";
 			this.AudioAutoBasePitchCheck.UseVisualStyleBackColor = true;
-			//
-			// AudioNoTuningDrumKitsCheck
-			//
-			this.AudioNoTuningDrumKitsCheck.AutoSize = true;
-			this.AudioNoTuningDrumKitsCheck.Checked = true;
-			this.AudioNoTuningDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.AudioNoTuningDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(496, 3);
-			this.AudioNoTuningDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
-			this.AudioNoTuningDrumKitsCheck.Name = "AudioNoTuningDrumKitsCheck";
-			this.AudioNoTuningDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
-			this.AudioNoTuningDrumKitsCheck.TabIndex = 1;
-			this.AudioNoTuningDrumKitsCheck.Text = "不调音鼓组通道";
-			this.AudioNoTuningDrumKitsCheck.UseVisualStyleBackColor = true;
 			//
 			// AudioPreviewLbl
 			//
@@ -30490,6 +30589,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			// PreviewBeepWaveFormCombo
 			//
+			this.PreviewBeepWaveFormCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PreviewBeepWaveFormCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.PreviewBeepWaveFormCombo.FormattingEnabled = true;
 			this.PreviewBeepWaveFormCombo.Items.AddRange(new object[] {
@@ -32416,6 +32516,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			// VideoEffectInitialValueCombo
 			//
+			this.VideoEffectInitialValueCombo.Dock = System.Windows.Forms.DockStyle.Left;
 			this.VideoEffectInitialValueCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.VideoEffectInitialValueCombo.FormattingEnabled = true;
 			this.VideoEffectInitialValueCombo.Location = new System.Drawing.Point(119, 57);
@@ -32705,6 +32806,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoComboPanel.Controls.Add(this.VideoScratchCombo);
 			this.VideoComboPanel.Controls.Add(this.VideoLegatoLbl);
 			this.VideoComboPanel.Controls.Add(this.VideoLegatoCombo);
+			this.VideoComboPanel.Controls.Add(this.VideoFreezeLastFrameLbl);
+			this.VideoComboPanel.Controls.Add(this.VideoFreezeLastFrameBtn);
 			this.VideoComboPanel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.VideoComboPanel.Location = new System.Drawing.Point(8, 98);
 			this.VideoComboPanel.Name = "VideoComboPanel";
@@ -32766,13 +32869,37 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoLegatoCombo.Size = new System.Drawing.Size(222, 40);
 			this.VideoLegatoCombo.TabIndex = 1;
 			//
+			// VideoFreezeLastFrameLbl
+			//
+			this.VideoFreezeLastFrameLbl.AutoSize = true;
+			this.VideoFreezeLastFrameLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFreezeLastFrameLbl.Location = new System.Drawing.Point(697, 4);
+			this.VideoFreezeLastFrameLbl.MinimumSize = new System.Drawing.Size(0, 47);
+			this.VideoFreezeLastFrameLbl.Name = "VideoFreezeLastFrameLbl";
+			this.VideoFreezeLastFrameLbl.Size = new System.Drawing.Size(110, 47);
+			this.VideoFreezeLastFrameLbl.TabIndex = 5;
+			this.VideoFreezeLastFrameLbl.Text = "截断画面";
+			this.VideoFreezeLastFrameLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// VideoFreezeLastFrameBtn
+			//
+			this.VideoFreezeLastFrameBtn.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.VideoFreezeLastFrameBtn.AutoSize = true;
+			this.VideoFreezeLastFrameBtn.Location = new System.Drawing.Point(810, 4);
+			this.VideoFreezeLastFrameBtn.Margin = new System.Windows.Forms.Padding(0);
+			this.VideoFreezeLastFrameBtn.Name = "VideoFreezeLastFrameBtn";
+			this.VideoFreezeLastFrameBtn.Size = new System.Drawing.Size(150, 47);
+			this.VideoFreezeLastFrameBtn.TabIndex = 13;
+			this.VideoFreezeLastFrameBtn.Text = "选项...";
+			this.VideoFreezeLastFrameBtn.UseVisualStyleBackColor = true;
+			this.VideoFreezeLastFrameBtn.Click += new System.EventHandler(this.VideoFreezeLastFrameBtn_Click);
+			//
 			// VideoTogglePanel
 			//
 			this.VideoTogglePanel.AutoSize = true;
 			this.VideoTogglePanel.Controls.Add(this.VideoConfigCheck);
 			this.VideoTogglePanel.Controls.Add(this.VideoLoopCheck);
 			this.VideoTogglePanel.Controls.Add(this.VideoFreezeFirstFrameCheck);
-			this.VideoTogglePanel.Controls.Add(this.VideoFreezeLastFrameCheck);
 			this.VideoTogglePanel.Controls.Add(this.VideoMultitrackForChordsCheck);
 			this.VideoTogglePanel.Controls.Add(this.CreateEventGroupInVideoCheck);
 			this.VideoTogglePanel.Controls.Add(this.VideoStackCheck);
@@ -32819,20 +32946,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoFreezeFirstFrameCheck.Text = "静态画面";
 			this.VideoFreezeFirstFrameCheck.UseVisualStyleBackColor = true;
 			//
-			// VideoFreezeLastFrameCheck
-			//
-			this.VideoFreezeLastFrameCheck.AutoSize = true;
-			this.VideoFreezeLastFrameCheck.Location = new System.Drawing.Point(447, 6);
-			this.VideoFreezeLastFrameCheck.Name = "VideoFreezeLastFrameCheck";
-			this.VideoFreezeLastFrameCheck.Size = new System.Drawing.Size(142, 36);
-			this.VideoFreezeLastFrameCheck.TabIndex = 4;
-			this.VideoFreezeLastFrameCheck.Text = "截断画面";
-			this.VideoFreezeLastFrameCheck.UseVisualStyleBackColor = true;
-			//
 			// VideoMultitrackForChordsCheck
 			//
 			this.VideoMultitrackForChordsCheck.AutoSize = true;
-			this.VideoMultitrackForChordsCheck.Location = new System.Drawing.Point(595, 6);
+			this.VideoMultitrackForChordsCheck.Location = new System.Drawing.Point(447, 6);
 			this.VideoMultitrackForChordsCheck.Name = "VideoMultitrackForChordsCheck";
 			this.VideoMultitrackForChordsCheck.Size = new System.Drawing.Size(142, 36);
 			this.VideoMultitrackForChordsCheck.TabIndex = 9;
@@ -32844,7 +32961,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.CreateEventGroupInVideoCheck.AutoSize = true;
 			this.CreateEventGroupInVideoCheck.Checked = true;
 			this.CreateEventGroupInVideoCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.CreateEventGroupInVideoCheck.Location = new System.Drawing.Point(743, 6);
+			this.CreateEventGroupInVideoCheck.Location = new System.Drawing.Point(595, 6);
 			this.CreateEventGroupInVideoCheck.Name = "CreateEventGroupInVideoCheck";
 			this.CreateEventGroupInVideoCheck.Size = new System.Drawing.Size(142, 36);
 			this.CreateEventGroupInVideoCheck.TabIndex = 10;
@@ -32855,7 +32972,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// VideoStackCheck
 			//
 			this.VideoStackCheck.AutoSize = true;
-			this.VideoStackCheck.Location = new System.Drawing.Point(891, 6);
+			this.VideoStackCheck.Location = new System.Drawing.Point(743, 6);
 			this.VideoStackCheck.Name = "VideoStackCheck";
 			this.VideoStackCheck.Size = new System.Drawing.Size(94, 36);
 			this.VideoStackCheck.TabIndex = 13;
@@ -32865,7 +32982,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// VideoTimeUnremappingCheck
 			//
 			this.VideoTimeUnremappingCheck.AutoSize = true;
-			this.VideoTimeUnremappingCheck.Location = new System.Drawing.Point(3, 48);
+			this.VideoTimeUnremappingCheck.Location = new System.Drawing.Point(843, 6);
 			this.VideoTimeUnremappingCheck.Name = "VideoTimeUnremappingCheck";
 			this.VideoTimeUnremappingCheck.Size = new System.Drawing.Size(166, 36);
 			this.VideoTimeUnremappingCheck.TabIndex = 14;
@@ -32878,7 +32995,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoGlissandoFlow.Controls.Add(this.VideoGlissandoCheck);
 			this.VideoGlissandoFlow.Controls.Add(this.VideoGlissandoBox);
 			this.VideoGlissandoFlow.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoGlissandoFlow.Location = new System.Drawing.Point(172, 45);
+			this.VideoGlissandoFlow.Location = new System.Drawing.Point(0, 45);
 			this.VideoGlissandoFlow.Margin = new System.Windows.Forms.Padding(0);
 			this.VideoGlissandoFlow.Name = "VideoGlissandoFlow";
 			this.VideoGlissandoFlow.Size = new System.Drawing.Size(258, 42);
@@ -33294,7 +33411,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			-2147483648});
 			this.StaffNotesShiftBox.Name = "StaffNotesShiftBox";
 			this.StaffNotesShiftBox.Size = new System.Drawing.Size(425, 39);
-			this.StaffNotesShiftBox.Suffix = "key";
+			this.StaffNotesShiftBox.Suffix = "st";
 			this.StaffNotesShiftBox.TabIndex = 11;
 			//
 			// flowLayoutPanel4
@@ -35611,6 +35728,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Controls.Add(this.menu);
 			this.DoubleBuffered = true;
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.HelpButton = true;
 			this.Location = new System.Drawing.Point(40, 40);
 			this.MainMenuStrip = this.menu;
 			this.Margin = new System.Windows.Forms.Padding(6);
@@ -35621,6 +35739,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Otomad Helper for Vegas - 配置";
+			this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.ConfigForm_HelpButtonClicked);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ConfigForm_FormClosing);
 			this.Load += new System.EventHandler(this.ConfigForm_Load);
 			this.ResizeEnd += new System.EventHandler(this.ConfigForm_Resize);
@@ -35752,6 +35871,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneGroup.PerformLayout();
 			this.AudioTuneTablePanel.ResumeLayout(false);
 			this.AudioTuneTablePanel.PerformLayout();
+			this.flowLayoutPanel19.ResumeLayout(false);
+			this.flowLayoutPanel19.PerformLayout();
 			this.flowLayoutPanel10.ResumeLayout(false);
 			this.flowLayoutPanel10.PerformLayout();
 			this.flowLayoutPanel6.ResumeLayout(false);
@@ -35979,7 +36100,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.CheckBox VideoConfigCheck;
 		public System.Windows.Forms.CheckBox VideoLoopCheck;
 		public System.Windows.Forms.CheckBox VideoFreezeFirstFrameCheck;
-		public System.Windows.Forms.CheckBox VideoFreezeLastFrameCheck;
 		public System.Windows.Forms.TabPage SheetTab;
 		public System.Windows.Forms.TabPage HelperTab;
 		public ToolStripRadioButtonMenuItem chineseToolStripMenuItem;
@@ -36493,7 +36613,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public RememberedCheckBox LinearMapReuseCheck;
 		public System.Windows.Forms.Button PlaySelectedTrackBtn;
 		public System.Windows.Forms.CheckBox AudioAutoBasePitchCheck;
-		public System.Windows.Forms.CheckBox AudioNoTuningDrumKitsCheck;
 		public System.Windows.Forms.GroupBox AudioPluckGroup;
 		public System.Windows.Forms.TableLayoutPanel AudioPluckTable;
 		public System.Windows.Forms.Label AudioPluckSpliceLbl;
@@ -36524,6 +36643,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public ToolStripRadioButtonMenuItem darkMicaAltMaterialToolStripMenuItem;
 		public ToolStripRadioButtonMenuItem darkSolidMaterialToolStripMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem hideVersionOnMenuToolStripMenuItem;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel19;
+		public System.Windows.Forms.CheckBox AudioNoTuningDrumKitsCheck;
+		public System.Windows.Forms.Label AudioOverallShiftLbl;
+		public System.Windows.Forms.ComboBox AudioOverallShiftCombo;
+		public System.Windows.Forms.CheckBox AudioMuteDrumKitsCheck;
+		public System.Windows.Forms.Label VideoFreezeLastFrameLbl;
+		public System.Windows.Forms.Button VideoFreezeLastFrameBtn;
 	}
 	#endregion
 
@@ -36562,6 +36688,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 修复数字旋钮在高分屏边距异常、列表视图列宽不足
 			foreach (NumericUpDown control in this.GetChildrenOfType<NumericUpDown>())
 				control.Margin = new Padding(3);
+			foreach (Control control in this.GetChildrenOfType<Control>())
+				if (control is NumericUpDown || control is ComboBox || control is TextBox)
+					control.Anchor = control == VideoEffectInitialValueCombo ? AnchorStyles.Left : AnchorStyles.Left | AnchorStyles.Right;
 			float dpi = Dpi;
 			foreach (ListView listView in new ListView[] { MidiTrackListView, SonarList }) {
 				listView.BeginUpdate();
@@ -36633,6 +36762,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				VideoStackCheck.CheckedChanged += e;
 				MatchCutSustainCheck.CheckedChanged += e;
 				LinearMapSelectionModeLuckyDipRadio.CheckedChanged += e;
+				AudioMuteDrumKitsCheck.CheckedChanged += e;
 			}
 			AudioMainKeyCombo.MouseWheel += AudioMainKeyCombo_MouseWheel;
 			SourceConfigGroup.AllowDrop = MidiConfigGroup.AllowDrop = true;
@@ -36928,6 +37058,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioAutoBasePitchCheck.Checked = configIni.Read("AutoBasePitch", false);
 			AudioStretchMethodCombo.SetIndex(configIni.Read("StretchMethod", 2), 2);
 			AudioNoTuningDrumKitsCheck.Checked = configIni.Read("NoTuningDrumKits", true);
+			AudioMuteDrumKitsCheck.Checked = configIni.Read("MuteDrumKits", false);
+			AudioOverallShift = configIni.Read("OverallShift", 0);
 			AudioPluckSpliceBox.SetValue(configIni.Read("PluckSplice", 40), 40);
 			AudioPluckDuckBox.SetValue(configIni.Read("PluckDuck", 100), 100);
 			AudioPluckOffsetBox.SetValue(configIni.Read("PluckOffset", 100), 100);
@@ -36941,7 +37073,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			VideoScratchCombo.SetIndex(configIni.Read("Stretch", 0), 0);
 			VideoLoopCheck.Checked = configIni.Read("Loop", true);
 			VideoFreezeFirstFrameCheck.Checked = configIni.Read("FreezeFirstFrame", false);
-			VideoFreezeLastFrameCheck.Checked = configIni.Read("FreezeLastFrame", false);
+			//VideoFreezeLastFrameCheck.Checked = configIni.Read("FreezeLastFrame", false);
 			VideoLegatoCombo.SetIndex(configIni.Read("Legato", 1), 1);
 			VideoMultitrackForChordsCheck.UserChecked = configIni.Read("MultitrackForChords", false);
 			VideoGlissandoCheck.UserChecked = configIni.Read("VideoGlissando", true);
@@ -37203,6 +37335,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("AutoBasePitch", AudioAutoBasePitchCheck.Checked);
 			configIni.Write("StretchMethod", AudioStretchMethodCombo.UserSelectedIndex);
 			configIni.Write("NoTuningDrumKits", AudioNoTuningDrumKitsCheck.Checked);
+			configIni.Write("MuteDrumKits", AudioMuteDrumKitsCheck.Checked);
+			configIni.Write("OverallShift", AudioOverallShift);
 			configIni.Write("PluckSplice", AudioPluckSpliceBox.Value);
 			configIni.Write("PluckDuck", AudioPluckDuckBox.Value);
 			configIni.Write("PluckOffset", AudioPluckOffsetBox.Value);
@@ -37216,7 +37350,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("Stretch", VideoScratchCombo.SelectedIndex);
 			configIni.Write("Loop", VideoLoopCheck.Checked);
 			configIni.Write("FreezeFirstFrame", VideoFreezeFirstFrameCheck.Checked);
-			configIni.Write("FreezeLastFrame", VideoFreezeLastFrameCheck.Checked);
+			//configIni.Write("FreezeLastFrame", VideoFreezeLastFrameCheck.Checked);
 			configIni.Write("Legato", VideoLegatoCombo.SelectedIndex);
 			configIni.Write("MultitrackForChords", VideoMultitrackForChordsCheck.UserChecked);
 			configIni.Write("VideoGlissando", VideoGlissandoCheck.UserChecked);
@@ -38077,7 +38211,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioLoopCheck.Text = str.audio_loop;
 			AudioNormalizeCheck.Text = str.audio_normalize;
 			AudioFreezeLastFrameCheck.Text = str.audio_freeze_last_frame;
-			VideoFreezeLastFrameCheck.Text = str.video_freeze_last_frame;
+			VideoFreezeLastFrameLbl.Text = str.video_freeze_last_frame;
+			VideoFreezeLastFrameBtn.Text = str.options + str.dialog_sign;
 			AudioLegatoLbl.Text = VideoLegatoLbl.Text = str.legato;
 			CreateEventGroupInAudioCheck.Text = CreateEventGroupInVideoCheck.Text = str.create_event_group;
 			AudioAutoPanCheck.Text = str.auto_pan;
@@ -38393,6 +38528,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			darkMicaMaterialToolStripMenuItem.Text = str.theme_dark + " - " + str.theme_mica;
 			darkMicaAltMaterialToolStripMenuItem.Text = str.theme_dark + " - " + str.theme_mica_alt;
 			darkSolidMaterialToolStripMenuItem.Text = str.theme_dark + " - " + str.theme_solid;
+			AudioOverallShiftLbl.Text = str.overall_shift;
+			AudioMuteDrumKitsCheck.Text = str.mute_drum_kits;
+			AudioOverallShiftCombo.Items.Clear();
+			for (int value = -96; value <= 96; value += 12)
+				AudioOverallShiftCombo.Items.Add(new AudioOverallShiftComboBoxItem(value));
 			Text = str.otomad_helper_config;
 		}
 
@@ -38554,7 +38694,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				AudioScratchCombo.LockSelectedIndex = 0;
 			if (method == AudioTuningMethod.PITCH_SHIFT) AudioAltMethodCombo.LockSelectedIndex = 0;
 			else if (!isPitchChangeMethod) AudioAltMethodCombo.LockSelectedIndex = -1;
-			AudioNoTuningDrumKitsCheck.Enabled = method != AudioTuningMethod.NO_TUNING;
+			AudioOverallShiftCombo.Enabled = method != AudioTuningMethod.NO_TUNING;
+			AudioNoTuningDrumKitsCheck.Enabled = method != AudioTuningMethod.NO_TUNING && !AudioMuteDrumKitsCheck.Checked;
 			AudioPluckTable.Enabled = method != AudioTuningMethod.OSCILLATOR;
 			#if VER_GEQ_16
 			if (method == AudioTuningMethod.ELASTIQUE) {
@@ -38749,9 +38890,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				RELEASE_NOTES_V4_9_25_0 = "http://www.bilibili.com/read/cv13335178",
 				RELEASE_NOTES_V4_10_17_0 = "https://www.bilibili.com/read/cv13614419",
 				DOCUMENTATION_ENGLISH = "https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng",
-				READTHEDOCS_ENGLISH = "https://otomadhelper.readthedocs.io/v4/introduction.html",
-				READTHEDOCS_SCHINESE = "https://otomadhelper.readthedocs.io/zh-CN/v4/introduction.html",
-				READTHEDOCS_VIETNAMESE = "https://otomadhelper.readthedocs.io/vi/v4/introduction.html",
+				READTHEDOCS_ENGLISH = "https://otomadhelper.readthedocs.io/",
+				READTHEDOCS_SCHINESE = "https://otomadhelper.readthedocs.io/zh-CN/",
+				READTHEDOCS_VIETNAMESE = "https://otomadhelper.readthedocs.io/vi/",
 				READTHEDOCS_HOMEPAGE = "https://otomadhelper.readthedocs.io/",
 				TUTORIAL_VIDEO_ENGLISH = "https://youtu.be/8vSpzgL_86A", // Bug 之一：链接中不能包含如问号或等号等特殊符号。暂时打不开，以 YouTube 短链替换之。
 				TUTORIAL_VIDEO_V4_X_CHINESE = "https://www.bilibili.com/video/av613241077",
@@ -40708,6 +40849,28 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			ToolStripRadioButtonMenuItem item = titleBarMaterialToolStripMenuItems.FirstOrDefault(i => i.Tag as string == tag) ?? lightAcrylicMaterialToolStripMenuItem;
 			item.Checked = true;
 		}
+
+		private void VideoFreezeLastFrameBtn_Click(object sender, EventArgs e) {
+			//new VisualTruncateOptionsForm().ShowDialog();
+		}
+
+		private void ConfigForm_HelpButtonClicked(object sender, CancelEventArgs e) {
+			string link = Lang.str == Lang.SChinese || Lang.str == Lang.TChinese ? Links.READTHEDOCS_SCHINESE : Links.READTHEDOCS_ENGLISH;
+			OpenLink(link);
+		}
+
+		public int AudioOverallShift {
+			get {
+				return AudioOverallShiftCombo.SelectedItem is AudioOverallShiftComboBoxItem ? ((AudioOverallShiftComboBoxItem)AudioOverallShiftCombo.SelectedItem).Value : 0;
+			}
+			set {
+				IEnumerable<AudioOverallShiftComboBoxItem> audioOverallShiftComboBoxItems = AudioOverallShiftCombo.Items.OfType<AudioOverallShiftComboBoxItem>();
+				AudioOverallShiftComboBoxItem audioOverallShiftComboBoxItem =
+					audioOverallShiftComboBoxItems.FirstOrDefault(item => item.Value == value) ??
+					audioOverallShiftComboBoxItems.FirstOrDefault(item => item.Value == 0);
+				AudioOverallShiftCombo.SelectedItem = audioOverallShiftComboBoxItem;
+			}
+		}
 	}
 
 	#region 翻译
@@ -41673,7 +41836,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			play_selected_track = "播放所选音轨",
 			stretch_method = "拉伸方法",
 			no_tuning_no_stretching = "不调音*且不拉伸",
-			no_tuning_drum_kits = "不调音鼓组通道",
+			no_tuning_drum_kits = "鼓组通道不调音",
+			mute_drum_kits = "鼓组通道不发声",
 			chorus_crisp = "弹拨 (脆鸣)",
 			splice_position = "分割位置",
 			volume_duck = "音量闪避",
@@ -41701,6 +41865,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			theme_mica_alt = "云母平替",
 			theme_solid = "纯色",
 			reverse_the_order = "反转顺序",
+			options = "选项",
+			overall_shift = "整体偏移",
+			semitone_attr = "半音",
 			__eol__ = null;
 
 		static Lang() {
