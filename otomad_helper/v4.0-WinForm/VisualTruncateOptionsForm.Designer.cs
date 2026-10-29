@@ -42,7 +42,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.FadeCheck = new System.Windows.Forms.CheckBox();
 			this.MonochromeTrack = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
 			this.MonochromeCheck = new System.Windows.Forms.CheckBox();
-			this.comboBox1 = new System.Windows.Forms.ComboBox();
+			this.NegativeCombo = new System.Windows.Forms.ComboBox();
 			this.LoopRegionTable = new System.Windows.Forms.TableLayoutPanel();
 			this.LoopRegionTrack = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
 			this.LoopRegionLbl = new System.Windows.Forms.Label();
@@ -125,6 +125,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LoopWithSplitRadio.TabIndex = 7;
 			this.LoopWithSplitRadio.Text = "循环且分割";
 			this.LoopWithSplitRadio.UseVisualStyleBackColor = true;
+			this.LoopWithSplitRadio.CheckedChanged += new System.EventHandler(this.Option_CheckedChanged);
 			// 
 			// PingPongWithSplitRadio
 			// 
@@ -137,6 +138,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.PingPongWithSplitRadio.TabIndex = 6;
 			this.PingPongWithSplitRadio.Text = "来回且分割";
 			this.PingPongWithSplitRadio.UseVisualStyleBackColor = true;
+			this.PingPongWithSplitRadio.CheckedChanged += new System.EventHandler(this.Option_CheckedChanged);
 			// 
 			// PingPongWithoutSplitRadio
 			// 
@@ -149,6 +151,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.PingPongWithoutSplitRadio.TabIndex = 5;
 			this.PingPongWithoutSplitRadio.Text = "来回不分割";
 			this.PingPongWithoutSplitRadio.UseVisualStyleBackColor = true;
+			this.PingPongWithoutSplitRadio.CheckedChanged += new System.EventHandler(this.Option_CheckedChanged);
 			// 
 			// SplitThenResumeRadio
 			// 
@@ -161,6 +164,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SplitThenResumeRadio.TabIndex = 4;
 			this.SplitThenResumeRadio.Text = "分割后续播";
 			this.SplitThenResumeRadio.UseVisualStyleBackColor = true;
+			this.SplitThenResumeRadio.CheckedChanged += new System.EventHandler(this.Option_CheckedChanged);
 			// 
 			// SplitThenFreezeRadio
 			// 
@@ -173,6 +177,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SplitThenFreezeRadio.TabIndex = 3;
 			this.SplitThenFreezeRadio.Text = "分割后冻结";
 			this.SplitThenFreezeRadio.UseVisualStyleBackColor = true;
+			this.SplitThenFreezeRadio.CheckedChanged += new System.EventHandler(this.Option_CheckedChanged);
 			// 
 			// TrimEndFramesRadio
 			// 
@@ -185,6 +190,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.TrimEndFramesRadio.TabIndex = 2;
 			this.TrimEndFramesRadio.Text = "截断尾帧";
 			this.TrimEndFramesRadio.UseVisualStyleBackColor = true;
+			this.TrimEndFramesRadio.CheckedChanged += new System.EventHandler(this.Option_CheckedChanged);
 			// 
 			// FreezeEndFramesRadio
 			// 
@@ -197,6 +203,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.FreezeEndFramesRadio.TabIndex = 1;
 			this.FreezeEndFramesRadio.Text = "冻结尾帧";
 			this.FreezeEndFramesRadio.UseVisualStyleBackColor = true;
+			this.FreezeEndFramesRadio.CheckedChanged += new System.EventHandler(this.Option_CheckedChanged);
 			// 
 			// LengthenableRadio
 			// 
@@ -211,6 +218,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LengthenableRadio.TabStop = true;
 			this.LengthenableRadio.Text = "可延长 (关)";
 			this.LengthenableRadio.UseVisualStyleBackColor = true;
+			this.LengthenableRadio.CheckedChanged += new System.EventHandler(this.Option_CheckedChanged);
 			// 
 			// panel1
 			// 
@@ -248,7 +256,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.IdleEffectTable.Controls.Add(this.FadeCheck, 0, 1);
 			this.IdleEffectTable.Controls.Add(this.MonochromeTrack, 1, 0);
 			this.IdleEffectTable.Controls.Add(this.MonochromeCheck, 0, 0);
-			this.IdleEffectTable.Controls.Add(this.comboBox1, 1, 2);
+			this.IdleEffectTable.Controls.Add(this.NegativeCombo, 1, 2);
 			this.IdleEffectTable.Dock = System.Windows.Forms.DockStyle.Top;
 			this.IdleEffectTable.Location = new System.Drawing.Point(12, 32);
 			this.IdleEffectTable.Name = "IdleEffectTable";
@@ -270,6 +278,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.NegativeCheck.TabIndex = 6;
 			this.NegativeCheck.Text = "反色";
 			this.NegativeCheck.UseVisualStyleBackColor = true;
+			this.NegativeCheck.CheckedChanged += new System.EventHandler(this.IdleEffect_CheckedChanged);
 			// 
 			// FadeTrack
 			// 
@@ -315,11 +324,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.FadeCheck.TabIndex = 4;
 			this.FadeCheck.Text = "淡化";
 			this.FadeCheck.UseVisualStyleBackColor = true;
+			this.FadeCheck.CheckedChanged += new System.EventHandler(this.IdleEffect_CheckedChanged);
 			// 
 			// MonochromeTrack
 			// 
 			this.MonochromeTrack.BackColor = System.Drawing.Color.Transparent;
-			this.MonochromeTrack.DecimalPlace = 0;
 			this.MonochromeTrack.DefaultValue = new decimal(new int[] {
             100,
             0,
@@ -361,21 +370,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MonochromeCheck.TabIndex = 0;
 			this.MonochromeCheck.Text = "黑白";
 			this.MonochromeCheck.UseVisualStyleBackColor = true;
+			this.MonochromeCheck.CheckedChanged += new System.EventHandler(this.IdleEffect_CheckedChanged);
 			// 
-			// comboBox1
+			// NegativeCombo
 			// 
-			this.comboBox1.Dock = System.Windows.Forms.DockStyle.Left;
-			this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBox1.FormattingEnabled = true;
-			this.comboBox1.ItemHeight = 32;
-			this.comboBox1.Items.AddRange(new object[] {
+			this.NegativeCombo.Dock = System.Windows.Forms.DockStyle.Left;
+			this.NegativeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.NegativeCombo.FormattingEnabled = true;
+			this.NegativeCombo.ItemHeight = 32;
+			this.NegativeCombo.Items.AddRange(new object[] {
             "色相反转",
             "辉度反转",
             "颜色反转"});
-			this.comboBox1.Location = new System.Drawing.Point(103, 134);
-			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(300, 40);
-			this.comboBox1.TabIndex = 7;
+			this.NegativeCombo.Location = new System.Drawing.Point(120, 131);
+			this.NegativeCombo.Margin = new System.Windows.Forms.Padding(20, 0, 20, 0);
+			this.NegativeCombo.Name = "NegativeCombo";
+			this.NegativeCombo.Size = new System.Drawing.Size(300, 40);
+			this.NegativeCombo.TabIndex = 7;
 			// 
 			// LoopRegionTable
 			// 
@@ -388,7 +399,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LoopRegionTable.Dock = System.Windows.Forms.DockStyle.Top;
 			this.LoopRegionTable.Location = new System.Drawing.Point(12, 216);
 			this.LoopRegionTable.Name = "LoopRegionTable";
-			this.LoopRegionTable.Padding = new System.Windows.Forms.Padding(12, 20, 12, 20);
+			this.LoopRegionTable.Padding = new System.Windows.Forms.Padding(6, 20, 12, 20);
 			this.LoopRegionTable.RowCount = 1;
 			this.LoopRegionTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.LoopRegionTable.Size = new System.Drawing.Size(707, 106);
@@ -397,7 +408,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// LoopRegionTrack
 			// 
 			this.LoopRegionTrack.BackColor = System.Drawing.Color.Transparent;
-			this.LoopRegionTrack.DecimalPlace = 0;
 			this.LoopRegionTrack.DefaultValue = new decimal(new int[] {
             50,
             0,
@@ -405,7 +415,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
             0});
 			this.LoopRegionTrack.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LoopRegionTrack.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.LoopRegionTrack.Location = new System.Drawing.Point(184, 28);
+			this.LoopRegionTrack.Location = new System.Drawing.Point(172, 28);
 			this.LoopRegionTrack.Margin = new System.Windows.Forms.Padding(8);
 			this.LoopRegionTrack.Maximum = new decimal(new int[] {
             100,
@@ -420,7 +430,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LoopRegionTrack.MinimumSize = new System.Drawing.Size(0, 50);
 			this.LoopRegionTrack.Name = "LoopRegionTrack";
 			this.LoopRegionTrack.NumericUpDownWidth = 65;
-			this.LoopRegionTrack.Size = new System.Drawing.Size(503, 50);
+			this.LoopRegionTrack.Size = new System.Drawing.Size(515, 50);
 			this.LoopRegionTrack.TabIndex = 3;
 			this.LoopRegionTrack.TrackRightToLeft = true;
 			this.LoopRegionTrack.Value = new decimal(new int[] {
@@ -433,7 +443,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 
 			this.LoopRegionLbl.AutoSize = true;
 			this.LoopRegionLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LoopRegionLbl.Location = new System.Drawing.Point(15, 20);
+			this.LoopRegionLbl.Location = new System.Drawing.Point(6, 20);
+			this.LoopRegionLbl.Margin = new System.Windows.Forms.Padding(0);
 			this.LoopRegionLbl.Name = "LoopRegionLbl";
 			this.LoopRegionLbl.Size = new System.Drawing.Size(158, 66);
 			this.LoopRegionLbl.TabIndex = 4;
@@ -460,6 +471,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "截断画面选项";
+			this.Shown += new System.EventHandler(this.VisualTruncateOptionsForm_Shown);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.OptionsTable.ResumeLayout(false);
@@ -501,6 +513,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private System.Windows.Forms.TableLayoutPanel LoopRegionTable;
 		public IntegerTrackWithBox LoopRegionTrack;
 		private System.Windows.Forms.Label LoopRegionLbl;
-		private System.Windows.Forms.ComboBox comboBox1;
+		private System.Windows.Forms.ComboBox NegativeCombo;
 	}
 }
