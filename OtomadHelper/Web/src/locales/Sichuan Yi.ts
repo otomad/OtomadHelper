@@ -238,7 +238,7 @@ export default {
 		all: "crwdns4062:0crwdne4062:0",
 		export: "crwdns4408:0crwdne4408:0",
 		import: "crwdns4410:0crwdne4410:0",
-		dangerZone: "crwdns4412:0crwdne4412:0",
+		risk: "crwdns4412:0crwdne4412:0",
 		locate: "crwdns4414:0crwdne4414:0",
 		clearAll: "crwdns4604:0crwdne4604:0",
 		search: "crwdns4606:0crwdne4606:0",

@@ -248,7 +248,7 @@ export default {
 		all: "All",
 		export: "Export",
 		import: "Import",
-		dangerZone: "Danger zone",
+		risk: "Risk",
 		locate: "Locate",
 		clearAll: "Clear all",
 		search: "Search",

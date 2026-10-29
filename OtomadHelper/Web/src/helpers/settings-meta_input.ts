@@ -406,9 +406,9 @@ export const settingsMetaInput = {
 					items: {
 						backupAndRestore: { icon: "arrow_sync" },
 						fileLocation: { icon: "folder" },
-						dangerZone: {
+						risk: {
 							icon: "warning",
-							title: t.dangerZone,
+							title: t.risk,
 							details: t.descriptions.settings.config.userConfig.reset,
 							unsearchable: true,
 						},

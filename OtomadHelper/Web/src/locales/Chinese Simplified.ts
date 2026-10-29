@@ -237,7 +237,7 @@ export default {
 		all: "全部",
 		export: "导出",
 		import: "导入",
-		dangerZone: "危险地带",
+		risk: "危险地带",
 		locate: "定位",
 		clearAll: "清空",
 		search: "搜索",

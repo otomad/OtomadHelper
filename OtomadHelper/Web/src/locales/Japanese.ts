@@ -237,7 +237,7 @@ export default {
 		all: "すべて",
 		export: "エクスポート",
 		import: "インポート",
-		dangerZone: "危険ゾーン",
+		risk: "危険ゾーン",
 		locate: "場所を特定する",
 		clearAll: "すべてクリア",
 		search: "検索",

@@ -497,7 +497,7 @@ export default function Settings() {
 					)}
 				/>
 				<Setting meta={meta.config.userConfig.fileLocation} selectInfo="C:\" actions={<Button icon="location_target">{t.locate}</Button>} />
-				<Setting meta={meta.config.userConfig.dangerZone} actions={<Button icon="arrow_reset" accent="critical" onClick={() => !window.isWebView && resetUserConfig_dev()}>{t.reset}</Button>} />
+				<Setting meta={meta.config.userConfig.risk} actions={<Button icon="arrow_reset" accent="critical" onClick={() => !window.isWebView && resetUserConfig_dev()}>{t.reset}</Button>} />
 			</Setting>
 			<Setting meta={meta.config.clipsFolder}>
 				<Expander.ChildWrapper $single>
