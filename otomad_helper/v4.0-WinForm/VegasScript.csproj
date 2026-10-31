@@ -347,6 +347,9 @@
     <EmbeddedResource Include="VisualTruncateOptionsForm.resx">
       <DependentUpon>VisualTruncateOptionsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="VisualTruncateOptionsForm.resx">
+      <DependentUpon>VisualTruncateOptionsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
       <SubType>Designer</SubType>

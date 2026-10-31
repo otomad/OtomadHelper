@@ -492,27 +492,27 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		#endregion
 
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-		private System.Windows.Forms.Button CloseBtn;
-		private System.Windows.Forms.TableLayoutPanel OptionsTable;
-		private System.Windows.Forms.RadioButton LengthenableRadio;
-		private System.Windows.Forms.RadioButton LoopWithSplitRadio;
-		private System.Windows.Forms.RadioButton PingPongWithSplitRadio;
-		private System.Windows.Forms.RadioButton PingPongWithoutSplitRadio;
-		private System.Windows.Forms.RadioButton SplitThenResumeRadio;
-		private System.Windows.Forms.RadioButton SplitThenFreezeRadio;
-		private System.Windows.Forms.RadioButton TrimEndFramesRadio;
-		private System.Windows.Forms.RadioButton FreezeEndFramesRadio;
-		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.GroupBox IdleEffectGroup;
-		private System.Windows.Forms.TableLayoutPanel IdleEffectTable;
-		private System.Windows.Forms.CheckBox MonochromeCheck;
-		private System.Windows.Forms.CheckBox NegativeCheck;
 		public IntegerTrackWithBox FadeTrack;
-		private System.Windows.Forms.CheckBox FadeCheck;
 		public IntegerTrackWithBox MonochromeTrack;
-		private System.Windows.Forms.TableLayoutPanel LoopRegionTable;
 		public IntegerTrackWithBox LoopRegionTrack;
-		private System.Windows.Forms.Label LoopRegionLbl;
-		private System.Windows.Forms.ComboBox NegativeCombo;
+		public System.Windows.Forms.Button CloseBtn;
+		public System.Windows.Forms.TableLayoutPanel OptionsTable;
+		public System.Windows.Forms.RadioButton LengthenableRadio;
+		public System.Windows.Forms.RadioButton LoopWithSplitRadio;
+		public System.Windows.Forms.RadioButton PingPongWithSplitRadio;
+		public System.Windows.Forms.RadioButton PingPongWithoutSplitRadio;
+		public System.Windows.Forms.RadioButton SplitThenResumeRadio;
+		public System.Windows.Forms.RadioButton SplitThenFreezeRadio;
+		public System.Windows.Forms.RadioButton TrimEndFramesRadio;
+		public System.Windows.Forms.RadioButton FreezeEndFramesRadio;
+		public System.Windows.Forms.Panel panel1;
+		public System.Windows.Forms.GroupBox IdleEffectGroup;
+		public System.Windows.Forms.TableLayoutPanel IdleEffectTable;
+		public System.Windows.Forms.CheckBox MonochromeCheck;
+		public System.Windows.Forms.CheckBox NegativeCheck;
+		public System.Windows.Forms.CheckBox FadeCheck;
+		public System.Windows.Forms.TableLayoutPanel LoopRegionTable;
+		public System.Windows.Forms.Label LoopRegionLbl;
+		public System.Windows.Forms.ComboBox NegativeCombo;
 	}
 }

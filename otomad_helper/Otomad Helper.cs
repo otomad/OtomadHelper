@@ -99,13 +99,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		// 配置参数变量
 		#region 视频属性
 		/**<summary>启　　用</summary>*/ private bool VConfig { get { return configForm.VideoConfigCheck.Checked; } }
-		/**<summary>视觉效果</summary>*/ private PvVisualEffectType VConfigEffect { get { return configForm.VideoEffect; } }
-		/**<summary>多重效果</summary>*/ private PrveValues VConfigEffects { get { return IsVConfigEffects ? (PrveValues)configForm.VideoEffectCombo.SelectedItem : null; } }
-		/**<summary>多重效吗</summary>*/ private bool IsVConfigEffects { get { return configForm.VideoEffectCombo.SelectedItem is PrveValues; } }
+		/**<summary>视觉效果</summary>*/ internal PvVisualEffectType VConfigEffect { get { return configForm.VideoEffect; } }
+		/**<summary>多重效果</summary>*/ internal PrveValues VConfigEffects { get { return IsVConfigEffects ? (PrveValues)configForm.VideoEffectCombo.SelectedItem : null; } }
+		/**<summary>多重效吗</summary>*/ internal bool IsVConfigEffects { get { return configForm.VideoEffectCombo.SelectedItem is PrveValues; } }
 		/**<summary>拉　　伸</summary>*/ private StretchType VConfigScratch { get { return (StretchType)configForm.VideoScratchCombo.SelectedIndex; } }
 		/**<summary>循　　环</summary>*/ private bool VConfigLoop { get { return configForm.VideoLoopCheck.Checked; } }
-		/**<summary>定格首帧</summary>*/ private bool VConfigFreezeFirstFrame { get { return configForm.VideoFreezeFirstFrameCheck.Checked; } }
-		/**<summary>定格尾帧</summary>*/ private bool VConfigFreezeLastFrame { get { return false/*configForm.VideoFreezeLastFrameCheck.Checked*/; } }
+		/**<summary>静态画面</summary>*/ private bool VConfigStatic { get { return configForm.VideoFreezeFirstFrameCheck.Checked; } }
+		/**<summary>截　　断</summary>*/ private TruncateOption VConfigTruncate { get { return configForm.visualTruncate.Truncate; } }
+		/**<summary>截断循环区间</summary>*/ private double VConfigTruncateLoopRegion { get { return configForm.visualTruncate.LoopRegionTrack.DoubleValue; } }
+		/**<summary>截断黑白</summary>*/ private bool VConfigTruncateMonochromeEnabled { get { return configForm.visualTruncate.MonochromeCheck.Checked; } }
+		/**<summary>截断黑白</summary>*/ private double VConfigTruncateMonochrome { get { return configForm.visualTruncate.MonochromeTrack.DoubleValue; } }
+		/**<summary>截断淡化</summary>*/ private bool VConfigTruncateFadeEnabled { get { return configForm.visualTruncate.FadeCheck.Checked; } }
+		/**<summary>截断淡化</summary>*/ private double VConfigTruncateFade { get { return configForm.visualTruncate.FadeTrack.DoubleValue; } }
+		/**<summary>截断反色</summary>*/ private bool VConfigTruncateNegativeEnabled { get { return configForm.visualTruncate.NegativeCheck.Checked; } }
+		/**<summary>截断反色</summary>*/ private NegativeOption VConfigTruncateNegative { get { return (NegativeOption)configForm.visualTruncate.NegativeCombo.SelectedIndex; } }
 		/**<summary>削除空隙</summary>*/ private LegatoMaxGapType VConfigLegato { get { return (LegatoMaxGapType)configForm.VideoLegatoCombo.SelectedIndex; } }
 		/**<summary>映射力度</summary>*/ private bool VConfigVelocity { get { return configForm.VideoVelocityCheck.Checked; } }
 		/**<summary>乘以增益</summary>*/ private bool VConfigVelocityMultiplyGain { get { return configForm.VideoVelocityMultiplyGainCheck.Checked; } }
@@ -156,7 +163,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>拉　　伸</summary>*/ private StretchType AConfigScratch { get { return (StretchType)configForm.AudioScratchCombo.SelectedIndex; } }
 		/**<summary>循　　环</summary>*/ private bool AConfigLoop { get { return configForm.AudioLoopCheck.Checked; } }
 		/**<summary>标准音量</summary>*/ private bool AConfigNormalize { get { return configForm.AudioNormalizeCheck.Checked; } }
-		/**<summary>定格尾帧</summary>*/ private bool AConfigFreezeLastFrame { get { return configForm.AudioFreezeLastFrameCheck.Checked; } }
+		/**<summary>截　　断</summary>*/ private bool AConfigTruncate { get { return configForm.AudioFreezeLastFrameCheck.Checked; } }
 		/**<summary>连　　奏</summary>*/ private LegatoMaxGapType AConfigLegato { get { return (LegatoMaxGapType)configForm.AudioLegatoCombo.SelectedIndex; } }
 		/**<summary>自动声像</summary>*/ private bool AConfigAutoPan { get { return configForm.AudioAutoPanCheck.Checked; } }
 		/**<summary>声像曲线</summary>*/ private CurveType AConfigAutoPanCurve { get { return GetCurveType(configForm.AudioAutoPanCurveCombo.SelectedIndex); } }
@@ -1145,12 +1152,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </summary>
 		/// <param name="videoEvent">视频事件</param>
 		/// <param name="duration">规定的长度</param>
-		/// <returns>原视频事件</returns>
-		public VideoEvent FreezeLastFrame(VideoEvent videoEvent, double duration, bool force = false) {
+		/// <param name="isTimeClassesPrve">当前是否是位于“时间类”或“时间类2”的视觉效果？</param>
+		public void FreezeLastFrame(VideoEvent videoEvent, double duration, bool force = false, bool isTimeClassesPrve = false) {
+			TruncateOption truncate = VConfigTruncate;
+			if (truncate == TruncateOption.LENGTHENABLE) return;
 			Timecode length = Timecode.FromMilliseconds(duration);
 			if ((VConfigScratch == StretchType.FLEXING_AND_EXTENDING || VConfigScratch == StretchType.EXTENDING_ONLY) && !force)
 				length = Timecode.FromMilliseconds(duration * 4);
-			if (VConfigLegato == LegatoMaxGapType.STACCATO && length > videoEvent.Length) return videoEvent; // 该功能会和“填补间隙”功能冲突
+			if (VConfigLegato == LegatoMaxGapType.STACCATO && length > videoEvent.Length) return; // 该功能会和“填补间隙”功能冲突
+			if (truncate == TruncateOption.SPLIT_THEN_RESUME) {
+				videoEvent.Split(length);
+				return;
+			} else if (truncate == TruncateOption.TRIM_END_FRAMES) {
+				return;
+			}
 			Envelope velocity = videoEvent.Envelopes.FindByType(EnvelopeType.Velocity) ?? new Envelope(EnvelopeType.Velocity);
 			if (!videoEvent.Envelopes.HasEnvelope(EnvelopeType.Velocity)) videoEvent.Envelopes.Add(velocity);
 			velocity.Points[0].Curve = CurveType.None;
@@ -1160,7 +1175,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				point.Y = 0;
 				point.Curve = CurveType.None;
 			}
-			return videoEvent;
 		}
 
 		public void AdjustDeviation(TrackEvent trackEvent, double startTime, double endTime) {
@@ -1662,7 +1676,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						AudioEvent audioEvent = trackHelper.AddEvent(activeSource.audioEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(duration), out indexInAudioTracks);
 						if (audioEvent == null) goto endAConfig;
 						audioEvent.Length = Timecode.FromMilliseconds(duration);
-						bool audioFreezeLastFrameCondition = AConfigFreezeLastFrame &&
+						bool audioFreezeLastFrameCondition = AConfigTruncate &&
 							(AConfigScratch == StretchType.NO_STRETCHING || AConfigScratch == StretchType.FLEXING_ONLY);
 						if (audioFreezeLastFrameCondition && duration > audioLength)
 							audioEvent.Length = Timecode.FromMilliseconds(audioLength);
@@ -1837,10 +1851,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							prevVideoEvent = videoEvent;
 						}
 						if (anim.IsReverse) ReverseVideo(videoEvent); // 结论：先拉伸后反转
-						if (VConfigFreezeFirstFrame) FreezeFirstFrame(videoEvent);
-						if (VConfigFreezeLastFrame) FreezeLastFrame(videoEvent, videoLength);
+						if (VConfigStatic) FreezeFirstFrame(videoEvent);
+						if (VConfigTruncate != TruncateOption.LENGTHENABLE) FreezeLastFrame(videoEvent, videoLength, false, anim.IsTimeClassesEffects);
 						if (SheetConfig)
-							if (SheetConfigFreezeAtNoteOff) FreezeLastFrame(videoEvent, duration, true);
+							if (SheetConfigFreezeAtNoteOff) FreezeLastFrame(videoEvent, duration, true, anim.IsTimeClassesEffects);
 						videoEvent.Loop = VConfigLoop;
 						if (tempEventGroup != null) tempEventGroup.Add(videoEvent);
 						// 淡入淡出
@@ -5226,6 +5240,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public bool IsPitchHoldEffects { get { return GetFirstEffectInRange(PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_INVERT) != null; } }
 		public bool IsPitchNotHoldEffects { get { return fxes.HasEffect(PvVisualEffectType.H_FLIP_INTERRUPT, PvVisualEffectType.V_FLIP_INTERRUPT, PvVisualEffectType.NEGATIVE_INTERRUPT); } }
 		public bool IsRandomly { get { return fxes.HasEffect(PvVisualEffectType.RANDOM_1); } }
+		public bool IsTimeClassesEffects { get { return GetFirstEffectInRange(PvVisualEffectType.PINGPONG, PvVisualEffectType.WOBBLE_PERIOD) != null; } }
 
 		public PvVisualEffect(PvVisualEffectType fx, int initStep = 0) : this(new PrveValue(fx, initStep)) { }
 		public PvVisualEffect(PrveValue fx) : this(new PrveValues { fx }) { }
@@ -26176,28 +26191,28 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		#endregion
 
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-		private System.Windows.Forms.Button CloseBtn;
-		private System.Windows.Forms.TableLayoutPanel OptionsTable;
-		private System.Windows.Forms.RadioButton LengthenableRadio;
-		private System.Windows.Forms.RadioButton LoopWithSplitRadio;
-		private System.Windows.Forms.RadioButton PingPongWithSplitRadio;
-		private System.Windows.Forms.RadioButton PingPongWithoutSplitRadio;
-		private System.Windows.Forms.RadioButton SplitThenResumeRadio;
-		private System.Windows.Forms.RadioButton SplitThenFreezeRadio;
-		private System.Windows.Forms.RadioButton TrimEndFramesRadio;
-		private System.Windows.Forms.RadioButton FreezeEndFramesRadio;
-		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.GroupBox IdleEffectGroup;
-		private System.Windows.Forms.TableLayoutPanel IdleEffectTable;
-		private System.Windows.Forms.CheckBox MonochromeCheck;
-		private System.Windows.Forms.CheckBox NegativeCheck;
 		public IntegerTrackWithBox FadeTrack;
-		private System.Windows.Forms.CheckBox FadeCheck;
 		public IntegerTrackWithBox MonochromeTrack;
-		private System.Windows.Forms.TableLayoutPanel LoopRegionTable;
 		public IntegerTrackWithBox LoopRegionTrack;
-		private System.Windows.Forms.Label LoopRegionLbl;
-		private System.Windows.Forms.ComboBox NegativeCombo;
+		public System.Windows.Forms.Button CloseBtn;
+		public System.Windows.Forms.TableLayoutPanel OptionsTable;
+		public System.Windows.Forms.RadioButton LengthenableRadio;
+		public System.Windows.Forms.RadioButton LoopWithSplitRadio;
+		public System.Windows.Forms.RadioButton PingPongWithSplitRadio;
+		public System.Windows.Forms.RadioButton PingPongWithoutSplitRadio;
+		public System.Windows.Forms.RadioButton SplitThenResumeRadio;
+		public System.Windows.Forms.RadioButton SplitThenFreezeRadio;
+		public System.Windows.Forms.RadioButton TrimEndFramesRadio;
+		public System.Windows.Forms.RadioButton FreezeEndFramesRadio;
+		public System.Windows.Forms.Panel panel1;
+		public System.Windows.Forms.GroupBox IdleEffectGroup;
+		public System.Windows.Forms.TableLayoutPanel IdleEffectTable;
+		public System.Windows.Forms.CheckBox MonochromeCheck;
+		public System.Windows.Forms.CheckBox NegativeCheck;
+		public System.Windows.Forms.CheckBox FadeCheck;
+		public System.Windows.Forms.TableLayoutPanel LoopRegionTable;
+		public System.Windows.Forms.Label LoopRegionLbl;
+		public System.Windows.Forms.ComboBox NegativeCombo;
 	}
 
 	public partial class VisualTruncateOptionsForm : Form, IInterpret, IConfigIniUser {
@@ -26224,12 +26239,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void Option_CheckedChanged(object sender, EventArgs e) {
-			LoopRegionTable.Enabled = PingPongWithoutSplitRadio.Checked || PingPongWithSplitRadio.Checked || LoopWithSplitRadio.Checked;
-			IdleEffectGroup.Enabled = SplitThenFreezeRadio.Checked || SplitThenResumeRadio.Checked || PingPongWithSplitRadio.Checked || LoopWithSplitRadio.Checked;
+			LoopRegionTable.Enabled = IsCheckedAndEnabled(PingPongWithoutSplitRadio, PingPongWithSplitRadio, LoopWithSplitRadio);
+			IdleEffectGroup.Enabled = IsCheckedAndEnabled(SplitThenFreezeRadio, SplitThenResumeRadio, PingPongWithSplitRadio, LoopWithSplitRadio);
 		}
 
 		private void VisualTruncateOptionsForm_Shown(object sender, EventArgs e) {
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
+			PingPongWithoutSplitRadio.Enabled = PingPongWithSplitRadio.Enabled = LoopWithSplitRadio.Enabled =
+				!(parent.IsVConfigEffects ? parent.VConfigEffects.Any(v => IsTimeClassesPrve(v.Effect)) : IsTimeClassesPrve(parent.VConfigEffect));
+			Option_CheckedChanged(null, null);
+		}
+
+		private static bool IsTimeClassesPrve(PvVisualEffectType type) {
+			return type >= PvVisualEffectType.PINGPONG && type <= PvVisualEffectType.WOBBLE_PERIOD;
+		}
+
+		public static bool IsCheckedAndEnabled(params RadioButton[] radioButtons) {
+			return radioButtons.Any(radioButton => radioButton.Checked && radioButton.Enabled);
 		}
 
 		private readonly IList<RadioButton> truncateOptionRadios;
@@ -39307,7 +39333,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioStretchMethod stretchMethod = (AudioStretchMethod)AudioStretchMethodCombo.SelectedIndex;
 			AudioScratchCombo.Unlock();
 			AudioAltMethodCombo.Unlock();
-			AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled = PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled = AudioAutoBasePitchCheck.Enabled = AudioBasePitchIntervalLbl.Enabled
+			AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled = PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled
+				= AudioAutoBasePitchCheck.Enabled = AudioBasePitchIntervalLbl.Enabled = AudioOverallShiftCombo.Enabled
 				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING;
 			AudioFadeSetAsTimecodeRadio.Enabled = AudioFadeInCurveCombo.Enabled = AudioFadeOutCurveCombo.Enabled = method != AudioTuningMethod.OSCILLATOR;
 			AudioVocalFryCheck.Status = (isAConfigOn && method == AudioTuningMethod.OSCILLATOR) ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
@@ -39324,7 +39351,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				AudioScratchCombo.LockSelectedIndex = 0;
 			if (method == AudioTuningMethod.PITCH_SHIFT) AudioAltMethodCombo.LockSelectedIndex = 0;
 			else if (!isPitchChangeMethod) AudioAltMethodCombo.LockSelectedIndex = -1;
-			AudioOverallShiftCombo.Enabled = method != AudioTuningMethod.NO_TUNING;
+			if (!isAConfigOn) AudioScratchCombo.Enabled = false;
 			AudioNoTuningDrumKitsCheck.Enabled = method != AudioTuningMethod.NO_TUNING && !AudioMuteDrumKitsCheck.Checked;
 			AudioPluckTable.Enabled = method != AudioTuningMethod.OSCILLATOR;
 			#if VER_GEQ_16
