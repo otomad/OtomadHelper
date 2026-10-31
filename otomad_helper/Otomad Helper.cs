@@ -26442,8 +26442,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void VisualTruncateOptionsForm_Shown(object sender, EventArgs e) {
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
-			PingPongWithoutSplitRadio.Enabled = PingPongWithSplitRadio.Enabled = LoopWithSplitRadio.Enabled =
-				!(parent.IsVConfigEffects ? parent.VConfigEffects.Any(v => IsTimeClassesPrve(v.Effect)) : IsTimeClassesPrve(parent.VConfigEffect));
+			//PingPongWithoutSplitRadio.Enabled = PingPongWithSplitRadio.Enabled = LoopWithSplitRadio.Enabled =
+			//	!(parent.IsVConfigEffects ? parent.VConfigEffects.Any(v => IsTimeClassesPrve(v.Effect)) : IsTimeClassesPrve(parent.VConfigEffect));
 			Option_CheckedChanged(null, null);
 		}
 
@@ -27016,7 +27016,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoPreferredTrackCombo = new System.Windows.Forms.ComboBox();
 			this.VideoComboPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.VideoScratchLbl = new System.Windows.Forms.Label();
-			this.VideoScratchCombo = new System.Windows.Forms.ComboBox();
+			this.VideoScratchCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.VideoLegatoLbl = new System.Windows.Forms.Label();
 			this.VideoLegatoCombo = new System.Windows.Forms.ComboBox();
 			this.VideoFreezeLastFrameLbl = new System.Windows.Forms.Label();
@@ -37291,7 +37291,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.Label AudioScratchLbl;
 		public RememberedComboBox AudioScratchCombo;
 		public System.Windows.Forms.Label VideoScratchLbl;
-		public System.Windows.Forms.ComboBox VideoScratchCombo;
+		public RememberedComboBox VideoScratchCombo;
 		public CommandLinkButton CustomFadeGainBtn;
 		public System.Windows.Forms.CheckBox AudioMultitrackForChordsCheck;
 		public System.Windows.Forms.Label DatamoshClipsFolderInfo;
@@ -38244,7 +38244,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 视频配置
 			configIni.StartSection("Video");
 			configIni.Write("VisualEffect", PrvesToSerializableString());
-			configIni.Write("Stretch", VideoScratchCombo.SelectedIndex);
+			configIni.Write("Stretch", VideoScratchCombo.UserSelectedIndex);
 			configIni.Write("Loop", VideoLoopCheck.Checked);
 			configIni.Write("FreezeFirstFrame", VideoFreezeFirstFrameCheck.Checked);
 			configIni.Write("Legato", VideoLegatoCombo.SelectedIndex);
@@ -39555,12 +39555,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			StaffVisualizerConfigCheck.Enabled = isVConfigOn;
 			if (!isVConfigOn) StaffVisualizerConfigCheck.Checked = false;
 			if (VideoEffect >= PvVisualEffectType.PINGPONG && VideoEffect <= PvVisualEffectType.WHIRL) {
-				VideoScratchCombo.SelectedIndex = 1;
-				VideoScratchCombo.Enabled = false;
+				VideoScratchCombo.LockSelectedIndex = 1;
 			} else {
-				if (!VideoScratchCombo.Enabled && VideoConfigCheck.Enabled) VideoScratchCombo.SelectedIndex = 0;
+				VideoScratchCombo.Unlock();
 				VideoScratchCombo.Enabled = isVConfigOn;
 			}
+			VideoFreezeLastFrameBtn.Enabled = isVConfigOn && !(VideoEffect >= PvVisualEffectType.PINGPONG && VideoEffect <= PvVisualEffectType.WOBBLE_PERIOD);
 
 			bool isAConfigOn = AudioConfigCheck.Checked;
 			if (AudioParamsGroup.Enabled != isAConfigOn)
