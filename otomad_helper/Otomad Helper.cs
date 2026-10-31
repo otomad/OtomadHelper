@@ -1124,21 +1124,40 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		/// <summary>
-		/// 倒放视频事件。
+		/// 倒放视频事件。<br />
 		/// 注意是使用速度包络控制，而不是创建一个反转的子剪辑。
 		/// </summary>
-		/// <param name="videoEvent">视频事件</param>
-		/// <returns>倒放后的视频事件（实际上也就是原视频事件）</returns>
-		public VideoEvent ReverseVideo(VideoEvent videoEvent) {
-			Timecode start = videoEvent.Start, length = videoEvent.Length;
-			videoEvent.AdjustStartLength(start + length, length, true);
-			videoEvent.Start = start;
+		/// <param name="videoEvent">视频事件。</param>
+		/// <param name="isReversed">是否倒放？</param>
+		/// <param name="originalDuration">原始视频事件的长度。</param>
+		/// <returns>倒放后的视频事件（实际上也就是原视频事件）。</returns>
+		public VideoEvent ReverseVideo(VideoEvent videoEvent, bool isReversed = true, double? originalDuration = null) {
+			Timecode length = videoEvent.Length;
+			bool isStretchToLongest = originalDuration.HasValue && videoEvent.PlaybackRate == PitchStretchConstants.MIN_STRETCH_VIDEO;
+			if (isStretchToLongest) length = Timecode.FromMilliseconds(originalDuration.Value / PitchStretchConstants.MIN_STRETCH_VIDEO);
+			if (isReversed) videoEvent.ActiveTake.Offset += length;
 			Envelope velocity = videoEvent.Envelopes.FindByType(EnvelopeType.Velocity) ?? new Envelope(EnvelopeType.Velocity);
 			if (!videoEvent.Envelopes.HasEnvelope(EnvelopeType.Velocity)) videoEvent.Envelopes.Add(velocity);
 			velocity.Points.Clear();
-			velocity.Points[0].Y = -1;
+			velocity.Points[0].Y = isReversed ? -1 : 1;
 			velocity.Points[0].Curve = CurveType.None;
+			if (isStretchToLongest)
+				velocity.Points.Add(new EnvelopePoint(Timecode.FromMilliseconds(originalDuration.Value / PitchStretchConstants.MIN_STRETCH_VIDEO), 0, CurveType.None));
 			return videoEvent;
+		}
+
+		/// <inheritdoc cref="TrackEvent.Split(Timecode)" />
+		/// <remarks>
+		/// 原版 <see cref="TrackEvent.Split(Timecode)" /> 如果源事件数据太多（我猜）可能会变卡，或者频繁刷新 UI。
+		/// </remarks>
+		public static TTrackEvent FastSplit<TTrackEvent>(TTrackEvent source, Timecode offset) where TTrackEvent : TrackEvent {
+			if (offset >= source.Length) return null;
+			Timecode splitEventLength = source.Length - offset;
+			source.Length = offset;
+			TTrackEvent splitEvent = (TTrackEvent)source.Copy(source.Track, source.End);
+			splitEvent.Length = splitEventLength;
+			splitEvent.ActiveTake.Offset += offset;
+			return splitEvent;
 		}
 
 		/// <summary>
@@ -1160,14 +1179,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </summary>
 		/// <param name="videoEvent">视频事件。</param>
 		/// <param name="duration">原始视频事件的长度。</param>
+		/// <param name="originalRate">原始视频事件的播放速率。</param>
 		/// <param name="truncatedEvents">如果需要分割，则将分割后的事件加入集合中。</param>
 		/// <param name="isTimeClassesPrve">当前是否是位于“时间类”或“时间类2”的视觉效果？</param>
-		public void FreezeLastFrame(VideoEvent videoEvent, double duration, out List<VideoEvent> truncatedEvents, bool force = false, bool isTimeClassesPrve = false) {
+		public void FreezeLastFrame(VideoEvent videoEvent, double duration, double originalRate, out List<VideoEvent> truncatedEvents, bool force = false, bool isTimeClassesPrve = false) {
 			truncatedEvents = null;
+			double relativeRate = videoEvent.PlaybackRate / originalRate;
+			duration /= relativeRate;
 			Timecode length = Timecode.FromMilliseconds(duration);
 			TruncateOption truncate = VConfigTrunc;
-			if (!(truncate != TruncateOption.LENGTHENABLE && videoEvent.Length > length)) return;
-			if (isTimeClassesPrve || VConfigTruncLoopRegion == 0) // 时间类效果不要做来回或循环，以免冲突。
+			if (truncate == TruncateOption.LENGTHENABLE || isTimeClassesPrve || videoEvent.Length <= length) return;
+			if (VConfigTruncLoopRegion == 0) // 时间类效果不要做来回或循环，以免冲突。
 				truncate = truncate == TruncateOption.PINGPONG_WITHOUT_SPLIT ? TruncateOption.FREEZE_END_FRAMES :
 					truncate == TruncateOption.PINGPONG_WITH_SPLIT || truncate == TruncateOption.LOOP_WITH_SPLIT ? TruncateOption.SPLIT_THEN_FREEZE : truncate;
 			//if ((VConfigStretch == StretchType.FLEXING_AND_EXTENDING || VConfigStretch == StretchType.EXTENDING_ONLY) && !force) // 拉伸伸长后时间也要相应发生变化。
@@ -1175,7 +1197,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//if (VConfigLegato == LegatoMaxGapType.STACCATO && length > videoEvent.Length) return; // 该功能会和“填补间隙”功能冲突。
 			List<VideoEvent> _truncatedEvents = truncatedEvents = new List<VideoEvent>();
 			Action<TrackEvent> AddTrunc = truncEvent => { if (truncEvent != null) _truncatedEvents.Add((VideoEvent)truncEvent); };
-			double filledLength = (videoEvent.Length - length).ToMilliseconds(), loopedLength = duration * VConfigTruncLoopRegion / 100;
+			double filledLength = (videoEvent.Length - length).ToMilliseconds(), loopedLength = duration * VConfigTruncLoopRegion / 100, loopedStart = duration - loopedLength;
 			if (truncate == TruncateOption.SPLIT_THEN_RESUME) {
 				AddTrunc(videoEvent.Split(length));
 				return;
@@ -1184,12 +1206,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return;
 			} else if (truncate == TruncateOption.LOOP_WITH_SPLIT) {
 				videoEvent.Length = length;
-				double loopedStart = duration - loopedLength;
 				TrackEvent truncEvent = videoEvent;
 				for (double remainedLength = filledLength; remainedLength > 0; remainedLength -= loopedLength) {
 					truncEvent = videoEvent.Copy(videoEvent.Track, truncEvent.End);
 					truncEvent.Length = Timecode.FromMilliseconds(Math.Min(loopedLength, remainedLength));
-					truncEvent.ActiveTake.Offset += Timecode.FromMilliseconds(loopedStart);
+					truncEvent.ActiveTake.Offset += Timecode.FromMilliseconds(loopedStart * videoEvent.PlaybackRate);
 					AddTrunc(truncEvent);
 				}
 				return;
@@ -1202,10 +1223,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (point == null) velocity.Points.Add(new EnvelopePoint(x, y, CurveType.None));
 				else { point.Y = y; point.Curve = CurveType.None; }
 			};
-			if (truncate == TruncateOption.FREEZE_END_FRAMES || truncate == TruncateOption.SPLIT_THEN_FREEZE) {
+			Action<VideoEvent, double> SetFirstPoint = (evt, y) => {
+				EnvelopePoint point = evt.Envelopes.FindByType(EnvelopeType.Velocity).Points[0];
+				point.Y = y; point.Curve = CurveType.None;
+			};
+			if (truncate == TruncateOption.FREEZE_END_FRAMES) {
 				SetPoint(length, 0);
-				if (truncate == TruncateOption.SPLIT_THEN_FREEZE)
-					AddTrunc(videoEvent.Split(length));
+			} else if (truncate == TruncateOption.SPLIT_THEN_FREEZE) {
+				VideoEvent truncEvent = FastSplit(videoEvent, length); // 原版 Split 方法会卡成奥利给。
+				if (truncEvent == null) return;
+				SetFirstPoint(truncEvent, 0);
+				AddTrunc(truncEvent);
 			} else if (truncate == TruncateOption.PINGPONG_WITHOUT_SPLIT || truncate == TruncateOption.PINGPONG_WITH_SPLIT) {
 				List<Timecode> splitPositions = new List<Timecode>();
 				bool isForward = true;
@@ -1213,12 +1241,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					Timecode splitPos = Timecode.FromMilliseconds(splitMs);
 					splitPositions.Add(splitPos); // 代码 splitPositions.Insert(0, splitPos); 的性能更差，其时间复杂度是 O(n^2)，而 Add + Reverse 的时间复杂度是 O(n)。
 					isForward = !isForward;
-					SetPoint(splitPos, isForward ? 1 : -1);
+					if (truncate == TruncateOption.PINGPONG_WITHOUT_SPLIT) SetPoint(splitPos, isForward ? 1 : -1);
 				}
 				if (truncate == TruncateOption.PINGPONG_WITH_SPLIT) {
 					splitPositions.Reverse(); // 从后往前分割，避免时间码错乱。
-					foreach (Timecode splitPos in splitPositions)
-						AddTrunc(videoEvent.Split(splitPos));
+					Timecode offsetForward = videoEvent.ActiveTake.Offset + Timecode.FromMilliseconds(loopedStart), offsetBackward = videoEvent.ActiveTake.Offset + length;
+					foreach (Timecode splitPos in splitPositions) {
+						VideoEvent truncEvent = FastSplit(videoEvent, splitPos);
+						if (truncEvent == null) continue;
+						truncEvent.ActiveTake.Offset = isForward ? offsetForward : offsetBackward;
+						SetFirstPoint(truncEvent, isForward ? 1 : -1);
+						isForward = !isForward;
+						AddTrunc(truncEvent);
+					}
 					truncatedEvents.Reverse(); // 再倒回来。
 				}
 			}
@@ -1906,16 +1941,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						else if (!anims.TryGetValue(videoTrack, out anim))
 							anims.Add(videoTrack, anim = NewAnim());
 						bool pitchHold = anim.EqualsLastPitch(CombConfigMatchCut && CombConfigMatchCutAccumulateHarmonics ? pitch : currentUpperNoteNumber);
+						double originalRate = videoEvent.PlaybackRate;
 						if (adjustTime) AdjustDeviation(videoEvent, sourceStartTime, sourceEndTime);
 						if (VConfigStretch == StretchType.FLEXING_AND_EXTENDING && duration != videoLength ||
 							VConfigStretch == StretchType.EXTENDING_ONLY && duration > videoLength ||
 							VConfigStretch == StretchType.FLEXING_ONLY && duration < videoLength)
-							videoEvent.AdjustPlaybackRate(videoLength / duration, true);
+							videoEvent.RelativeAdjustPlaybackRate(videoLength / duration, forceStretch: true, changeLength: false);
 						if (VConfigTimeUnremapping && !ShouldMultisource) {
 							if (prevVideoEvent != null) UnremapTime(videoEvent, prevVideoEvent);
 							prevVideoEvent = videoEvent;
 						}
-						if (anim.IsReverse) applyToVideoEventsAfterLegato.AddIfRequired(() => ReverseVideo(videoEvent));
+						PvVisualEffect animCurrent = anim.Clone();
+						if (anim.IsTimeClassEffects) applyToVideoEventsAfterLegato.AddIfRequired(() => ReverseVideo(videoEvent, animCurrent.IsReverse, videoLength));
 						if (VConfigStatic) FreezeFirstFrame(videoEvent);
 						videoEvent.Loop = VConfigLoop;
 						if (tempEventGroup != null) tempEventGroup.Add(videoEvent);
@@ -1925,7 +1962,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						videoEvent.FadeIn.Curve = VConfigFadeinCurve;
 						videoEvent.FadeOut.Curve = VConfigFadeoutCurve;
 						if (VConfigVelocity) videoEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Video), VConfigVelocityMultiplyGain);
-						PvVisualEffect animCurrent = anim.Clone();
 						Func<bool> ApplyParameters = () => {
 							// 视频平移/裁切调整
 							Timecode originalVideoLength = videoEvent.Length;
@@ -1966,8 +2002,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							// 截断画面
 							List<VideoEvent> truncatedEvents = null;
 							bool isTimeClassesEffects = animCurrent.IsTimeClassesEffects;
-							if (SheetConfig && SheetConfigFreezeAtNoteOff) FreezeLastFrame(videoEvent, Math.Min(duration, videoLength), out truncatedEvents, true, isTimeClassesEffects);
-							else if (VConfigTrunc != TruncateOption.LENGTHENABLE) FreezeLastFrame(videoEvent, videoLength, out truncatedEvents, false, isTimeClassesEffects);
+							if (SheetConfig && SheetConfigFreezeAtNoteOff) FreezeLastFrame(videoEvent, Math.Min(duration, videoLength), originalRate, out truncatedEvents, true, isTimeClassesEffects);
+							else if (VConfigTrunc != TruncateOption.LENGTHENABLE) FreezeLastFrame(videoEvent, videoLength, originalRate, out truncatedEvents, false, isTimeClassesEffects);
 							if (truncatedEvents != null) {
 								FreezeLastFrame_ApplyIdleEffects(truncatedEvents);
 								if (tempEventGroup != null && tempEventGroup.Any()) {
@@ -2236,7 +2272,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (stretch == StretchType.FLEXING_AND_EXTENDING && newLength != oldLength ||
 							stretch == StretchType.EXTENDING_ONLY && newLength > oldLength ||
 							stretch == StretchType.FLEXING_ONLY && newLength < oldLength)
-							currentEvent.AdjustPlaybackRate(oldLength / newLength, true);
+							currentEvent.RelativeAdjustPlaybackRate(oldLength / newLength, forceStretch: true, changeLength: false);
 					}
 				}
 			}
@@ -2281,7 +2317,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				MIN_PITCH = -MAX_PITCH,
 				MAX_STRETCH_EXP_RESAMPLE = MAX_STRETCH,
 				MIN_STRETCH_EXP_RESAMPLE = 0.05,
-				MAX_PITCH_EXP_RESAMPLE = MAX_PITCH;
+				MAX_PITCH_EXP_RESAMPLE = MAX_PITCH,
+				MAX_STRETCH_VIDEO = MAX_STRETCH_EXP_RESAMPLE,
+				MIN_STRETCH_VIDEO = MIN_STRETCH_EXP_RESAMPLE;
 			public static readonly double
 				MAX_PITCH_EXP = Stretch2Pitch(MAX_STRETCH_EXP),
 				MIN_PITCH_EXP = -MAX_PITCH_EXP,
@@ -3028,14 +3066,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				bool isDisposed = IsDisposed;
 				IsDisposed = true;
 				if (!Enabled || events.Count <= 1) return null;
-				TrackEventGroup group = null;
-				if (isDisposed)
-					foreach (TrackEvent trackEvent in events)
-						if (trackEvent.IsGrouped) {
-							group = trackEvent.Group;
-							break;
-						}
-				group = group ?? parent.GroupTrackEvents(events);
+				TrackEventGroup group = parent.GroupTrackEvents(events);
 				return group;
 			}
 			void IDisposable.Dispose() {
@@ -4198,8 +4229,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 如果为是，则当素材拉伸到极限之后改变素材的长度，播放原素材裁剪范围之外的内容（拉长）或裁去多余长度的内容（缩短）。
 		/// </param>
 		/// <param name="setReversely">是否向反向拉伸？</param>
+		/// <param name="changeLength">拉伸时改变长度？</param>
 		/// <returns>原轨道事件。</returns>
-		public static TrackEvent RelativeAdjustPlaybackRate(this TrackEvent trackEvent, double rate, bool forceStretch = false, bool setReversely = false) {
+		public static TrackEvent RelativeAdjustPlaybackRate(this TrackEvent trackEvent, double rate, bool forceStretch = false, bool setReversely = false, bool changeLength = true) {
 			double originalRate = trackEvent.PlaybackRate;
 			double expectRate = rate * originalRate;
 			Timecode originalEnd = trackEvent.End;
@@ -4207,7 +4239,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			double actualRate = trackEvent.PlaybackRate;
 			double expectLength = trackEvent.Length.ToMilliseconds() / expectRate * originalRate,
 				actualLength = trackEvent.Length.ToMilliseconds() / actualRate * originalRate;
-			trackEvent.Length = Timecode.FromMilliseconds((forceStretch && !setReversely) ? expectLength : actualLength);
+			if (changeLength) trackEvent.Length = Timecode.FromMilliseconds((forceStretch && !setReversely) ? expectLength : actualLength);
 			if (setReversely) {
 				trackEvent.End = originalEnd;
 				trackEvent.SetLengthReversely(Timecode.FromMilliseconds(forceStretch ? expectLength : actualLength));
@@ -5350,6 +5382,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public bool IsPitchHoldEffects { get { return GetFirstEffectInRange(PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_INVERT) != null; } }
 		public bool IsPitchNotHoldEffects { get { return fxes.HasEffect(PvVisualEffectType.H_FLIP_INTERRUPT, PvVisualEffectType.V_FLIP_INTERRUPT, PvVisualEffectType.NEGATIVE_INTERRUPT); } }
 		public bool IsRandomly { get { return fxes.HasEffect(PvVisualEffectType.RANDOM_1); } }
+		public bool IsTimeClassEffects { get { return GetFirstEffectInRange(PvVisualEffectType.PINGPONG, PvVisualEffectType.WHIRL) != null; } }
+		public bool IsTimeClass2Effects { get { return GetFirstEffectInRange(PvVisualEffectType.SHARP_REWIND, PvVisualEffectType.WOBBLE_PERIOD) != null; } }
 		public bool IsTimeClassesEffects { get { return GetFirstEffectInRange(PvVisualEffectType.PINGPONG, PvVisualEffectType.WOBBLE_PERIOD) != null; } }
 
 		public PvVisualEffect(PvVisualEffectType fx, int initStep = 0) : this(new PrveValue(fx, initStep)) { }
