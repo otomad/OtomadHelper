@@ -102,18 +102,19 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>视觉效果</summary>*/ internal PvVisualEffectType VConfigEffect { get { return configForm.VideoEffect; } }
 		/**<summary>多重效果</summary>*/ internal PrveValues VConfigEffects { get { return IsVConfigEffects ? (PrveValues)configForm.VideoEffectCombo.SelectedItem : null; } }
 		/**<summary>多重效吗</summary>*/ internal bool IsVConfigEffects { get { return configForm.VideoEffectCombo.SelectedItem is PrveValues; } }
-		/**<summary>拉　　伸</summary>*/ private StretchType VConfigScratch { get { return (StretchType)configForm.VideoScratchCombo.SelectedIndex; } }
+		/**<summary>拉　　伸</summary>*/ private StretchType VConfigStretch { get { return (StretchType)configForm.VideoScratchCombo.SelectedIndex; } }
 		/**<summary>循　　环</summary>*/ private bool VConfigLoop { get { return configForm.VideoLoopCheck.Checked; } }
 		/**<summary>静态画面</summary>*/ private bool VConfigStatic { get { return configForm.VideoFreezeFirstFrameCheck.Checked; } }
-		/**<summary>截　　断</summary>*/ private TruncateOption VConfigTruncate { get { return configForm.visualTruncate.Truncate; } }
-		/**<summary>截断循环区间</summary>*/ private double VConfigTruncateLoopRegion { get { return configForm.visualTruncate.LoopRegionTrack.DoubleValue; } }
-		/**<summary>截断黑白</summary>*/ private bool VConfigTruncateMonochromeEnabled { get { return configForm.visualTruncate.MonochromeCheck.Checked; } }
-		/**<summary>截断黑白</summary>*/ private double VConfigTruncateMonochrome { get { return configForm.visualTruncate.MonochromeTrack.DoubleValue; } }
-		/**<summary>截断淡化</summary>*/ private bool VConfigTruncateFadeEnabled { get { return configForm.visualTruncate.FadeCheck.Checked; } }
-		/**<summary>截断淡化</summary>*/ private double VConfigTruncateFade { get { return configForm.visualTruncate.FadeTrack.DoubleValue; } }
-		/**<summary>截断反色</summary>*/ private bool VConfigTruncateNegativeEnabled { get { return configForm.visualTruncate.NegativeCheck.Checked; } }
-		/**<summary>截断反色</summary>*/ private NegativeOption VConfigTruncateNegative { get { return (NegativeOption)configForm.visualTruncate.NegativeCombo.SelectedIndex; } }
+		/**<summary>截　　断</summary>*/ private TruncateOption VConfigTrunc { get { return configForm.visualTruncate.Truncate; } }
+		/**<summary>截断循环区间</summary>*/ private double VConfigTruncLoopRegion { get { return configForm.visualTruncate.LoopRegionTrack.DoubleValue; } }
+		/**<summary>截断黑白</summary>*/ private bool VConfigTruncMonochromeEnabled { get { return configForm.visualTruncate.MonochromeCheck.Checked; } }
+		/**<summary>截断黑白</summary>*/ private double VConfigTruncMonochrome { get { return configForm.visualTruncate.MonochromeTrack.DoubleValue; } }
+		/**<summary>截断淡化</summary>*/ private bool VConfigTruncFadeEnabled { get { return configForm.visualTruncate.FadeCheck.Checked; } }
+		/**<summary>截断淡化</summary>*/ private double VConfigTruncFade { get { return configForm.visualTruncate.FadeTrack.DoubleValue; } }
+		/**<summary>截断反色</summary>*/ private bool VConfigTruncNegativeEnabled { get { return configForm.visualTruncate.NegativeCheck.Checked; } }
+		/**<summary>截断反色</summary>*/ private NegativeOption VConfigTruncNegative { get { return (NegativeOption)configForm.visualTruncate.NegativeCombo.SelectedIndex; } }
 		/**<summary>削除空隙</summary>*/ private LegatoMaxGapType VConfigLegato { get { return (LegatoMaxGapType)configForm.VideoLegatoCombo.SelectedIndex; } }
+		/**<summary>削除空隙</summary>*/ private bool VConfigShouldLegato { get { return VConfigLegato != LegatoMaxGapType.STACCATO; } }
 		/**<summary>映射力度</summary>*/ private bool VConfigVelocity { get { return configForm.VideoVelocityCheck.Checked; } }
 		/**<summary>乘以增益</summary>*/ private bool VConfigVelocityMultiplyGain { get { return configForm.VideoVelocityMultiplyGainCheck.Checked; } }
 		/**<summary>渐　　入</summary>*/ private double VConfigFadein { get { return configForm.VideoFadeInBox.DoubleValue; } }
@@ -160,11 +161,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		#region 音频属性
 		/**<summary>启　　用</summary>*/ private bool AConfig { get { return configForm.AudioConfigCheck.Checked; } }
-		/**<summary>拉　　伸</summary>*/ private StretchType AConfigScratch { get { return (StretchType)configForm.AudioScratchCombo.SelectedIndex; } }
+		/**<summary>拉　　伸</summary>*/ private StretchType AConfigStretch { get { return (StretchType)configForm.AudioScratchCombo.SelectedIndex; } }
 		/**<summary>循　　环</summary>*/ private bool AConfigLoop { get { return configForm.AudioLoopCheck.Checked; } }
 		/**<summary>标准音量</summary>*/ private bool AConfigNormalize { get { return configForm.AudioNormalizeCheck.Checked; } }
 		/**<summary>截　　断</summary>*/ private bool AConfigTruncate { get { return configForm.AudioFreezeLastFrameCheck.Checked; } }
 		/**<summary>连　　奏</summary>*/ private LegatoMaxGapType AConfigLegato { get { return (LegatoMaxGapType)configForm.AudioLegatoCombo.SelectedIndex; } }
+		/**<summary>连　　奏</summary>*/ private bool AConfigShouldLegato { get { return AConfigLegato != LegatoMaxGapType.STACCATO; } }
 		/**<summary>自动声像</summary>*/ private bool AConfigAutoPan { get { return configForm.AudioAutoPanCheck.Checked; } }
 		/**<summary>声像曲线</summary>*/ private CurveType AConfigAutoPanCurve { get { return GetCurveType(configForm.AudioAutoPanCurveCombo.SelectedIndex); } }
 		/**<summary>映射力度</summary>*/ private bool AConfigVelocity { get { return configForm.AudioVelocityCheck.Checked; } }
@@ -1140,7 +1142,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		/// <summary>
-		/// 定格视频事件初帧，即静止画。
+		/// 定格视频事件初帧，即静止画。<br />
 		/// 如果要和倒放视频事件函数一起使用，应该放在其之后。
 		/// </summary>
 		/// <param name="videoEvent">视频事件</param>
@@ -1156,30 +1158,84 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>
 		/// 定格视频事件末帧，防止素材播放到超过其规定长度范围的部分。
 		/// </summary>
-		/// <param name="videoEvent">视频事件</param>
-		/// <param name="duration">规定的长度</param>
+		/// <param name="videoEvent">视频事件。</param>
+		/// <param name="duration">原始视频事件的长度。</param>
+		/// <param name="truncatedEvents">如果需要分割，则将分割后的事件加入集合中。</param>
 		/// <param name="isTimeClassesPrve">当前是否是位于“时间类”或“时间类2”的视觉效果？</param>
-		public void FreezeLastFrame(VideoEvent videoEvent, double duration, bool force = false, bool isTimeClassesPrve = false) {
-			TruncateOption truncate = VConfigTruncate;
-			if (truncate == TruncateOption.LENGTHENABLE) return;
+		public void FreezeLastFrame(VideoEvent videoEvent, double duration, out List<VideoEvent> truncatedEvents, bool force = false, bool isTimeClassesPrve = false) {
+			truncatedEvents = null;
 			Timecode length = Timecode.FromMilliseconds(duration);
-			if ((VConfigScratch == StretchType.FLEXING_AND_EXTENDING || VConfigScratch == StretchType.EXTENDING_ONLY) && !force)
-				length = Timecode.FromMilliseconds(duration * 4);
-			if (VConfigLegato == LegatoMaxGapType.STACCATO && length > videoEvent.Length) return; // 该功能会和“填补间隙”功能冲突
+			TruncateOption truncate = VConfigTrunc;
+			if (!(truncate != TruncateOption.LENGTHENABLE && videoEvent.Length > length)) return;
+			if (isTimeClassesPrve || VConfigTruncLoopRegion == 0) // 时间类效果不要做来回或循环，以免冲突。
+				truncate = truncate == TruncateOption.PINGPONG_WITHOUT_SPLIT ? TruncateOption.FREEZE_END_FRAMES :
+					truncate == TruncateOption.PINGPONG_WITH_SPLIT || truncate == TruncateOption.LOOP_WITH_SPLIT ? TruncateOption.SPLIT_THEN_FREEZE : truncate;
+			//if ((VConfigStretch == StretchType.FLEXING_AND_EXTENDING || VConfigStretch == StretchType.EXTENDING_ONLY) && !force) // 拉伸伸长后时间也要相应发生变化。
+			//	length = Timecode.FromMilliseconds(duration * 4); // 画面的最大拉伸倍数为 4，超过后仍会限制为 4。
+			//if (VConfigLegato == LegatoMaxGapType.STACCATO && length > videoEvent.Length) return; // 该功能会和“填补间隙”功能冲突。
+			List<VideoEvent> _truncatedEvents = truncatedEvents = new List<VideoEvent>();
+			Action<TrackEvent> AddTrunc = truncEvent => { if (truncEvent != null) _truncatedEvents.Add((VideoEvent)truncEvent); };
+			double filledLength = (videoEvent.Length - length).ToMilliseconds(), loopedLength = duration * VConfigTruncLoopRegion / 100;
 			if (truncate == TruncateOption.SPLIT_THEN_RESUME) {
-				videoEvent.Split(length);
+				AddTrunc(videoEvent.Split(length));
 				return;
 			} else if (truncate == TruncateOption.TRIM_END_FRAMES) {
+				videoEvent.Length = length;
+				return;
+			} else if (truncate == TruncateOption.LOOP_WITH_SPLIT) {
+				videoEvent.Length = length;
+				double loopedStart = duration - loopedLength;
+				TrackEvent truncEvent = videoEvent;
+				for (double remainedLength = filledLength; remainedLength > 0; remainedLength -= loopedLength) {
+					truncEvent = videoEvent.Copy(videoEvent.Track, truncEvent.End);
+					truncEvent.Length = Timecode.FromMilliseconds(Math.Min(loopedLength, remainedLength));
+					truncEvent.ActiveTake.Offset += Timecode.FromMilliseconds(loopedStart);
+					AddTrunc(truncEvent);
+				}
 				return;
 			}
 			Envelope velocity = videoEvent.Envelopes.FindByType(EnvelopeType.Velocity) ?? new Envelope(EnvelopeType.Velocity);
 			if (!videoEvent.Envelopes.HasEnvelope(EnvelopeType.Velocity)) videoEvent.Envelopes.Add(velocity);
 			velocity.Points[0].Curve = CurveType.None;
-			EnvelopePoint point = velocity.Points.GetPointAtX(length);
-			if (point == null) velocity.Points.Add(new EnvelopePoint(length, 0, CurveType.None));
-			else {
-				point.Y = 0;
-				point.Curve = CurveType.None;
+			Action<Timecode, double> SetPoint = (x, y) => {
+				EnvelopePoint point = velocity.Points.GetPointAtX(x);
+				if (point == null) velocity.Points.Add(new EnvelopePoint(x, y, CurveType.None));
+				else { point.Y = y; point.Curve = CurveType.None; }
+			};
+			if (truncate == TruncateOption.FREEZE_END_FRAMES || truncate == TruncateOption.SPLIT_THEN_FREEZE) {
+				SetPoint(length, 0);
+				if (truncate == TruncateOption.SPLIT_THEN_FREEZE)
+					AddTrunc(videoEvent.Split(length));
+			} else if (truncate == TruncateOption.PINGPONG_WITHOUT_SPLIT || truncate == TruncateOption.PINGPONG_WITH_SPLIT) {
+				List<Timecode> splitPositions = new List<Timecode>();
+				bool isForward = true;
+				for (double splitMs = duration; splitMs < duration + filledLength; splitMs += loopedLength) {
+					Timecode splitPos = Timecode.FromMilliseconds(splitMs);
+					splitPositions.Add(splitPos); // 代码 splitPositions.Insert(0, splitPos); 的性能更差，其时间复杂度是 O(n^2)，而 Add + Reverse 的时间复杂度是 O(n)。
+					isForward = !isForward;
+					SetPoint(splitPos, isForward ? 1 : -1);
+				}
+				if (truncate == TruncateOption.PINGPONG_WITH_SPLIT) {
+					splitPositions.Reverse(); // 从后往前分割，避免时间码错乱。
+					foreach (Timecode splitPos in splitPositions)
+						AddTrunc(videoEvent.Split(splitPos));
+					truncatedEvents.Reverse(); // 再倒回来。
+				}
+			}
+		}
+
+		public void FreezeLastFrame_ApplyIdleEffects(List<VideoEvent> truncatedEvents) {
+			foreach (VideoEvent videoEvent in truncatedEvents) {
+				if (VConfigTruncMonochromeEnabled && Plugin.blackAndWhite != null) Plugin.ForVideoEvents.Grey(videoEvent, VConfigTruncMonochrome);
+				if (VConfigTruncFadeEnabled) videoEvent.FadeIn.SetGain(VConfigTruncFade / 100, true);
+				if (VConfigTruncNegativeEnabled) {
+					switch (VConfigTruncNegative) {
+						case NegativeOption.COLOR_INVERT: if (Plugin.invert != null) Plugin.ForVideoEvents.Negative(videoEvent); break;
+						case NegativeOption.LUMIN_INVERT: if (Plugin.labAdjust != null) Plugin.ForVideoEvents.InvertLumin(videoEvent); break;
+						case NegativeOption.HUE_INVERT: if (Plugin.hslAdjust != null) Plugin.ForVideoEvents.ChangeHue(videoEvent, 0.5); break;
+						default: break;
+					}
+				}
 			}
 		}
 
@@ -1487,6 +1543,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			#endregion
 
+			bool vShouldLegato = VConfigShouldLegato && !SheetConfig && VConfig && !isSonarLegal;
+			DoActionsOnEventLater applyToVideoEventsAfterLegato = new DoActionsOnEventLater(vShouldLegato); // 部分视频事件处理在消除间隙（如果需要）之后再执行。
+
 			for (int i = 0; i < currentChannel.Events.Count; i++) {
 				MidiEvent midiEvent = currentChannel.Events[i];
 				if (!(midiEvent is NoteOnEvent)) continue;
@@ -1683,7 +1742,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (audioEvent == null) goto endAConfig;
 						audioEvent.Length = Timecode.FromMilliseconds(duration);
 						bool audioFreezeLastFrameCondition = AConfigTruncate &&
-							(AConfigScratch == StretchType.NO_STRETCHING || AConfigScratch == StretchType.FLEXING_ONLY);
+							(AConfigStretch == StretchType.NO_STRETCHING || AConfigStretch == StretchType.FLEXING_ONLY);
 						if (audioFreezeLastFrameCondition && duration > audioLength)
 							audioEvent.Length = Timecode.FromMilliseconds(audioLength);
 						AudioTuningMethod method = AConfigMethod;
@@ -1710,9 +1769,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							}
 						}
 						if (adjustTime) AdjustDeviation(audioEvent, sourceStartTime, sourceEndTime);
-						if ((AConfigScratch == StretchType.FLEXING_AND_EXTENDING ||
-							AConfigScratch == StretchType.EXTENDING_ONLY && duration > audioLength ||
-							AConfigScratch == StretchType.FLEXING_ONLY && duration < audioLength) &&
+						if ((AConfigStretch == StretchType.FLEXING_AND_EXTENDING ||
+							AConfigStretch == StretchType.EXTENDING_ONLY && duration > audioLength ||
+							AConfigStretch == StretchType.FLEXING_ONLY && duration < audioLength) &&
 							AConfigMethod != AudioTuningMethod.OSCILLATOR && AConfigStretchMethod != AudioStretchMethod.NO_TUNING
 							#if VER_GEQ_16
 							&& !(AConfigStretchMethod == AudioStretchMethod.UNSET && audioEvent.Method == TimeStretchPitchShift.None)
@@ -1848,19 +1907,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							anims.Add(videoTrack, anim = NewAnim());
 						bool pitchHold = anim.EqualsLastPitch(CombConfigMatchCut && CombConfigMatchCutAccumulateHarmonics ? pitch : currentUpperNoteNumber);
 						if (adjustTime) AdjustDeviation(videoEvent, sourceStartTime, sourceEndTime);
-						if (VConfigScratch == StretchType.FLEXING_AND_EXTENDING ||
-							VConfigScratch == StretchType.EXTENDING_ONLY && duration > videoLength ||
-							VConfigScratch == StretchType.FLEXING_ONLY && duration < videoLength)
+						if (VConfigStretch == StretchType.FLEXING_AND_EXTENDING && duration != videoLength ||
+							VConfigStretch == StretchType.EXTENDING_ONLY && duration > videoLength ||
+							VConfigStretch == StretchType.FLEXING_ONLY && duration < videoLength)
 							videoEvent.AdjustPlaybackRate(videoLength / duration, true);
 						if (VConfigTimeUnremapping && !ShouldMultisource) {
 							if (prevVideoEvent != null) UnremapTime(videoEvent, prevVideoEvent);
 							prevVideoEvent = videoEvent;
 						}
-						if (anim.IsReverse) ReverseVideo(videoEvent); // 结论：先拉伸后反转
+						if (anim.IsReverse) applyToVideoEventsAfterLegato.AddIfRequired(() => ReverseVideo(videoEvent));
 						if (VConfigStatic) FreezeFirstFrame(videoEvent);
-						if (VConfigTruncate != TruncateOption.LENGTHENABLE) FreezeLastFrame(videoEvent, videoLength, false, anim.IsTimeClassesEffects);
-						if (SheetConfig)
-							if (SheetConfigFreezeAtNoteOff) FreezeLastFrame(videoEvent, duration, true, anim.IsTimeClassesEffects);
 						videoEvent.Loop = VConfigLoop;
 						if (tempEventGroup != null) tempEventGroup.Add(videoEvent);
 						// 淡入淡出
@@ -1869,42 +1925,59 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						videoEvent.FadeIn.Curve = VConfigFadeinCurve;
 						videoEvent.FadeOut.Curve = VConfigFadeoutCurve;
 						if (VConfigVelocity) videoEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Video), VConfigVelocityMultiplyGain);
-						// 视频平移/裁切调整
-						Timecode originalVideoLength = videoEvent.Length;
-						bool temporarilyExtendLength = RestrictKeyframesLengthMode != RestrictLengthModeType.UNRESTRICTED && requireTwoKeys && originalVideoLength < RestrictKeyframesLengthValue;
-						if (temporarilyExtendLength) videoEvent.Length = RestrictKeyframesLengthValue;
-						VideoMotionKeyframe key0 = videoEvent.VideoMotion.Keyframes[0];
-						VideoMotionKeyframe key1 = new VideoMotionKeyframe(RestrictKeyframesLengthMode == RestrictLengthModeType.FIXED_LENGTH ? RestrictKeyframesLengthValue : videoEvent.Length);
-						if (requireTwoKeys) videoEvent.VideoMotion.Keyframes.Add(key1);
-						float width = key0.BottomRight.X;
-						float height = key0.BottomRight.Y;
-						float startRatio = VConfigStartSize / 100;
-						key0.ScaleBy(new VideoMotionVertex(startRatio, startRatio));
-						key0.MoveBy(new VideoMotionVertex(Math.Abs(1 - startRatio) * width / 2 * VConfigStartHTrans / 100, Math.Abs(1 - startRatio) * height / 2 * VConfigStartVTrans / 100));
-						key0.Type = VConfigStartSizeCurve;
-						if (requireTwoKeys) {
-							float endRatio = VConfigEndSize / 100;
-							key1.ScaleBy(new VideoMotionVertex(endRatio, endRatio));
-							key1.MoveBy(new VideoMotionVertex(Math.Abs(1 - endRatio) * width / 2 * VConfigEndHTrans / 100, Math.Abs(1 - endRatio) * height / 2 * VConfigEndVTrans / 100));
-						}
-						// 色相、饱和度、对比度、对比度中心（阈值）
-						if (VConfigStartHue != 0 || VConfigEndHue != 0 || VConfigStartSaturation != 100 || VConfigEndSaturation != 100) {
-							if (Plugin.hslAdjust != null) Plugin.ForVideoEvents.HueAndSaturationParam(videoEvent, VConfigStartHue, VConfigEndHue, VConfigStartSaturation, VConfigEndSaturation, VConfigStartHueCurve, VConfigStartSaturationCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return false; }
-						}
-						if (VConfigStartContrast != 0 || VConfigEndContrast != 0 || VConfigStartThreshold != 50 || VConfigEndThreshold != 0) {
-							if (Plugin.contrast != null) Plugin.ForVideoEvents.ContrastAndThresholdParam(videoEvent, VConfigStartContrast, VConfigEndContrast, VConfigStartThreshold, VConfigEndThreshold, VConfigStartContrastCurve, VConfigStartThresholdCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
-						}
-						// 单独对所有关键帧处理翻转
-						videoEvent.FlipAllKeyframes(anim.HorizontalFlip, anim.VerticalFlip);
-						// 旋转属性单独调整，因为和上面“翻转所有关键帧”功能冲突了
-						key0.RotateBy(VConfigStartRotation + anim.RotationDeg);
-						if (requireTwoKeys) key1.RotateBy(VConfigEndRotation + anim.RotationDeg);
-						if (temporarilyExtendLength) videoEvent.Length = originalVideoLength;
-						// 发光效果
-						if (VConfigGlow != 0) if (Plugin.contrast != null) Plugin.ForVideoEvents.Glow(videoEvent, VConfigGlow, VConfigGlowCurve, VConfigGlowBright);
-						else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
-						// 动画效果生成
-						if (!ApplyPvRhythmVisualEffectPartialMethod(videoEvent, anim)) return false;
+						PvVisualEffect animCurrent = anim.Clone();
+						Func<bool> ApplyParameters = () => {
+							// 视频平移/裁切调整
+							Timecode originalVideoLength = videoEvent.Length;
+							bool temporarilyExtendLength = RestrictKeyframesLengthMode != RestrictLengthModeType.UNRESTRICTED && requireTwoKeys && originalVideoLength < RestrictKeyframesLengthValue;
+							if (temporarilyExtendLength) videoEvent.Length = RestrictKeyframesLengthValue;
+							VideoMotionKeyframe key0 = videoEvent.VideoMotion.Keyframes[0];
+							VideoMotionKeyframe key1 = new VideoMotionKeyframe(RestrictKeyframesLengthMode == RestrictLengthModeType.FIXED_LENGTH ? RestrictKeyframesLengthValue : videoEvent.Length);
+							if (requireTwoKeys) videoEvent.VideoMotion.Keyframes.Add(key1);
+							float width = key0.BottomRight.X;
+							float height = key0.BottomRight.Y;
+							float startRatio = VConfigStartSize / 100;
+							key0.ScaleBy(new VideoMotionVertex(startRatio, startRatio));
+							key0.MoveBy(new VideoMotionVertex(Math.Abs(1 - startRatio) * width / 2 * VConfigStartHTrans / 100, Math.Abs(1 - startRatio) * height / 2 * VConfigStartVTrans / 100));
+							key0.Type = VConfigStartSizeCurve;
+							if (requireTwoKeys) {
+								float endRatio = VConfigEndSize / 100;
+								key1.ScaleBy(new VideoMotionVertex(endRatio, endRatio));
+								key1.MoveBy(new VideoMotionVertex(Math.Abs(1 - endRatio) * width / 2 * VConfigEndHTrans / 100, Math.Abs(1 - endRatio) * height / 2 * VConfigEndVTrans / 100));
+							}
+							// 色相、饱和度、对比度、对比度中心（阈值）
+							if (VConfigStartHue != 0 || VConfigEndHue != 0 || VConfigStartSaturation != 100 || VConfigEndSaturation != 100) {
+								if (Plugin.hslAdjust != null) Plugin.ForVideoEvents.HueAndSaturationParam(videoEvent, VConfigStartHue, VConfigEndHue, VConfigStartSaturation, VConfigEndSaturation, VConfigStartHueCurve, VConfigStartSaturationCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return false; }
+							}
+							if (VConfigStartContrast != 0 || VConfigEndContrast != 0 || VConfigStartThreshold != 50 || VConfigEndThreshold != 0) {
+								if (Plugin.contrast != null) Plugin.ForVideoEvents.ContrastAndThresholdParam(videoEvent, VConfigStartContrast, VConfigEndContrast, VConfigStartThreshold, VConfigEndThreshold, VConfigStartContrastCurve, VConfigStartThresholdCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
+							}
+							// 单独对所有关键帧处理翻转
+							videoEvent.FlipAllKeyframes(animCurrent.HorizontalFlip, animCurrent.VerticalFlip);
+							// 旋转属性单独调整，因为和上面“翻转所有关键帧”功能冲突了
+							key0.RotateBy(VConfigStartRotation + animCurrent.RotationDeg);
+							if (requireTwoKeys) key1.RotateBy(VConfigEndRotation + animCurrent.RotationDeg);
+							if (temporarilyExtendLength) videoEvent.Length = originalVideoLength;
+							// 发光效果
+							if (VConfigGlow != 0) if (Plugin.contrast != null) Plugin.ForVideoEvents.Glow(videoEvent, VConfigGlow, VConfigGlowCurve, VConfigGlowBright);
+							else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
+							// 动画效果生成
+							if (!ApplyPvRhythmVisualEffectPartialMethod(videoEvent, animCurrent)) return false;
+							// 截断画面
+							List<VideoEvent> truncatedEvents = null;
+							bool isTimeClassesEffects = animCurrent.IsTimeClassesEffects;
+							if (SheetConfig && SheetConfigFreezeAtNoteOff) FreezeLastFrame(videoEvent, Math.Min(duration, videoLength), out truncatedEvents, true, isTimeClassesEffects);
+							else if (VConfigTrunc != TruncateOption.LENGTHENABLE) FreezeLastFrame(videoEvent, videoLength, out truncatedEvents, false, isTimeClassesEffects);
+							if (truncatedEvents != null) {
+								FreezeLastFrame_ApplyIdleEffects(truncatedEvents);
+								if (tempEventGroup != null && tempEventGroup.Any()) {
+									tempEventGroup.AddRange(truncatedEvents);
+									if (tempEventGroup.IsDisposed) tempEventGroup.Dispose();
+								}
+							}
+							return true;
+						};
+						if (!applyToVideoEventsAfterLegato.AddIfRequired(ApplyParameters)) return false;
 						// 五线谱效果生成
 						if (SheetConfig) {
 							double startQuarters = beatIntegrator.GetQuarterPassed(midiEvent), barLength = barEndQuarters - barStartQuarters;
@@ -2125,25 +2198,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			#region 消除间隙
 			// ⸘视频被削除了‽
-			// 注意该方法目前仅能支持不可变的 BPM 和节拍，对于可变的值仅使用其初值。暂时还没有更加妥当的方法，先这样将就一下。此外视频参数的终止值也没法映射到延长长度后的位置上。
+			// 注意该方法目前仅能支持不可变的 BPM 和节拍，对于可变的值仅使用其初值。暂时还没有更加妥当的方法，先这样将就一下。
 			double quarter = midi.MsPerQuarter, bar = quarter * midi.TimeSignatureNumerator;
 			double[] maxGaps = { 0, quarter, bar, double.MaxValue };
 			double vMaxGap = maxGaps[(int)VConfigLegato], aMaxGap = maxGaps[(int)AConfigLegato];
-			if (VConfigLegato != LegatoMaxGapType.STACCATO && !SheetConfig && VConfig && !isSonarLegal) {
-				foreach (VideoTrack track in trackHelper.videoTracks) {
-					TrackEvents events = track.Events;
-					for (int i = 0; i < events.Count - 1; i++)
-						if ((events[i + 1].Start - events[i].End).ToMilliseconds() <= vMaxGap)
-							events[i].End = events[i + 1].Start;
-				}
+			if (vShouldLegato) {
+				ApplyLegatoOnGeneration(trackHelper.videoTracks, vMaxGap, VConfigStretch);
+				foreach (Func<bool> action in applyToVideoEventsAfterLegato)
+					if (!action()) return false;
 			}
-			if (AConfigLegato != LegatoMaxGapType.STACCATO && AConfig)
-				foreach (AudioTrack aTrack in trackHelper.audioTracks) {
-					TrackEvents events = aTrack.Events;
-					for (int i = 0; i < events.Count - 1; i++)
-						if ((events[i + 1].Start - events[i].End).ToMilliseconds() <= aMaxGap)
-							events[i].End = events[i + 1].Start;
-				}
+			if (AConfigShouldLegato && AConfig)
+				ApplyLegatoOnGeneration(trackHelper.audioTracks, aMaxGap, AConfigStretch);
 			#endregion
 
 			foreach (Track track in trackHelper.AllTracks)
@@ -2157,6 +2222,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				generatedTracks.UnionWiths(trackHelper.audioTracks);
 			nextTrackIndex = trackHelper.Dispose();
 			return !progressForm.RequestAbort;
+		}
+
+		private static void ApplyLegatoOnGeneration<TTrack>(List<TTrack> tracks, double maxGap, StretchType stretch) where TTrack : Track {
+			foreach (TTrack track in tracks) {
+				TrackEvents events = track.Events;
+				for (int i = 0; i < events.Count - 1; i++) {
+					TrackEvent currentEvent = events[i], nextEvent = events[i + 1];
+					if ((nextEvent.Start - currentEvent.End).ToMilliseconds() <= maxGap) {
+						double oldLength = currentEvent.Length.ToMilliseconds();
+						currentEvent.End = nextEvent.Start;
+						double newLength = currentEvent.Length.ToMilliseconds();
+						if (stretch == StretchType.FLEXING_AND_EXTENDING && newLength != oldLength ||
+							stretch == StretchType.EXTENDING_ONLY && newLength > oldLength ||
+							stretch == StretchType.FLEXING_ONLY && newLength < oldLength)
+							currentEvent.AdjustPlaybackRate(oldLength / newLength, true);
+					}
+				}
+			}
 		}
 
 		private static bool ApplyPvRhythmVisualEffectPartialMethod(VideoEvent videoEvent, PvVisualEffect anim) {
@@ -2913,7 +2996,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>
 		/// 临时轨道事件分组。
 		/// </summary>
-		public class TempEventGroup : IDisposable {
+		public class TempEventGroup : IDisposable, ICollection<TrackEvent> {
 			private Timecode startTime;
 			private readonly HashSet<TrackEvent> events = new HashSet<TrackEvent>();
 			private readonly EntryPoint parent;
@@ -2936,18 +3019,39 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (startTime != trackEvent.Start) Dispose();
 				events.Add(trackEvent);
 			}
+			public bool IsDisposed { get; private set; }
 			/// <summary>
 			/// 捆绑轨道事件。
 			/// </summary>
 			/// <returns>轨道事件分组。</returns>
 			public TrackEventGroup Dispose() {
-				if (!Enabled) return null;
-				TrackEventGroup group = events.Count > 1 ? parent.GroupTrackEvents(events) : null;
+				bool isDisposed = IsDisposed;
+				IsDisposed = true;
+				if (!Enabled || events.Count <= 1) return null;
+				TrackEventGroup group = null;
+				if (isDisposed)
+					foreach (TrackEvent trackEvent in events)
+						if (trackEvent.IsGrouped) {
+							group = trackEvent.Group;
+							break;
+						}
+				group = group ?? parent.GroupTrackEvents(events);
 				return group;
 			}
 			void IDisposable.Dispose() {
 				Dispose();
 			}
+
+			public void Clear() { events.Clear(); }
+			public bool Contains(TrackEvent item) { return events.Contains(item); }
+			public void CopyTo(TrackEvent[] array, int arrayIndex) { events.CopyTo(array, arrayIndex); }
+			public bool Remove(TrackEvent item) { return events.Remove(item); }
+			public int Count { get { return events.Count; } }
+			public bool IsReadOnly { get { return ((ICollection<TrackEvent>)events).IsReadOnly; } }
+			public IEnumerator<TrackEvent> GetEnumerator() { return events.GetEnumerator(); }
+			IEnumerator IEnumerable.GetEnumerator() { return events.GetEnumerator(); }
+			/// <inheritdoc cref="List{T}.AddRange(IEnumerable{T})" />
+			public void AddRange<TTrackEvent>(IEnumerable<TTrackEvent> events) where TTrackEvent : TrackEvent { foreach (TrackEvent trackEvent in events) Add(trackEvent); }
 		}
 
 		/// <summary>
@@ -5118,7 +5222,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	/// <summary>
 	/// Promotion Video 的节奏视觉效果类。
 	/// </summary>
-	public class PvVisualEffect {
+	public class PvVisualEffect : ICloneable {
 		public static string[][] InitialValues {
 			get {
 				Lang str = Lang.str;
@@ -5464,6 +5568,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return range;
 			}
 		}
+
+		public PvVisualEffect Clone() {
+			return (PvVisualEffect)MemberwiseClone();
+		}
+		object ICloneable.Clone() {
+			return Clone();
+		}
 	}
 
 	/// <summary>
@@ -5713,8 +5824,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// 应用黑白效果。
 			/// </summary>
 			/// <param name="videoEvent">视频事件</param>
-			public static void Grey(VideoEvent videoEvent) {
-				videoEvent.Effects.AddEffect(blackAndWhite);
+			/// <param name="blendAmount">黑白的混合量。</param>
+			public static void Grey(VideoEvent videoEvent, double blendAmount = 100) {
+				Effect effect = videoEvent.Effects.AddEffect(blackAndWhite);
+				if (blendAmount != 100)
+					(effect.OFXEffect.FindParameterByName("BlendAmount") as OFXDoubleParameter).Value = blendAmount;
 			}
 			/// <summary>
 			/// 应用反转亮度效果。
@@ -26360,6 +26474,51 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			FadeCheck.Checked = configIni.Read("TruncateFadeEnabled", false);
 			NegativeCheck.Checked = configIni.Read("TruncateNegativeEnabled", false);
 		}
+	}
+
+	public class DoActionsOnEventLater : IList<Func<bool>> {
+		private readonly List<Func<bool>> actions = new List<Func<bool>>();
+		public bool Required { get; set; }
+		public DoActionsOnEventLater(bool required) { Required = required; }
+
+		public bool AddIfRequired(Func<bool> action) {
+			if (!Required) return action();
+			else {
+				actions.Add(action);
+				return true;
+			}
+		}
+
+		public void AddIfRequired(Action action) {
+			if (!Required) action();
+			else actions.Add(() => {
+				action();
+				return true;
+			});
+		}
+
+		public bool Invoke() {
+			foreach (Func<bool> action in actions)
+				if (!action()) return false;
+			return true;
+		}
+
+		public int IndexOf(Func<bool> item) { return actions.IndexOf(item); }
+		void IList<Func<bool>>.Insert(int index, Func<bool> item) { actions.Insert(index, item); }
+		public void RemoveAt(int index) { actions.RemoveAt(index); }
+		public Func<bool> this[int index] {
+			get { return actions[index]; }
+			set { actions[index] = value; }
+		}
+		void ICollection<Func<bool>>.Add(Func<bool> item) { actions.Add(item); }
+		public void Clear() { actions.Clear(); }
+		public bool Contains(Func<bool> item) { return actions.Contains(item); }
+		public void CopyTo(Func<bool>[] array, int arrayIndex) { actions.CopyTo(array, arrayIndex); }
+		public bool Remove(Func<bool> item) { return actions.Remove(item); }
+		public int Count { get { return actions.Count; } }
+		public bool IsReadOnly { get { return ((IList<Func<bool>>)actions).IsReadOnly; } }
+		public IEnumerator<Func<bool>> GetEnumerator() { return actions.GetEnumerator(); }
+		IEnumerator IEnumerable.GetEnumerator() { return ((IEnumerable)actions).GetEnumerator(); }
 	}
 	#endregion
 
