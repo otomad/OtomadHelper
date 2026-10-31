@@ -656,6 +656,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				#endif
 			}
 		}
+		public static bool IsProgressFormRequestAbort {
+			get {
+				ProgressForm progress = instance.progressForm;
+				return progress != null && progress.RequestAbort;
+			}
+		}
 
 		public class AudioVideoEnabledTable {
 			public struct AudioVideoEnabledGroup {
@@ -8871,6 +8877,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			double frameDuration = 0.046,
 			double hopDuration = 0.0116) {
 
+			if (EntryPoint.IsProgressFormRequestAbort) {
+				throw new OperationCanceledException();
+			}
+
 			PitchOptions pitchOptions = new PitchOptions {
 				SamplingRate = signal.SamplingRate,
 				LowFrequency = lowFreq,
@@ -8879,21 +8889,32 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				HopDuration = hopDuration
 			};
 			PitchExtractor extractor = new PitchExtractor(pitchOptions);
-			List<float[]> vectors = extractor.ComputeFrom(signal);
 
-			int count = vectors.Count;
-			double[] midiValues = new double[count];
-			double[] timePositions = new double[count];
+			int frameLength = (int)Math.Round(frameDuration * signal.SamplingRate);
+			int hopLength = (int)Math.Round(hopDuration * signal.SamplingRate);
+			if (frameLength <= 0 || hopLength <= 0 || signal.Length < frameLength) {
+				return Tuple.Create(new double[0], new double[0]);
+			}
 
-			for (int i = 0; i < count; i++) {
-				timePositions[i] = i * hopDuration;
-				float[] features = vectors[i];
-				float hz = features != null && features.Length > 0 ? features[0] : 0;
-				if (hz > 0) {
-					midiValues[i] = 69 + 12 * Math.Log(hz / 440.0, 2);
-				} else {
-					midiValues[i] = double.NaN;
+			int frameCount = (signal.Length - frameLength) / hopLength + 1;
+			double[] midiValues = new double[frameCount];
+			double[] timePositions = new double[frameCount];
+
+			float[] frameBuffer = new float[frameLength];
+			float[] features = new float[1];
+
+			for (int i = 0; i < frameCount; i++) {
+				if (EntryPoint.IsProgressFormRequestAbort) {
+					throw new OperationCanceledException();
 				}
+
+				int start = i * hopLength;
+				Array.Copy(signal.Samples, start, frameBuffer, 0, frameLength);
+				extractor.ProcessFrame(frameBuffer, features);
+				float hz = features.Length > 0 ? features[0] : 0;
+
+				timePositions[i] = i * hopDuration;
+				midiValues[i] = hz > 0 ? 69 + 12 * Math.Log(hz / 440.0, 2) : double.NaN;
 			}
 
 			if (medianWindow > 1) {
@@ -8920,22 +8941,50 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			double maxLookAheadMs = 500,
 			int medianWindow = 3,
 			int jumpWindow = 5,
-			double jumpThreshold = 4.0) {
+			double jumpThreshold = 4,
+			double preRollMs = 2500) {
 
-			Tuple<double[], double[]> curve = GetOrLoadCurve(
-				filePath, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold);
-			double[] midiValues = curve.Item1;
-			double[] timePositions = curve.Item2;
-
-			double totalDurationMs = timePositions.Length > 0
-				? timePositions[timePositions.Length - 1] * 1000.0
-				: 0;
+			DiscreteSignal signal = LoadAudioAsSignal(filePath);
+			double totalDurationMs = signal.Length * 1000.0 / signal.SamplingRate;
 			if (timeMs < 0 || timeMs > totalDurationMs) {
 				return null;
 			}
 
-			double winStartSec = (timeMs - windowMs / 2.0) / 1000.0;
-			double winEndSec = (timeMs + windowMs / 2.0) / 1000.0;
+			// 提取目标时间附近 2.5 秒前置 + 最大后置搜索时间 + 2.5 秒后置
+			double postRollMs = maxLookAheadMs + preRollMs;
+			double segmentStartMs = Math.Max(0, timeMs - preRollMs);
+			double segmentEndMs = Math.Min(totalDurationMs, timeMs + postRollMs);
+			double segmentDurationMs = segmentEndMs - segmentStartMs;
+			if (segmentDurationMs <= 0) {
+				return null;
+			}
+
+			int startSample = (int)Math.Floor(segmentStartMs / 1000.0 * signal.SamplingRate);
+			int endSample = (int)Math.Ceiling(segmentEndMs / 1000.0 * signal.SamplingRate);
+			startSample = Math.Max(0, Math.Min(startSample, signal.Length));
+			endSample = Math.Max(startSample, Math.Min(endSample, signal.Length));
+			int segmentLength = endSample - startSample;
+			if (segmentLength <= 0) {
+				return null;
+			}
+
+			float[] segmentSamples = new float[segmentLength];
+			Array.Copy(signal.Samples, startSample, segmentSamples, 0, segmentLength);
+			DiscreteSignal segment = new DiscreteSignal(signal.SamplingRate, segmentSamples);
+
+			Tuple<double[], double[]> curve = ExtractPitchCurve(
+				segment, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold);
+			double[] midiValues = curve.Item1;
+			double[] timePositions = curve.Item2;
+
+			if (timePositions.Length == 0) {
+				return null;
+			}
+
+			double relativeTimeSec = (timeMs - segmentStartMs) / 1000.0;
+			double winStartSec = relativeTimeSec - windowMs / 2000.0;
+			double winEndSec = relativeTimeSec + windowMs / 2000.0;
+
 			List<double> validInWindow = new List<double>();
 			for (int i = 0; i < timePositions.Length; i++) {
 				double t = timePositions[i];
@@ -8954,8 +9003,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return median;
 			}
 
-			double searchStartSec = timeMs / 1000.0;
-			double searchEndSec = (timeMs + maxLookAheadMs) / 1000.0;
+			double searchStartSec = relativeTimeSec;
+			double searchEndSec = relativeTimeSec + maxLookAheadMs / 1000.0;
 			for (int i = 0; i < timePositions.Length; i++) {
 				double t = timePositions[i];
 				if (t < searchStartSec) {
@@ -8965,7 +9014,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					break;
 				}
 				if (!double.IsNaN(midiValues[i])) {
-					return midiValues[i];
+					return (int)Math.Round(midiValues[i], MidpointRounding.AwayFromZero);
 				}
 			}
 
