@@ -99,9 +99,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		// 配置参数变量
 		#region 视频属性
 		/**<summary>启　　用</summary>*/ private bool VConfig { get { return configForm.VideoConfigCheck.Checked; } }
-		/**<summary>视觉效果</summary>*/ internal PvVisualEffectType VConfigEffect { get { return configForm.VideoEffect; } }
-		/**<summary>多重效果</summary>*/ internal PrveValues VConfigEffects { get { return IsVConfigEffects ? (PrveValues)configForm.VideoEffectCombo.SelectedItem : null; } }
-		/**<summary>多重效吗</summary>*/ internal bool IsVConfigEffects { get { return configForm.VideoEffectCombo.SelectedItem is PrveValues; } }
+		/**<summary>视觉效果</summary>*/ private PvVisualEffectType VConfigEffect { get { return configForm.VideoEffect; } }
+		/**<summary>多重效果</summary>*/ private PrveValues VConfigEffects { get { return IsVConfigEffects ? (PrveValues)configForm.VideoEffectCombo.SelectedItem : null; } }
+		/**<summary>多重效吗</summary>*/ private bool IsVConfigEffects { get { return configForm.VideoEffectCombo.SelectedItem is PrveValues; } }
 		/**<summary>拉　　伸</summary>*/ private StretchType VConfigStretch { get { return (StretchType)configForm.VideoScratchCombo.SelectedIndex; } }
 		/**<summary>循　　环</summary>*/ private bool VConfigLoop { get { return configForm.VideoLoopCheck.Checked; } }
 		/**<summary>静态画面</summary>*/ private bool VConfigStatic { get { return configForm.VideoFreezeFirstFrameCheck.Checked; } }
@@ -1192,9 +1192,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (VConfigTruncLoopRegion == 0) // 时间类效果不要做来回或循环，以免冲突。
 				truncate = truncate == TruncateOption.PINGPONG_WITHOUT_SPLIT ? TruncateOption.FREEZE_END_FRAMES :
 					truncate == TruncateOption.PINGPONG_WITH_SPLIT || truncate == TruncateOption.LOOP_WITH_SPLIT ? TruncateOption.SPLIT_THEN_FREEZE : truncate;
-			//if ((VConfigStretch == StretchType.FLEXING_AND_EXTENDING || VConfigStretch == StretchType.EXTENDING_ONLY) && !force) // 拉伸伸长后时间也要相应发生变化。
-			//	length = Timecode.FromMilliseconds(duration * 4); // 画面的最大拉伸倍数为 4，超过后仍会限制为 4。
-			//if (VConfigLegato == LegatoMaxGapType.STACCATO && length > videoEvent.Length) return; // 该功能会和“填补间隙”功能冲突。
 			List<VideoEvent> _truncatedEvents = truncatedEvents = new List<VideoEvent>();
 			Action<TrackEvent> AddTrunc = truncEvent => { if (truncEvent != null) _truncatedEvents.Add((VideoEvent)truncEvent); };
 			double filledLength = (videoEvent.Length - length).ToMilliseconds(), loopedLength = duration * VConfigTruncLoopRegion / 100, loopedStart = duration - loopedLength;
@@ -1227,6 +1224,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				EnvelopePoint point = evt.Envelopes.FindByType(EnvelopeType.Velocity).Points[0];
 				point.Y = y; point.Curve = CurveType.None;
 			};
+			Action<VideoEvent, Timecode, double> SetAnotherPoint = (evt, x, y) => {
+				Envelope velocity2 = evt.Envelopes.FindByType(EnvelopeType.Velocity);
+				EnvelopePoint point = velocity2.Points.GetPointAtX(x);
+				if (point == null) velocity2.Points.Add(new EnvelopePoint(x, y, CurveType.None));
+				else { point.Y = y; point.Curve = CurveType.None; }
+			};
 			if (truncate == TruncateOption.FREEZE_END_FRAMES) {
 				SetPoint(length, 0);
 			} else if (truncate == TruncateOption.SPLIT_THEN_FREEZE) {
@@ -1234,27 +1237,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (truncEvent == null) return;
 				SetFirstPoint(truncEvent, 0);
 				AddTrunc(truncEvent);
-			} else if (truncate == TruncateOption.PINGPONG_WITHOUT_SPLIT || truncate == TruncateOption.PINGPONG_WITH_SPLIT) {
-				List<Timecode> splitPositions = new List<Timecode>();
+			} else if (truncate == TruncateOption.PINGPONG_WITHOUT_SPLIT) {
 				bool isForward = true;
 				for (double splitMs = duration; splitMs < duration + filledLength; splitMs += loopedLength) {
 					Timecode splitPos = Timecode.FromMilliseconds(splitMs);
-					splitPositions.Add(splitPos); // 代码 splitPositions.Insert(0, splitPos); 的性能更差，其时间复杂度是 O(n^2)，而 Add + Reverse 的时间复杂度是 O(n)。
 					isForward = !isForward;
-					if (truncate == TruncateOption.PINGPONG_WITHOUT_SPLIT) SetPoint(splitPos, isForward ? 1 : -1);
+					SetPoint(splitPos, isForward ? 1 : -1);
 				}
-				if (truncate == TruncateOption.PINGPONG_WITH_SPLIT) {
-					splitPositions.Reverse(); // 从后往前分割，避免时间码错乱。
-					Timecode offsetForward = videoEvent.ActiveTake.Offset + Timecode.FromMilliseconds(loopedStart), offsetBackward = videoEvent.ActiveTake.Offset + length;
-					foreach (Timecode splitPos in splitPositions) {
-						VideoEvent truncEvent = FastSplit(videoEvent, splitPos);
-						if (truncEvent == null) continue;
-						truncEvent.ActiveTake.Offset = isForward ? offsetForward : offsetBackward;
-						SetFirstPoint(truncEvent, isForward ? 1 : -1);
-						isForward = !isForward;
-						AddTrunc(truncEvent);
-					}
-					truncatedEvents.Reverse(); // 再倒回来。
+			} else if (truncate == TruncateOption.PINGPONG_WITH_SPLIT) {
+				// 原始计划行为是每次来回折返时都拆分一次，现在为了降低剪辑数目以优化性能，只在第一次拆分一次。
+				VideoEvent truncEvent = FastSplit(videoEvent, length);
+				AddTrunc(truncEvent);
+				bool isForward = true;
+				for (double splitMs = 0; splitMs < filledLength; splitMs += loopedLength) {
+					Timecode splitPos = Timecode.FromMilliseconds(splitMs);
+					isForward = !isForward;
+					SetAnotherPoint(truncEvent, splitPos, isForward ? 1 : -1);
 				}
 			}
 		}
@@ -1999,10 +1997,50 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
 							// 动画效果生成
 							if (!ApplyPvRhythmVisualEffectPartialMethod(videoEvent, animCurrent)) return false;
+							// 五线谱效果生成
+							if (SheetConfig) {
+								double startQuarters = beatIntegrator.GetQuarterPassed(midiEvent), barLength = barEndQuarters - barStartQuarters;
+								if (UseLegacySheetMethod) {
+									double sheetConfigGap = SheetConfigGap,
+										sheetConfigPosition = SheetConfigPosition,
+										sheetConfigPaddingLeft = SheetConfigPaddingLeft,
+										sheetConfigPaddingRight = SheetConfigPaddingRight;
+									if (SheetConfigRelative) {
+										sheetConfigGap *= projHeight / 1080.0;
+										sheetConfigPosition *= projHeight / 1080.0;
+										sheetConfigPaddingLeft *= projWidth / 1920.0;
+										sheetConfigPaddingRight *= projWidth / 1920.0;
+									}
+									double sheetConfigWidth = projWidth - sheetConfigPaddingLeft - sheetConfigPaddingRight;
+									TrackMotionKeyframe keyFrame = (videoEvent.Track as VideoTrack).TrackMotion.InsertMotionKeyframe(Timecode.FromMilliseconds(startTime));
+									keyFrame.Type = VideoKeyframeType.Hold;
+									keyFrame.Width = sheetConfigGap * 2 * projWidth / projHeight;
+									keyFrame.Height = sheetConfigGap * 2;
+									keyFrame.PositionX = -projWidth / 2 + sheetConfigPaddingLeft + sheetConfigWidth / barLength * (startQuarters - barStartQuarters);
+									int octave = _pitch / 12;
+									int line = StaffPitchMap[_pitch % 12];
+									keyFrame.PositionY = sheetConfigPosition - sheetConfigGap * 3 + (octave - 5) * sheetConfigGap * 3.5 + line * sheetConfigGap * 0.5 + SheetConfigCelf * 12;
+								} else {
+									double sheetConfigWidth = virtualWidth - SheetConfigPaddingLeft - SheetConfigPaddingRight;
+									if (Plugin.picInPic == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
+									Effect picInPic = videoEvent.Effects.AddEffect(Plugin.picInPic);
+									OFXDoubleParameter scale = picInPic.OFXEffect.FindParameterByName("Scale") as OFXDoubleParameter;
+									scale.Value = SheetConfigGap * 2.0 / virtualHeight;
+									OFXDoubleParameter scaleY = picInPic.OFXEffect.FindParameterByName("DistortionScaleY") as OFXDoubleParameter; // Vegas Pro 15 及以下版本不支持。
+									if (scaleY != null) scaleY.Value = scale.Value;
+									OFXDouble2DParameter location = picInPic.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter;
+									double positionX = -virtualWidth / 2 + SheetConfigPaddingLeft + sheetConfigWidth / barLength * (startQuarters - barStartQuarters);
+									int octave = _pitch / 12;
+									int line = StaffPitchMap[_pitch % 12];
+									double positionY = SheetConfigPosition - SheetConfigGap * 3 + (octave - 5) * SheetConfigGap * 3.5 + line * SheetConfigGap * 0.5 + SheetConfigCelf * 12;
+									location.Value = new OFXDouble2D { X = positionX / virtualWidth + 0.5, Y = positionY / virtualHeight + 0.5 };
+								}
+							}
 							// 截断画面
 							List<VideoEvent> truncatedEvents = null;
 							bool isTimeClassesEffects = animCurrent.IsTimeClassesEffects;
-							if (SheetConfig && SheetConfigFreezeAtNoteOff) FreezeLastFrame(videoEvent, Math.Min(duration, videoLength), originalRate, out truncatedEvents, true, isTimeClassesEffects);
+							if (SheetConfig && SheetConfigFreezeAtNoteOff) FreezeLastFrame(videoEvent, duration, originalRate, out truncatedEvents, true, isTimeClassesEffects);
+							// 后续可选的衍生发展：界面中添加一个新的选项用于控制将上面的 duration 参数换成 Math.Min(duration, videoLength)。
 							else if (VConfigTrunc != TruncateOption.LENGTHENABLE) FreezeLastFrame(videoEvent, videoLength, originalRate, out truncatedEvents, false, isTimeClassesEffects);
 							if (truncatedEvents != null) {
 								FreezeLastFrame_ApplyIdleEffects(truncatedEvents);
@@ -2014,45 +2052,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							return true;
 						};
 						if (!applyToVideoEventsAfterLegato.AddIfRequired(ApplyParameters)) return false;
-						// 五线谱效果生成
-						if (SheetConfig) {
-							double startQuarters = beatIntegrator.GetQuarterPassed(midiEvent), barLength = barEndQuarters - barStartQuarters;
-							if (UseLegacySheetMethod) {
-								double sheetConfigGap = SheetConfigGap,
-									sheetConfigPosition = SheetConfigPosition,
-									sheetConfigPaddingLeft = SheetConfigPaddingLeft,
-									sheetConfigPaddingRight = SheetConfigPaddingRight;
-								if (SheetConfigRelative) {
-									sheetConfigGap *= projHeight / 1080.0;
-									sheetConfigPosition *= projHeight / 1080.0;
-									sheetConfigPaddingLeft *= projWidth / 1920.0;
-									sheetConfigPaddingRight *= projWidth / 1920.0;
-								}
-								double sheetConfigWidth = projWidth - sheetConfigPaddingLeft - sheetConfigPaddingRight;
-								TrackMotionKeyframe keyFrame = (videoEvent.Track as VideoTrack).TrackMotion.InsertMotionKeyframe(Timecode.FromMilliseconds(startTime));
-								keyFrame.Type = VideoKeyframeType.Hold;
-								keyFrame.Width = sheetConfigGap * 2 * projWidth / projHeight;
-								keyFrame.Height = sheetConfigGap * 2;
-								keyFrame.PositionX = -projWidth / 2 + sheetConfigPaddingLeft + sheetConfigWidth / barLength * (startQuarters - barStartQuarters);
-								int octave = _pitch / 12;
-								int line = StaffPitchMap[_pitch % 12];
-								keyFrame.PositionY = sheetConfigPosition - sheetConfigGap * 3 + (octave - 5) * sheetConfigGap * 3.5 + line * sheetConfigGap * 0.5 + SheetConfigCelf * 12;
-							} else {
-								double sheetConfigWidth = virtualWidth - SheetConfigPaddingLeft - SheetConfigPaddingRight;
-								if (Plugin.picInPic == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
-								Effect picInPic = videoEvent.Effects.AddEffect(Plugin.picInPic);
-								OFXDoubleParameter scale = picInPic.OFXEffect.FindParameterByName("Scale") as OFXDoubleParameter;
-								scale.Value = SheetConfigGap * 2.0 / virtualHeight;
-								OFXDoubleParameter scaleY = picInPic.OFXEffect.FindParameterByName("DistortionScaleY") as OFXDoubleParameter; // Vegas Pro 15 及以下版本不支持。
-								if (scaleY != null) scaleY.Value = scale.Value;
-								OFXDouble2DParameter location = picInPic.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter;
-								double positionX = -virtualWidth / 2 + SheetConfigPaddingLeft + sheetConfigWidth / barLength * (startQuarters - barStartQuarters);
-								int octave = _pitch / 12;
-								int line = StaffPitchMap[_pitch % 12];
-								double positionY = SheetConfigPosition - SheetConfigGap * 3 + (octave - 5) * SheetConfigGap * 3.5 + line * SheetConfigGap * 0.5 + SheetConfigCelf * 12;
-								location.Value = new OFXDouble2D { X = positionX / virtualWidth + 0.5, Y = positionY / virtualHeight + 0.5 };
-							}
-						}
 						if (!(CombConfigMatchCut && CombConfigMatchCutApplyEffectsByRound) || matchCutRound != prevMatchCutRound) {
 							if (SheetConfig) {
 								NoteOnEvent nextNoteEvent = NextNoteEvent();
@@ -2602,11 +2601,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			stream.Size = new Size(height, height);
 			videoEvent.AddTake(solidColor.GetVideoStreamByIndex(0));
 			(solidColor.Generator.OFXEffect.FindParameterByName("Color") as OFXRGBAParameter).Value = color.ToOFXColor();
-			return clef == 1 ? AddBassClef(videoEvent) : AddTrebleClef(videoEvent);
+			if (clef == 1) AddBassClef(videoEvent); else AddTrebleClef(videoEvent);
+			foreach (Effect effect in videoEvent.Effects)
+				effect.ApplyBeforePanCrop = true;
+			return videoEvent;
 		}
 
 		#region 谱号数据杂项
-		private VideoEvent AddBassClef(VideoEvent videoEvent) {
+		private void AddBassClef(VideoEvent videoEvent) {
 			OFXEffect ofx = videoEvent.Effects.AddEffect(Plugin.bzMasking).OFXEffect;
 			(ofx.FindParameterByName("Enable_0") as OFXBooleanParameter).Value = true;
 			ChooseBezierType(ofx, "Type_0", 3);
@@ -2625,10 +2627,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			(ofx.FindParameterByName("Width_2") as OFXDoubleParameter).Value = 0.1;
 			(ofx.FindParameterByName("Height_2") as OFXDoubleParameter).Value = 0.1;
 			(ofx.FindParameterByName("Location_2") as OFXDouble2DParameter).Value = new OFXDouble2D { X = 0.865, Y = 0.503 };
-			return videoEvent;
 		}
 
-		private VideoEvent AddTrebleClef(VideoEvent videoEvent) {
+		private void AddTrebleClef(VideoEvent videoEvent) {
 			OFXEffect ofx = videoEvent.Effects.AddEffect(Plugin.bzMasking).OFXEffect;
 			(ofx.FindParameterByName("Enable_0") as OFXBooleanParameter).Value = true;
 			ChooseBezierType(ofx, "Type_0", 3);
@@ -2660,7 +2661,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			(ofx2.FindParameterByName("Width_2") as OFXDoubleParameter).Value = 1;
 			(ofx2.FindParameterByName("Height_2") as OFXDoubleParameter).Value = 1;
 			(ofx2.FindParameterByName("Location_2") as OFXDouble2DParameter).Value = new OFXDouble2D { X = 0.453, Y = 0.416 };
-			return videoEvent;
 		}
 		#endregion
 
@@ -5157,20 +5157,37 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		AFTER_LAST_NOTE,
 	}
 
+	/// <summary>
+	/// 截断选项。
+	/// </summary>
 	public enum TruncateOption {
+		/// <summary>可延长。</summary>
 		LENGTHENABLE,
+		/// <summary>冻结尾帧。</summary>
 		FREEZE_END_FRAMES,
+		/// <summary>截断尾帧。</summary>
 		TRIM_END_FRAMES,
+		/// <summary>分割后冻结。</summary>
 		SPLIT_THEN_FREEZE,
+		/// <summary>分割后续播。</summary>
 		SPLIT_THEN_RESUME,
+		/// <summary>来回不分割。</summary>
 		PINGPONG_WITHOUT_SPLIT,
+		/// <summary>来回且分割。</summary>
 		PINGPONG_WITH_SPLIT,
+		/// <summary>循环且分割。</summary>
 		LOOP_WITH_SPLIT,
 	}
 
+	/// <summary>
+	/// 反色选项。
+	/// </summary>
 	public enum NegativeOption {
+		/// <summary>色相反转。</summary>
 		HUE_INVERT,
+		/// <summary>辉度反转。</summary>
 		LUMIN_INVERT,
+		/// <summary>颜色反转。</summary>
 		COLOR_INVERT,
 	}
 
@@ -12047,12 +12064,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public IntegerTrackWithBox() {
 			InitializeComponent();
 			Track.MouseClick += new MouseEventHandler(Track_MouseClick);
-			Track.MouseDown += new MouseEventHandler(Track_MouseDown);
 			Numeric.MouseWheel += AutoLayoutTracksGridForm.NumericUpDown_MouseWheel;
-			doubleClickTimer.Tick += new EventHandler((sender, e) => {
-				isWaitingDoubleClick = false;
-				doubleClickTimer.Stop();
-			});
 			Layout += IntegerTrackWithBox_Layout;
 		}
 
@@ -12163,32 +12175,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		//public new Size Size { get { return base.Size; } set { try { base.Size = value; } catch (Exception e) { } } }
 
 		/// <summary>
-		/// 右键/中键滑动条，可以重置其值。
+		/// 右键/中键滑动条，可以重置其值。（现已弃用双击重置行为。）
 		/// </summary>
 		private void Track_MouseClick(object sender, MouseEventArgs e) {
 			if ((e.Button == MouseButtons.Middle || e.Button == MouseButtons.Right) && e.Clicks == 1) ResetDefaultValue();
 		}
-
-		/// <summary>
-		/// 双击滑动条，也可以重置其值。（现已弃用双击重置行为。）
-		/// </summary>
-		private void Track_MouseDown(object sender, MouseEventArgs e) {
-			// pass
-			/*if (e.Button == MouseButtons.Left && e.Clicks == 1) {
-				if (!isWaitingDoubleClick) {
-					isWaitingDoubleClick = true;
-					doubleClickTimer.Start();
-				} else {
-					doubleClickTimer.Stop();
-					isWaitingDoubleClick = false;
-					ResetDefaultValue();
-				}
-			}*/
-		}
-
-		private const int DOUBLE_CLICK_DURATION = 500;
-		private readonly System.Windows.Forms.Timer doubleClickTimer = new System.Windows.Forms.Timer { Interval = DOUBLE_CLICK_DURATION };
-		private bool isWaitingDoubleClick = false;
 
 		private void ResetDefaultValue() {
 			Value = DefaultValue;
@@ -26424,6 +26415,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				LengthenableRadio, FreezeEndFramesRadio, TrimEndFramesRadio, SplitThenFreezeRadio,
 				SplitThenResumeRadio, PingPongWithoutSplitRadio, PingPongWithSplitRadio, LoopWithSplitRadio,
 			};
+			AllowRadioButtonsDoubleClick();
 			NegativeCombo.Anchor = AnchorStyles.Left;
 			IdleEffect_CheckedChanged(null, null);
 			Option_CheckedChanged(null, null);
@@ -26442,9 +26434,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void VisualTruncateOptionsForm_Shown(object sender, EventArgs e) {
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
-			//PingPongWithoutSplitRadio.Enabled = PingPongWithSplitRadio.Enabled = LoopWithSplitRadio.Enabled =
-			//	!(parent.IsVConfigEffects ? parent.VConfigEffects.Any(v => IsTimeClassesPrve(v.Effect)) : IsTimeClassesPrve(parent.VConfigEffect));
 			Option_CheckedChanged(null, null);
+		}
+
+		private void AllowRadioButtonsDoubleClick() {
+			// Allow double clicking of radios.
+			foreach (RadioButton radio in truncateOptionRadios) {
+				MethodInfo method = typeof(RadioButton).GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic);
+				if (method != null) method.Invoke(radio, new object[] { ControlStyles.StandardClick | ControlStyles.StandardDoubleClick, true });
+				radio.MouseDoubleClick += Option_MouseDoubleClick;
+			}
+		}
+
+		private void Option_MouseDoubleClick(object sender, EventArgs e) {
+			Close();
 		}
 
 		private static bool IsTimeClassesPrve(PvVisualEffectType type) {
@@ -26504,8 +26507,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MonochromeTrack.SetValue(configIni.Read("TruncateMonochrome", 100), 100);
 			FadeTrack.SetValue(configIni.Read("TruncateFade", 50), 50);
 			NegativeCombo.SetIndex(configIni.Read("TruncateNegative", 2), 2);
-			MonochromeCheck.Checked = configIni.Read("TruncateMonochromeEnabled", false);
-			FadeCheck.Checked = configIni.Read("TruncateFadeEnabled", false);
+			MonochromeCheck.Checked = configIni.Read("TruncateMonochromeEnabled", true);
+			FadeCheck.Checked = configIni.Read("TruncateFadeEnabled", true);
 			NegativeCheck.Checked = configIni.Read("TruncateNegativeEnabled", false);
 		}
 	}
@@ -26607,7 +26610,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutRepeatRoundBox = new System.Windows.Forms.NumericUpDown();
 			this.AudioTuneMethodCombo = new System.Windows.Forms.ComboBox();
 			this.AudioAltMethodCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
-			this.StaffFreezeAtNoteOffCheck = new System.Windows.Forms.CheckBox();
+			this.StaffFreezeAtNoteOffCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.PreviewBasePitchBtn = new System.Windows.Forms.Button();
 			this.AudioStretchAttrCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.menu = new System.Windows.Forms.MenuStrip();
@@ -27853,6 +27856,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.StaffFreezeAtNoteOffCheck.Size = new System.Drawing.Size(238, 36);
 			this.StaffFreezeAtNoteOffCheck.TabIndex = 7;
 			this.StaffFreezeAtNoteOffCheck.Text = "定格在音符结尾处";
+			this.StaffFreezeAtNoteOffCheck.UserChecked = true;
 			this.StaffFreezeAtNoteOffCheck.UseVisualStyleBackColor = true;
 			//
 			// PreviewBasePitchBtn
@@ -37155,7 +37159,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.Label StaffClefColorLbl;
 		public NumericUpDownWithUnit StaffClefScaleBox;
 		public System.Windows.Forms.Label StaffClefScaleLbl;
-		public System.Windows.Forms.CheckBox StaffFreezeAtNoteOffCheck;
+		public RememberedCheckBox StaffFreezeAtNoteOffCheck;
 		public NumericUpDownWithUnit StaffSurfacePaddingRightBox;
 		public System.Windows.Forms.Label StaffSurfacePaddingRightLbl;
 		public System.Windows.Forms.ToolStripMenuItem increaseSpacingToolStripMenuItem;
@@ -38123,7 +38127,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			StaffClefColorBtn.Color = Color.FromArgb(configIni.Read("ClefColor", Color.White.ToArgb()));
 			StaffClefScaleBox.SetValue(configIni.Read("ClefScale", 100), 100);
 			StaffGenerateClefCheck.Checked = configIni.Read("GenerateStaffClef", true);
-			StaffFreezeAtNoteOffCheck.Checked = configIni.Read("FreezeAtNoteOff", true);
+			StaffFreezeAtNoteOffCheck.UserChecked = configIni.Read("FreezeAtNoteOff", true);
 			StaffLengthenToBarEndCheck.Checked = configIni.Read("LengthenToBarEnd", true);
 			StaffLegacyMethodCheck.Checked = configIni.Read("LegacyMethod", false);
 			configIni.EndSection();
@@ -38377,7 +38381,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("ClefColor", StaffClefColorBtn.Color.ToArgb());
 			configIni.Write("ClefScale", StaffClefScaleBox.Value);
 			configIni.Write("GenerateStaffClef", StaffGenerateClefCheck.Checked);
-			configIni.Write("FreezeAtNoteOff", StaffFreezeAtNoteOffCheck.Checked);
+			configIni.Write("FreezeAtNoteOff", StaffFreezeAtNoteOffCheck.UserChecked);
 			configIni.Write("LengthenToBarEnd", StaffLengthenToBarEndCheck.Checked);
 			configIni.Write("LegacyMethod", StaffLegacyMethodCheck.Checked);
 			configIni.EndSection();
@@ -39625,7 +39629,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				StaffLineThicknessBox.Enabled = StaffLineColorBtn.Enabled = false;
 			if (!StaffGenerateClefCheck.Checked)
 				StaffClefScaleBox.Enabled = StaffClefColorBtn.Enabled = false;
-			StaffFreezeAtNoteOffCheck.Enabled = StaffLengthenToBarEndCheck.Checked;
+			StaffFreezeAtNoteOffCheck.Status = visualTruncate.Truncate == TruncateOption.LENGTHENABLE || !StaffLengthenToBarEndCheck.Checked ?
+				RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
 			if (VideoConfigCheck.Checked && VideoStackCheck.Checked && VideoStackCheck.Enabled)
 				StaffLegacyMethodCheck.Checked = StaffLegacyMethodCheck.Enabled = false;
 			SetEnabled(YtpTab, VideoConfigCheck.Checked || AudioConfigCheck.Checked);
@@ -41751,6 +41756,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void VideoFreezeLastFrameBtn_Click(object sender, EventArgs e) {
 			visualTruncate.ShowDialog();
+			SetCheckedEnabled(sender, e);
 		}
 
 		private void ConfigForm_HelpButtonClicked(object sender, CancelEventArgs e) {

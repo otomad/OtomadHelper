@@ -50,7 +50,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutRepeatRoundBox = new System.Windows.Forms.NumericUpDown();
 			this.AudioTuneMethodCombo = new System.Windows.Forms.ComboBox();
 			this.AudioAltMethodCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
-			this.StaffFreezeAtNoteOffCheck = new System.Windows.Forms.CheckBox();
+			this.StaffFreezeAtNoteOffCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.PreviewBasePitchBtn = new System.Windows.Forms.Button();
 			this.AudioStretchAttrCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.menu = new System.Windows.Forms.MenuStrip();
@@ -1296,6 +1296,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.StaffFreezeAtNoteOffCheck.Size = new System.Drawing.Size(238, 36);
 			this.StaffFreezeAtNoteOffCheck.TabIndex = 7;
 			this.StaffFreezeAtNoteOffCheck.Text = "定格在音符结尾处";
+			this.StaffFreezeAtNoteOffCheck.UserChecked = true;
 			this.StaffFreezeAtNoteOffCheck.UseVisualStyleBackColor = true;
 			//
 			// PreviewBasePitchBtn
@@ -10598,7 +10599,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.Label StaffClefColorLbl;
 		public NumericUpDownWithUnit StaffClefScaleBox;
 		public System.Windows.Forms.Label StaffClefScaleLbl;
-		public System.Windows.Forms.CheckBox StaffFreezeAtNoteOffCheck;
+		public RememberedCheckBox StaffFreezeAtNoteOffCheck;
 		public NumericUpDownWithUnit StaffSurfacePaddingRightBox;
 		public System.Windows.Forms.Label StaffSurfacePaddingRightLbl;
 		public System.Windows.Forms.ToolStripMenuItem increaseSpacingToolStripMenuItem;
