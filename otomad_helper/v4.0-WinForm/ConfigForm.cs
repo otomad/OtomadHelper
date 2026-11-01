@@ -42,6 +42,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			CheckForIllegalCrossThreadCalls = false;
 			SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
 			InitializeComponent();
+			//new Sunisoft.IrisSkin.SkinEngine().SkinFile = "skins/MacOS.ssk";
 
 			#if VEGAS_ENVIRONMENT
 			parent = entryPoint;

@@ -21,7 +21,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//HandledMouseEventArgs hme = e as HandledMouseEventArgs;
 			//if (hme != null) hme.Handled = true;
 			NumericUpDown numeric = sender as NumericUpDown;
-			if (e is HandledMouseEventArgs hme) hme.Handled = true;
+			if (e is HandledMouseEventArgs) ((HandledMouseEventArgs)e).Handled = true;
 			decimal increment = numeric.Increment;
 			if (e.Delta > 0) {
 				if (numeric.Value + increment > numeric.Maximum) numeric.Value = numeric.Maximum;

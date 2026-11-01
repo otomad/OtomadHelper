@@ -1950,7 +1950,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							prevVideoEvent = videoEvent;
 						}
 						PvVisualEffect animCurrent = anim.Clone();
-						if (anim.IsTimeClassEffects) applyToVideoEventsAfterLegato.AddIfRequired(() => ReverseVideo(videoEvent, animCurrent.IsReverse, videoLength));
+						if (anim.TimeClass == 1) applyToVideoEventsAfterLegato.AddIfRequired(() => ReverseVideo(videoEvent, animCurrent.IsReverse, videoLength));
 						if (VConfigStatic) FreezeFirstFrame(videoEvent);
 						videoEvent.Loop = VConfigLoop;
 						if (tempEventGroup != null) tempEventGroup.Add(videoEvent);
@@ -2038,7 +2038,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							}
 							// 截断画面
 							List<VideoEvent> truncatedEvents = null;
-							bool isTimeClassesEffects = animCurrent.IsTimeClassesEffects;
+							bool isTimeClassesEffects = animCurrent.TimeClass != 0;
 							if (SheetConfig && SheetConfigFreezeAtNoteOff) FreezeLastFrame(videoEvent, duration, originalRate, out truncatedEvents, true, isTimeClassesEffects);
 							// 后续可选的衍生发展：界面中添加一个新的选项用于控制将上面的 duration 参数换成 Math.Min(duration, videoLength)。
 							else if (VConfigTrunc != TruncateOption.LENGTHENABLE) FreezeLastFrame(videoEvent, videoLength, originalRate, out truncatedEvents, false, isTimeClassesEffects);
@@ -2291,7 +2291,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (anim.IsGaussianBlur) if (Plugin.gaussianBlur != null) Plugin.ForVideoEvents.GaussianBlur(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.gaussian_blur)); return false; }
 			if (anim.IsRadialBlur) if (Plugin.radialBlur != null) Plugin.ForVideoEvents.RadialBlur(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.radial_blur)); return false; }
 			if (anim.VerticalExpansion != null) if (Plugin.picInPic != null) Plugin.ForVideoEvents.Expansion(videoEvent, anim.VerticalExpansion); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
-			if (anim.TimeClass2 != null) Plugin.ForVideoEvents.TimeClass2(videoEvent, anim.TimeClass2);
+			if (anim.TimeClass == 2) Plugin.ForVideoEvents.TimeClass2(videoEvent, PvVisualEffectType.WOBBLE_PERIOD);
 			if (anim.IsZoomOutIn) if (Plugin.picInPic != null) Plugin.ForVideoEvents.ZoomOutIn(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
 			if (anim.IsWipeInTheRight) if (Plugin.crop != null) Plugin.ForVideoEvents.WipeInTheRight(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.crop)); return false; }
 			if (anim.IsSplitVerticalOut) if (Plugin.crop != null) Plugin.ForVideoEvents.SplitVerticalOut(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.crop)); return false; }
@@ -5251,7 +5251,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		GREY,
 		PINGPONG,
 		WHIRL, // PERPETUAL_MOTION / UNLIMITED
-		SHARP_REWIND,
 		WOBBLE_PERIOD,
 		VERTICAL_EXPANSION,
 		VERTICAL_EXPANSION_WITH_REBOUND,
@@ -5266,6 +5265,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		WIPE_IN_THE_RIGHT,
 		SPLIT_VERTICAL_OUT,
 		RANDOM_1,
+		// 因技术限制暂时不再支持。
+		SHARP_REWIND = -100,
 	}
 
 	/// <summary>
@@ -5307,7 +5308,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					new string[] { str.effect_init_chromatic, str.effect_init_monochrome },
 					new string[] { str.effect_init_forward, str.effect_init_counter },
 					new string[] { str.effect_init_forward, str.effect_init_stepon },
-					new string[] { str.effect_init_forward },
+					//new string[] { str.effect_init_forward },
 					new string[] { str.effect_init_forward },
 					new string[] { str.effect_init_up },
 					new string[] { str.effect_init_up },
@@ -5337,8 +5338,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					{ str.invert_class, new PvVisualEffectType[] { PvVisualEffectType.NEGATIVE, PvVisualEffectType.LUMIN_INVERT, PvVisualEffectType.NEGATIVE_INTERRUPT } },
 					{ str.hue_class, new PvVisualEffectType[] { PvVisualEffectType.HUE_INVERT, PvVisualEffectType.STEP_3_CHANGE_HUE, PvVisualEffectType.STEP_4_CHANGE_HUE, PvVisualEffectType.STEP_5_CHANGE_HUE, PvVisualEffectType.STEP_6_CHANGE_HUE, PvVisualEffectType.STEP_7_CHANGE_HUE, PvVisualEffectType.STEP_8_CHANGE_HUE } },
 					{ str.monochrome_class, new PvVisualEffectType[] { PvVisualEffectType.GREY } },
-					{ str.time_class, new PvVisualEffectType[] { PvVisualEffectType.PINGPONG, PvVisualEffectType.WHIRL } },
-					{ str.time_class_2, new PvVisualEffectType[] { PvVisualEffectType.SHARP_REWIND, PvVisualEffectType.WOBBLE_PERIOD } },
+					{ str.time_class, new PvVisualEffectType[] { PvVisualEffectType.PINGPONG, PvVisualEffectType.WHIRL, PvVisualEffectType.WOBBLE_PERIOD } },
+					//{ str.time_class_2, new PvVisualEffectType[] { PvVisualEffectType.SHARP_REWIND, PvVisualEffectType.WOBBLE_PERIOD } },
 					{ str.expansion_and_compression_class, new PvVisualEffectType[] { PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.VERTICAL_EXPANSION_WITH_REBOUND, PvVisualEffectType.VERTICAL_COMPRESSION, PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND, PvVisualEffectType.VERTICAL_BOUNCE, PvVisualEffectType.OBLIQUE_EXPANSION_AND_COMPRESSION, PvVisualEffectType.PUYO_PUYO} },
 					{ str.swing_class, new PvVisualEffectType[] { PvVisualEffectType.PENDULUM } },
 					{ str.blur_class, new PvVisualEffectType[] { PvVisualEffectType.GAUSSIAN_BLUR, PvVisualEffectType.RADIAL_BLUR } },
@@ -5395,13 +5396,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public PvVisualEffectType? VerticalExpansion { get { return GetFirstEffectInRange(PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.VERTICAL_BOUNCE); } }
 		public bool RequirePicInPicDeformEffects { get { return GetFirstEffectInRange(PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.PUYO_PUYO) != null; } }
 		public bool IsVerticalBounce { get { return fxes.HasEffect(PvVisualEffectType.VERTICAL_BOUNCE); } }
-		public PvVisualEffectType? TimeClass2 { get { return GetFirstEffectInRange(PvVisualEffectType.SHARP_REWIND, PvVisualEffectType.WOBBLE_PERIOD); } }
+		//public PvVisualEffectType? TimeClass2 { get { return GetFirstEffectInRange(PvVisualEffectType.WOBBLE_PERIOD, PvVisualEffectType.WOBBLE_PERIOD); } }
 		public bool IsPitchHoldEffects { get { return GetFirstEffectInRange(PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_INVERT) != null; } }
 		public bool IsPitchNotHoldEffects { get { return fxes.HasEffect(PvVisualEffectType.H_FLIP_INTERRUPT, PvVisualEffectType.V_FLIP_INTERRUPT, PvVisualEffectType.NEGATIVE_INTERRUPT); } }
 		public bool IsRandomly { get { return fxes.HasEffect(PvVisualEffectType.RANDOM_1); } }
-		public bool IsTimeClassEffects { get { return GetFirstEffectInRange(PvVisualEffectType.PINGPONG, PvVisualEffectType.WHIRL) != null; } }
-		public bool IsTimeClass2Effects { get { return GetFirstEffectInRange(PvVisualEffectType.SHARP_REWIND, PvVisualEffectType.WOBBLE_PERIOD) != null; } }
-		public bool IsTimeClassesEffects { get { return GetFirstEffectInRange(PvVisualEffectType.PINGPONG, PvVisualEffectType.WOBBLE_PERIOD) != null; } }
+		public int TimeClass { get { return GetFirstEffectInRange(PvVisualEffectType.PINGPONG, PvVisualEffectType.WHIRL) != null ? 1 : fxes.HasEffect(PvVisualEffectType.WOBBLE_PERIOD) ? 2 : 0; } }
 
 		public PvVisualEffect(PvVisualEffectType fx, int initStep = 0) : this(new PrveValue(fx, initStep)) { }
 		public PvVisualEffect(PrveValue fx) : this(new PrveValues { fx }) { }
@@ -6351,20 +6350,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// <param name="videoEvent">视频事件。</param>
 			/// <param name="type">所选的映像节奏视觉效果。必须是时间类 2 中的效果才可使用。</param>
 			/// <param name="percent">倒带开始时间百分比。<br /><strong>V4 (WinForm) 版本暂不支持修改。</strong></param>
+			/// <param name="originalRate">若提供原始速率可用于判断剪辑是否已被拉伸过。</param>
 			public static void TimeClass2(VideoEvent videoEvent, PvVisualEffectType? type, double? percent = null) {
-				if (type == null || type < PvVisualEffectType.SHARP_REWIND || type > PvVisualEffectType.WOBBLE_PERIOD) return;
-				bool isStretching = videoEvent.PlaybackRate != 1;
+				if (type == null || type != PvVisualEffectType.WOBBLE_PERIOD) return;
+				//bool isStretching = videoEvent.PlaybackRate != originalRate;
 				Envelope velocity = videoEvent.Envelopes.FindByType(EnvelopeType.Velocity) ?? new Envelope(EnvelopeType.Velocity);
 				if (!videoEvent.Envelopes.HasEnvelope(EnvelopeType.Velocity)) videoEvent.Envelopes.Add(velocity);
 				if (type == PvVisualEffectType.WOBBLE_PERIOD) {
 					double _percent = percent ?? 0.5;
-					if (isStretching) velocity.Points[0].Y /= _percent;
+					//if (isStretching) velocity.Points[0].Y /= _percent;
 					double start = velocity.Points[0].Y;
 					velocity.Points[0].Curve = CurveType.None;
 					velocity.Points.Add(new EnvelopePoint(videoEvent.Length.Multiply(_percent), -start, CurveType.None));
 				} else if (type == PvVisualEffectType.SHARP_REWIND) {
 					double _percent = percent ?? 0.9;
-					if (isStretching) velocity.Points[0].Y /= _percent;
+					//if (isStretching) velocity.Points[0].Y /= _percent;
 					double start = velocity.Points[0].Y;
 					double value = -start / (1 - _percent);
 					velocity.Points[0].Curve = CurveType.None;
@@ -39167,7 +39167,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				string.Format(str.step_change_hue, 7),
 				string.Format(str.step_change_hue, 8),
 				str.chromatic_and_monochrome, str.pingpong, str.whirl,
-				str.sharp_rewind, str.wobble_period,
+				/*str.sharp_rewind,*/ str.wobble_period,
 				str.vertical_expansion,
 				str.vertical_expansion_with_rebound,
 				str.vertical_compression,

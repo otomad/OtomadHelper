@@ -15,7 +15,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void VideoEffectCombo_SelectedIndexChanged(object sender, EventArgs e) {
-			_ = VideoEffectCombo.SelectedIndex;
+			//_ = VideoEffectCombo.SelectedIndex;
 		}
 
 		private void OkBtn_Click(object sender, EventArgs e) {

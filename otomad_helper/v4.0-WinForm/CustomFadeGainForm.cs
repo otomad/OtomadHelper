@@ -23,7 +23,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void PreviewBtn_Paint(object sender, PaintEventArgs e) {
 			Button button = PreviewBtn;
 			decimal min = FromBox.Value, max = ToBox.Value;
-			Debug.WriteLine($"${min}, ${max}");
+			Debug.WriteLine(min + ", " + max);
 			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 			const int MARGIN = 0;
 			decimal width = button.Width - MARGIN * 2, height = button.Height - MARGIN * 2;

@@ -194,7 +194,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void ApplyValueInternally(Action action) {
 			isInternalChanging = true;
 			try {
-				action?.Invoke();
+				if (action != null) action.Invoke();
 			} finally {
 				isInternalChanging = false;
 			}

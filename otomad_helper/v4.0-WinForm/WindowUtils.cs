@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 public static class WindowUtils {
 	public static void EnableAcrylic(IWin32Window window, Color blurColor) {
-		if (window is null) throw new ArgumentNullException(nameof(window));
+		if (window == null) throw new ArgumentNullException("window");
 
 		var accentPolicy = new AccentPolicy {
 			AccentState = ACCENT.ENABLE_ACRYLICBLURBEHIND,
@@ -39,7 +39,7 @@ public static class WindowUtils {
 	// https://github.com/riverar/sample-win32-acrylicblur/blob/917adc277c7258307799327d12262ebd47fd0308/MainWindow.xaml.cs
 
 	[DllImport("user32.dll")]
-	private static extern int SetWindowCompositionAttribute(HandleRef hWnd, in WindowCompositionAttributeData data);
+	private static extern int SetWindowCompositionAttribute(HandleRef hWnd, WindowCompositionAttributeData data);
 
 	private unsafe struct WindowCompositionAttributeData {
 		public WCA Attribute;
