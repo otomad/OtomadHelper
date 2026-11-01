@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private bool isSyncing = false; // 防止双向绑定时陷入死循环的旗标
 		private string headerTitle = string.Empty;
 		private bool isInitialized = false; // 引入防重复执行旗标
+		private readonly Dictionary<TabPage, bool> pageEnabledStatus = new Dictionary<TabPage, bool>(); // 维护页面禁用状态的字典
 
 		public ButtonTabControl() {
 			// 默认设置一个美观的初始大小
@@ -27,14 +29,94 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		// 暴露给外部的属性：在按钮栏开头处显示的标题
-		[Category("Appearance"), Description("在选项卡按钮开头处显示的标题文本，为空则自动隐藏"), DefaultValue("")]
+		/// <summary>
+		/// 在选项卡按钮开头处显示的标题文本，为空则自动隐藏。
+		/// </summary>
+		[Category("Appearance"), Description("在选项卡按钮开头处显示的标题文本，为空则自动隐藏。"), DefaultValue("")]
 		public string HeaderTitle {
 			get { return headerTitle; }
 			set {
 				// 运行期同步更新 Label
-				titleLabel.Text = headerTitle = value;
+				headerTitle = value;
+				if (titleLabel == null) return;
+				titleLabel.Text = value;
 				titleLabel.Visible = !string.IsNullOrEmpty(value);
 			}
+		}
+
+		#region 公开控制方法：启用/禁用特定 Tab
+
+		/// <summary>
+		/// 根据 TabPage 对象控制该标签是否禁用
+		/// </summary>
+		public void SetEnabled(TabPage page, bool enabled) {
+			if (page == null) return;
+
+			// 记录状态
+			pageEnabledStatus[page] = enabled;
+
+			// 1. 同步更新运行时的 RadioButton 状态
+			if (buttonPanel != null) {
+				foreach (Control ctrl in buttonPanel.Controls) {
+					RadioButton btn = ctrl as RadioButton;
+					if (btn != null && btn.Tag == page) {
+						btn.Enabled = enabled;
+						break;
+					}
+				}
+			}
+
+			// 2. 如果当前选中的页面正好被禁用了，自动跳到下一个可用的页面
+			if (!enabled && SelectedTab == page) {
+				SelectNextAvailableTab();
+			}
+		}
+
+		/// <summary>
+		/// 根据索引控制该标签是否禁用
+		/// </summary>
+		public void SetEnabled(int index, bool enabled) {
+			if (index >= 0 && index < TabCount) {
+				SetEnabled(TabPages[index], enabled);
+			}
+		}
+
+		/// <summary>
+		/// 检查某个 TabPage 是否处于启用状态
+		/// </summary>
+		public bool GetEnabled(TabPage page) {
+			if (page == null) return false;
+			bool enabled;
+			if (pageEnabledStatus.TryGetValue(page, out enabled)) return enabled;
+			return true; // 默认都是启用的
+		}
+
+		/// <summary>
+		/// 外部修改了 TabPage 的 Text 或 ToolTipText 后，可调用此方法手动触发立即同步刷新
+		/// </summary>
+		public void RefreshPageDisplay(TabPage page) {
+			if (page == null || buttonPanel == null) return;
+			SyncButtonTextAndToolTip(page);
+		}
+
+		private void SelectNextAvailableTab() {
+			for (int i = 0; i < TabCount; i++) {
+				if (GetEnabled(TabPages[i])) {
+					SelectedIndex = i;
+					return;
+				}
+			}
+		}
+
+		#endregion
+
+		// 防止通过快捷键或外部代码强行切换到已禁用的页面
+		protected override void OnSelecting(TabControlCancelEventArgs e) {
+			if (e.TabPage != null && !GetEnabled(e.TabPage)) {
+				e.Cancel = true; // 直接拦截核心切换事件
+				return;
+			}
+			base.OnSelecting(e);
 		}
 
 		// 核心魔法 1：拦截 Windows 消息
@@ -52,9 +134,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			base.WndProc(ref m);
 		}
 
-		// 核心魔法 2：运行期初始化（此时它的父窗体和位置、网格属性均已确定）
-		protected override void InitLayout() {
-			base.InitLayout();
+		// 核心魔法 2：换到这个生命周期钩子！此时控件属性及子页面已全部由设计器组装完毕
+		protected override void OnHandleCreated(EventArgs e) {
+			base.OnHandleCreated(e);
 
 			// 如果是设计模式，什么都不做，保持原生 TabControl 的外观供开发使用
 			if (DesignMode) return;
@@ -69,6 +151,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			Control originalParent = Parent;
 			if (originalParent == null) return;
+
+			// 捕捉并记录外部多层父容器可能存在的滚动条位置
+			Dictionary<ScrollableControl, Point> parentScrollPositions = new Dictionary<ScrollableControl, Point>();
+			Control currentParent = originalParent;
+			while (currentParent != null) {
+				ScrollableControl sc = currentParent as ScrollableControl;
+				if (sc != null && sc.AutoScroll) {
+					parentScrollPositions[sc] = sc.AutoScrollPosition;
+				}
+				currentParent = currentParent.Parent;
+			}
 
 			// 1. 保存原控件的所有布局和容器属性
 			int myIndex = originalParent.Controls.GetChildIndex(this);
@@ -98,6 +191,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				Dock = origDock,
 				Anchor = origAnchor,
 				TabIndex = origTabIndex,
+				AutoSize = true,
 			};
 
 			// 4. 将包装容器放入原父容器的“原位置”
@@ -118,9 +212,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 6. 创建支持多行换行、自适应高度的 FlowLayoutPanel
 			buttonPanel = new FlowLayoutPanel {
 				FlowDirection = FlowDirection.LeftToRight,
-				WrapContents = true,  // 开启多行换行排列
-				AutoScroll = false,   // 关闭单行滚动
-				AutoSize = true,      // 开启自适应高度
+				WrapContents = true, // 开启多行换行排列
+				AutoScroll = false, // 关闭单行滚动
+				AutoSize = true, // 开启自适应高度
 				Dock = DockStyle.Top,
 				Margin = new Padding(0),
 				Padding = new Padding(2),
@@ -131,10 +225,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				Text = HeaderTitle,
 				AutoSize = true,
 				Anchor = AnchorStyles.None, // 垂直居中对齐
-				Font = new Font(Font, FontStyle.Bold),
+				Font = new Font(originalParent.Font, FontStyle.Bold),
 				TextAlign = ContentAlignment.MiddleLeft,
-				Margin = new Padding(4, 8, 8, 4), // 适当的边距让它更好看
-				Visible = !string.IsNullOrEmpty(HeaderTitle)
+				Margin = new Padding(2, 4, 4, 4), // 适当的边距让它更好看
+				Visible = !string.IsNullOrEmpty(HeaderTitle),
 			};
 			buttonPanel.Controls.Add(titleLabel);
 
@@ -149,7 +243,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					Height = 28,
 					AutoSize = true,
 					TextAlign = ContentAlignment.MiddleCenter,
-					Margin = new Padding(2)
+					Margin = new Padding(2),
 				};
 
 				if (!string.IsNullOrEmpty(page.ToolTipText))
@@ -160,9 +254,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (isSyncing) return;
 					RadioButton btn = s as RadioButton;
 					if (btn != null && btn.Checked && btn.Tag is TabPage) {
-						isSyncing = true;
-						SelectedTab = (TabPage)btn.Tag;
-						isSyncing = false;
+						// 锁定并保持父容器的滚动条位置，彻底根治切换Tab时的抖动
+						LockAndExecuteWithNoScroll(parentScrollPositions, () => {
+							isSyncing = true;
+							SelectedTab = (TabPage)btn.Tag;
+							isSyncing = false;
+						});
 					}
 				};
 
@@ -177,15 +274,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			// 9. 监听 TabControl 页面改变 -> 同步高亮单选按钮
 			SelectedIndexChanged += (s, e) => {
-				if (isSyncing)
-					return;
-				isSyncing = true;
-				UpdateSelectedButton();
-				isSyncing = false;
+				if (isSyncing) return;
+				LockAndExecuteWithNoScroll(parentScrollPositions, () => {
+					isSyncing = true;
+					UpdateSelectedButton();
+					isSyncing = false;
+				});
 			};
 
 			// 10. 组装：将按钮栏和 TabControl 放入包装容器中
-			Dock = DockStyle.Fill; // 强行让 TabControl 铺满容器剩余部分
+			Dock = DockStyle.Top; // 强行让 TabControl 铺满容器剩余部分
 			wrapperPanel.Controls.Add(this); // 此时移入新容器引发的 OnInitLayout 会直接在开头被 isInitialized 拦截
 			wrapperPanel.Controls.Add(buttonPanel); // 按照 Dock=Top 紧贴在最上方
 
@@ -196,30 +294,54 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			// 恢复原父容器的布局计算并强制刷新
 			originalParent.ResumeLayout(true);
+
+			// 完美恢复初始化时所有祖先容器的滚动条原位置
+			foreach (KeyValuePair<ScrollableControl, Point> kvp in parentScrollPositions) {
+				kvp.Key.AutoScrollPosition = new Point(Math.Abs(kvp.Value.X), Math.Abs(kvp.Value.Y));
+			}
 		}
 
-		// 辅助方法：多语言切换时，单向同步更新按钮上的文本和提示
-		private void SyncButtonTextAndToolTip(TabPage page) {
-			if (buttonPanel == null) return;
+		// 核心辅助机制 1：无滚动强制执行区（确保切换时外部容器滚动条纹丝不动）
+		private void LockAndExecuteWithNoScroll(Dictionary<ScrollableControl, Point> scrollPositions, Action action) {
+			// 1. 刷新和快照当前的实际滚动位置
+			Dictionary<ScrollableControl, Point> currentPositions = new Dictionary<ScrollableControl, Point>();
+			foreach (var key in scrollPositions.Keys) {
+				currentPositions[key] = key.AutoScrollPosition;
+			}
+			// 2. 执行核心页面切换动作
+			action();
+			// 3. 强行还原位置，消除抖动
+			foreach (KeyValuePair<ScrollableControl, Point> kvp in currentPositions) {
+				kvp.Key.AutoScrollPosition = new Point(Math.Abs(kvp.Value.X), Math.Abs(kvp.Value.Y));
+			}
+		}
 
+		// 核心修复 2：同步更新文本与 ToolTip 的底层方法
+		private void SyncButtonTextAndToolTip(TabPage page) {
+			if (buttonPanel == null)
+				return;
 			foreach (Control ctrl in buttonPanel.Controls) {
 				RadioButton btn = ctrl as RadioButton;
 				if (btn != null && btn.Tag == page) {
 					btn.Text = page.Text;
-					toolTipProvider.SetToolTip(btn, page.ToolTipText);
+					// 重新绑定最新的 ToolTip 提示
+					toolTipProvider.SetToolTip(btn, string.IsNullOrEmpty(page.ToolTipText) ? null : page.ToolTipText);
 					break;
 				}
 			}
 		}
 
-		// 辅助方法：页面变化时勾选对应按钮
+		// 针对没有自带事件的属性（如 ToolTipText）提供一个全局自动捕捉机制
+		// 每当页面发生实际切换或重绘时，对当前活跃页和历史页的属性重新对齐刷新
 		private void UpdateSelectedButton() {
-			if (buttonPanel == null || SelectedTab == null) return;
-
+			if (buttonPanel == null || SelectedTab == null)
+				return;
 			foreach (Control ctrl in buttonPanel.Controls) {
 				RadioButton btn = ctrl as RadioButton;
 				if (btn != null && btn.Tag == SelectedTab) {
 					btn.Checked = true;
+					// 在此切换瞬间，进行一次全自动的数据对齐（不仅解决了 Text，也自动同步了无事件的 ToolTipText）
+					SyncButtonTextAndToolTip(SelectedTab);
 					break;
 				}
 			}

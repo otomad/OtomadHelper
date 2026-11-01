@@ -144,7 +144,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			} catch (Exception) { } // 如果路径不存在则不受影响
 			#else
 			icon = Icon = Properties.Resources.Otomad_Helper;
-			#endif
+#endif
 			#endregion
 
 			/*int trueValue = 0x01, falseValue = 0x00;
