@@ -46,11 +46,26 @@ declare module "i18next" {
 }
 
 declare module "enum-plus/types" {
-	interface StandardEnumItemInit {
+	interface EnumItemInitExtension {
 		icon?: DeclaredIcons;
 	}
 
-	interface MetaOnlyEnumItemInit {
+	interface StandardEnumItemInit extends EnumItemInitExtension { }
+	interface LooseStandardEnumItemInit extends EnumItemInitExtension { }
+	interface ValueOnlyEnumItemInit extends EnumItemInitExtension { }
+	interface LabelOnlyEnumItemInit extends EnumItemInitExtension { }
+	interface MetaOnlyEnumItemInit extends EnumItemInitExtension { }
+}
+
+declare module "enum-plus" {
+	interface EnumItemOptions {
+		// TODO: 在此处添加其它的枚举本体自身的选项。
+	}
+}
+
+declare module "enum-plus/extension" {
+	interface EnumItemExtension {
+		description?: string;
 		icon?: DeclaredIcons;
 	}
 }
