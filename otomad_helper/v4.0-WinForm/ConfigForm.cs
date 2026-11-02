@@ -589,6 +589,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				"仓库地址：https://github.com/Chaosinism/vegas_scripts\n",
 				"关于",
 				MessageBoxButtons.OK, MessageBoxIcon.Information);
+			ShupelunkerTab.Text = "鸡你太美";
+			ShupelunkerTab.ToolTipText = "鸡你太美";
 		}
 
 		private void TrimTime_ValueChanged(object sender, EventArgs e) {

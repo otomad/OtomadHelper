@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.Design;
 
 namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	/// <summary>
@@ -45,7 +48,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		#region 公开控制方法：启用/禁用特定 Tab
-
 		/// <summary>
 		/// 根据 TabPage 对象控制该标签是否禁用
 		/// </summary>
@@ -267,9 +269,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 				// 绑定 TabPage 的属性改变事件，实现 Text 和 ToolTipText 的单向多语言同步
 				page.TextChanged += (s, e) => {
-					if (s is TabPage)
-						SyncButtonTextAndToolTip((TabPage)s);
+					if (s is TabPage) SyncButtonTextAndToolTip((TabPage)s);
 				};
+
+				// 【新增】如果是我们自定义的 ButtonTabPage，直接订阅 ToolTip 改变事件
+				if (page is ButtonTabPage) {
+					((ButtonTabPage)page).ToolTipTextChanged += (s, e) => {
+						if (s is TabPage) SyncButtonTextAndToolTip((TabPage)s); // 只要设值，不经切换，当场顺便更新！
+					};
+				}
 			}
 
 			// 9. 监听 TabControl 页面改变 -> 同步高亮单选按钮
@@ -305,21 +313,41 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void LockAndExecuteWithNoScroll(Dictionary<ScrollableControl, Point> scrollPositions, Action action) {
 			// 1. 刷新和快照当前的实际滚动位置
 			Dictionary<ScrollableControl, Point> currentPositions = new Dictionary<ScrollableControl, Point>();
-			foreach (var key in scrollPositions.Keys) {
+			foreach (ScrollableControl key in scrollPositions.Keys) {
 				currentPositions[key] = key.AutoScrollPosition;
+				SuspendDrawing(key);
 			}
 			// 2. 执行核心页面切换动作
 			action();
 			// 3. 强行还原位置，消除抖动
 			foreach (KeyValuePair<ScrollableControl, Point> kvp in currentPositions) {
 				kvp.Key.AutoScrollPosition = new Point(Math.Abs(kvp.Value.X), Math.Abs(kvp.Value.Y));
+				ResumeDrawing(kvp.Key);
 			}
+		}
+
+		[DllImport("user32.dll")]
+		internal static extern int SendMessage(IntPtr hWnd, int wMsg, bool wParam, int lParam);
+		internal const int WM_SETREDRAW = 0xB;
+
+		/// <summary>
+		/// 暂停刷新。
+		/// </summary>
+		public static void SuspendDrawing(Control control) {
+			SendMessage(control.Handle, WM_SETREDRAW, false, 0);
+		}
+
+		/// <summary>
+		/// 恢复刷新。
+		/// </summary>
+		public static void ResumeDrawing(Control control) {
+			SendMessage(control.Handle, WM_SETREDRAW, true, 0);
+			control.Refresh(); // 必须调用一次 Refresh，否则界面会停留在空白或残影状态
 		}
 
 		// 核心修复 2：同步更新文本与 ToolTip 的底层方法
 		private void SyncButtonTextAndToolTip(TabPage page) {
-			if (buttonPanel == null)
-				return;
+			if (buttonPanel == null) return;
 			foreach (Control ctrl in buttonPanel.Controls) {
 				RadioButton btn = ctrl as RadioButton;
 				if (btn != null && btn.Tag == page) {
@@ -334,14 +362,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		// 针对没有自带事件的属性（如 ToolTipText）提供一个全局自动捕捉机制
 		// 每当页面发生实际切换或重绘时，对当前活跃页和历史页的属性重新对齐刷新
 		private void UpdateSelectedButton() {
-			if (buttonPanel == null || SelectedTab == null)
-				return;
+			if (buttonPanel == null || SelectedTab == null) return;
 			foreach (Control ctrl in buttonPanel.Controls) {
 				RadioButton btn = ctrl as RadioButton;
 				if (btn != null && btn.Tag == SelectedTab) {
 					btn.Checked = true;
-					// 在此切换瞬间，进行一次全自动的数据对齐（不仅解决了 Text，也自动同步了无事件的 ToolTipText）
-					SyncButtonTextAndToolTip(SelectedTab);
 					break;
 				}
 			}
@@ -355,6 +380,83 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (wrapperPanel != null) wrapperPanel.Dispose();
 			}
 			base.Dispose(disposing);
+		}
+	}
+
+	[ToolboxItem(false)] // 隐藏于工具箱，避免开发者在工具箱中误拉
+	public class ButtonTabPage : TabPage {
+		// 声明 ToolTipText 改变的事件
+		[Category("Property Changed"), Description("当 ToolTipText 属性的值更改时发生。")]
+		public event EventHandler ToolTipTextChanged;
+
+		// 重写 ToolTipText 属性
+		[Browsable(true)]
+		[EditorBrowsable(EditorBrowsableState.Always)]
+		public new string ToolTipText {
+			get { return base.ToolTipText; }
+			set {
+				if (base.ToolTipText != value) {
+					base.ToolTipText = value;
+					OnToolTipTextChanged(EventArgs.Empty);
+				}
+			}
+		}
+
+		protected virtual void OnToolTipTextChanged(EventArgs e) {
+			if (ToolTipTextChanged != null) ToolTipTextChanged.Invoke(this, e);
+		}
+	}
+
+	public class ModernNativeTabControlDesigner : ParentControlDesigner {
+		private DesignerVerbCollection verbs;
+
+		public override void Initialize(IComponent component) {
+			base.Initialize(component);
+			if (component is TabControl) {
+				EnableDesignMode((TabControl)component, "TabPages");
+			}
+		}
+
+		// 核心拦截：当用户在设计视图点击“添加选项卡”时触发
+		public override DesignerVerbCollection Verbs {
+			get {
+				if (verbs == null) {
+					verbs = new DesignerVerbCollection(new DesignerVerb[] {
+						new DesignerVerb("添加选项卡", new EventHandler(OnAddPage))
+					});
+				}
+				return verbs;
+			}
+		}
+
+		private void OnAddPage(object sender, EventArgs e) {
+			IDesignerHost host = (IDesignerHost)GetService(typeof(IDesignerHost));
+			IComponentChangeService changeService = (IComponentChangeService)GetService(typeof(IComponentChangeService));
+			TabControl tabControl = Control as TabControl;
+
+			if (host != null && tabControl != null) {
+				using (DesignerTransaction transaction = host.CreateTransaction("添加 ButtonTabPage")) {
+					try {
+						// 关键点：强行创建我们自定义的 ButtonTabPage 实例，而不是系统原生的 TabPage
+						ButtonTabPage newPage = (ButtonTabPage)host.CreateComponent(typeof(ButtonTabPage));
+
+						changeService.OnComponentChanging(tabControl, null);
+
+						// 设置新页面的默认名称和文本
+						string pageName = "ButtonTabPage" + (tabControl.TabCount + 1);
+						newPage.Name = pageName;
+						newPage.Text = pageName;
+						newPage.UseVisualStyleBackColor = true;
+
+						tabControl.TabPages.Add(newPage);
+
+						changeService.OnComponentChanged(tabControl, null, null, null);
+						transaction.Commit();
+					} catch {
+						transaction.Cancel();
+					}
+				}
+			}
 		}
 	}
 }
