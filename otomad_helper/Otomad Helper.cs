@@ -28583,7 +28583,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceCombTabs.Size = new System.Drawing.Size(1060, 407);
 			this.MultiSourceCombTabs.TabIndex = 10;
 			this.MultiSourceCombTabs.SelectedIndexChanged += new System.EventHandler(this.MultiSourceCombTabs_SelectedIndexChanged);
-			this.MultiSourceCombTabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.MultiSourceCombTabs_Selecting);
 			//
 			// MultiSourceOffTab
 			//
@@ -41546,51 +41545,29 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			listView.Parent.Invalidate(); // 直接重绘控件本身，则对系统控制栏区域无效。因此这里选用重绘其父控件。
 		}
 
-		private int MultiSourceCombTabs_PreviousSelectedIndex = 0;
-		private bool MultiSourceCombTabs_InternalSelecting = false;
-		private void MultiSourceCombTabs_Selecting(object sender, TabControlCancelEventArgs e) {
-			if (e == null || e.TabPageIndex < 0 || MultiSourceCombTabs_InternalSelecting) return;
-			TabControl tabControl = MultiSourceCombTabs;
-			int previousSelectedIndex = MultiSourceCombTabs_PreviousSelectedIndex;
-			if (!e.TabPage.Enabled) {
-				CommingSoon();
-				if (!tabControl.Multiline) {
-					MultiSourceCombTabs_InternalSelecting = true;
-					SuspendDrawing();
-					tabControl.SelectedIndex = 0;
-					tabControl.SelectedIndex = previousSelectedIndex;
-					ResumeDrawing();
-					MultiSourceCombTabs_InternalSelecting = false;
-				}
-			} else
-				MultiSourceCombTabs_PreviousSelectedIndex = tabControl.SelectedIndex;
-		}
-
 		private void MultiSourceCombTabs_SelectedIndexChanged(object sender, EventArgs e) {
-			TabControl tabControl = MultiSourceCombTabs;
-			if (tabControl == null || tabControl.SelectedTab == null) return;
+			TabControl[] tabControls = sender is TabControl ? new TabControl[] { (TabControl)sender } : new TabControl[] { MultiSourceCombTabs };
 
-			TabPage page = tabControl.SelectedTab;
-			int contentHeight = 0;
+			foreach (TabControl tabControl in tabControls) {
+				if (tabControl == null || tabControl.SelectedTab == null) continue;
 
-			// 1. 获取内部唯一控件的高度
-			if (page.Controls.Count > 0) {
-				Control mainCtrl = page.Controls[0];
-				// 如果控件是隐藏的，Bottom 可能为 0，确保它可见或直接取 PreferredSize
-				contentHeight = mainCtrl.PreferredSize.Height;
+				TabPage page = tabControl.SelectedTab;
+				int contentHeight = 0;
+
+				// 1. 获取内部唯一控件的高度
+				if (page.Controls.Count > 0) {
+					Control mainCtrl = page.Controls[0];
+					// 如果控件是隐藏的，Bottom 可能为 0，确保它可见或直接取 PreferredSize
+					contentHeight = mainCtrl.PreferredSize.Height;
+				}
+
+				// 3. 更新高度（加少量 Padding 补差，避免出现滚动条）
+				int newHeight = contentHeight + page.Padding.Vertical;
+
+				// 只有在高度确实改变时才赋值，减少界面闪烁
+				if (tabControl.Height != newHeight)
+					tabControl.Height = newHeight;
 			}
-
-			// 2. 计算标签栏（Header）占用的高度
-			// TabControl.Height = 内部内容高度 + (TabControl总高度 - 内部可用显示区域高度)
-			// 这样无论标签是单行还是多行，差值永远是标签栏的实时高度
-			int headerHeight = tabControl.Height - tabControl.DisplayRectangle.Height;
-
-			// 3. 更新高度（加少量 Padding 补差，避免出现滚动条）
-			int newHeight = contentHeight + headerHeight + page.Padding.Vertical;
-
-			// 只有在高度确实改变时才赋值，减少界面闪烁
-			if (tabControl.Height != newHeight)
-				tabControl.Height = newHeight;
 
 			// 其它逻辑相关代码
 			SetStackAndTimeUnremappingEnabled();

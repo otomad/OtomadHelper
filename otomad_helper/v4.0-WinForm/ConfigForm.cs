@@ -589,8 +589,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				"仓库地址：https://github.com/Chaosinism/vegas_scripts\n",
 				"关于",
 				MessageBoxButtons.OK, MessageBoxIcon.Information);
-			ShupelunkerTab.Text = "鸡你太美";
-			ShupelunkerTab.ToolTipText = "鸡你太美";
 		}
 
 		private void TrimTime_ValueChanged(object sender, EventArgs e) {
@@ -1397,16 +1395,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private static extern uint GetPixel(IntPtr hdc, int nXPos, int nYPos);
 
 		private void FixTabPageTransparentColor() {
-			//Color tabPageColor;
-			//using (Graphics g = SourceTab.CreateGraphics()) {
-			//	// 获取父控件左上角第一个像素的颜色
-			//	IntPtr hdc = g.GetHdc();
-			//	uint pixel = GetPixel(hdc, 1, 1);
-			//	g.ReleaseHdc(hdc);
-			//	tabPageColor = ColorTranslator.FromOle((int)pixel);
-			//}
+			Color tabPageColor;
+			using (Graphics g = SourceTab.CreateGraphics()) {
+				// 获取父控件左上角第一个像素的颜色
+				IntPtr hdc = g.GetHdc();
+				uint pixel = GetPixel(hdc, 1, SourceTab.Height);
+				g.ReleaseHdc(hdc);
+				tabPageColor = ColorTranslator.FromOle((int)pixel);
+			}
 
-			//AudioTab.BackColor = VideoTab.BackColor = YtpTab.BackColor = YtpEffectsCheckList.BackColor = tabPageColor;
+			AudioTab.BackColor = VideoTab.BackColor = YtpTab.BackColor = YtpEffectsCheckList.BackColor = tabPageColor;
 		}
 
 		private void MultiSourceRadio_CheckedChanged(object sender, EventArgs e) {
@@ -1430,13 +1428,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void MultiSourceCombTabs_Selecting(object sender, TabControlCancelEventArgs e) {
-			if (e == null || e.TabPageIndex < 0) return;
+			/*if (e == null || e.TabPageIndex < 0) return;
 			if (e.Cancel = !e.TabPage.Enabled)
-				CommingSoon();
+				CommingSoon();*/
 		}
 
 		private void MultiSourceCombTabs_SelectedIndexChanged(object sender, EventArgs e) {
-			TabControl tabControl = MultiSourceCombTabs;
+			TabControl tabControl = sender as TabControl;
 			if (tabControl == null || tabControl.SelectedTab == null) return;
 
 			TabPage page = tabControl.SelectedTab;
@@ -1449,13 +1447,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				contentHeight = mainCtrl.PreferredSize.Height;
 			}
 
-			// 2. 计算标签栏（Header）占用的高度
-			// TabControl.Height = 内部内容高度 + (TabControl总高度 - 内部可用显示区域高度)
-			// 这样无论标签是单行还是多行，差值永远是标签栏的实时高度
-			int headerHeight = tabControl.Height - tabControl.DisplayRectangle.Height;
-
 			// 3. 更新高度（加少量 Padding 补差，避免出现滚动条）
-			int newHeight = contentHeight + headerHeight + page.Padding.Vertical;
+			int newHeight = contentHeight + page.Padding.Vertical;
 
 			// 只有在高度确实改变时才赋值，减少界面闪烁
 			if (tabControl.Height != newHeight)
@@ -1483,7 +1476,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void ConfigForm_Load(object sender, EventArgs e) {
-			Console.WriteLine(DatamoshInfoLbl);
+			MultiSourceCombTabs.SetEnabled(ConsonantTab, false);
+			FixTabPageTransparentColor();
 		}
 
 		private void Tabs_SelectedIndexChanged(object sender, EventArgs e) {
@@ -1552,6 +1546,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void ConfigForm_HelpButtonClicked(object sender, CancelEventArgs e) {
 			Console.WriteLine(DatamoshInfoLbl); // 直接上网。
+		}
+
+		private void TrackGroupRadio_CheckedChanged(object sender, EventArgs e) {
+			CollapseTrackGroupCheck.Enabled = TrackGroupReuseCheck.Enabled = TrackGroupByTrackRadio.Checked || TrackGroupBySessionRadio.Checked;
+			AudioBusTrackReuseCheck.Enabled = AudioBusTrackByTrackRadio.Checked || AudioBusTrackBySessionRadio.Checked;
 		}
 	}
 }

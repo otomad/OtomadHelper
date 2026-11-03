@@ -24,7 +24,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private bool isSyncing = false; // 防止双向绑定时陷入死循环的旗标
 		private string headerTitle = string.Empty;
 		private bool isInitialized = false; // 引入防重复执行旗标
-		private readonly Dictionary<TabPage, bool> pageEnabledStatus = new Dictionary<TabPage, bool>(); // 维护页面禁用状态的字典
+		private List<RadioButton> radioButtons = new List<RadioButton>(0);
 
 		public ButtonTabControl() {
 			// 默认设置一个美观的初始大小
@@ -54,19 +54,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public void SetEnabled(TabPage page, bool enabled) {
 			if (page == null) return;
 
-			// 记录状态
-			pageEnabledStatus[page] = enabled;
-
 			// 1. 同步更新运行时的 RadioButton 状态
-			if (buttonPanel != null) {
-				foreach (Control ctrl in buttonPanel.Controls) {
-					RadioButton btn = ctrl as RadioButton;
-					if (btn != null && btn.Tag == page) {
-						btn.Enabled = enabled;
-						break;
-					}
-				}
-			}
+			RadioButton radio = radioButtons.FirstOrDefault(r => r != null && r.Tag == page);
+			if (radio != null) radio.Enabled = enabled;
 
 			// 2. 如果当前选中的页面正好被禁用了，自动跳到下一个可用的页面
 			if (!enabled && SelectedTab == page) {
@@ -78,9 +68,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 根据索引控制该标签是否禁用
 		/// </summary>
 		public void SetEnabled(int index, bool enabled) {
-			if (index >= 0 && index < TabCount) {
+			if (index >= 0 && index < TabCount)
 				SetEnabled(TabPages[index], enabled);
-			}
 		}
 
 		/// <summary>
@@ -88,9 +77,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </summary>
 		public bool GetEnabled(TabPage page) {
 			if (page == null) return false;
-			bool enabled;
-			if (pageEnabledStatus.TryGetValue(page, out enabled)) return enabled;
-			return true; // 默认都是启用的
+			RadioButton radio = radioButtons.FirstOrDefault(r => r != null && r.Tag == page);
+			if (radio != null) return radio.Enabled;
+			return false;
 		}
 
 		/// <summary>
@@ -114,7 +103,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		// 防止通过快捷键或外部代码强行切换到已禁用的页面
 		protected override void OnSelecting(TabControlCancelEventArgs e) {
-			if (e.TabPage != null && !GetEnabled(e.TabPage)) {
+			if (e.TabPage != null && !GetEnabled(e.TabPage) && !DesignMode) {
 				e.Cancel = true; // 直接拦截核心切换事件
 				return;
 			}
@@ -235,10 +224,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			buttonPanel.Controls.Add(titleLabel);
 
 			// 8. 动态生成对应的系统原生按钮
+			radioButtons = new List<RadioButton>(TabCount);
 			for (int i = 0; i < TabCount; i++) {
 				TabPage page = TabPages[i];
 
-				RadioButton rdoBtn = new RadioButton {
+				RadioButton radio = new RadioButton {
 					Appearance = System.Windows.Forms.Appearance.Button,
 					Text = page.Text,
 					Tag = page, // 此时将 Tag 直接绑定到 TabPage 对象本身，方便后续动态找寻
@@ -249,10 +239,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				};
 
 				if (!string.IsNullOrEmpty(page.ToolTipText))
-					toolTipProvider.SetToolTip(rdoBtn, page.ToolTipText);
+					toolTipProvider.SetToolTip(radio, page.ToolTipText);
 
 				// 按钮被勾选时 -> 切页面
-				rdoBtn.CheckedChanged += (s, e) => {
+				radio.CheckedChanged += (s, e) => {
 					if (isSyncing) return;
 					RadioButton btn = s as RadioButton;
 					if (btn != null && btn.Checked && btn.Tag is TabPage) {
@@ -265,19 +255,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					}
 				};
 
-				buttonPanel.Controls.Add(rdoBtn);
+				buttonPanel.Controls.Add(radio);
+				radioButtons.Add(radio);
 
 				// 绑定 TabPage 的属性改变事件，实现 Text 和 ToolTipText 的单向多语言同步
 				page.TextChanged += (s, e) => {
 					if (s is TabPage) SyncButtonTextAndToolTip((TabPage)s);
 				};
-
-				// 【新增】如果是我们自定义的 ButtonTabPage，直接订阅 ToolTip 改变事件
-				if (page is ButtonTabPage) {
-					((ButtonTabPage)page).ToolTipTextChanged += (s, e) => {
-						if (s is TabPage) SyncButtonTextAndToolTip((TabPage)s); // 只要设值，不经切换，当场顺便更新！
-					};
-				}
 			}
 
 			// 9. 监听 TabControl 页面改变 -> 同步高亮单选按钮
@@ -346,14 +330,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		// 核心修复 2：同步更新文本与 ToolTip 的底层方法
+		// 由于 TabPage 没有 ToolTipTextChanged 事件，此时约定翻译时必须先更新 ToolTipText 再更新 Text。
 		private void SyncButtonTextAndToolTip(TabPage page) {
-			if (buttonPanel == null) return;
-			foreach (Control ctrl in buttonPanel.Controls) {
-				RadioButton btn = ctrl as RadioButton;
-				if (btn != null && btn.Tag == page) {
-					btn.Text = page.Text;
+			foreach (RadioButton radio in radioButtons) {
+				if (radio != null && radio.Tag == page) {
+					radio.Text = page.Text;
 					// 重新绑定最新的 ToolTip 提示
-					toolTipProvider.SetToolTip(btn, string.IsNullOrEmpty(page.ToolTipText) ? null : page.ToolTipText);
+					toolTipProvider.SetToolTip(radio.Parent is Panel ? radio.Parent : radio, string.IsNullOrEmpty(page.ToolTipText) ? null : page.ToolTipText);
 					break;
 				}
 			}
@@ -362,11 +345,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		// 针对没有自带事件的属性（如 ToolTipText）提供一个全局自动捕捉机制
 		// 每当页面发生实际切换或重绘时，对当前活跃页和历史页的属性重新对齐刷新
 		private void UpdateSelectedButton() {
-			if (buttonPanel == null || SelectedTab == null) return;
-			foreach (Control ctrl in buttonPanel.Controls) {
-				RadioButton btn = ctrl as RadioButton;
-				if (btn != null && btn.Tag == SelectedTab) {
-					btn.Checked = true;
+			foreach (RadioButton radio in radioButtons) {
+				if (radio != null && radio.Tag == SelectedTab) {
+					radio.Checked = true;
 					break;
 				}
 			}
@@ -380,83 +361,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (wrapperPanel != null) wrapperPanel.Dispose();
 			}
 			base.Dispose(disposing);
-		}
-	}
-
-	[ToolboxItem(false)] // 隐藏于工具箱，避免开发者在工具箱中误拉
-	public class ButtonTabPage : TabPage {
-		// 声明 ToolTipText 改变的事件
-		[Category("Property Changed"), Description("当 ToolTipText 属性的值更改时发生。")]
-		public event EventHandler ToolTipTextChanged;
-
-		// 重写 ToolTipText 属性
-		[Browsable(true)]
-		[EditorBrowsable(EditorBrowsableState.Always)]
-		public new string ToolTipText {
-			get { return base.ToolTipText; }
-			set {
-				if (base.ToolTipText != value) {
-					base.ToolTipText = value;
-					OnToolTipTextChanged(EventArgs.Empty);
-				}
-			}
-		}
-
-		protected virtual void OnToolTipTextChanged(EventArgs e) {
-			if (ToolTipTextChanged != null) ToolTipTextChanged.Invoke(this, e);
-		}
-	}
-
-	public class ModernNativeTabControlDesigner : ParentControlDesigner {
-		private DesignerVerbCollection verbs;
-
-		public override void Initialize(IComponent component) {
-			base.Initialize(component);
-			if (component is TabControl) {
-				EnableDesignMode((TabControl)component, "TabPages");
-			}
-		}
-
-		// 核心拦截：当用户在设计视图点击“添加选项卡”时触发
-		public override DesignerVerbCollection Verbs {
-			get {
-				if (verbs == null) {
-					verbs = new DesignerVerbCollection(new DesignerVerb[] {
-						new DesignerVerb("添加选项卡", new EventHandler(OnAddPage))
-					});
-				}
-				return verbs;
-			}
-		}
-
-		private void OnAddPage(object sender, EventArgs e) {
-			IDesignerHost host = (IDesignerHost)GetService(typeof(IDesignerHost));
-			IComponentChangeService changeService = (IComponentChangeService)GetService(typeof(IComponentChangeService));
-			TabControl tabControl = Control as TabControl;
-
-			if (host != null && tabControl != null) {
-				using (DesignerTransaction transaction = host.CreateTransaction("添加 ButtonTabPage")) {
-					try {
-						// 关键点：强行创建我们自定义的 ButtonTabPage 实例，而不是系统原生的 TabPage
-						ButtonTabPage newPage = (ButtonTabPage)host.CreateComponent(typeof(ButtonTabPage));
-
-						changeService.OnComponentChanging(tabControl, null);
-
-						// 设置新页面的默认名称和文本
-						string pageName = "ButtonTabPage" + (tabControl.TabCount + 1);
-						newPage.Name = pageName;
-						newPage.Text = pageName;
-						newPage.UseVisualStyleBackColor = true;
-
-						tabControl.TabPages.Add(newPage);
-
-						changeService.OnComponentChanged(tabControl, null, null, null);
-						transaction.Commit();
-					} catch {
-						transaction.Cancel();
-					}
-				}
-			}
 		}
 	}
 }
