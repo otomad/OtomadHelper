@@ -26,6 +26,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private string headerTitle = string.Empty;
 		private bool isInitialized = false; // 引入防重复执行旗标
 		private List<RadioButton> radioButtons = new List<RadioButton>(0);
+		private bool isSyncingVisible = false; // 用于屏蔽运行时组装带来的伪信号
 
 		public ButtonTabControl() {
 			// 默认设置一个美观的初始大小
@@ -45,6 +46,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (titleLabel == null) return;
 				titleLabel.Text = value;
 				titleLabel.Visible = !string.IsNullOrEmpty(value);
+			}
+		}
+
+		/// <inheritdoc cref="Control.Visible" />
+		[Category("Behavior"), Description("确定该控件是可见的还是隐藏的。"), DefaultValue(true)]
+		public new bool Visible {
+			get {
+				// 如果在运行期且包装盒已经建立，控件的真实可见性应该以外壳为准
+				return !DesignMode && wrapperPanel != null ? wrapperPanel.Visible : base.Visible;
+			}
+			set {
+				// 如果在运行期且外壳已准备好，同时不在内部组装期间，则完美同步外壳
+				if (!DesignMode && wrapperPanel != null && !isSyncingVisible) {
+					wrapperPanel.Visible = value;
+					base.Visible = true;
+				} else
+					base.Visible = value;
 			}
 		}
 
@@ -166,7 +184,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 
 			// 2. 从原父容器中移除当前 TabControl，准备塞入包装容器中
-			originalParent.Controls.Remove(this);
+			// 【新增保护】：开始拆装前，开启屏蔽锁，防止移除 Parent 导致 Visible 伪信号乱飞
+			isSyncingVisible = true;
+			originalParent.SuspendLayout();
+			originalParent.Controls.Remove(this); // 此时移除不会再把外壳带入错误状态
 
 			// 3. 创建运行时的包装容器 Wrapper Panel，全盘接收原 TabControl 的布局属性
 			wrapperPanel = new Panel {
@@ -176,6 +197,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				Anchor = origAnchor,
 				TabIndex = origTabIndex,
 				AutoSize = true,
+				// 【关键改动】：初始化时，包装容器的 Visible 必须精准同步此时设计器给 TabControl 设定的初始 Visible 值
+				Visible = base.Visible,
 			};
 
 			// 4. 将包装容器放入原父容器的“原位置”
@@ -284,6 +307,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			foreach (KeyValuePair<ScrollableControl, Point> kvp in parentScrollPositions) {
 				kvp.Key.AutoScrollPosition = new Point(Math.Abs(kvp.Value.X), Math.Abs(kvp.Value.Y));
 			}
+
+			// 组件完全组装完毕，恢复外壳同步锁
+			isSyncingVisible = false;
 		}
 
 		// 核心辅助机制 1：无滚动强制执行区（确保切换时外部容器滚动条纹丝不动）

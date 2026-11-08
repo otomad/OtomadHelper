@@ -21,7 +21,7 @@
  *
  ***********************************************************************************************
  *
- * Otomad Helper for Vegas, which is designed to allow Vegas Pro to accept MIDI files as input,
+ * Otomad Helper for Vegas Pro, which is designed to allow Vegas Pro to accept MIDI files as input,
  * and automatically generate YTPMV/otoMAD tracks.
  * Vegas Pro 16 and above support all features, and Vegas Pro 13 and above are compatible to run.
  * Place this script and all other attached files in the Script Menu folder in your Vegas installation directory.
@@ -155,7 +155,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>首选轨道</summary>*/ private PreferredTrackWrapper<VideoTrack> VConfigPreferredTrack { get { return configForm.VideoPreferredTrackCombo.SelectedItem as PreferredTrackWrapper<VideoTrack>; } }
 		/**<summary>堆　　叠</summary>*/ private bool VConfigStack { get { return configForm.VideoStackCheck.Checked && IsMultiMidiChannel; } }
 		/**<summary>不重映射</summary>*/ private bool VConfigTimeUnremapping { get { return configForm.VideoTimeUnremappingCheck.Checked; } }
-		/**<summary>限长模式</summary>*/ private RestrictLengthModeType RestrictKeyframesLengthMode { get { return configForm.RestrictKeyframesLengthMode; } }
+		/**<summary>限长模式</summary>*/ private ConstrainLengthModeType RestrictKeyframesLengthMode { get { return configForm.RestrictKeyframesLengthMode; } }
 		/**<summary>限长大小</summary>*/ private Timecode RestrictKeyframesLengthValue { get { return configForm.RestrictKeyframesLengthBox.Timecode; } }
 		#endregion
 
@@ -219,7 +219,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>自拟速度</summary>*/ private bool MidiUseCustomBpm { get { return configForm.MidiCustomBpmCheck.Checked; } }
 		/**<summary>自拟速度</summary>*/ private double MidiUseCustomBpmValue { get { return (double)configForm.MidiCustomBpmBox.Value; } }
 		/**<summary>变速形式</summary>*/ private int MidiUseVariableMidiBpmForm { get { return configForm.MidiDynamicMidiBpmFormCombo.SelectedIndex; } }
-		/**<summary>限长模式</summary>*/ private RestrictLengthModeType RestrictLengthMode { get { return configForm.RestrictLengthMode; } }
+		/**<summary>限长模式</summary>*/ private ConstrainLengthModeType RestrictLengthMode { get { return configForm.RestrictLengthMode; } }
 		/**<summary>限长大小</summary>*/ private double RestrictLengthValue { get { return configForm.RestrictLengthBox.DoubleValue; } }
 		/**<summary>自动改速</summary>*/ private bool AutoChangeProjectBpm { get { return configForm.MidiAutoChangeProjectBpmCheck.Checked; } }
 		/**<summary>自动改拍</summary>*/ private bool AutoChangeProjectBeat { get { return configForm.MidiAutoChangeProjectBeatCheck.Checked; } }
@@ -266,7 +266,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		#endregion
 		#region 踩　　点
 		/**<summary>启　　用</summary>*/ private bool CombConfigMatchCut { get { return configForm.MatchCutTab.Selected(); } }
-		/**<summary>次　　序</summary>*/ private MatchCutOrder CombConfigMatchCutOrder { get { return configForm.MatchCutOrder; } }
+		/**<summary>次　　序</summary>*/ private SyncopatorOrder CombConfigMatchCutOrder { get { return configForm.MatchCutOrder; } }
 		/**<summary>单个重复</summary>*/ private int CombConfigMatchCutRepeatOneCount { get { return (int)configForm.MatchCutRepeatBox.Value; } }
 		/**<summary>总共重复</summary>*/ private int CombConfigMatchCutRepeatRoundCount { get { return (int)configForm.MatchCutRepeatRoundBox.Value; } }
 		/**<summary>素材盲盒</summary>*/ private bool CombConfigMatchCutLuckyDip { get { return configForm.MatchCutLuckyDipCheck.Checked; } }
@@ -1514,12 +1514,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				bool calcByVideos = AConfig && VConfig ? eventSets.IsRemainingVideos != false : !AConfig;
 				activeSource = Randoms.SourceRandomSelector.GetRandomByDuration(eventSets, calcByVideos, seeds);
 			};
-			Action<MatchCutOrder, object[], long, bool, bool> NextSourceByOrder = (order, seeds, step, isStrictStep, isCalledByLuckyDip) => {
+			Action<SyncopatorOrder, object[], long, bool, bool> NextSourceByOrder = (order, seeds, step, isStrictStep, isCalledByLuckyDip) => {
 				if (!ShouldMultisource) return;
-				if (order != MatchCutOrder.SHUFFLED) {
+				if (order != SyncopatorOrder.SHUFFLED) {
 					bool matchCutLooped;
 					if (!isStrictStep) {
-						int direction = order == MatchCutOrder.SEQUENTIAL ? 1 : -1;
+						int direction = order == SyncopatorOrder.SEQUENTIAL ? 1 : -1;
 						activeSource = eventSets.ElementWrappedAt(eventSets.IndexOf(activeSource) + direction, out matchCutLooped) ?? eventSets.Primary;
 					} else
 						activeSource = eventSets[FloorMod(unchecked((int)step), eventSets.Count, out matchCutLooped)] ?? eventSets.Primary;
@@ -1537,8 +1537,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			int prevMarkerIndex = -1;
 			Action<long> NextLuckyDipSource = step => {
 				if ((CombConfigLuckyDip && CombConfigLuckyDipLimitToSelected) && !(CombConfigMatchCut && CombConfigMatchCutLuckyDip))
-					if (CombConfigLuckyDip && CombConfigLuckyDipLotionBath) NextSourceByOrder(MatchCutOrder.SEQUENTIAL, baseShuffledSeed, !CombConfigLuckyDipTrack ? step : step + MidiConfigTracks.CurrentChannel, true, true);
-					else NextSourceByOrder(MatchCutOrder.SHUFFLED, baseShuffledSeed, step, true, true);
+					if (CombConfigLuckyDip && CombConfigLuckyDipLotionBath) NextSourceByOrder(SyncopatorOrder.SEQUENTIAL, baseShuffledSeed, !CombConfigLuckyDipTrack ? step : step + MidiConfigTracks.CurrentChannel, true, true);
+					else NextSourceByOrder(SyncopatorOrder.SHUFFLED, baseShuffledSeed, step, true, true);
 				else if (CombConfigLuckyDip && CombConfigLuckyDipLotionBath) {
 					int _;
 					NextSequentialSourceByStep(CombConfigLuckyDipLotionBathInterval.Value, !CombConfigLuckyDipTrack ? step : step + MidiConfigTracks.CurrentChannel, out activeSource, out _, out sourceStartTime);
@@ -1680,8 +1680,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				int pitch = noteEvent.NoteNumber;
 				int _pitch = pitch + SheetConfigShift; // 五线谱音符偏移量。
 				int velocity = noteEvent.Velocity;
-				if (RestrictLengthMode == RestrictLengthModeType.FIXED_LENGTH) duration = RestrictLengthValue;
-				else if (RestrictLengthMode == RestrictLengthModeType.MAX_LENGTH) duration = Math.Min(duration, RestrictLengthValue);
+				if (RestrictLengthMode == ConstrainLengthModeType.FIXED_LENGTH) duration = RestrictLengthValue;
+				else if (RestrictLengthMode == ConstrainLengthModeType.MAX_LENGTH) duration = Math.Min(duration, RestrictLengthValue);
 
 				if (startTime < MidiConfigStartTime) continue;
 				if (startTime > MidiConfigEndTime && sliceComposition) break;
@@ -1963,10 +1963,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						Func<bool> ApplyParameters = () => {
 							// 视频平移/裁切调整
 							Timecode originalVideoLength = videoEvent.Length;
-							bool temporarilyExtendLength = RestrictKeyframesLengthMode != RestrictLengthModeType.UNRESTRICTED && requireTwoKeys && originalVideoLength < RestrictKeyframesLengthValue;
+							bool temporarilyExtendLength = RestrictKeyframesLengthMode != ConstrainLengthModeType.UNCONSTRAINED && requireTwoKeys && originalVideoLength < RestrictKeyframesLengthValue;
 							if (temporarilyExtendLength) videoEvent.Length = RestrictKeyframesLengthValue;
 							VideoMotionKeyframe key0 = videoEvent.VideoMotion.Keyframes[0];
-							VideoMotionKeyframe key1 = new VideoMotionKeyframe(RestrictKeyframesLengthMode == RestrictLengthModeType.FIXED_LENGTH ? RestrictKeyframesLengthValue : videoEvent.Length);
+							VideoMotionKeyframe key1 = new VideoMotionKeyframe(RestrictKeyframesLengthMode == ConstrainLengthModeType.FIXED_LENGTH ? RestrictKeyframesLengthValue : videoEvent.Length);
 							if (requireTwoKeys) videoEvent.VideoMotion.Keyframes.Add(key1);
 							float width = key0.BottomRight.X;
 							float height = key0.BottomRight.Y;
@@ -5003,20 +5003,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	/// 视频轨道的渐变效果枚举。
 	/// </summary>
 	public enum VideoTrackGradientEffectType {
+		/// <summary>地府调色。</summary>
+		TRIPPY_COLORING,
+		/// <summary>正负交替。</summary>
+		ALTERNATELY_NEGATIVE,
+		/// <summary>彩灰交替。</summary>
+		ALTERNATELY_CHROMATIC,
 		/// <summary>彩虹色。</summary>
 		RAINBOW,
 		/// <summary>逐渐饱和。</summary>
 		GRADUALLY_SATURATED,
 		/// <summary>逐渐对比。</summary>
 		GRADUALLY_CONTRASTED,
-		/// <summary>阈值。</summary>
+		/// <summary>阈值变化。</summary>
 		THRESHOLD,
-		/// <summary>彩灰交替。</summary>
-		ALTERNATELY_CHROMATIC,
-		/// <summary>正负交替。</summary>
-		ALTERNATELY_NEGATIVE,
-		/// <summary>地府调色。</summary>
-		TRIPPY_COLORING,
 	}
 
 	/// <summary>
@@ -5084,9 +5084,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	/// <summary>
 	/// 限制音符长度类型枚举。
 	/// </summary>
-	public enum RestrictLengthModeType {
+	public enum ConstrainLengthModeType {
 		/// <summary>不限制。</summary>
-		UNRESTRICTED,
+		UNCONSTRAINED,
 		/// <summary>限制最大长度。</summary>
 		MAX_LENGTH,
 		/// <summary>限制在固定长度。</summary>
@@ -5120,24 +5120,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	}
 
 	/// <summary>
-	/// 多素材梳子模式。
+	/// 多素材梳子挑取器/组织器模式。
 	/// </summary>
 	public enum MultisourceCombMode {
 		/// <summary>不启用多素材梳子。</summary>
 		OFF,
 		/// <summary>素材盲盒。</summary>
-		LUCKY_DIP,
+		MYSTERY_BOX,
 		/// <summary>踩点。</summary>
-		MATCH_CUT,
+		SYNCOPATOR,
 		/// <summary>素材乐团。</summary>
-		LINEAR_MAP,
+		ORCHESTRA,
+		/// <summary>原音系战法 / 鞑靼战法。</summary>
+		SHUPELUNKER,
 		/// <summary>辅音时间。</summary>
 		CONSONANT,
-		/// <summary>原音系战法。</summary>
-		SHUPELUNKER,
 	}
 
-	public enum MatchCutOrder {
+	public enum SyncopatorOrder {
 		/// <summary>顺序。</summary>
 		SEQUENTIAL,
 		/// <summary>逆序。</summary>
@@ -17331,9 +17331,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			InfoLbl.Text = str.gradient_tracks_info;
 			EffectsCombo.Items.Clear();
 			EffectsCombo.Items.AddRange(new string[] {
-				str.rainbow_color, str.gradually_saturated, str.gradually_contrasted,
-				str.threshold, str.alternately_chromatic, str.alternately_negative,
 				str.trippy_coloring,
+				str.alternately_negative, str.alternately_chromatic,
+				str.rainbow_color, str.gradually_saturated, str.gradually_contrasted, str.threshold
 			});
 			ReverseCheck.Text = IsToolMode ? str.descending : str.ascending;
 			Text = str.gradient_tracks;
@@ -26571,6 +26571,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private string headerTitle = string.Empty;
 		private bool isInitialized = false; // 引入防重复执行旗标
 		private List<RadioButton> radioButtons = new List<RadioButton>(0);
+		private bool isSyncingVisible = false; // 用于屏蔽运行时组装带来的伪信号
 
 		public ButtonTabControl() {
 			// 默认设置一个美观的初始大小
@@ -26590,6 +26591,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (titleLabel == null) return;
 				titleLabel.Text = value;
 				titleLabel.Visible = !string.IsNullOrEmpty(value);
+			}
+		}
+
+		/// <inheritdoc cref="Control.Visible" />
+		[Category("Behavior"), Description("确定该控件是可见的还是隐藏的。"), DefaultValue(true)]
+		public new bool Visible {
+			get {
+				// 如果在运行期且包装盒已经建立，控件的真实可见性应该以外壳为准
+				return !DesignMode && wrapperPanel != null ? wrapperPanel.Visible : base.Visible;
+			}
+			set {
+				// 如果在运行期且外壳已准备好，同时不在内部组装期间，则完美同步外壳
+				if (!DesignMode && wrapperPanel != null && !isSyncingVisible) {
+					wrapperPanel.Visible = value;
+					base.Visible = true;
+				} else
+					base.Visible = value;
 			}
 		}
 
@@ -26711,7 +26729,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 
 			// 2. 从原父容器中移除当前 TabControl，准备塞入包装容器中
-			originalParent.Controls.Remove(this);
+			// 【新增保护】：开始拆装前，开启屏蔽锁，防止移除 Parent 导致 Visible 伪信号乱飞
+			isSyncingVisible = true;
+			originalParent.SuspendLayout();
+			originalParent.Controls.Remove(this); // 此时移除不会再把外壳带入错误状态
 
 			// 3. 创建运行时的包装容器 Wrapper Panel，全盘接收原 TabControl 的布局属性
 			wrapperPanel = new Panel {
@@ -26721,6 +26742,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				Anchor = origAnchor,
 				TabIndex = origTabIndex,
 				AutoSize = true,
+				// 【关键改动】：初始化时，包装容器的 Visible 必须精准同步此时设计器给 TabControl 设定的初始 Visible 值
+				Visible = base.Visible,
 			};
 
 			// 4. 将包装容器放入原父容器的“原位置”
@@ -26829,6 +26852,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			foreach (KeyValuePair<ScrollableControl, Point> kvp in parentScrollPositions) {
 				kvp.Key.AutoScrollPosition = new Point(Math.Abs(kvp.Value.X), Math.Abs(kvp.Value.Y));
 			}
+
+			// 组件完全组装完毕，恢复外壳同步锁
+			isSyncingVisible = false;
 		}
 
 		// 核心辅助机制 1：无滚动强制执行区（确保切换时外部容器滚动条纹丝不动）
@@ -26895,6 +26921,155 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			base.Dispose(disposing);
 		}
 	}
+
+	/// <summary>
+	/// Extension class to disable the auto-select behavior when a combobox is in DropDown mode.
+	/// </summary>
+	/// <remarks>
+	/// <see href="https://stackoverflow.com/a/25696213/19553213" />
+	/// </remarks>
+	public static class ComboBoxAutoSelectExtension {
+		public static void AutoSelectOff(this ComboBox combo) {
+			Data.Register(combo);
+		}
+
+		public static void AutoSelectOn(this ComboBox combo) {
+			Data data;
+			if (Data.dict.TryGetValue(combo, out data)) {
+				data.Dispose();
+				Data.dict.Remove(combo);
+			}
+		}
+
+		private class Data {
+			// keep a reference to the native windows so they don't get disposed
+			internal static Dictionary<ComboBox, Data> dict = new Dictionary<ComboBox, Data>();
+
+			// a ComboBox consists of 3 windows (combobox handle, text edit handle and dropdown list handle)
+			ComboBox combo;
+			NW nwList = null; // handle to the combobox's dropdown list
+			//NW2 nwEdit = null; // handle to the edit window
+
+			internal void Dispose() {
+				dict.Remove(combo);
+				nwList.ReleaseHandle();
+				//nwEdit.ReleaseHandle();
+			}
+
+			public static void Register(ComboBox combo) {
+				if (dict.ContainsKey(combo)) return; // already registered
+
+				Data data = new Data() { combo = combo };
+				Action assign = () => {
+					if (dict.ContainsKey(combo)) return; // already assigned
+
+					COMBOBOXINFO info = COMBOBOXINFO.GetInfo(combo);
+
+					dict[combo] = data;
+					data.nwList = new NW(combo, info.hwndList);
+					//data.nwEdit = new NW2(info.hwndEdit);
+				};
+
+				if (!combo.IsHandleCreated)
+					combo.HandleCreated += delegate { assign(); };
+				else
+					assign();
+
+				combo.HandleDestroyed += delegate {
+					data.Dispose();
+				};
+			}
+		}
+
+		private class NW : NativeWindow {
+			private readonly ComboBox combo;
+			public NW(ComboBox combo, IntPtr handle) {
+				this.combo = combo;
+				AssignHandle(handle);
+			}
+
+			private const int LB_FINDSTRING = 0x018F;
+			private const int LB_FINDSTRINGEXACT = 0x01A2;
+
+			protected override void WndProc(ref Message m) {
+				if (m.Msg == LB_FINDSTRING) {
+					m.Msg = LB_FINDSTRINGEXACT;
+				}
+
+				base.WndProc(ref m);
+
+				if (m.Msg == LB_FINDSTRINGEXACT) {
+					string find = Marshal.PtrToStringAuto(m.LParam);
+					for (int i = 0; i < combo.Items.Count; i++) {
+						object item = combo.Items[i];
+						if (item.Equals(find)) {
+							m.Result = new IntPtr(i);
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		private class NW2 : NativeWindow {
+			public NW2(IntPtr handle) {
+				AssignHandle(handle);
+			}
+
+			private const int EM_SETSEL = 0x00B1;
+			private const int EM_GETSEL = 0x00B0;
+
+			protected override void WndProc(ref Message m) {
+				if (m.Msg == EM_SETSEL) {
+					// if this code is not here, then the entire combobox text is selected
+					// which looks ugly, especially when there are multiple combo boxes.
+					//
+					// if this method returns immediately, then the caret position is set
+					// to (0, 0). However, it seems that calling EM_GETSEL has a side effect
+					// that the caret position is mostly maintained. Sometimes it slips back
+					// to (0, 0).
+					SendMessage(Handle, EM_GETSEL, IntPtr.Zero, IntPtr.Zero);
+					//int selStart = (sel & 0x00ff);
+					//int selEnd = (sel >> 16) & 0x00ff;
+					//Debug.WriteLine("EM_GETSEL: " + selStart + " nEnd: " + selEnd);
+					return;
+				}
+				base.WndProc(ref m);
+			}
+
+			[DllImport("user32.dll", SetLastError = true)]
+			private static extern int SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
+		public struct COMBOBOXINFO {
+			public int cbSize;
+			public RECT rcItem;
+			public RECT rcButton;
+			public int buttonState;
+			public IntPtr hwndCombo;
+			public IntPtr hwndEdit;
+			public IntPtr hwndList;
+
+			public static COMBOBOXINFO GetInfo(ComboBox combo) {
+				COMBOBOXINFO info = new COMBOBOXINFO();
+				info.cbSize = Marshal.SizeOf(info);
+				SendMessageCb(combo.Handle, 0x164, IntPtr.Zero, out info);
+				return info;
+			}
+
+			[DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
+			private static extern IntPtr SendMessageCb(IntPtr hWnd, int msg, IntPtr wp, out COMBOBOXINFO lp);
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
+		public struct RECT {
+			public int Left;
+			public int Top;
+			public int Right;
+			public int Bottom;
+		}
+	}
 	#endregion
 
 	#region 设计器部分
@@ -26929,28 +27104,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OkBtn = new System.Windows.Forms.Button();
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.Balloon = new System.Windows.Forms.ToolTip(this.components);
-			this.AudioLockStretchPitchCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.PreviewTuneAudioCheck = new System.Windows.Forms.CheckBox();
 			this.StaffRelativeValueCheck = new System.Windows.Forms.CheckBox();
 			this.StaffLegacyMethodCheck = new System.Windows.Forms.CheckBox();
-			this.SourceStartTimeText = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
-			this.SourceEndTimeText = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
-			this.MidiStartSecondBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
-			this.MidiEndSecondBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
-			this.PreviewBeepDurationBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
-			this.StaffLineThicknessBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
-			this.StaffSurfacePaddingRightBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
-			this.StaffLineSpacingBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
-			this.StaffSurfacePositionBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
-			this.StaffSurfacePaddingLeftBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
-			this.YtpMinLenBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
-			this.YtpMaxLenBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
-			this.MatchCutRepeatRoundBox = new System.Windows.Forms.NumericUpDown();
 			this.AudioTuneMethodCombo = new System.Windows.Forms.ComboBox();
-			this.AudioAltMethodCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
-			this.StaffFreezeAtNoteOffCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.PreviewBasePitchBtn = new System.Windows.Forms.Button();
-			this.AudioStretchAttrCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.menu = new System.Windows.Forms.MenuStrip();
 			this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -27032,12 +27190,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTab = new System.Windows.Forms.TabPage();
 			this.SourceTabScrollPanel = new System.Windows.Forms.Panel();
 			this.MultiSourceConfigGroup = new System.Windows.Forms.GroupBox();
-			this.MultiSourceCombTabs = new System.Windows.Forms.TabControl();
-			this.MultiSourceOffTab = new System.Windows.Forms.TabPage();
-			this.MultiSourceOffInfoLbl = new System.Windows.Forms.Label();
+			this.MultiSourceCombOrganizerTabs = new Otomad.VegasScripts.OtomadHelper.V4.ButtonTabControl();
 			this.LuckyDipTab = new System.Windows.Forms.TabPage();
 			this.LuckyDipPanel = new System.Windows.Forms.FlowLayoutPanel();
-			this.LuckyDipLimitToSelectedCheck = new System.Windows.Forms.CheckBox();
 			this.LuckyDipTrackCheck = new System.Windows.Forms.CheckBox();
 			this.LuckyDipMarkerCheck = new System.Windows.Forms.CheckBox();
 			this.LuckyDipBarOrBeatCheck = new System.Windows.Forms.CheckBox();
@@ -27048,24 +27203,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPreparationLbl = new System.Windows.Forms.Label();
 			this.LuckyDipBarOrBeatPreparationBox = new System.Windows.Forms.NumericUpDown();
 			this.LuckyDipBarOrBeatPreparationUnitCombo = new System.Windows.Forms.ComboBox();
-			this.LuckyDipLotionBathCheck = new System.Windows.Forms.CheckBox();
-			this.LuckyDipLotionBathIntervalPanel = new System.Windows.Forms.TableLayoutPanel();
-			this.LuckyDipLotionBathIntervalLbl = new System.Windows.Forms.Label();
-			this.LuckyDipLotionBathIntervalBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
 			this.MatchCutTab = new System.Windows.Forms.TabPage();
 			this.MatchCutPanel = new System.Windows.Forms.FlowLayoutPanel();
-			this.MatchCutOrderPanel = new System.Windows.Forms.FlowLayoutPanel();
-			this.MatchCutOrderLbl = new System.Windows.Forms.Label();
-			this.MatchCutOrderSequentialRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
-			this.MatchCutOrderReversedRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
-			this.MatchCutOrderShuffleRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.MatchCutRepeatPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.MatchCutRepeatLbl = new System.Windows.Forms.Label();
 			this.MatchCutRepeatBox = new System.Windows.Forms.NumericUpDown();
 			this.MatchCutRepeatRoundPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.MatchCutRepeatRoundLbl = new System.Windows.Forms.Label();
+			this.MatchCutRepeatRoundBox = new System.Windows.Forms.NumericUpDown();
 			this.MatchCutApplyEffectsByRoundCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
-			this.MatchCutLuckyDipCheck = new System.Windows.Forms.CheckBox();
 			this.MatchCutAccumulateHarmonicsCheck = new System.Windows.Forms.CheckBox();
 			this.MatchCutSustainCheck = new System.Windows.Forms.CheckBox();
 			this.MatchCutSustainPanel = new System.Windows.Forms.TableLayoutPanel();
@@ -27073,14 +27219,49 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutSustainCacheCapacityBox = new System.Windows.Forms.NumericUpDown();
 			this.LinearMapTab = new System.Windows.Forms.TabPage();
 			this.LinearMapPanel = new System.Windows.Forms.FlowLayoutPanel();
-			this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
-			this.LinearMapSelectionModeLbl = new System.Windows.Forms.Label();
-			this.LinearMapSelectionModeLuckyDipRadio = new System.Windows.Forms.RadioButton();
-			this.LinearMapSelectionModeMatchCutRadio = new System.Windows.Forms.RadioButton();
-			this.LinearMapDescendingCheck = new System.Windows.Forms.CheckBox();
 			this.LinearMapReuseCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
-			this.ConsonantTab = new System.Windows.Forms.TabPage();
 			this.ShupelunkerTab = new System.Windows.Forms.TabPage();
+			this.ShupelunkerPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.ShupelunkerOrTartarPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.ShupelunkerRadio = new System.Windows.Forms.RadioButton();
+			this.TartarRadio = new System.Windows.Forms.RadioButton();
+			this.ShupelunkerUnallocatedPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.ShupelunkerUnallocatedLbl = new System.Windows.Forms.Label();
+			this.ShupelunkerUnallocatedOctavesCheck = new System.Windows.Forms.CheckBox();
+			this.ShupelunkerUnallocatedFillUpCheck = new System.Windows.Forms.CheckBox();
+			this.ShupelunkerUnallocatedFillDownCheck = new System.Windows.Forms.CheckBox();
+			this.ShupelunkerUnallocatedDefaultCheck = new System.Windows.Forms.CheckBox();
+			this.ShupelunkerOffsetPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.ShupelunkerOffsetLbl = new System.Windows.Forms.Label();
+			this.ShupelunkerOffsetCombo = new System.Windows.Forms.ComboBox();
+			this.ShupelunkerOffsetUnitLbl = new System.Windows.Forms.Label();
+			this.ShupelunkerExclusiveTrackCheck = new System.Windows.Forms.CheckBox();
+			this.TartarReuseCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
+			this.ConsonantTab = new System.Windows.Forms.TabPage();
+			this.MultiSourceConfigSplitterWrapper = new System.Windows.Forms.Panel();
+			this.MultiSourceConfigSplitter = new System.Windows.Forms.Splitter();
+			this.MultiSourceCombPickerTabs = new Otomad.VegasScripts.OtomadHelper.V4.ButtonTabControl();
+			this.MultiSourceOffTab = new System.Windows.Forms.TabPage();
+			this.MultiSourceOffInfoLbl = new System.Windows.Forms.Label();
+			this.MysteryBoxTab = new System.Windows.Forms.TabPage();
+			this.MysteryBoxPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.EnhanceSelectCheck = new System.Windows.Forms.CheckBox();
+			this.LuckyDipLotionBathCheck = new System.Windows.Forms.CheckBox();
+			this.LuckyDipLotionBathIntervalPanel = new System.Windows.Forms.TableLayoutPanel();
+			this.LuckyDipLotionBathIntervalLbl = new System.Windows.Forms.Label();
+			this.LuckyDipLotionBathIntervalBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
+			this.SyncopatorTab = new System.Windows.Forms.TabPage();
+			this.SyncopatorPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.MatchCutOrderPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.MatchCutOrderLbl = new System.Windows.Forms.Label();
+			this.MatchCutOrderSequentialRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.MatchCutOrderReversedRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.MatchCutOrderShuffleRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AffixAsPitchLblPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.AffixAsPitchLbl = new System.Windows.Forms.Label();
+			this.AffixAsPitchOffRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AffixAsPitchPrefixRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AffixAsPitchSuffixRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.SourceConfigGroup = new System.Windows.Forms.GroupBox();
 			this.SourceConfigTablePanel = new System.Windows.Forms.TableLayoutPanel();
 			this.AudioBusTrackReuseCheck = new System.Windows.Forms.CheckBox();
@@ -27109,7 +27290,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ChooseSourceBtn = new System.Windows.Forms.Button();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.SourceStartTimeLbl = new System.Windows.Forms.Label();
+			this.SourceStartTimeText = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
 			this.SourceEndTimeLbl = new System.Windows.Forms.Label();
+			this.SourceEndTimeText = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
 			this.GenerateAtLbl = new System.Windows.Forms.Label();
 			this.flowLayoutPanel9 = new System.Windows.Forms.FlowLayoutPanel();
 			this.GenerateAtBeginRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
@@ -27157,7 +27340,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ChooseMidiBtn = new System.Windows.Forms.Button();
 			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
 			this.MidiStartSecondLbl = new System.Windows.Forms.Label();
+			this.MidiStartSecondBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
 			this.MidiEndSecondLbl = new System.Windows.Forms.Label();
+			this.MidiEndSecondBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.MidiAutoChangeProjectPropertiesLbl = new System.Windows.Forms.Label();
 			this.MidiAutoChangeProjectBpmCheck = new System.Windows.Forms.CheckBox();
@@ -27209,16 +27394,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneTablePanel = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel19 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioOverallShiftCombo = new System.Windows.Forms.ComboBox();
+			this.AudioOverallShiftUnitLbl = new System.Windows.Forms.Label();
 			this.AudioNoTuningDrumKitsCheck = new System.Windows.Forms.CheckBox();
 			this.AudioMuteDrumKitsCheck = new System.Windows.Forms.CheckBox();
 			this.AudioOverallShiftLbl = new System.Windows.Forms.Label();
 			this.AudioStretchMethodCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.AudioStretchMethodLbl = new System.Windows.Forms.Label();
+			this.AudioAltMethodCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.AudioAltMethodLbl = new System.Windows.Forms.Label();
 			this.AudioTuneMethodLbl = new System.Windows.Forms.Label();
 			this.AudioStretchAttrLbl = new System.Windows.Forms.Label();
+			this.AudioStretchAttrCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.AudioLockAttrLbl = new System.Windows.Forms.Label();
 			this.flowLayoutPanel10 = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioLockStretchPitchCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.AudioReserveFormantCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.AudioVocalFryCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.AudioBasePitchLbl = new System.Windows.Forms.Label();
@@ -27234,6 +27423,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioPreviewAttrLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.PreviewBeepEngineCombo = new System.Windows.Forms.ComboBox();
 			this.PreviewBeepWaveFormCombo = new System.Windows.Forms.ComboBox();
+			this.PreviewBeepDurationBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
 			this.AudioVelocityGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
 			this.AudioGainTildeLbl = new System.Windows.Forms.Label();
@@ -27386,18 +27576,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.StaffGenerateLinesCheck = new System.Windows.Forms.CheckBox();
 			this.StaffLineColorBtn = new Otomad.VegasScripts.OtomadHelper.V4.ColorButton();
 			this.StaffLineColorLbl = new System.Windows.Forms.Label();
+			this.StaffLineThicknessBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
 			this.StaffLineThicknessLbl = new System.Windows.Forms.Label();
 			this.StaffNotesParamsGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
+			this.StaffSurfacePaddingRightBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
 			this.StaffSurfacePaddingRightLbl = new System.Windows.Forms.Label();
 			this.StaffClefLbl = new System.Windows.Forms.Label();
 			this.StaffClefCombo = new System.Windows.Forms.ComboBox();
 			this.StaffLineSpacingLbl = new System.Windows.Forms.Label();
+			this.StaffLineSpacingBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
+			this.StaffSurfacePositionBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
 			this.StaffSurfacePaddingLeftLbl = new System.Windows.Forms.Label();
+			this.StaffSurfacePaddingLeftBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
 			this.StaffSurfacePositionLbl = new System.Windows.Forms.Label();
 			this.StaffNotesShiftLbl = new System.Windows.Forms.Label();
 			this.StaffNotesShiftBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
 			this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+			this.StaffFreezeAtNoteOffCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.StaffLengthenToBarEndCheck = new System.Windows.Forms.CheckBox();
 			this.StaffVisualizerConfigCheck = new System.Windows.Forms.CheckBox();
 			this.SheetConfigInfoLabel = new System.Windows.Forms.Label();
@@ -27479,7 +27675,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.YtpMinLenLbl = new System.Windows.Forms.Label();
 			this.YtpClipsCountLbl = new System.Windows.Forms.Label();
 			this.YtpClipsCountBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
+			this.YtpMinLenBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
 			this.YtpMaxLenLbl = new System.Windows.Forms.Label();
+			this.YtpMaxLenBox = new Otomad.VegasScripts.OtomadHelper.V4.NumericUpDownWithUnit();
 			this.YtpEffectsGroup = new System.Windows.Forms.GroupBox();
 			this.YtpEnableAllEffectsCheck = new System.Windows.Forms.CheckBox();
 			this.YtpEffectsCheckList = new System.Windows.Forms.CheckedListBox();
@@ -27550,45 +27748,44 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.tableLayoutPanel1.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePaddingRightBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePositionBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePaddingLeftBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.YtpMinLenBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.YtpMaxLenBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.MatchCutRepeatRoundBox)).BeginInit();
 			this.menu.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.Tabs.SuspendLayout();
 			this.SourceTab.SuspendLayout();
 			this.SourceTabScrollPanel.SuspendLayout();
 			this.MultiSourceConfigGroup.SuspendLayout();
-			this.MultiSourceCombTabs.SuspendLayout();
-			this.MultiSourceOffTab.SuspendLayout();
+			this.MultiSourceCombOrganizerTabs.SuspendLayout();
 			this.LuckyDipTab.SuspendLayout();
 			this.LuckyDipPanel.SuspendLayout();
 			this.LuckyDipBarOrBeatPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.LuckyDipBarOrBeatPeriodBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.LuckyDipBarOrBeatPreparationBox)).BeginInit();
-			this.LuckyDipLotionBathIntervalPanel.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.LuckyDipLotionBathIntervalBox)).BeginInit();
 			this.MatchCutTab.SuspendLayout();
 			this.MatchCutPanel.SuspendLayout();
-			this.MatchCutOrderPanel.SuspendLayout();
 			this.MatchCutRepeatPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MatchCutRepeatBox)).BeginInit();
 			this.MatchCutRepeatRoundPanel.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.MatchCutRepeatRoundBox)).BeginInit();
 			this.MatchCutSustainPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MatchCutSustainCacheCapacityBox)).BeginInit();
 			this.LinearMapTab.SuspendLayout();
 			this.LinearMapPanel.SuspendLayout();
-			this.flowLayoutPanel7.SuspendLayout();
+			this.ShupelunkerTab.SuspendLayout();
+			this.ShupelunkerPanel.SuspendLayout();
+			this.ShupelunkerOrTartarPanel.SuspendLayout();
+			this.ShupelunkerUnallocatedPanel.SuspendLayout();
+			this.ShupelunkerOffsetPanel.SuspendLayout();
+			this.MultiSourceConfigSplitterWrapper.SuspendLayout();
+			this.MultiSourceCombPickerTabs.SuspendLayout();
+			this.MultiSourceOffTab.SuspendLayout();
+			this.MysteryBoxTab.SuspendLayout();
+			this.MysteryBoxPanel.SuspendLayout();
+			this.LuckyDipLotionBathIntervalPanel.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.LuckyDipLotionBathIntervalBox)).BeginInit();
+			this.SyncopatorTab.SuspendLayout();
+			this.SyncopatorPanel.SuspendLayout();
+			this.MatchCutOrderPanel.SuspendLayout();
+			this.AffixAsPitchLblPanel.SuspendLayout();
 			this.SourceConfigGroup.SuspendLayout();
 			this.SourceConfigTablePanel.SuspendLayout();
 			this.flowLayoutPanel18.SuspendLayout();
@@ -27597,6 +27794,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel12.SuspendLayout();
 			this.tableLayoutPanel4.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
 			this.flowLayoutPanel9.SuspendLayout();
 			this.flowLayoutPanel11.SuspendLayout();
 			this.flowLayoutPanel5.SuspendLayout();
@@ -27609,6 +27808,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigTablePanel.SuspendLayout();
 			this.tableLayoutPanel6.SuspendLayout();
 			this.flowLayoutPanel3.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).BeginInit();
 			this.tableLayoutPanel3.SuspendLayout();
 			this.MidiBpmFlowPanel.SuspendLayout();
 			this.MidiDynamicTempoFlow.SuspendLayout();
@@ -27630,6 +27831,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel6.SuspendLayout();
 			this.tableLayoutPanel17.SuspendLayout();
 			this.AudioPreviewAttrLayoutPanel.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			this.AudioVelocityGroup.SuspendLayout();
 			this.tableLayoutPanel13.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.AudioGainMoreBox)).BeginInit();
@@ -27667,8 +27869,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			((System.ComponentModel.ISupportInitialize)(this.StaffClefScaleBox)).BeginInit();
 			this.StaffLinesParamsGroup.SuspendLayout();
 			this.tableLayoutPanel7.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).BeginInit();
 			this.StaffNotesParamsGroup.SuspendLayout();
 			this.tableLayoutPanel10.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePaddingRightBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePositionBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePaddingLeftBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffNotesShiftBox)).BeginInit();
 			this.flowLayoutPanel4.SuspendLayout();
 			this.SonarTab.SuspendLayout();
@@ -27701,6 +27908,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.YtpParamsGroup.SuspendLayout();
 			this.tableLayoutPanel16.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.YtpClipsCountBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.YtpMinLenBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.YtpMaxLenBox)).BeginInit();
 			this.YtpEffectsGroup.SuspendLayout();
 			this.MoshTab.SuspendLayout();
 			this.DatamoshTable.SuspendLayout();
@@ -27810,19 +28019,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Balloon.ToolTipTitle = "填写说明";
 			this.Balloon.Popup += new System.Windows.Forms.PopupEventHandler(this.Balloon_Popup);
 			//
-			// AudioLockStretchPitchCheck
-			//
-			this.AudioLockStretchPitchCheck.AutoSize = true;
-			this.AudioLockStretchPitchCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioLockStretchPitchCheck.Location = new System.Drawing.Point(3, 3);
-			this.AudioLockStretchPitchCheck.MinimumSize = new System.Drawing.Size(0, 48);
-			this.AudioLockStretchPitchCheck.Name = "AudioLockStretchPitchCheck";
-			this.AudioLockStretchPitchCheck.Size = new System.Drawing.Size(214, 48);
-			this.AudioLockStretchPitchCheck.TabIndex = 0;
-			this.AudioLockStretchPitchCheck.Text = "锁定伸缩与音调";
-			this.Balloon.SetToolTip(this.AudioLockStretchPitchCheck, "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\r\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。");
-			this.AudioLockStretchPitchCheck.UseVisualStyleBackColor = true;
-			//
 			// PreviewTuneAudioCheck
 			//
 			this.PreviewTuneAudioCheck.AutoSize = true;
@@ -27863,291 +28059,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Balloon.SetToolTip(this.StaffLegacyMethodCheck, "将使用与旧版脚本五线谱可视化 v0.1 相同的定位方式。\r\n即音符和谱线的位置和形状由轨道运动定位。");
 			this.StaffLegacyMethodCheck.UseVisualStyleBackColor = true;
 			//
-			// SourceStartTimeText
-			//
-			this.SourceStartTimeText.DoubleValue = 0D;
-			this.SourceStartTimeText.Location = new System.Drawing.Point(116, 3);
-			this.SourceStartTimeText.Name = "SourceStartTimeText";
-			this.SourceStartTimeText.Size = new System.Drawing.Size(260, 39);
-			this.SourceStartTimeText.TabIndex = 4;
-			this.Balloon.SetToolTip(this.SourceStartTimeText, "此处填写媒体素材裁剪的开始时间。\r\n单位：秒。");
-			this.SourceStartTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			//
-			// SourceEndTimeText
-			//
-			this.SourceEndTimeText.DoubleValue = 0D;
-			this.SourceEndTimeText.Location = new System.Drawing.Point(515, 3);
-			this.SourceEndTimeText.Name = "SourceEndTimeText";
-			this.SourceEndTimeText.Size = new System.Drawing.Size(260, 39);
-			this.SourceEndTimeText.TabIndex = 5;
-			this.Balloon.SetToolTip(this.SourceEndTimeText, "注意如果此处填写的数值比入点秒数小或相等，则始终表示持续到素材时间末尾。\r\n单位：秒。");
-			this.SourceEndTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			//
-			// MidiStartSecondBox
-			//
-			this.MidiStartSecondBox.DoubleValue = 0D;
-			this.MidiStartSecondBox.Enabled = false;
-			this.MidiStartSecondBox.Location = new System.Drawing.Point(116, 3);
-			this.MidiStartSecondBox.Name = "MidiStartSecondBox";
-			this.MidiStartSecondBox.Size = new System.Drawing.Size(260, 39);
-			this.MidiStartSecondBox.TabIndex = 3;
-			this.Balloon.SetToolTip(this.MidiStartSecondBox, "用于截取 MIDI 音乐的一部分。\r\n单位：秒。");
-			this.MidiStartSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			//
-			// MidiEndSecondBox
-			//
-			this.MidiEndSecondBox.DoubleValue = 0D;
-			this.MidiEndSecondBox.Enabled = false;
-			this.MidiEndSecondBox.Location = new System.Drawing.Point(515, 3);
-			this.MidiEndSecondBox.Name = "MidiEndSecondBox";
-			this.MidiEndSecondBox.Size = new System.Drawing.Size(260, 39);
-			this.MidiEndSecondBox.TabIndex = 4;
-			this.Balloon.SetToolTip(this.MidiEndSecondBox, "此处填写需要读取 MIDI 文件的时间长度。\r\n注意如果填写的值过小，将截去多余时间部分的音符。\r\n如果此处填写的值比起始秒数小或相等，则始终表示持续到整个音乐时" +
-		"长末尾。\r\n单位：秒。");
-			this.MidiEndSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			//
-			// PreviewBeepDurationBox
-			//
-			this.PreviewBeepDurationBox.Constrain = new decimal(new int[] {
-			500,
-			0,
-			0,
-			0});
-			this.PreviewBeepDurationBox.EnableDecimalPlaces = true;
-			this.PreviewBeepDurationBox.Location = new System.Drawing.Point(347, 3);
-			this.PreviewBeepDurationBox.Maximum = new decimal(new int[] {
-			2000,
-			0,
-			0,
-			0});
-			this.PreviewBeepDurationBox.Minimum = new decimal(new int[] {
-			1,
-			0,
-			0,
-			0});
-			this.PreviewBeepDurationBox.Name = "PreviewBeepDurationBox";
-			this.PreviewBeepDurationBox.Size = new System.Drawing.Size(166, 39);
-			this.PreviewBeepDurationBox.Suffix = "ms";
-			this.PreviewBeepDurationBox.TabIndex = 5;
-			this.Balloon.SetToolTip(this.PreviewBeepDurationBox, "预听标准音高所持续的时间。\r\n单位：毫秒。");
-			this.PreviewBeepDurationBox.Value = new decimal(new int[] {
-			500,
-			0,
-			0,
-			0});
-			//
-			// StaffLineThicknessBox
-			//
-			this.StaffLineThicknessBox.Constrain = new decimal(new int[] {
-			25,
-			0,
-			0,
-			0});
-			this.StaffLineThicknessBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffLineThicknessBox.Enabled = false;
-			this.StaffLineThicknessBox.EnableDecimalPlaces = true;
-			this.StaffLineThicknessBox.Location = new System.Drawing.Point(119, 45);
-			this.StaffLineThicknessBox.Minimum = new decimal(new int[] {
-			10,
-			0,
-			0,
-			0});
-			this.StaffLineThicknessBox.Name = "StaffLineThicknessBox";
-			this.StaffLineThicknessBox.Size = new System.Drawing.Size(425, 39);
-			this.StaffLineThicknessBox.Suffix = "%";
-			this.StaffLineThicknessBox.TabIndex = 11;
-			this.Balloon.SetToolTip(this.StaffLineThicknessBox, "生成五线谱的谱线时，五线谱谱线的粗细。当粗细值达到 100 % 后，谱线将会占满整个谱线间距。\r\n单位：百分比。");
-			this.StaffLineThicknessBox.Value = new decimal(new int[] {
-			25,
-			0,
-			0,
-			0});
-			//
-			// StaffSurfacePaddingRightBox
-			//
-			this.StaffSurfacePaddingRightBox.Constrain = new decimal(new int[] {
-			200,
-			0,
-			0,
-			0});
-			this.StaffSurfacePaddingRightBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffSurfacePaddingRightBox.Enabled = false;
-			this.StaffSurfacePaddingRightBox.EnableDecimalPlaces = true;
-			this.StaffSurfacePaddingRightBox.Location = new System.Drawing.Point(666, 99);
-			this.StaffSurfacePaddingRightBox.Maximum = new decimal(new int[] {
-			65536,
-			0,
-			0,
-			0});
-			this.StaffSurfacePaddingRightBox.Name = "StaffSurfacePaddingRightBox";
-			this.StaffSurfacePaddingRightBox.Size = new System.Drawing.Size(425, 39);
-			this.StaffSurfacePaddingRightBox.Suffix = "px";
-			this.StaffSurfacePaddingRightBox.TabIndex = 9;
-			this.Balloon.SetToolTip(this.StaffSurfacePaddingRightBox, "将在屏幕中间所填的宽度内显示音符，用于左右留白，给左侧的谱号留间距。\r\n单位：像素。");
-			this.StaffSurfacePaddingRightBox.Value = new decimal(new int[] {
-			200,
-			0,
-			0,
-			0});
-			//
-			// StaffLineSpacingBox
-			//
-			this.StaffLineSpacingBox.Constrain = new decimal(new int[] {
-			100,
-			0,
-			0,
-			0});
-			this.StaffLineSpacingBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffLineSpacingBox.Enabled = false;
-			this.StaffLineSpacingBox.EnableDecimalPlaces = true;
-			this.StaffLineSpacingBox.Location = new System.Drawing.Point(666, 45);
-			this.StaffLineSpacingBox.Maximum = new decimal(new int[] {
-			65536,
-			0,
-			0,
-			0});
-			this.StaffLineSpacingBox.Name = "StaffLineSpacingBox";
-			this.StaffLineSpacingBox.Size = new System.Drawing.Size(425, 39);
-			this.StaffLineSpacingBox.Suffix = "px";
-			this.StaffLineSpacingBox.TabIndex = 7;
-			this.Balloon.SetToolTip(this.StaffLineSpacingBox, "五线谱线与线之间的间距。\r\n单位：像素。");
-			this.StaffLineSpacingBox.Value = new decimal(new int[] {
-			100,
-			0,
-			0,
-			0});
-			//
-			// StaffSurfacePositionBox
-			//
-			this.StaffSurfacePositionBox.Constrain = new decimal(new int[] {
-			0,
-			0,
-			0,
-			0});
-			this.StaffSurfacePositionBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffSurfacePositionBox.Enabled = false;
-			this.StaffSurfacePositionBox.EnableDecimalPlaces = true;
-			this.StaffSurfacePositionBox.Location = new System.Drawing.Point(119, 153);
-			this.StaffSurfacePositionBox.Maximum = new decimal(new int[] {
-			65536,
-			0,
-			0,
-			0});
-			this.StaffSurfacePositionBox.Minimum = new decimal(new int[] {
-			65536,
-			0,
-			0,
-			-2147483648});
-			this.StaffSurfacePositionBox.Name = "StaffSurfacePositionBox";
-			this.StaffSurfacePositionBox.Size = new System.Drawing.Size(425, 39);
-			this.StaffSurfacePositionBox.Suffix = "px";
-			this.StaffSurfacePositionBox.TabIndex = 10;
-			this.Balloon.SetToolTip(this.StaffSurfacePositionBox, "五线谱中间第三根线到屏幕中心的距离，上正下负。\r\n单位：像素。");
-			//
-			// StaffSurfacePaddingLeftBox
-			//
-			this.StaffSurfacePaddingLeftBox.Constrain = new decimal(new int[] {
-			500,
-			0,
-			0,
-			0});
-			this.StaffSurfacePaddingLeftBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffSurfacePaddingLeftBox.Enabled = false;
-			this.StaffSurfacePaddingLeftBox.EnableDecimalPlaces = true;
-			this.StaffSurfacePaddingLeftBox.Location = new System.Drawing.Point(119, 99);
-			this.StaffSurfacePaddingLeftBox.Maximum = new decimal(new int[] {
-			65536,
-			0,
-			0,
-			0});
-			this.StaffSurfacePaddingLeftBox.Name = "StaffSurfacePaddingLeftBox";
-			this.StaffSurfacePaddingLeftBox.Size = new System.Drawing.Size(425, 39);
-			this.StaffSurfacePaddingLeftBox.Suffix = "px";
-			this.StaffSurfacePaddingLeftBox.TabIndex = 8;
-			this.Balloon.SetToolTip(this.StaffSurfacePaddingLeftBox, "将在屏幕中间所填的宽度内显示音符，用于左右留白，给左侧的谱号留间距。\r\n单位：像素。");
-			this.StaffSurfacePaddingLeftBox.Value = new decimal(new int[] {
-			500,
-			0,
-			0,
-			0});
-			//
-			// YtpMinLenBox
-			//
-			this.YtpMinLenBox.Constrain = new decimal(new int[] {
-			10,
-			0,
-			0,
-			0});
-			this.YtpMinLenBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.YtpMinLenBox.EnableDecimalPlaces = true;
-			this.YtpMinLenBox.Location = new System.Drawing.Point(119, 3);
-			this.YtpMinLenBox.Maximum = new decimal(new int[] {
-			30000,
-			0,
-			0,
-			0});
-			this.YtpMinLenBox.Minimum = new decimal(new int[] {
-			10,
-			0,
-			0,
-			0});
-			this.YtpMinLenBox.Name = "YtpMinLenBox";
-			this.YtpMinLenBox.Size = new System.Drawing.Size(425, 39);
-			this.YtpMinLenBox.Suffix = "ms";
-			this.YtpMinLenBox.TabIndex = 8;
-			this.Balloon.SetToolTip(this.YtpMinLenBox, "指定单个轨道剪辑的最小长度。\r\n单位：毫秒。");
-			this.YtpMinLenBox.Value = new decimal(new int[] {
-			10,
-			0,
-			0,
-			0});
-			this.YtpMinLenBox.ValueChanged += new System.EventHandler(this.YtpLenBox_ValueChanged);
-			//
-			// YtpMaxLenBox
-			//
-			this.YtpMaxLenBox.Constrain = new decimal(new int[] {
-			5000,
-			0,
-			0,
-			0});
-			this.YtpMaxLenBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.YtpMaxLenBox.EnableDecimalPlaces = true;
-			this.YtpMaxLenBox.Location = new System.Drawing.Point(666, 3);
-			this.YtpMaxLenBox.Maximum = new decimal(new int[] {
-			30000,
-			0,
-			0,
-			0});
-			this.YtpMaxLenBox.Minimum = new decimal(new int[] {
-			10,
-			0,
-			0,
-			0});
-			this.YtpMaxLenBox.Name = "YtpMaxLenBox";
-			this.YtpMaxLenBox.Size = new System.Drawing.Size(425, 39);
-			this.YtpMaxLenBox.Suffix = "ms";
-			this.YtpMaxLenBox.TabIndex = 9;
-			this.Balloon.SetToolTip(this.YtpMaxLenBox, "指定单个轨道剪辑的最大长度。\r\n单位：毫秒。");
-			this.YtpMaxLenBox.Value = new decimal(new int[] {
-			5000,
-			0,
-			0,
-			0});
-			this.YtpMaxLenBox.ValueChanged += new System.EventHandler(this.YtpLenBox_ValueChanged);
-			//
-			// MatchCutRepeatRoundBox
-			//
-			this.MatchCutRepeatRoundBox.Location = new System.Drawing.Point(169, 3);
-			this.MatchCutRepeatRoundBox.Maximum = new decimal(new int[] {
-			200,
-			0,
-			0,
-			0});
-			this.MatchCutRepeatRoundBox.Name = "MatchCutRepeatRoundBox";
-			this.MatchCutRepeatRoundBox.Size = new System.Drawing.Size(120, 39);
-			this.MatchCutRepeatRoundBox.TabIndex = 15;
-			this.Balloon.SetToolTip(this.MatchCutRepeatRoundBox, "设为0意味着可以无限循环。");
-			//
 			// AudioTuneMethodCombo
 			//
 			this.AudioTuneMethodCombo.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -28167,36 +28078,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneMethodCombo.TabIndex = 2;
 			this.AudioTuneMethodCombo.SelectedIndexChanged += new System.EventHandler(this.AudioTuneMethodCombo_SelectedIndexChanged);
 			//
-			// AudioAltMethodCombo
-			//
-			this.AudioAltMethodCombo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioAltMethodCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.AudioAltMethodCombo.FormattingEnabled = true;
-			this.AudioAltMethodCombo.Items.AddRange(new object[] {
-			"切换到移调效果插件",
-			"升 / 降八度",
-			"升 / 降八度 (实验性)",
-			"停靠在边缘",
-			"不发声"});
-			this.AudioAltMethodCombo.Location = new System.Drawing.Point(119, 165);
-			this.AudioAltMethodCombo.Name = "AudioAltMethodCombo";
-			this.AudioAltMethodCombo.Size = new System.Drawing.Size(938, 40);
-			this.AudioAltMethodCombo.TabIndex = 12;
-			//
-			// StaffFreezeAtNoteOffCheck
-			//
-			this.StaffFreezeAtNoteOffCheck.AutoSize = true;
-			this.StaffFreezeAtNoteOffCheck.Checked = true;
-			this.StaffFreezeAtNoteOffCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.StaffFreezeAtNoteOffCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffFreezeAtNoteOffCheck.Location = new System.Drawing.Point(371, 3);
-			this.StaffFreezeAtNoteOffCheck.Name = "StaffFreezeAtNoteOffCheck";
-			this.StaffFreezeAtNoteOffCheck.Size = new System.Drawing.Size(238, 36);
-			this.StaffFreezeAtNoteOffCheck.TabIndex = 7;
-			this.StaffFreezeAtNoteOffCheck.Text = "定格在音符结尾处";
-			this.StaffFreezeAtNoteOffCheck.UserChecked = true;
-			this.StaffFreezeAtNoteOffCheck.UseVisualStyleBackColor = true;
-			//
 			// PreviewBasePitchBtn
 			//
 			this.PreviewBasePitchBtn.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -28207,16 +28088,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.PreviewBasePitchBtn.Text = "预听标准音高(&B)";
 			this.PreviewBasePitchBtn.UseVisualStyleBackColor = true;
 			this.PreviewBasePitchBtn.Click += new System.EventHandler(this.PreviewBasePitchBtn_MouseDown);
-			//
-			// AudioStretchAttrCombo
-			//
-			this.AudioStretchAttrCombo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioStretchAttrCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.AudioStretchAttrCombo.FormattingEnabled = true;
-			this.AudioStretchAttrCombo.Location = new System.Drawing.Point(119, 111);
-			this.AudioStretchAttrCombo.Name = "AudioStretchAttrCombo";
-			this.AudioStretchAttrCombo.Size = new System.Drawing.Size(938, 40);
-			this.AudioStretchAttrCombo.TabIndex = 3;
 			//
 			// menu
 			//
@@ -28895,64 +28766,41 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.MultiSourceConfigGroup.AutoSize = true;
 			this.MultiSourceConfigGroup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.MultiSourceConfigGroup.Controls.Add(this.MultiSourceCombTabs);
+			this.MultiSourceConfigGroup.Controls.Add(this.MultiSourceCombOrganizerTabs);
+			this.MultiSourceConfigGroup.Controls.Add(this.MultiSourceConfigSplitterWrapper);
+			this.MultiSourceConfigGroup.Controls.Add(this.MultiSourceCombPickerTabs);
 			this.MultiSourceConfigGroup.Dock = System.Windows.Forms.DockStyle.Top;
 			this.MultiSourceConfigGroup.Location = new System.Drawing.Point(8, 754);
 			this.MultiSourceConfigGroup.Name = "MultiSourceConfigGroup";
 			this.MultiSourceConfigGroup.Padding = new System.Windows.Forms.Padding(8);
-			this.MultiSourceConfigGroup.Size = new System.Drawing.Size(1076, 455);
+			this.MultiSourceConfigGroup.Size = new System.Drawing.Size(1076, 583);
 			this.MultiSourceConfigGroup.TabIndex = 4;
 			this.MultiSourceConfigGroup.TabStop = false;
 			this.MultiSourceConfigGroup.Text = "多素材梳子";
 			//
-			// MultiSourceCombTabs
+			// MultiSourceCombOrganizerTabs
 			//
-			this.MultiSourceCombTabs.Controls.Add(this.MultiSourceOffTab);
-			this.MultiSourceCombTabs.Controls.Add(this.LuckyDipTab);
-			this.MultiSourceCombTabs.Controls.Add(this.MatchCutTab);
-			this.MultiSourceCombTabs.Controls.Add(this.LinearMapTab);
-			this.MultiSourceCombTabs.Controls.Add(this.ConsonantTab);
-			this.MultiSourceCombTabs.Controls.Add(this.ShupelunkerTab);
-			this.MultiSourceCombTabs.Dock = System.Windows.Forms.DockStyle.Top;
-			this.MultiSourceCombTabs.Location = new System.Drawing.Point(8, 40);
-			this.MultiSourceCombTabs.Name = "MultiSourceCombTabs";
-			this.MultiSourceCombTabs.SelectedIndex = 0;
-			this.MultiSourceCombTabs.ShowToolTips = true;
-			this.MultiSourceCombTabs.Size = new System.Drawing.Size(1060, 407);
-			this.MultiSourceCombTabs.TabIndex = 10;
-			this.MultiSourceCombTabs.SelectedIndexChanged += new System.EventHandler(this.MultiSourceCombTabs_SelectedIndexChanged);
-			//
-			// MultiSourceOffTab
-			//
-			this.MultiSourceOffTab.Controls.Add(this.MultiSourceOffInfoLbl);
-			this.MultiSourceOffTab.Location = new System.Drawing.Point(8, 46);
-			this.MultiSourceOffTab.Name = "MultiSourceOffTab";
-			this.MultiSourceOffTab.Padding = new System.Windows.Forms.Padding(3);
-			this.MultiSourceOffTab.Size = new System.Drawing.Size(1044, 353);
-			this.MultiSourceOffTab.TabIndex = 0;
-			this.MultiSourceOffTab.Text = "关";
-			this.MultiSourceOffTab.ToolTipText = "经典单素材模式，不启用多素材梳子。";
-			this.MultiSourceOffTab.UseVisualStyleBackColor = true;
-			//
-			// MultiSourceOffInfoLbl
-			//
-			this.MultiSourceOffInfoLbl.AutoSize = true;
-			this.MultiSourceOffInfoLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MultiSourceOffInfoLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
-			this.MultiSourceOffInfoLbl.Location = new System.Drawing.Point(3, 3);
-			this.MultiSourceOffInfoLbl.Margin = new System.Windows.Forms.Padding(0);
-			this.MultiSourceOffInfoLbl.Name = "MultiSourceOffInfoLbl";
-			this.MultiSourceOffInfoLbl.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
-			this.MultiSourceOffInfoLbl.Size = new System.Drawing.Size(518, 67);
-			this.MultiSourceOffInfoLbl.TabIndex = 3;
-			this.MultiSourceOffInfoLbl.Text = "当前是经典单素材模式。\r\n你可以通过切换选项卡以尝试其它多素材模式。";
+			this.MultiSourceCombOrganizerTabs.Controls.Add(this.LuckyDipTab);
+			this.MultiSourceCombOrganizerTabs.Controls.Add(this.MatchCutTab);
+			this.MultiSourceCombOrganizerTabs.Controls.Add(this.LinearMapTab);
+			this.MultiSourceCombOrganizerTabs.Controls.Add(this.ShupelunkerTab);
+			this.MultiSourceCombOrganizerTabs.Controls.Add(this.ConsonantTab);
+			this.MultiSourceCombOrganizerTabs.Dock = System.Windows.Forms.DockStyle.Top;
+			this.MultiSourceCombOrganizerTabs.HeaderTitle = "组织器";
+			this.MultiSourceCombOrganizerTabs.Location = new System.Drawing.Point(8, 245);
+			this.MultiSourceCombOrganizerTabs.Name = "MultiSourceCombOrganizerTabs";
+			this.MultiSourceCombOrganizerTabs.SelectedIndex = 0;
+			this.MultiSourceCombOrganizerTabs.ShowToolTips = true;
+			this.MultiSourceCombOrganizerTabs.Size = new System.Drawing.Size(1060, 330);
+			this.MultiSourceCombOrganizerTabs.TabIndex = 10;
+			this.MultiSourceCombOrganizerTabs.SelectedIndexChanged += new System.EventHandler(this.MultiSourceCombTabs_SelectedIndexChanged);
 			//
 			// LuckyDipTab
 			//
 			this.LuckyDipTab.Controls.Add(this.LuckyDipPanel);
 			this.LuckyDipTab.Location = new System.Drawing.Point(8, 46);
 			this.LuckyDipTab.Name = "LuckyDipTab";
-			this.LuckyDipTab.Size = new System.Drawing.Size(1078, 353);
+			this.LuckyDipTab.Size = new System.Drawing.Size(1044, 276);
 			this.LuckyDipTab.TabIndex = 1;
 			this.LuckyDipTab.Text = "素材盲盒";
 			this.LuckyDipTab.ToolTipText = "无需有意挑选多项素材，只需点选至少一段长素材，它将自动随机挑取片段的入点。";
@@ -28962,32 +28810,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.LuckyDipPanel.AutoSize = true;
 			this.LuckyDipPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.LuckyDipPanel.Controls.Add(this.LuckyDipLimitToSelectedCheck);
 			this.LuckyDipPanel.Controls.Add(this.LuckyDipTrackCheck);
 			this.LuckyDipPanel.Controls.Add(this.LuckyDipMarkerCheck);
 			this.LuckyDipPanel.Controls.Add(this.LuckyDipBarOrBeatCheck);
 			this.LuckyDipPanel.Controls.Add(this.LuckyDipBarOrBeatPanel);
-			this.LuckyDipPanel.Controls.Add(this.LuckyDipLotionBathCheck);
-			this.LuckyDipPanel.Controls.Add(this.LuckyDipLotionBathIntervalPanel);
 			this.LuckyDipPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LuckyDipPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this.LuckyDipPanel.Location = new System.Drawing.Point(0, 0);
 			this.LuckyDipPanel.Name = "LuckyDipPanel";
 			this.LuckyDipPanel.Padding = new System.Windows.Forms.Padding(3);
-			this.LuckyDipPanel.Size = new System.Drawing.Size(1078, 353);
+			this.LuckyDipPanel.Size = new System.Drawing.Size(1044, 276);
 			this.LuckyDipPanel.TabIndex = 8;
 			this.LuckyDipPanel.WrapContents = false;
-			//
-			// LuckyDipLimitToSelectedCheck
-			//
-			this.LuckyDipLimitToSelectedCheck.AutoSize = true;
-			this.LuckyDipLimitToSelectedCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipLimitToSelectedCheck.Location = new System.Drawing.Point(6, 6);
-			this.LuckyDipLimitToSelectedCheck.Name = "LuckyDipLimitToSelectedCheck";
-			this.LuckyDipLimitToSelectedCheck.Size = new System.Drawing.Size(394, 36);
-			this.LuckyDipLimitToSelectedCheck.TabIndex = 15;
-			this.LuckyDipLimitToSelectedCheck.Text = "限制在所选素材";
-			this.LuckyDipLimitToSelectedCheck.UseVisualStyleBackColor = true;
 			//
 			// LuckyDipTrackCheck
 			//
@@ -28995,9 +28829,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipTrackCheck.Checked = true;
 			this.LuckyDipTrackCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.LuckyDipTrackCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipTrackCheck.Location = new System.Drawing.Point(6, 48);
+			this.LuckyDipTrackCheck.Location = new System.Drawing.Point(6, 6);
 			this.LuckyDipTrackCheck.Name = "LuckyDipTrackCheck";
-			this.LuckyDipTrackCheck.Size = new System.Drawing.Size(394, 36);
+			this.LuckyDipTrackCheck.Size = new System.Drawing.Size(386, 36);
 			this.LuckyDipTrackCheck.TabIndex = 16;
 			this.LuckyDipTrackCheck.Text = "使每条音轨不同";
 			this.LuckyDipTrackCheck.UseVisualStyleBackColor = true;
@@ -29008,9 +28842,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipMarkerCheck.Checked = true;
 			this.LuckyDipMarkerCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.LuckyDipMarkerCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipMarkerCheck.Location = new System.Drawing.Point(6, 90);
+			this.LuckyDipMarkerCheck.Location = new System.Drawing.Point(6, 48);
 			this.LuckyDipMarkerCheck.Name = "LuckyDipMarkerCheck";
-			this.LuckyDipMarkerCheck.Size = new System.Drawing.Size(394, 36);
+			this.LuckyDipMarkerCheck.Size = new System.Drawing.Size(386, 36);
 			this.LuckyDipMarkerCheck.TabIndex = 17;
 			this.LuckyDipMarkerCheck.Text = "每处标记切换一次";
 			this.LuckyDipMarkerCheck.UseVisualStyleBackColor = true;
@@ -29021,9 +28855,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatCheck.Checked = true;
 			this.LuckyDipBarOrBeatCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.LuckyDipBarOrBeatCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipBarOrBeatCheck.Location = new System.Drawing.Point(6, 132);
+			this.LuckyDipBarOrBeatCheck.Location = new System.Drawing.Point(6, 90);
 			this.LuckyDipBarOrBeatCheck.Name = "LuckyDipBarOrBeatCheck";
-			this.LuckyDipBarOrBeatCheck.Size = new System.Drawing.Size(394, 36);
+			this.LuckyDipBarOrBeatCheck.Size = new System.Drawing.Size(386, 36);
 			this.LuckyDipBarOrBeatCheck.TabIndex = 18;
 			this.LuckyDipBarOrBeatCheck.Text = "每小节或每拍切换一次";
 			this.LuckyDipBarOrBeatCheck.UseVisualStyleBackColor = true;
@@ -29042,7 +28876,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPanel.Controls.Add(this.LuckyDipBarOrBeatPreparationBox, 1, 1);
 			this.LuckyDipBarOrBeatPanel.Controls.Add(this.LuckyDipBarOrBeatPreparationUnitCombo, 2, 1);
 			this.LuckyDipBarOrBeatPanel.Dock = System.Windows.Forms.DockStyle.Left;
-			this.LuckyDipBarOrBeatPanel.Location = new System.Drawing.Point(3, 171);
+			this.LuckyDipBarOrBeatPanel.Location = new System.Drawing.Point(3, 129);
 			this.LuckyDipBarOrBeatPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.LuckyDipBarOrBeatPanel.Name = "LuckyDipBarOrBeatPanel";
 			this.LuckyDipBarOrBeatPanel.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
@@ -29128,11 +28962,608 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPreparationUnitCombo.TabIndex = 16;
 			this.LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndexChanged += new System.EventHandler(this.LuckyDipBarOrBeatPeriodUnitCombo_SelectedIndexChanged);
 			//
+			// MatchCutTab
+			//
+			this.MatchCutTab.Controls.Add(this.MatchCutPanel);
+			this.MatchCutTab.Location = new System.Drawing.Point(8, 46);
+			this.MatchCutTab.Name = "MatchCutTab";
+			this.MatchCutTab.Size = new System.Drawing.Size(1044, 276);
+			this.MatchCutTab.TabIndex = 2;
+			this.MatchCutTab.Text = "踩点";
+			this.MatchCutTab.ToolTipText = "点选多项素材，将通过自动踩点依次轮流应用这些素材。";
+			this.MatchCutTab.UseVisualStyleBackColor = true;
+			//
+			// MatchCutPanel
+			//
+			this.MatchCutPanel.AutoSize = true;
+			this.MatchCutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.MatchCutPanel.Controls.Add(this.MatchCutRepeatPanel);
+			this.MatchCutPanel.Controls.Add(this.MatchCutRepeatRoundPanel);
+			this.MatchCutPanel.Controls.Add(this.MatchCutApplyEffectsByRoundCheck);
+			this.MatchCutPanel.Controls.Add(this.MatchCutAccumulateHarmonicsCheck);
+			this.MatchCutPanel.Controls.Add(this.MatchCutSustainCheck);
+			this.MatchCutPanel.Controls.Add(this.MatchCutSustainPanel);
+			this.MatchCutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MatchCutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.MatchCutPanel.Location = new System.Drawing.Point(0, 0);
+			this.MatchCutPanel.Name = "MatchCutPanel";
+			this.MatchCutPanel.Padding = new System.Windows.Forms.Padding(3);
+			this.MatchCutPanel.Size = new System.Drawing.Size(1044, 276);
+			this.MatchCutPanel.TabIndex = 6;
+			this.MatchCutPanel.WrapContents = false;
+			//
+			// MatchCutRepeatPanel
+			//
+			this.MatchCutRepeatPanel.AutoSize = true;
+			this.MatchCutRepeatPanel.ColumnCount = 2;
+			this.MatchCutRepeatPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.MatchCutRepeatPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.MatchCutRepeatPanel.Controls.Add(this.MatchCutRepeatLbl, 0, 0);
+			this.MatchCutRepeatPanel.Controls.Add(this.MatchCutRepeatBox, 1, 0);
+			this.MatchCutRepeatPanel.Dock = System.Windows.Forms.DockStyle.Left;
+			this.MatchCutRepeatPanel.Location = new System.Drawing.Point(3, 6);
+			this.MatchCutRepeatPanel.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.MatchCutRepeatPanel.Name = "MatchCutRepeatPanel";
+			this.MatchCutRepeatPanel.RowCount = 1;
+			this.MatchCutRepeatPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.MatchCutRepeatPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.MatchCutRepeatPanel.Size = new System.Drawing.Size(292, 44);
+			this.MatchCutRepeatPanel.TabIndex = 20;
+			//
+			// MatchCutRepeatLbl
+			//
+			this.MatchCutRepeatLbl.AutoSize = true;
+			this.MatchCutRepeatLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MatchCutRepeatLbl.Location = new System.Drawing.Point(0, 0);
+			this.MatchCutRepeatLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.MatchCutRepeatLbl.MinimumSize = new System.Drawing.Size(100, 0);
+			this.MatchCutRepeatLbl.Name = "MatchCutRepeatLbl";
+			this.MatchCutRepeatLbl.Size = new System.Drawing.Size(158, 44);
+			this.MatchCutRepeatLbl.TabIndex = 14;
+			this.MatchCutRepeatLbl.Text = "每段重复次数";
+			this.MatchCutRepeatLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// MatchCutRepeatBox
+			//
+			this.MatchCutRepeatBox.Location = new System.Drawing.Point(169, 3);
+			this.MatchCutRepeatBox.Maximum = new decimal(new int[] {
+			200,
+			0,
+			0,
+			0});
+			this.MatchCutRepeatBox.Minimum = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			this.MatchCutRepeatBox.Name = "MatchCutRepeatBox";
+			this.MatchCutRepeatBox.Size = new System.Drawing.Size(120, 39);
+			this.MatchCutRepeatBox.TabIndex = 15;
+			this.MatchCutRepeatBox.Value = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			//
+			// MatchCutRepeatRoundPanel
+			//
+			this.MatchCutRepeatRoundPanel.AutoSize = true;
+			this.MatchCutRepeatRoundPanel.ColumnCount = 2;
+			this.MatchCutRepeatRoundPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.MatchCutRepeatRoundPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.MatchCutRepeatRoundPanel.Controls.Add(this.MatchCutRepeatRoundLbl, 0, 0);
+			this.MatchCutRepeatRoundPanel.Controls.Add(this.MatchCutRepeatRoundBox, 1, 0);
+			this.MatchCutRepeatRoundPanel.Dock = System.Windows.Forms.DockStyle.Left;
+			this.MatchCutRepeatRoundPanel.Location = new System.Drawing.Point(3, 56);
+			this.MatchCutRepeatRoundPanel.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.MatchCutRepeatRoundPanel.Name = "MatchCutRepeatRoundPanel";
+			this.MatchCutRepeatRoundPanel.RowCount = 1;
+			this.MatchCutRepeatRoundPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.MatchCutRepeatRoundPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.MatchCutRepeatRoundPanel.Size = new System.Drawing.Size(292, 44);
+			this.MatchCutRepeatRoundPanel.TabIndex = 21;
+			//
+			// MatchCutRepeatRoundLbl
+			//
+			this.MatchCutRepeatRoundLbl.AutoSize = true;
+			this.MatchCutRepeatRoundLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MatchCutRepeatRoundLbl.Location = new System.Drawing.Point(0, 0);
+			this.MatchCutRepeatRoundLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.MatchCutRepeatRoundLbl.MinimumSize = new System.Drawing.Size(100, 0);
+			this.MatchCutRepeatRoundLbl.Name = "MatchCutRepeatRoundLbl";
+			this.MatchCutRepeatRoundLbl.Size = new System.Drawing.Size(158, 44);
+			this.MatchCutRepeatRoundLbl.TabIndex = 14;
+			this.MatchCutRepeatRoundLbl.Text = "每轮重复总数";
+			this.MatchCutRepeatRoundLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// MatchCutRepeatRoundBox
+			//
+			this.MatchCutRepeatRoundBox.Location = new System.Drawing.Point(169, 3);
+			this.MatchCutRepeatRoundBox.Maximum = new decimal(new int[] {
+			200,
+			0,
+			0,
+			0});
+			this.MatchCutRepeatRoundBox.Name = "MatchCutRepeatRoundBox";
+			this.MatchCutRepeatRoundBox.Size = new System.Drawing.Size(120, 39);
+			this.MatchCutRepeatRoundBox.TabIndex = 15;
+			//
+			// MatchCutApplyEffectsByRoundCheck
+			//
+			this.MatchCutApplyEffectsByRoundCheck.AutoSize = true;
+			this.MatchCutApplyEffectsByRoundCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MatchCutApplyEffectsByRoundCheck.Location = new System.Drawing.Point(6, 106);
+			this.MatchCutApplyEffectsByRoundCheck.Name = "MatchCutApplyEffectsByRoundCheck";
+			this.MatchCutApplyEffectsByRoundCheck.Size = new System.Drawing.Size(318, 36);
+			this.MatchCutApplyEffectsByRoundCheck.TabIndex = 16;
+			this.MatchCutApplyEffectsByRoundCheck.Text = "按轮次应用视觉效果";
+			this.MatchCutApplyEffectsByRoundCheck.UseVisualStyleBackColor = true;
+			//
+			// MatchCutAccumulateHarmonicsCheck
+			//
+			this.MatchCutAccumulateHarmonicsCheck.AutoSize = true;
+			this.MatchCutAccumulateHarmonicsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MatchCutAccumulateHarmonicsCheck.Location = new System.Drawing.Point(6, 148);
+			this.MatchCutAccumulateHarmonicsCheck.Name = "MatchCutAccumulateHarmonicsCheck";
+			this.MatchCutAccumulateHarmonicsCheck.Size = new System.Drawing.Size(318, 36);
+			this.MatchCutAccumulateHarmonicsCheck.TabIndex = 21;
+			this.MatchCutAccumulateHarmonicsCheck.Text = "对和弦的泛音列独立累加";
+			this.MatchCutAccumulateHarmonicsCheck.UseVisualStyleBackColor = true;
+			//
+			// MatchCutSustainCheck
+			//
+			this.MatchCutSustainCheck.AutoSize = true;
+			this.MatchCutSustainCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MatchCutSustainCheck.Location = new System.Drawing.Point(6, 190);
+			this.MatchCutSustainCheck.Name = "MatchCutSustainCheck";
+			this.MatchCutSustainCheck.Size = new System.Drawing.Size(318, 36);
+			this.MatchCutSustainCheck.TabIndex = 22;
+			this.MatchCutSustainCheck.Text = "相同音高时不换素材";
+			this.MatchCutSustainCheck.UseVisualStyleBackColor = true;
+			//
+			// MatchCutSustainPanel
+			//
+			this.MatchCutSustainPanel.AutoSize = true;
+			this.MatchCutSustainPanel.ColumnCount = 2;
+			this.MatchCutSustainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.MatchCutSustainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.MatchCutSustainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.MatchCutSustainPanel.Controls.Add(this.MatchCutSustainCacheCapacityLbl, 0, 0);
+			this.MatchCutSustainPanel.Controls.Add(this.MatchCutSustainCacheCapacityBox, 1, 0);
+			this.MatchCutSustainPanel.Dock = System.Windows.Forms.DockStyle.Left;
+			this.MatchCutSustainPanel.Location = new System.Drawing.Point(3, 229);
+			this.MatchCutSustainPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.MatchCutSustainPanel.Name = "MatchCutSustainPanel";
+			this.MatchCutSustainPanel.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
+			this.MatchCutSustainPanel.RowCount = 1;
+			this.MatchCutSustainPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.MatchCutSustainPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+			this.MatchCutSustainPanel.Size = new System.Drawing.Size(324, 44);
+			this.MatchCutSustainPanel.TabIndex = 23;
+			//
+			// MatchCutSustainCacheCapacityLbl
+			//
+			this.MatchCutSustainCacheCapacityLbl.AutoSize = true;
+			this.MatchCutSustainCacheCapacityLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MatchCutSustainCacheCapacityLbl.Location = new System.Drawing.Point(32, 0);
+			this.MatchCutSustainCacheCapacityLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.MatchCutSustainCacheCapacityLbl.MinimumSize = new System.Drawing.Size(100, 0);
+			this.MatchCutSustainCacheCapacityLbl.Name = "MatchCutSustainCacheCapacityLbl";
+			this.MatchCutSustainCacheCapacityLbl.Size = new System.Drawing.Size(158, 44);
+			this.MatchCutSustainCacheCapacityLbl.TabIndex = 14;
+			this.MatchCutSustainCacheCapacityLbl.Text = "音高缓存容量";
+			this.MatchCutSustainCacheCapacityLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// MatchCutSustainCacheCapacityBox
+			//
+			this.MatchCutSustainCacheCapacityBox.Location = new System.Drawing.Point(201, 3);
+			this.MatchCutSustainCacheCapacityBox.Maximum = new decimal(new int[] {
+			200,
+			0,
+			0,
+			0});
+			this.MatchCutSustainCacheCapacityBox.Minimum = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			this.MatchCutSustainCacheCapacityBox.Name = "MatchCutSustainCacheCapacityBox";
+			this.MatchCutSustainCacheCapacityBox.Size = new System.Drawing.Size(120, 39);
+			this.MatchCutSustainCacheCapacityBox.TabIndex = 15;
+			this.MatchCutSustainCacheCapacityBox.Value = new decimal(new int[] {
+			4,
+			0,
+			0,
+			0});
+			//
+			// LinearMapTab
+			//
+			this.LinearMapTab.Controls.Add(this.LinearMapPanel);
+			this.LinearMapTab.Location = new System.Drawing.Point(8, 46);
+			this.LinearMapTab.Name = "LinearMapTab";
+			this.LinearMapTab.Size = new System.Drawing.Size(1044, 276);
+			this.LinearMapTab.TabIndex = 3;
+			this.LinearMapTab.Text = "素材乐团";
+			this.LinearMapTab.ToolTipText = "点选多项素材，它们将依次映射到可用音轨（多余的素材或音轨会被剔除）。";
+			this.LinearMapTab.UseVisualStyleBackColor = true;
+			//
+			// LinearMapPanel
+			//
+			this.LinearMapPanel.AutoSize = true;
+			this.LinearMapPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.LinearMapPanel.Controls.Add(this.LinearMapReuseCheck);
+			this.LinearMapPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LinearMapPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.LinearMapPanel.Location = new System.Drawing.Point(0, 0);
+			this.LinearMapPanel.Name = "LinearMapPanel";
+			this.LinearMapPanel.Padding = new System.Windows.Forms.Padding(3);
+			this.LinearMapPanel.Size = new System.Drawing.Size(1044, 276);
+			this.LinearMapPanel.TabIndex = 9;
+			this.LinearMapPanel.WrapContents = false;
+			//
+			// LinearMapReuseCheck
+			//
+			this.LinearMapReuseCheck.AutoSize = true;
+			this.LinearMapReuseCheck.Checked = true;
+			this.LinearMapReuseCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.LinearMapReuseCheck.Location = new System.Drawing.Point(6, 6);
+			this.LinearMapReuseCheck.Name = "LinearMapReuseCheck";
+			this.LinearMapReuseCheck.Size = new System.Drawing.Size(142, 36);
+			this.LinearMapReuseCheck.TabIndex = 18;
+			this.LinearMapReuseCheck.Text = "允许重用";
+			this.LinearMapReuseCheck.UserChecked = true;
+			this.LinearMapReuseCheck.UseVisualStyleBackColor = true;
+			//
+			// ShupelunkerTab
+			//
+			this.ShupelunkerTab.Controls.Add(this.ShupelunkerPanel);
+			this.ShupelunkerTab.Location = new System.Drawing.Point(8, 46);
+			this.ShupelunkerTab.Name = "ShupelunkerTab";
+			this.ShupelunkerTab.Size = new System.Drawing.Size(1044, 276);
+			this.ShupelunkerTab.TabIndex = 5;
+			this.ShupelunkerTab.Text = "原音系战法/鞑靼战法";
+			this.ShupelunkerTab.ToolTipText = "一种不调音的音MAD制作手法。它在不改变音高的情况下，通过使用与旋律音高相同的原素材片段来演奏旋律。";
+			this.ShupelunkerTab.UseVisualStyleBackColor = true;
+			//
+			// ShupelunkerPanel
+			//
+			this.ShupelunkerPanel.AutoSize = true;
+			this.ShupelunkerPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.ShupelunkerPanel.Controls.Add(this.ShupelunkerOrTartarPanel);
+			this.ShupelunkerPanel.Controls.Add(this.ShupelunkerUnallocatedPanel);
+			this.ShupelunkerPanel.Controls.Add(this.ShupelunkerOffsetPanel);
+			this.ShupelunkerPanel.Controls.Add(this.ShupelunkerExclusiveTrackCheck);
+			this.ShupelunkerPanel.Controls.Add(this.TartarReuseCheck);
+			this.ShupelunkerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ShupelunkerPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.ShupelunkerPanel.Location = new System.Drawing.Point(0, 0);
+			this.ShupelunkerPanel.Name = "ShupelunkerPanel";
+			this.ShupelunkerPanel.Padding = new System.Windows.Forms.Padding(3);
+			this.ShupelunkerPanel.Size = new System.Drawing.Size(1044, 276);
+			this.ShupelunkerPanel.TabIndex = 8;
+			this.ShupelunkerPanel.WrapContents = false;
+			//
+			// ShupelunkerOrTartarPanel
+			//
+			this.ShupelunkerOrTartarPanel.AutoSize = true;
+			this.ShupelunkerOrTartarPanel.Controls.Add(this.ShupelunkerRadio);
+			this.ShupelunkerOrTartarPanel.Controls.Add(this.TartarRadio);
+			this.ShupelunkerOrTartarPanel.Dock = System.Windows.Forms.DockStyle.Top;
+			this.ShupelunkerOrTartarPanel.Location = new System.Drawing.Point(3, 3);
+			this.ShupelunkerOrTartarPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.ShupelunkerOrTartarPanel.Name = "ShupelunkerOrTartarPanel";
+			this.ShupelunkerOrTartarPanel.Size = new System.Drawing.Size(734, 42);
+			this.ShupelunkerOrTartarPanel.TabIndex = 14;
+			//
+			// ShupelunkerRadio
+			//
+			this.ShupelunkerRadio.AutoSize = true;
+			this.ShupelunkerRadio.Checked = true;
+			this.ShupelunkerRadio.Location = new System.Drawing.Point(3, 3);
+			this.ShupelunkerRadio.Name = "ShupelunkerRadio";
+			this.ShupelunkerRadio.Size = new System.Drawing.Size(165, 36);
+			this.ShupelunkerRadio.TabIndex = 2;
+			this.ShupelunkerRadio.TabStop = true;
+			this.ShupelunkerRadio.Text = "原音系战法";
+			this.ShupelunkerRadio.UseVisualStyleBackColor = true;
+			this.ShupelunkerRadio.CheckedChanged += new System.EventHandler(this.TartarRadio_CheckedChanged);
+			//
+			// TartarRadio
+			//
+			this.TartarRadio.AutoSize = true;
+			this.TartarRadio.Location = new System.Drawing.Point(174, 3);
+			this.TartarRadio.Name = "TartarRadio";
+			this.TartarRadio.Size = new System.Drawing.Size(141, 36);
+			this.TartarRadio.TabIndex = 3;
+			this.TartarRadio.Text = "鞑靼战法";
+			this.TartarRadio.UseVisualStyleBackColor = true;
+			this.TartarRadio.CheckedChanged += new System.EventHandler(this.TartarRadio_CheckedChanged);
+			//
+			// ShupelunkerUnallocatedPanel
+			//
+			this.ShupelunkerUnallocatedPanel.AutoSize = true;
+			this.ShupelunkerUnallocatedPanel.Controls.Add(this.ShupelunkerUnallocatedLbl);
+			this.ShupelunkerUnallocatedPanel.Controls.Add(this.ShupelunkerUnallocatedOctavesCheck);
+			this.ShupelunkerUnallocatedPanel.Controls.Add(this.ShupelunkerUnallocatedFillUpCheck);
+			this.ShupelunkerUnallocatedPanel.Controls.Add(this.ShupelunkerUnallocatedFillDownCheck);
+			this.ShupelunkerUnallocatedPanel.Controls.Add(this.ShupelunkerUnallocatedDefaultCheck);
+			this.ShupelunkerUnallocatedPanel.Dock = System.Windows.Forms.DockStyle.Top;
+			this.ShupelunkerUnallocatedPanel.Location = new System.Drawing.Point(3, 45);
+			this.ShupelunkerUnallocatedPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.ShupelunkerUnallocatedPanel.Name = "ShupelunkerUnallocatedPanel";
+			this.ShupelunkerUnallocatedPanel.Size = new System.Drawing.Size(734, 42);
+			this.ShupelunkerUnallocatedPanel.TabIndex = 16;
+			//
+			// ShupelunkerUnallocatedLbl
+			//
+			this.ShupelunkerUnallocatedLbl.AutoSize = true;
+			this.ShupelunkerUnallocatedLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ShupelunkerUnallocatedLbl.Location = new System.Drawing.Point(0, 0);
+			this.ShupelunkerUnallocatedLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.ShupelunkerUnallocatedLbl.MinimumSize = new System.Drawing.Size(100, 0);
+			this.ShupelunkerUnallocatedLbl.Name = "ShupelunkerUnallocatedLbl";
+			this.ShupelunkerUnallocatedLbl.Size = new System.Drawing.Size(182, 42);
+			this.ShupelunkerUnallocatedLbl.TabIndex = 13;
+			this.ShupelunkerUnallocatedLbl.Text = "未分配区域填充";
+			this.ShupelunkerUnallocatedLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// ShupelunkerUnallocatedOctavesCheck
+			//
+			this.ShupelunkerUnallocatedOctavesCheck.AutoSize = true;
+			this.ShupelunkerUnallocatedOctavesCheck.Checked = true;
+			this.ShupelunkerUnallocatedOctavesCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.ShupelunkerUnallocatedOctavesCheck.Location = new System.Drawing.Point(193, 3);
+			this.ShupelunkerUnallocatedOctavesCheck.Name = "ShupelunkerUnallocatedOctavesCheck";
+			this.ShupelunkerUnallocatedOctavesCheck.Size = new System.Drawing.Size(94, 36);
+			this.ShupelunkerUnallocatedOctavesCheck.TabIndex = 14;
+			this.ShupelunkerUnallocatedOctavesCheck.Text = "八度";
+			this.ShupelunkerUnallocatedOctavesCheck.UseVisualStyleBackColor = true;
+			//
+			// ShupelunkerUnallocatedFillUpCheck
+			//
+			this.ShupelunkerUnallocatedFillUpCheck.AutoSize = true;
+			this.ShupelunkerUnallocatedFillUpCheck.Checked = true;
+			this.ShupelunkerUnallocatedFillUpCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.ShupelunkerUnallocatedFillUpCheck.Location = new System.Drawing.Point(293, 3);
+			this.ShupelunkerUnallocatedFillUpCheck.Name = "ShupelunkerUnallocatedFillUpCheck";
+			this.ShupelunkerUnallocatedFillUpCheck.Size = new System.Drawing.Size(142, 36);
+			this.ShupelunkerUnallocatedFillUpCheck.TabIndex = 15;
+			this.ShupelunkerUnallocatedFillUpCheck.Text = "向上填充";
+			this.ShupelunkerUnallocatedFillUpCheck.UseVisualStyleBackColor = true;
+			//
+			// ShupelunkerUnallocatedFillDownCheck
+			//
+			this.ShupelunkerUnallocatedFillDownCheck.AutoSize = true;
+			this.ShupelunkerUnallocatedFillDownCheck.Checked = true;
+			this.ShupelunkerUnallocatedFillDownCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.ShupelunkerUnallocatedFillDownCheck.Location = new System.Drawing.Point(441, 3);
+			this.ShupelunkerUnallocatedFillDownCheck.Name = "ShupelunkerUnallocatedFillDownCheck";
+			this.ShupelunkerUnallocatedFillDownCheck.Size = new System.Drawing.Size(142, 36);
+			this.ShupelunkerUnallocatedFillDownCheck.TabIndex = 16;
+			this.ShupelunkerUnallocatedFillDownCheck.Text = "向下填充";
+			this.ShupelunkerUnallocatedFillDownCheck.UseVisualStyleBackColor = true;
+			//
+			// ShupelunkerUnallocatedDefaultCheck
+			//
+			this.ShupelunkerUnallocatedDefaultCheck.AutoSize = true;
+			this.ShupelunkerUnallocatedDefaultCheck.Checked = true;
+			this.ShupelunkerUnallocatedDefaultCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.ShupelunkerUnallocatedDefaultCheck.Location = new System.Drawing.Point(589, 3);
+			this.ShupelunkerUnallocatedDefaultCheck.Name = "ShupelunkerUnallocatedDefaultCheck";
+			this.ShupelunkerUnallocatedDefaultCheck.Size = new System.Drawing.Size(142, 36);
+			this.ShupelunkerUnallocatedDefaultCheck.TabIndex = 17;
+			this.ShupelunkerUnallocatedDefaultCheck.Text = "缺省兜底";
+			this.ShupelunkerUnallocatedDefaultCheck.UseVisualStyleBackColor = true;
+			//
+			// ShupelunkerOffsetPanel
+			//
+			this.ShupelunkerOffsetPanel.AutoSize = true;
+			this.ShupelunkerOffsetPanel.Controls.Add(this.ShupelunkerOffsetLbl);
+			this.ShupelunkerOffsetPanel.Controls.Add(this.ShupelunkerOffsetCombo);
+			this.ShupelunkerOffsetPanel.Controls.Add(this.ShupelunkerOffsetUnitLbl);
+			this.ShupelunkerOffsetPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ShupelunkerOffsetPanel.Location = new System.Drawing.Point(3, 87);
+			this.ShupelunkerOffsetPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.ShupelunkerOffsetPanel.Name = "ShupelunkerOffsetPanel";
+			this.ShupelunkerOffsetPanel.Size = new System.Drawing.Size(734, 54);
+			this.ShupelunkerOffsetPanel.TabIndex = 19;
+			//
+			// ShupelunkerOffsetLbl
+			//
+			this.ShupelunkerOffsetLbl.AutoSize = true;
+			this.ShupelunkerOffsetLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ShupelunkerOffsetLbl.Location = new System.Drawing.Point(3, 0);
+			this.ShupelunkerOffsetLbl.MinimumSize = new System.Drawing.Size(0, 54);
+			this.ShupelunkerOffsetLbl.Name = "ShupelunkerOffsetLbl";
+			this.ShupelunkerOffsetLbl.Size = new System.Drawing.Size(62, 54);
+			this.ShupelunkerOffsetLbl.TabIndex = 19;
+			this.ShupelunkerOffsetLbl.Text = "偏移";
+			this.ShupelunkerOffsetLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// ShupelunkerOffsetCombo
+			//
+			this.ShupelunkerOffsetCombo.Dock = System.Windows.Forms.DockStyle.Left;
+			this.ShupelunkerOffsetCombo.FormattingEnabled = true;
+			this.ShupelunkerOffsetCombo.Items.AddRange(new object[] {
+			"−96",
+			"−84",
+			"−72",
+			"−60",
+			"−48",
+			"−36",
+			"−24",
+			"−12",
+			"±0",
+			"+12",
+			"+24",
+			"+36",
+			"+48",
+			"+60",
+			"+72",
+			"+84",
+			"+96"});
+			this.ShupelunkerOffsetCombo.Location = new System.Drawing.Point(71, 3);
+			this.ShupelunkerOffsetCombo.Name = "ShupelunkerOffsetCombo";
+			this.ShupelunkerOffsetCombo.Size = new System.Drawing.Size(174, 40);
+			this.ShupelunkerOffsetCombo.TabIndex = 4;
+			this.ShupelunkerOffsetCombo.DropDown += new System.EventHandler(this.PitchOffsetCombo_Leave);
+			this.ShupelunkerOffsetCombo.Leave += new System.EventHandler(this.PitchOffsetCombo_Leave);
+			//
+			// ShupelunkerOffsetUnitLbl
+			//
+			this.ShupelunkerOffsetUnitLbl.AutoSize = true;
+			this.ShupelunkerOffsetUnitLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ShupelunkerOffsetUnitLbl.Location = new System.Drawing.Point(248, 0);
+			this.ShupelunkerOffsetUnitLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.ShupelunkerOffsetUnitLbl.MaximumSize = new System.Drawing.Size(0, 52);
+			this.ShupelunkerOffsetUnitLbl.Name = "ShupelunkerOffsetUnitLbl";
+			this.ShupelunkerOffsetUnitLbl.Size = new System.Drawing.Size(62, 52);
+			this.ShupelunkerOffsetUnitLbl.TabIndex = 18;
+			this.ShupelunkerOffsetUnitLbl.Text = "半音";
+			this.ShupelunkerOffsetUnitLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// ShupelunkerExclusiveTrackCheck
+			//
+			this.ShupelunkerExclusiveTrackCheck.AutoSize = true;
+			this.ShupelunkerExclusiveTrackCheck.Checked = true;
+			this.ShupelunkerExclusiveTrackCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.ShupelunkerExclusiveTrackCheck.Location = new System.Drawing.Point(6, 144);
+			this.ShupelunkerExclusiveTrackCheck.Name = "ShupelunkerExclusiveTrackCheck";
+			this.ShupelunkerExclusiveTrackCheck.Size = new System.Drawing.Size(142, 36);
+			this.ShupelunkerExclusiveTrackCheck.TabIndex = 18;
+			this.ShupelunkerExclusiveTrackCheck.Text = "独占轨道";
+			this.ShupelunkerExclusiveTrackCheck.UseVisualStyleBackColor = true;
+			//
+			// TartarReuseCheck
+			//
+			this.TartarReuseCheck.AutoSize = true;
+			this.TartarReuseCheck.Checked = true;
+			this.TartarReuseCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.TartarReuseCheck.Enabled = false;
+			this.TartarReuseCheck.Location = new System.Drawing.Point(6, 186);
+			this.TartarReuseCheck.Name = "TartarReuseCheck";
+			this.TartarReuseCheck.Size = new System.Drawing.Size(142, 36);
+			this.TartarReuseCheck.Status = Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox.StatusType.True;
+			this.TartarReuseCheck.TabIndex = 20;
+			this.TartarReuseCheck.Text = "允许重用";
+			this.TartarReuseCheck.UserChecked = true;
+			this.TartarReuseCheck.UseVisualStyleBackColor = true;
+			//
+			// ConsonantTab
+			//
+			this.ConsonantTab.Location = new System.Drawing.Point(8, 46);
+			this.ConsonantTab.Name = "ConsonantTab";
+			this.ConsonantTab.Size = new System.Drawing.Size(1044, 276);
+			this.ConsonantTab.TabIndex = 4;
+			this.ConsonantTab.Text = "辅音时间";
+			this.ConsonantTab.ToolTipText = "为防止辅音被拉伸或延迟，可以将同一音视频素材的辅音与元音部分分割开，以便于为素材的辅音部分应用特殊优化。";
+			this.ConsonantTab.UseVisualStyleBackColor = true;
+			//
+			// MultiSourceConfigSplitterWrapper
+			//
+			this.MultiSourceConfigSplitterWrapper.Controls.Add(this.MultiSourceConfigSplitter);
+			this.MultiSourceConfigSplitterWrapper.Dock = System.Windows.Forms.DockStyle.Top;
+			this.MultiSourceConfigSplitterWrapper.Location = new System.Drawing.Point(8, 236);
+			this.MultiSourceConfigSplitterWrapper.Name = "MultiSourceConfigSplitterWrapper";
+			this.MultiSourceConfigSplitterWrapper.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
+			this.MultiSourceConfigSplitterWrapper.Size = new System.Drawing.Size(1060, 9);
+			this.MultiSourceConfigSplitterWrapper.TabIndex = 12;
+			//
+			// MultiSourceConfigSplitter
+			//
+			this.MultiSourceConfigSplitter.BackColor = System.Drawing.SystemColors.ScrollBar;
+			this.MultiSourceConfigSplitter.Cursor = System.Windows.Forms.Cursors.Arrow;
+			this.MultiSourceConfigSplitter.Dock = System.Windows.Forms.DockStyle.Top;
+			this.MultiSourceConfigSplitter.Location = new System.Drawing.Point(0, 4);
+			this.MultiSourceConfigSplitter.Margin = new System.Windows.Forms.Padding(0);
+			this.MultiSourceConfigSplitter.Name = "MultiSourceConfigSplitter";
+			this.MultiSourceConfigSplitter.Size = new System.Drawing.Size(1060, 1);
+			this.MultiSourceConfigSplitter.TabIndex = 0;
+			this.MultiSourceConfigSplitter.TabStop = false;
+			//
+			// MultiSourceCombPickerTabs
+			//
+			this.MultiSourceCombPickerTabs.Controls.Add(this.MultiSourceOffTab);
+			this.MultiSourceCombPickerTabs.Controls.Add(this.MysteryBoxTab);
+			this.MultiSourceCombPickerTabs.Controls.Add(this.SyncopatorTab);
+			this.MultiSourceCombPickerTabs.Dock = System.Windows.Forms.DockStyle.Top;
+			this.MultiSourceCombPickerTabs.HeaderTitle = "挑取器";
+			this.MultiSourceCombPickerTabs.Location = new System.Drawing.Point(8, 40);
+			this.MultiSourceCombPickerTabs.Name = "MultiSourceCombPickerTabs";
+			this.MultiSourceCombPickerTabs.SelectedIndex = 0;
+			this.MultiSourceCombPickerTabs.Size = new System.Drawing.Size(1060, 196);
+			this.MultiSourceCombPickerTabs.TabIndex = 11;
+			this.MultiSourceCombPickerTabs.SelectedIndexChanged += new System.EventHandler(this.MultiSourceCombTabs_SelectedIndexChanged);
+			//
+			// MultiSourceOffTab
+			//
+			this.MultiSourceOffTab.Controls.Add(this.MultiSourceOffInfoLbl);
+			this.MultiSourceOffTab.Location = new System.Drawing.Point(8, 46);
+			this.MultiSourceOffTab.Name = "MultiSourceOffTab";
+			this.MultiSourceOffTab.Padding = new System.Windows.Forms.Padding(3);
+			this.MultiSourceOffTab.Size = new System.Drawing.Size(1044, 142);
+			this.MultiSourceOffTab.TabIndex = 0;
+			this.MultiSourceOffTab.Text = "关";
+			this.MultiSourceOffTab.ToolTipText = "经典单素材模式，不启用多素材梳子。";
+			this.MultiSourceOffTab.UseVisualStyleBackColor = true;
+			//
+			// MultiSourceOffInfoLbl
+			//
+			this.MultiSourceOffInfoLbl.AutoSize = true;
+			this.MultiSourceOffInfoLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MultiSourceOffInfoLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
+			this.MultiSourceOffInfoLbl.Location = new System.Drawing.Point(3, 3);
+			this.MultiSourceOffInfoLbl.Margin = new System.Windows.Forms.Padding(0);
+			this.MultiSourceOffInfoLbl.Name = "MultiSourceOffInfoLbl";
+			this.MultiSourceOffInfoLbl.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+			this.MultiSourceOffInfoLbl.Size = new System.Drawing.Size(518, 67);
+			this.MultiSourceOffInfoLbl.TabIndex = 3;
+			this.MultiSourceOffInfoLbl.Text = "当前是经典单素材模式。\r\n你可以通过切换选项卡以尝试其它多素材模式。";
+			//
+			// MysteryBoxTab
+			//
+			this.MysteryBoxTab.Controls.Add(this.MysteryBoxPanel);
+			this.MysteryBoxTab.Location = new System.Drawing.Point(8, 46);
+			this.MysteryBoxTab.Name = "MysteryBoxTab";
+			this.MysteryBoxTab.Padding = new System.Windows.Forms.Padding(3);
+			this.MysteryBoxTab.Size = new System.Drawing.Size(1044, 142);
+			this.MysteryBoxTab.TabIndex = 1;
+			this.MysteryBoxTab.Text = "素材盲盒";
+			this.MysteryBoxTab.UseVisualStyleBackColor = true;
+			//
+			// MysteryBoxPanel
+			//
+			this.MysteryBoxPanel.AutoSize = true;
+			this.MysteryBoxPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.MysteryBoxPanel.Controls.Add(this.EnhanceSelectCheck);
+			this.MysteryBoxPanel.Controls.Add(this.LuckyDipLotionBathCheck);
+			this.MysteryBoxPanel.Controls.Add(this.LuckyDipLotionBathIntervalPanel);
+			this.MysteryBoxPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MysteryBoxPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.MysteryBoxPanel.Location = new System.Drawing.Point(3, 3);
+			this.MysteryBoxPanel.Name = "MysteryBoxPanel";
+			this.MysteryBoxPanel.Padding = new System.Windows.Forms.Padding(3);
+			this.MysteryBoxPanel.Size = new System.Drawing.Size(1038, 136);
+			this.MysteryBoxPanel.TabIndex = 8;
+			this.MysteryBoxPanel.WrapContents = false;
+			//
+			// EnhanceSelectCheck
+			//
+			this.EnhanceSelectCheck.AutoSize = true;
+			this.EnhanceSelectCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.EnhanceSelectCheck.Location = new System.Drawing.Point(6, 6);
+			this.EnhanceSelectCheck.Name = "EnhanceSelectCheck";
+			this.EnhanceSelectCheck.Size = new System.Drawing.Size(394, 36);
+			this.EnhanceSelectCheck.TabIndex = 23;
+			this.EnhanceSelectCheck.Text = "强化选择 (基于音频特征分析)";
+			this.EnhanceSelectCheck.UseVisualStyleBackColor = true;
+			this.EnhanceSelectCheck.CheckedChanged += new System.EventHandler(this.EnhanceSelectCheck_CheckedChanged);
+			//
 			// LuckyDipLotionBathCheck
 			//
 			this.LuckyDipLotionBathCheck.AutoSize = true;
 			this.LuckyDipLotionBathCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipLotionBathCheck.Location = new System.Drawing.Point(6, 262);
+			this.LuckyDipLotionBathCheck.Location = new System.Drawing.Point(6, 48);
 			this.LuckyDipLotionBathCheck.Name = "LuckyDipLotionBathCheck";
 			this.LuckyDipLotionBathCheck.Size = new System.Drawing.Size(394, 36);
 			this.LuckyDipLotionBathCheck.TabIndex = 21;
@@ -29148,7 +29579,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipLotionBathIntervalPanel.Controls.Add(this.LuckyDipLotionBathIntervalLbl, 0, 0);
 			this.LuckyDipLotionBathIntervalPanel.Controls.Add(this.LuckyDipLotionBathIntervalBox, 1, 0);
 			this.LuckyDipLotionBathIntervalPanel.Dock = System.Windows.Forms.DockStyle.Left;
-			this.LuckyDipLotionBathIntervalPanel.Location = new System.Drawing.Point(3, 301);
+			this.LuckyDipLotionBathIntervalPanel.Location = new System.Drawing.Point(3, 87);
 			this.LuckyDipLotionBathIntervalPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.LuckyDipLotionBathIntervalPanel.Name = "LuckyDipLotionBathIntervalPanel";
 			this.LuckyDipLotionBathIntervalPanel.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
@@ -29179,37 +29610,31 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipLotionBathIntervalBox.Size = new System.Drawing.Size(254, 39);
 			this.LuckyDipLotionBathIntervalBox.TabIndex = 15;
 			//
-			// MatchCutTab
+			// SyncopatorTab
 			//
-			this.MatchCutTab.Controls.Add(this.MatchCutPanel);
-			this.MatchCutTab.Location = new System.Drawing.Point(8, 46);
-			this.MatchCutTab.Name = "MatchCutTab";
-			this.MatchCutTab.Size = new System.Drawing.Size(1078, 353);
-			this.MatchCutTab.TabIndex = 2;
-			this.MatchCutTab.Text = "踩点";
-			this.MatchCutTab.ToolTipText = "点选多项素材，将通过自动踩点依次轮流应用这些素材。";
-			this.MatchCutTab.UseVisualStyleBackColor = true;
+			this.SyncopatorTab.Controls.Add(this.SyncopatorPanel);
+			this.SyncopatorTab.Location = new System.Drawing.Point(8, 46);
+			this.SyncopatorTab.Name = "SyncopatorTab";
+			this.SyncopatorTab.Padding = new System.Windows.Forms.Padding(3);
+			this.SyncopatorTab.Size = new System.Drawing.Size(1044, 142);
+			this.SyncopatorTab.TabIndex = 2;
+			this.SyncopatorTab.Text = "踩点";
+			this.SyncopatorTab.UseVisualStyleBackColor = true;
 			//
-			// MatchCutPanel
+			// SyncopatorPanel
 			//
-			this.MatchCutPanel.AutoSize = true;
-			this.MatchCutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.MatchCutPanel.Controls.Add(this.MatchCutOrderPanel);
-			this.MatchCutPanel.Controls.Add(this.MatchCutRepeatPanel);
-			this.MatchCutPanel.Controls.Add(this.MatchCutRepeatRoundPanel);
-			this.MatchCutPanel.Controls.Add(this.MatchCutApplyEffectsByRoundCheck);
-			this.MatchCutPanel.Controls.Add(this.MatchCutLuckyDipCheck);
-			this.MatchCutPanel.Controls.Add(this.MatchCutAccumulateHarmonicsCheck);
-			this.MatchCutPanel.Controls.Add(this.MatchCutSustainCheck);
-			this.MatchCutPanel.Controls.Add(this.MatchCutSustainPanel);
-			this.MatchCutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.MatchCutPanel.Location = new System.Drawing.Point(0, 0);
-			this.MatchCutPanel.Name = "MatchCutPanel";
-			this.MatchCutPanel.Padding = new System.Windows.Forms.Padding(3);
-			this.MatchCutPanel.Size = new System.Drawing.Size(1078, 353);
-			this.MatchCutPanel.TabIndex = 6;
-			this.MatchCutPanel.WrapContents = false;
+			this.SyncopatorPanel.AutoSize = true;
+			this.SyncopatorPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.SyncopatorPanel.Controls.Add(this.MatchCutOrderPanel);
+			this.SyncopatorPanel.Controls.Add(this.AffixAsPitchLblPanel);
+			this.SyncopatorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SyncopatorPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.SyncopatorPanel.Location = new System.Drawing.Point(3, 3);
+			this.SyncopatorPanel.Name = "SyncopatorPanel";
+			this.SyncopatorPanel.Padding = new System.Windows.Forms.Padding(3);
+			this.SyncopatorPanel.Size = new System.Drawing.Size(1038, 136);
+			this.SyncopatorPanel.TabIndex = 7;
+			this.SyncopatorPanel.WrapContents = false;
 			//
 			// MatchCutOrderPanel
 			//
@@ -29222,7 +29647,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutOrderPanel.Location = new System.Drawing.Point(3, 3);
 			this.MatchCutOrderPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.MatchCutOrderPanel.Name = "MatchCutOrderPanel";
-			this.MatchCutOrderPanel.Size = new System.Drawing.Size(405, 42);
+			this.MatchCutOrderPanel.Size = new System.Drawing.Size(575, 42);
 			this.MatchCutOrderPanel.TabIndex = 14;
 			//
 			// MatchCutOrderLbl
@@ -29276,306 +29701,70 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutOrderShuffleRadio.Text = "乱序";
 			this.MatchCutOrderShuffleRadio.UseVisualStyleBackColor = true;
 			//
-			// MatchCutRepeatPanel
+			// AffixAsPitchLblPanel
 			//
-			this.MatchCutRepeatPanel.AutoSize = true;
-			this.MatchCutRepeatPanel.ColumnCount = 2;
-			this.MatchCutRepeatPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.MatchCutRepeatPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.MatchCutRepeatPanel.Controls.Add(this.MatchCutRepeatLbl, 0, 0);
-			this.MatchCutRepeatPanel.Controls.Add(this.MatchCutRepeatBox, 1, 0);
-			this.MatchCutRepeatPanel.Dock = System.Windows.Forms.DockStyle.Left;
-			this.MatchCutRepeatPanel.Location = new System.Drawing.Point(3, 48);
-			this.MatchCutRepeatPanel.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.MatchCutRepeatPanel.Name = "MatchCutRepeatPanel";
-			this.MatchCutRepeatPanel.RowCount = 1;
-			this.MatchCutRepeatPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.MatchCutRepeatPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.MatchCutRepeatPanel.Size = new System.Drawing.Size(292, 44);
-			this.MatchCutRepeatPanel.TabIndex = 20;
+			this.AffixAsPitchLblPanel.AutoSize = true;
+			this.AffixAsPitchLblPanel.Controls.Add(this.AffixAsPitchLbl);
+			this.AffixAsPitchLblPanel.Controls.Add(this.AffixAsPitchOffRadio);
+			this.AffixAsPitchLblPanel.Controls.Add(this.AffixAsPitchPrefixRadio);
+			this.AffixAsPitchLblPanel.Controls.Add(this.AffixAsPitchSuffixRadio);
+			this.AffixAsPitchLblPanel.Dock = System.Windows.Forms.DockStyle.Top;
+			this.AffixAsPitchLblPanel.Location = new System.Drawing.Point(3, 45);
+			this.AffixAsPitchLblPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.AffixAsPitchLblPanel.Name = "AffixAsPitchLblPanel";
+			this.AffixAsPitchLblPanel.Size = new System.Drawing.Size(575, 42);
+			this.AffixAsPitchLblPanel.TabIndex = 15;
 			//
-			// MatchCutRepeatLbl
+			// AffixAsPitchLbl
 			//
-			this.MatchCutRepeatLbl.AutoSize = true;
-			this.MatchCutRepeatLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutRepeatLbl.Location = new System.Drawing.Point(0, 0);
-			this.MatchCutRepeatLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-			this.MatchCutRepeatLbl.MinimumSize = new System.Drawing.Size(100, 0);
-			this.MatchCutRepeatLbl.Name = "MatchCutRepeatLbl";
-			this.MatchCutRepeatLbl.Size = new System.Drawing.Size(158, 44);
-			this.MatchCutRepeatLbl.TabIndex = 14;
-			this.MatchCutRepeatLbl.Text = "每段重复次数";
-			this.MatchCutRepeatLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.AffixAsPitchLbl.AutoSize = true;
+			this.AffixAsPitchLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AffixAsPitchLbl.Location = new System.Drawing.Point(0, 0);
+			this.AffixAsPitchLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.AffixAsPitchLbl.MinimumSize = new System.Drawing.Size(100, 0);
+			this.AffixAsPitchLbl.Name = "AffixAsPitchLbl";
+			this.AffixAsPitchLbl.Size = new System.Drawing.Size(158, 42);
+			this.AffixAsPitchLbl.TabIndex = 13;
+			this.AffixAsPitchLbl.Text = "词缀表示音高";
+			this.AffixAsPitchLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
-			// MatchCutRepeatBox
+			// AffixAsPitchOffRadio
 			//
-			this.MatchCutRepeatBox.Location = new System.Drawing.Point(169, 3);
-			this.MatchCutRepeatBox.Maximum = new decimal(new int[] {
-			200,
-			0,
-			0,
-			0});
-			this.MatchCutRepeatBox.Minimum = new decimal(new int[] {
-			1,
-			0,
-			0,
-			0});
-			this.MatchCutRepeatBox.Name = "MatchCutRepeatBox";
-			this.MatchCutRepeatBox.Size = new System.Drawing.Size(120, 39);
-			this.MatchCutRepeatBox.TabIndex = 15;
-			this.MatchCutRepeatBox.Value = new decimal(new int[] {
-			1,
-			0,
-			0,
-			0});
+			this.AffixAsPitchOffRadio.AutoSize = true;
+			this.AffixAsPitchOffRadio.Checked = true;
+			this.AffixAsPitchOffRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AffixAsPitchOffRadio.Group = "AffixAsPitch";
+			this.AffixAsPitchOffRadio.Location = new System.Drawing.Point(169, 3);
+			this.AffixAsPitchOffRadio.Name = "AffixAsPitchOffRadio";
+			this.AffixAsPitchOffRadio.Size = new System.Drawing.Size(69, 36);
+			this.AffixAsPitchOffRadio.TabIndex = 0;
+			this.AffixAsPitchOffRadio.TabStop = true;
+			this.AffixAsPitchOffRadio.Text = "关";
+			this.AffixAsPitchOffRadio.UseVisualStyleBackColor = true;
 			//
-			// MatchCutRepeatRoundPanel
+			// AffixAsPitchPrefixRadio
 			//
-			this.MatchCutRepeatRoundPanel.AutoSize = true;
-			this.MatchCutRepeatRoundPanel.ColumnCount = 2;
-			this.MatchCutRepeatRoundPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.MatchCutRepeatRoundPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.MatchCutRepeatRoundPanel.Controls.Add(this.MatchCutRepeatRoundLbl, 0, 0);
-			this.MatchCutRepeatRoundPanel.Controls.Add(this.MatchCutRepeatRoundBox, 1, 0);
-			this.MatchCutRepeatRoundPanel.Dock = System.Windows.Forms.DockStyle.Left;
-			this.MatchCutRepeatRoundPanel.Location = new System.Drawing.Point(3, 98);
-			this.MatchCutRepeatRoundPanel.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.MatchCutRepeatRoundPanel.Name = "MatchCutRepeatRoundPanel";
-			this.MatchCutRepeatRoundPanel.RowCount = 1;
-			this.MatchCutRepeatRoundPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.MatchCutRepeatRoundPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.MatchCutRepeatRoundPanel.Size = new System.Drawing.Size(292, 44);
-			this.MatchCutRepeatRoundPanel.TabIndex = 21;
+			this.AffixAsPitchPrefixRadio.AutoSize = true;
+			this.AffixAsPitchPrefixRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AffixAsPitchPrefixRadio.Group = "AffixAsPitch";
+			this.AffixAsPitchPrefixRadio.Location = new System.Drawing.Point(244, 3);
+			this.AffixAsPitchPrefixRadio.Name = "AffixAsPitchPrefixRadio";
+			this.AffixAsPitchPrefixRadio.Size = new System.Drawing.Size(161, 36);
+			this.AffixAsPitchPrefixRadio.TabIndex = 1;
+			this.AffixAsPitchPrefixRadio.Text = "前缀 C5-⋯";
+			this.AffixAsPitchPrefixRadio.UseVisualStyleBackColor = true;
 			//
-			// MatchCutRepeatRoundLbl
+			// AffixAsPitchSuffixRadio
 			//
-			this.MatchCutRepeatRoundLbl.AutoSize = true;
-			this.MatchCutRepeatRoundLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutRepeatRoundLbl.Location = new System.Drawing.Point(0, 0);
-			this.MatchCutRepeatRoundLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-			this.MatchCutRepeatRoundLbl.MinimumSize = new System.Drawing.Size(100, 0);
-			this.MatchCutRepeatRoundLbl.Name = "MatchCutRepeatRoundLbl";
-			this.MatchCutRepeatRoundLbl.Size = new System.Drawing.Size(158, 44);
-			this.MatchCutRepeatRoundLbl.TabIndex = 14;
-			this.MatchCutRepeatRoundLbl.Text = "每轮重复总数";
-			this.MatchCutRepeatRoundLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
-			// MatchCutApplyEffectsByRoundCheck
-			//
-			this.MatchCutApplyEffectsByRoundCheck.AutoSize = true;
-			this.MatchCutApplyEffectsByRoundCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutApplyEffectsByRoundCheck.Location = new System.Drawing.Point(6, 148);
-			this.MatchCutApplyEffectsByRoundCheck.Name = "MatchCutApplyEffectsByRoundCheck";
-			this.MatchCutApplyEffectsByRoundCheck.Size = new System.Drawing.Size(399, 36);
-			this.MatchCutApplyEffectsByRoundCheck.TabIndex = 16;
-			this.MatchCutApplyEffectsByRoundCheck.Text = "按轮次应用视觉效果";
-			this.MatchCutApplyEffectsByRoundCheck.UseVisualStyleBackColor = true;
-			//
-			// MatchCutLuckyDipCheck
-			//
-			this.MatchCutLuckyDipCheck.AutoSize = true;
-			this.MatchCutLuckyDipCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutLuckyDipCheck.Location = new System.Drawing.Point(6, 190);
-			this.MatchCutLuckyDipCheck.Name = "MatchCutLuckyDipCheck";
-			this.MatchCutLuckyDipCheck.Size = new System.Drawing.Size(399, 36);
-			this.MatchCutLuckyDipCheck.TabIndex = 15;
-			this.MatchCutLuckyDipCheck.Text = "素材盲盒";
-			this.MatchCutLuckyDipCheck.UseVisualStyleBackColor = true;
-			//
-			// MatchCutAccumulateHarmonicsCheck
-			//
-			this.MatchCutAccumulateHarmonicsCheck.AutoSize = true;
-			this.MatchCutAccumulateHarmonicsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutAccumulateHarmonicsCheck.Location = new System.Drawing.Point(6, 232);
-			this.MatchCutAccumulateHarmonicsCheck.Name = "MatchCutAccumulateHarmonicsCheck";
-			this.MatchCutAccumulateHarmonicsCheck.Size = new System.Drawing.Size(399, 36);
-			this.MatchCutAccumulateHarmonicsCheck.TabIndex = 21;
-			this.MatchCutAccumulateHarmonicsCheck.Text = "对和弦的泛音列独立累加";
-			this.MatchCutAccumulateHarmonicsCheck.UseVisualStyleBackColor = true;
-			//
-			// MatchCutSustainCheck
-			//
-			this.MatchCutSustainCheck.AutoSize = true;
-			this.MatchCutSustainCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutSustainCheck.Location = new System.Drawing.Point(6, 274);
-			this.MatchCutSustainCheck.Name = "MatchCutSustainCheck";
-			this.MatchCutSustainCheck.Size = new System.Drawing.Size(399, 36);
-			this.MatchCutSustainCheck.TabIndex = 22;
-			this.MatchCutSustainCheck.Text = "相同音高时不换素材";
-			this.MatchCutSustainCheck.UseVisualStyleBackColor = true;
-			//
-			// MatchCutSustainPanel
-			//
-			this.MatchCutSustainPanel.AutoSize = true;
-			this.MatchCutSustainPanel.ColumnCount = 2;
-			this.MatchCutSustainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.MatchCutSustainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.MatchCutSustainPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.MatchCutSustainPanel.Controls.Add(this.MatchCutSustainCacheCapacityLbl, 0, 0);
-			this.MatchCutSustainPanel.Controls.Add(this.MatchCutSustainCacheCapacityBox, 1, 0);
-			this.MatchCutSustainPanel.Dock = System.Windows.Forms.DockStyle.Left;
-			this.MatchCutSustainPanel.Location = new System.Drawing.Point(3, 313);
-			this.MatchCutSustainPanel.Margin = new System.Windows.Forms.Padding(0);
-			this.MatchCutSustainPanel.Name = "MatchCutSustainPanel";
-			this.MatchCutSustainPanel.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-			this.MatchCutSustainPanel.RowCount = 1;
-			this.MatchCutSustainPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.MatchCutSustainPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-			this.MatchCutSustainPanel.Size = new System.Drawing.Size(324, 44);
-			this.MatchCutSustainPanel.TabIndex = 23;
-			//
-			// MatchCutSustainCacheCapacityLbl
-			//
-			this.MatchCutSustainCacheCapacityLbl.AutoSize = true;
-			this.MatchCutSustainCacheCapacityLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutSustainCacheCapacityLbl.Location = new System.Drawing.Point(32, 0);
-			this.MatchCutSustainCacheCapacityLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-			this.MatchCutSustainCacheCapacityLbl.MinimumSize = new System.Drawing.Size(100, 0);
-			this.MatchCutSustainCacheCapacityLbl.Name = "MatchCutSustainCacheCapacityLbl";
-			this.MatchCutSustainCacheCapacityLbl.Size = new System.Drawing.Size(158, 44);
-			this.MatchCutSustainCacheCapacityLbl.TabIndex = 14;
-			this.MatchCutSustainCacheCapacityLbl.Text = "音高缓存容量";
-			this.MatchCutSustainCacheCapacityLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
-			// MatchCutSustainCacheCapacityBox
-			//
-			this.MatchCutSustainCacheCapacityBox.Location = new System.Drawing.Point(201, 3);
-			this.MatchCutSustainCacheCapacityBox.Maximum = new decimal(new int[] {
-			200,
-			0,
-			0,
-			0});
-			this.MatchCutSustainCacheCapacityBox.Minimum = new decimal(new int[] {
-			1,
-			0,
-			0,
-			0});
-			this.MatchCutSustainCacheCapacityBox.Name = "MatchCutSustainCacheCapacityBox";
-			this.MatchCutSustainCacheCapacityBox.Size = new System.Drawing.Size(120, 39);
-			this.MatchCutSustainCacheCapacityBox.TabIndex = 15;
-			this.MatchCutSustainCacheCapacityBox.Value = new decimal(new int[] {
-			4,
-			0,
-			0,
-			0});
-			//
-			// LinearMapTab
-			//
-			this.LinearMapTab.Controls.Add(this.LinearMapPanel);
-			this.LinearMapTab.Location = new System.Drawing.Point(8, 46);
-			this.LinearMapTab.Name = "LinearMapTab";
-			this.LinearMapTab.Size = new System.Drawing.Size(1078, 353);
-			this.LinearMapTab.TabIndex = 3;
-			this.LinearMapTab.Text = "素材乐团";
-			this.LinearMapTab.ToolTipText = "点选多项素材，它们将依次映射到可用音轨（多余的素材或音轨会被剔除）。";
-			this.LinearMapTab.UseVisualStyleBackColor = true;
-			//
-			// LinearMapPanel
-			//
-			this.LinearMapPanel.AutoSize = true;
-			this.LinearMapPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.LinearMapPanel.Controls.Add(this.flowLayoutPanel7);
-			this.LinearMapPanel.Controls.Add(this.LinearMapDescendingCheck);
-			this.LinearMapPanel.Controls.Add(this.LinearMapReuseCheck);
-			this.LinearMapPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LinearMapPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.LinearMapPanel.Location = new System.Drawing.Point(0, 0);
-			this.LinearMapPanel.Name = "LinearMapPanel";
-			this.LinearMapPanel.Padding = new System.Windows.Forms.Padding(3);
-			this.LinearMapPanel.Size = new System.Drawing.Size(1078, 353);
-			this.LinearMapPanel.TabIndex = 9;
-			this.LinearMapPanel.WrapContents = false;
-			//
-			// flowLayoutPanel7
-			//
-			this.flowLayoutPanel7.AutoSize = true;
-			this.flowLayoutPanel7.Controls.Add(this.LinearMapSelectionModeLbl);
-			this.flowLayoutPanel7.Controls.Add(this.LinearMapSelectionModeLuckyDipRadio);
-			this.flowLayoutPanel7.Controls.Add(this.LinearMapSelectionModeMatchCutRadio);
-			this.flowLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel7.Location = new System.Drawing.Point(3, 3);
-			this.flowLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
-			this.flowLayoutPanel7.Name = "flowLayoutPanel7";
-			this.flowLayoutPanel7.Size = new System.Drawing.Size(364, 42);
-			this.flowLayoutPanel7.TabIndex = 17;
-			//
-			// LinearMapSelectionModeLbl
-			//
-			this.LinearMapSelectionModeLbl.AutoSize = true;
-			this.LinearMapSelectionModeLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LinearMapSelectionModeLbl.Location = new System.Drawing.Point(0, 0);
-			this.LinearMapSelectionModeLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-			this.LinearMapSelectionModeLbl.Name = "LinearMapSelectionModeLbl";
-			this.LinearMapSelectionModeLbl.Size = new System.Drawing.Size(110, 42);
-			this.LinearMapSelectionModeLbl.TabIndex = 13;
-			this.LinearMapSelectionModeLbl.Text = "挑取模式";
-			this.LinearMapSelectionModeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
-			// LinearMapSelectionModeLuckyDipRadio
-			//
-			this.LinearMapSelectionModeLuckyDipRadio.AutoSize = true;
-			this.LinearMapSelectionModeLuckyDipRadio.Location = new System.Drawing.Point(121, 3);
-			this.LinearMapSelectionModeLuckyDipRadio.Name = "LinearMapSelectionModeLuckyDipRadio";
-			this.LinearMapSelectionModeLuckyDipRadio.Size = new System.Drawing.Size(141, 36);
-			this.LinearMapSelectionModeLuckyDipRadio.TabIndex = 14;
-			this.LinearMapSelectionModeLuckyDipRadio.Text = "素材盲盒";
-			this.LinearMapSelectionModeLuckyDipRadio.UseVisualStyleBackColor = true;
-			//
-			// LinearMapSelectionModeMatchCutRadio
-			//
-			this.LinearMapSelectionModeMatchCutRadio.AutoSize = true;
-			this.LinearMapSelectionModeMatchCutRadio.Checked = true;
-			this.LinearMapSelectionModeMatchCutRadio.Location = new System.Drawing.Point(268, 3);
-			this.LinearMapSelectionModeMatchCutRadio.Name = "LinearMapSelectionModeMatchCutRadio";
-			this.LinearMapSelectionModeMatchCutRadio.Size = new System.Drawing.Size(93, 36);
-			this.LinearMapSelectionModeMatchCutRadio.TabIndex = 15;
-			this.LinearMapSelectionModeMatchCutRadio.TabStop = true;
-			this.LinearMapSelectionModeMatchCutRadio.Text = "踩点";
-			this.LinearMapSelectionModeMatchCutRadio.UseVisualStyleBackColor = true;
-			//
-			// LinearMapDescendingCheck
-			//
-			this.LinearMapDescendingCheck.AutoSize = true;
-			this.LinearMapDescendingCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LinearMapDescendingCheck.Location = new System.Drawing.Point(6, 48);
-			this.LinearMapDescendingCheck.Name = "LinearMapDescendingCheck";
-			this.LinearMapDescendingCheck.Size = new System.Drawing.Size(358, 36);
-			this.LinearMapDescendingCheck.TabIndex = 15;
-			this.LinearMapDescendingCheck.Text = "递减";
-			this.LinearMapDescendingCheck.UseVisualStyleBackColor = true;
-			//
-			// LinearMapReuseCheck
-			//
-			this.LinearMapReuseCheck.AutoSize = true;
-			this.LinearMapReuseCheck.Checked = true;
-			this.LinearMapReuseCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.LinearMapReuseCheck.Location = new System.Drawing.Point(6, 90);
-			this.LinearMapReuseCheck.Name = "LinearMapReuseCheck";
-			this.LinearMapReuseCheck.Size = new System.Drawing.Size(142, 36);
-			this.LinearMapReuseCheck.TabIndex = 18;
-			this.LinearMapReuseCheck.Text = "允许重用";
-			this.LinearMapReuseCheck.UserChecked = true;
-			this.LinearMapReuseCheck.UseVisualStyleBackColor = true;
-			//
-			// ConsonantTab
-			//
-			this.ConsonantTab.Location = new System.Drawing.Point(8, 46);
-			this.ConsonantTab.Name = "ConsonantTab";
-			this.ConsonantTab.Size = new System.Drawing.Size(1078, 353);
-			this.ConsonantTab.TabIndex = 4;
-			this.ConsonantTab.Text = "辅音时间";
-			this.ConsonantTab.ToolTipText = "为防止辅音被拉伸或延迟，可以将同一音视频素材的辅音与元音部分分割开，以便于为素材的辅音部分应用特殊优化。";
-			this.ConsonantTab.UseVisualStyleBackColor = true;
-			//
-			// ShupelunkerTab
-			//
-			this.ShupelunkerTab.Location = new System.Drawing.Point(8, 46);
-			this.ShupelunkerTab.Name = "ShupelunkerTab";
-			this.ShupelunkerTab.Size = new System.Drawing.Size(1078, 353);
-			this.ShupelunkerTab.TabIndex = 5;
-			this.ShupelunkerTab.Text = "原音系战法 / 鞑靼战法";
-			this.ShupelunkerTab.ToolTipText = "一种不调音的音MAD制作手法。它在不改变音高的情况下，通过使用与旋律音高相同的原素材片段来演奏旋律。";
-			this.ShupelunkerTab.UseVisualStyleBackColor = true;
+			this.AffixAsPitchSuffixRadio.AutoSize = true;
+			this.AffixAsPitchSuffixRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AffixAsPitchSuffixRadio.Group = "AffixAsPitch";
+			this.AffixAsPitchSuffixRadio.Location = new System.Drawing.Point(411, 3);
+			this.AffixAsPitchSuffixRadio.Name = "AffixAsPitchSuffixRadio";
+			this.AffixAsPitchSuffixRadio.Size = new System.Drawing.Size(161, 36);
+			this.AffixAsPitchSuffixRadio.TabIndex = 2;
+			this.AffixAsPitchSuffixRadio.Text = "后缀 ⋯-C5";
+			this.AffixAsPitchSuffixRadio.UseVisualStyleBackColor = true;
 			//
 			// SourceConfigGroup
 			//
@@ -29852,6 +30041,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.TrackGroupOffRadio.TabIndex = 0;
 			this.TrackGroupOffRadio.Text = "不分组";
 			this.TrackGroupOffRadio.UseVisualStyleBackColor = true;
+			this.TrackGroupOffRadio.CheckedChanged += new System.EventHandler(this.TrackGroupRadio_CheckedChanged);
 			//
 			// TrackGroupByTrackRadio
 			//
@@ -29971,6 +30161,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceStartTimeLbl.Text = "入点秒数";
 			this.SourceStartTimeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
+			// SourceStartTimeText
+			//
+			this.SourceStartTimeText.DoubleValue = 0D;
+			this.SourceStartTimeText.Location = new System.Drawing.Point(116, 3);
+			this.SourceStartTimeText.Name = "SourceStartTimeText";
+			this.SourceStartTimeText.Size = new System.Drawing.Size(260, 39);
+			this.SourceStartTimeText.TabIndex = 4;
+			this.SourceStartTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			//
 			// SourceEndTimeLbl
 			//
 			this.SourceEndTimeLbl.AutoSize = true;
@@ -29982,6 +30181,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceEndTimeLbl.TabIndex = 2;
 			this.SourceEndTimeLbl.Text = "出点秒数";
 			this.SourceEndTimeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// SourceEndTimeText
+			//
+			this.SourceEndTimeText.DoubleValue = 0D;
+			this.SourceEndTimeText.Location = new System.Drawing.Point(515, 3);
+			this.SourceEndTimeText.Name = "SourceEndTimeText";
+			this.SourceEndTimeText.Size = new System.Drawing.Size(260, 39);
+			this.SourceEndTimeText.TabIndex = 5;
+			this.SourceEndTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
 			//
 			// GenerateAtLbl
 			//
@@ -30148,7 +30356,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ScoreTab.Location = new System.Drawing.Point(8, 46);
 			this.ScoreTab.Name = "ScoreTab";
 			this.ScoreTab.Padding = new System.Windows.Forms.Padding(8);
-			this.ScoreTab.Size = new System.Drawing.Size(1126, 1162);
+			this.ScoreTab.Size = new System.Drawing.Size(1126, 1160);
 			this.ScoreTab.TabIndex = 8;
 			this.ScoreTab.Text = "乐曲";
 			this.ScoreTab.UseVisualStyleBackColor = true;
@@ -30176,7 +30384,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackListView.MultiSelect = false;
 			this.MidiTrackListView.Name = "MidiTrackListView";
 			this.MidiTrackListView.ShowItemToolTips = true;
-			this.MidiTrackListView.Size = new System.Drawing.Size(1110, 492);
+			this.MidiTrackListView.Size = new System.Drawing.Size(1110, 490);
 			this.MidiTrackListView.TabIndex = 23;
 			this.MidiTrackListView.UseCompatibleStateImageBehavior = false;
 			this.MidiTrackListView.View = System.Windows.Forms.View.Details;
@@ -30359,7 +30567,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiAutoLayoutTracksGroup.Controls.Add(this.tableLayoutPanel22);
 			this.MidiAutoLayoutTracksGroup.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.MidiAutoLayoutTracksGroup.Enabled = false;
-			this.MidiAutoLayoutTracksGroup.Location = new System.Drawing.Point(8, 1016);
+			this.MidiAutoLayoutTracksGroup.Location = new System.Drawing.Point(8, 1014);
 			this.MidiAutoLayoutTracksGroup.Name = "MidiAutoLayoutTracksGroup";
 			this.MidiAutoLayoutTracksGroup.Size = new System.Drawing.Size(1110, 138);
 			this.MidiAutoLayoutTracksGroup.TabIndex = 20;
@@ -30600,6 +30808,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiStartSecondLbl.Text = "起始秒数";
 			this.MidiStartSecondLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
+			// MidiStartSecondBox
+			//
+			this.MidiStartSecondBox.DoubleValue = 0D;
+			this.MidiStartSecondBox.Enabled = false;
+			this.MidiStartSecondBox.Location = new System.Drawing.Point(116, 3);
+			this.MidiStartSecondBox.Name = "MidiStartSecondBox";
+			this.MidiStartSecondBox.Size = new System.Drawing.Size(260, 39);
+			this.MidiStartSecondBox.TabIndex = 3;
+			this.MidiStartSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			//
 			// MidiEndSecondLbl
 			//
 			this.MidiEndSecondLbl.AutoSize = true;
@@ -30612,6 +30830,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiEndSecondLbl.TabIndex = 2;
 			this.MidiEndSecondLbl.Text = "终止秒数";
 			this.MidiEndSecondLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// MidiEndSecondBox
+			//
+			this.MidiEndSecondBox.DoubleValue = 0D;
+			this.MidiEndSecondBox.Enabled = false;
+			this.MidiEndSecondBox.Location = new System.Drawing.Point(515, 3);
+			this.MidiEndSecondBox.Name = "MidiEndSecondBox";
+			this.MidiEndSecondBox.Size = new System.Drawing.Size(260, 39);
+			this.MidiEndSecondBox.TabIndex = 4;
+			this.MidiEndSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
 			//
 			// tableLayoutPanel3
 			//
@@ -30953,7 +31181,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTab.Location = new System.Drawing.Point(8, 46);
 			this.AudioTab.Name = "AudioTab";
 			this.AudioTab.Padding = new System.Windows.Forms.Padding(8);
-			this.AudioTab.Size = new System.Drawing.Size(1126, 1162);
+			this.AudioTab.Size = new System.Drawing.Size(1126, 1160);
 			this.AudioTab.TabIndex = 1;
 			this.AudioTab.Text = "音频";
 			this.AudioTab.UseVisualStyleBackColor = true;
@@ -31452,6 +31680,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.flowLayoutPanel19.AutoSize = true;
 			this.flowLayoutPanel19.Controls.Add(this.AudioOverallShiftCombo);
+			this.flowLayoutPanel19.Controls.Add(this.AudioOverallShiftUnitLbl);
 			this.flowLayoutPanel19.Controls.Add(this.AudioNoTuningDrumKitsCheck);
 			this.flowLayoutPanel19.Controls.Add(this.AudioMuteDrumKitsCheck);
 			this.flowLayoutPanel19.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -31464,31 +31693,44 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// AudioOverallShiftCombo
 			//
 			this.AudioOverallShiftCombo.Dock = System.Windows.Forms.DockStyle.Left;
-			this.AudioOverallShiftCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.AudioOverallShiftCombo.FormattingEnabled = true;
 			this.AudioOverallShiftCombo.Items.AddRange(new object[] {
-			"-96 st",
-			"-84 st",
-			"-72 st",
-			"-60 st",
-			"-48 st",
-			"-36 st",
-			"-24 st",
-			"-12 st",
-			"±0 st",
-			"+12 st",
-			"+24 st",
-			"+36 st",
-			"+48 st",
-			"+60 st",
-			"+72 st",
-			"+84 st",
-			"+96 st"});
+			"−96",
+			"−84",
+			"−72",
+			"−60",
+			"−48",
+			"−36",
+			"−24",
+			"−12",
+			"±0",
+			"+12",
+			"+24",
+			"+36",
+			"+48",
+			"+60",
+			"+72",
+			"+84",
+			"+96"});
 			this.AudioOverallShiftCombo.Location = new System.Drawing.Point(3, 3);
-			this.AudioOverallShiftCombo.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
 			this.AudioOverallShiftCombo.Name = "AudioOverallShiftCombo";
-			this.AudioOverallShiftCombo.Size = new System.Drawing.Size(200, 40);
+			this.AudioOverallShiftCombo.Size = new System.Drawing.Size(174, 40);
 			this.AudioOverallShiftCombo.TabIndex = 4;
+			this.AudioOverallShiftCombo.DropDown += new System.EventHandler(this.PitchOffsetCombo_Leave);
+			this.AudioOverallShiftCombo.Leave += new System.EventHandler(this.PitchOffsetCombo_Leave);
+			//
+			// AudioOverallShiftUnitLbl
+			//
+			this.AudioOverallShiftUnitLbl.AutoSize = true;
+			this.AudioOverallShiftUnitLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioOverallShiftUnitLbl.Location = new System.Drawing.Point(180, 0);
+			this.AudioOverallShiftUnitLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.AudioOverallShiftUnitLbl.MaximumSize = new System.Drawing.Size(0, 52);
+			this.AudioOverallShiftUnitLbl.Name = "AudioOverallShiftUnitLbl";
+			this.AudioOverallShiftUnitLbl.Size = new System.Drawing.Size(62, 52);
+			this.AudioOverallShiftUnitLbl.TabIndex = 18;
+			this.AudioOverallShiftUnitLbl.Text = "半音";
+			this.AudioOverallShiftUnitLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
 			// AudioNoTuningDrumKitsCheck
 			//
@@ -31496,7 +31738,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioNoTuningDrumKitsCheck.Checked = true;
 			this.AudioNoTuningDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.AudioNoTuningDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(218, 3);
+			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(253, 3);
 			this.AudioNoTuningDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
 			this.AudioNoTuningDrumKitsCheck.Name = "AudioNoTuningDrumKitsCheck";
 			this.AudioNoTuningDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
@@ -31510,7 +31752,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioMuteDrumKitsCheck.Checked = true;
 			this.AudioMuteDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.AudioMuteDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioMuteDrumKitsCheck.Location = new System.Drawing.Point(438, 3);
+			this.AudioMuteDrumKitsCheck.Location = new System.Drawing.Point(473, 3);
 			this.AudioMuteDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
 			this.AudioMuteDrumKitsCheck.Name = "AudioMuteDrumKitsCheck";
 			this.AudioMuteDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
@@ -31558,6 +31800,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioStretchMethodLbl.Text = "拉伸方法";
 			this.AudioStretchMethodLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
+			// AudioAltMethodCombo
+			//
+			this.AudioAltMethodCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioAltMethodCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.AudioAltMethodCombo.FormattingEnabled = true;
+			this.AudioAltMethodCombo.Items.AddRange(new object[] {
+			"切换到移调效果插件",
+			"升 / 降八度",
+			"升 / 降八度 (实验性)",
+			"停靠在边缘",
+			"不发声"});
+			this.AudioAltMethodCombo.Location = new System.Drawing.Point(119, 165);
+			this.AudioAltMethodCombo.Name = "AudioAltMethodCombo";
+			this.AudioAltMethodCombo.Size = new System.Drawing.Size(938, 40);
+			this.AudioAltMethodCombo.TabIndex = 12;
+			//
 			// AudioAltMethodLbl
 			//
 			this.AudioAltMethodLbl.AutoSize = true;
@@ -31594,6 +31852,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioStretchAttrLbl.Text = "拉伸属性";
 			this.AudioStretchAttrLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
+			// AudioStretchAttrCombo
+			//
+			this.AudioStretchAttrCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioStretchAttrCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.AudioStretchAttrCombo.FormattingEnabled = true;
+			this.AudioStretchAttrCombo.Location = new System.Drawing.Point(119, 111);
+			this.AudioStretchAttrCombo.Name = "AudioStretchAttrCombo";
+			this.AudioStretchAttrCombo.Size = new System.Drawing.Size(938, 40);
+			this.AudioStretchAttrCombo.TabIndex = 3;
+			//
 			// AudioLockAttrLbl
 			//
 			this.AudioLockAttrLbl.AutoSize = true;
@@ -31618,6 +31886,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel10.Name = "flowLayoutPanel10";
 			this.flowLayoutPanel10.Size = new System.Drawing.Size(944, 54);
 			this.flowLayoutPanel10.TabIndex = 4;
+			//
+			// AudioLockStretchPitchCheck
+			//
+			this.AudioLockStretchPitchCheck.AutoSize = true;
+			this.AudioLockStretchPitchCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioLockStretchPitchCheck.Location = new System.Drawing.Point(3, 3);
+			this.AudioLockStretchPitchCheck.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioLockStretchPitchCheck.Name = "AudioLockStretchPitchCheck";
+			this.AudioLockStretchPitchCheck.Size = new System.Drawing.Size(214, 48);
+			this.AudioLockStretchPitchCheck.TabIndex = 0;
+			this.AudioLockStretchPitchCheck.Text = "锁定伸缩与音调";
+			this.AudioLockStretchPitchCheck.UseVisualStyleBackColor = true;
 			//
 			// AudioReserveFormantCheck
 			//
@@ -31837,6 +32117,35 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.PreviewBeepWaveFormCombo.Name = "PreviewBeepWaveFormCombo";
 			this.PreviewBeepWaveFormCombo.Size = new System.Drawing.Size(158, 40);
 			this.PreviewBeepWaveFormCombo.TabIndex = 3;
+			//
+			// PreviewBeepDurationBox
+			//
+			this.PreviewBeepDurationBox.Constrain = new decimal(new int[] {
+			500,
+			0,
+			0,
+			0});
+			this.PreviewBeepDurationBox.EnableDecimalPlaces = true;
+			this.PreviewBeepDurationBox.Location = new System.Drawing.Point(347, 3);
+			this.PreviewBeepDurationBox.Maximum = new decimal(new int[] {
+			2000,
+			0,
+			0,
+			0});
+			this.PreviewBeepDurationBox.Minimum = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			this.PreviewBeepDurationBox.Name = "PreviewBeepDurationBox";
+			this.PreviewBeepDurationBox.Size = new System.Drawing.Size(166, 39);
+			this.PreviewBeepDurationBox.Suffix = "ms";
+			this.PreviewBeepDurationBox.TabIndex = 5;
+			this.PreviewBeepDurationBox.Value = new decimal(new int[] {
+			500,
+			0,
+			0,
+			0});
 			//
 			// AudioVelocityGroup
 			//
@@ -32335,7 +32644,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab.Location = new System.Drawing.Point(8, 46);
 			this.VideoTab.Name = "VideoTab";
 			this.VideoTab.Padding = new System.Windows.Forms.Padding(8);
-			this.VideoTab.Size = new System.Drawing.Size(1126, 1162);
+			this.VideoTab.Size = new System.Drawing.Size(1126, 1160);
 			this.VideoTab.TabIndex = 2;
 			this.VideoTab.Text = "画面";
 			this.VideoTab.UseVisualStyleBackColor = true;
@@ -34288,7 +34597,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SheetTab.Location = new System.Drawing.Point(8, 46);
 			this.SheetTab.Name = "SheetTab";
 			this.SheetTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SheetTab.Size = new System.Drawing.Size(1126, 1162);
+			this.SheetTab.Size = new System.Drawing.Size(1126, 1160);
 			this.SheetTab.TabIndex = 3;
 			this.SheetTab.Text = "五线谱";
 			this.SheetTab.UseVisualStyleBackColor = true;
@@ -34480,6 +34789,32 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.StaffLineColorLbl.Text = "谱线颜色";
 			this.StaffLineColorLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
+			// StaffLineThicknessBox
+			//
+			this.StaffLineThicknessBox.Constrain = new decimal(new int[] {
+			25,
+			0,
+			0,
+			0});
+			this.StaffLineThicknessBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffLineThicknessBox.Enabled = false;
+			this.StaffLineThicknessBox.EnableDecimalPlaces = true;
+			this.StaffLineThicknessBox.Location = new System.Drawing.Point(119, 45);
+			this.StaffLineThicknessBox.Minimum = new decimal(new int[] {
+			10,
+			0,
+			0,
+			0});
+			this.StaffLineThicknessBox.Name = "StaffLineThicknessBox";
+			this.StaffLineThicknessBox.Size = new System.Drawing.Size(425, 39);
+			this.StaffLineThicknessBox.Suffix = "%";
+			this.StaffLineThicknessBox.TabIndex = 11;
+			this.StaffLineThicknessBox.Value = new decimal(new int[] {
+			25,
+			0,
+			0,
+			0});
+			//
 			// StaffLineThicknessLbl
 			//
 			this.StaffLineThicknessLbl.AutoSize = true;
@@ -34538,6 +34873,32 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel10.Size = new System.Drawing.Size(1094, 204);
 			this.tableLayoutPanel10.TabIndex = 0;
 			//
+			// StaffSurfacePaddingRightBox
+			//
+			this.StaffSurfacePaddingRightBox.Constrain = new decimal(new int[] {
+			200,
+			0,
+			0,
+			0});
+			this.StaffSurfacePaddingRightBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffSurfacePaddingRightBox.Enabled = false;
+			this.StaffSurfacePaddingRightBox.EnableDecimalPlaces = true;
+			this.StaffSurfacePaddingRightBox.Location = new System.Drawing.Point(666, 99);
+			this.StaffSurfacePaddingRightBox.Maximum = new decimal(new int[] {
+			65536,
+			0,
+			0,
+			0});
+			this.StaffSurfacePaddingRightBox.Name = "StaffSurfacePaddingRightBox";
+			this.StaffSurfacePaddingRightBox.Size = new System.Drawing.Size(425, 39);
+			this.StaffSurfacePaddingRightBox.Suffix = "px";
+			this.StaffSurfacePaddingRightBox.TabIndex = 9;
+			this.StaffSurfacePaddingRightBox.Value = new decimal(new int[] {
+			200,
+			0,
+			0,
+			0});
+			//
 			// StaffSurfacePaddingRightLbl
 			//
 			this.StaffSurfacePaddingRightLbl.AutoSize = true;
@@ -34588,6 +34949,58 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.StaffLineSpacingLbl.Text = "谱线间距";
 			this.StaffLineSpacingLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
+			// StaffLineSpacingBox
+			//
+			this.StaffLineSpacingBox.Constrain = new decimal(new int[] {
+			100,
+			0,
+			0,
+			0});
+			this.StaffLineSpacingBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffLineSpacingBox.Enabled = false;
+			this.StaffLineSpacingBox.EnableDecimalPlaces = true;
+			this.StaffLineSpacingBox.Location = new System.Drawing.Point(666, 45);
+			this.StaffLineSpacingBox.Maximum = new decimal(new int[] {
+			65536,
+			0,
+			0,
+			0});
+			this.StaffLineSpacingBox.Name = "StaffLineSpacingBox";
+			this.StaffLineSpacingBox.Size = new System.Drawing.Size(425, 39);
+			this.StaffLineSpacingBox.Suffix = "px";
+			this.StaffLineSpacingBox.TabIndex = 7;
+			this.StaffLineSpacingBox.Value = new decimal(new int[] {
+			100,
+			0,
+			0,
+			0});
+			//
+			// StaffSurfacePositionBox
+			//
+			this.StaffSurfacePositionBox.Constrain = new decimal(new int[] {
+			0,
+			0,
+			0,
+			0});
+			this.StaffSurfacePositionBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffSurfacePositionBox.Enabled = false;
+			this.StaffSurfacePositionBox.EnableDecimalPlaces = true;
+			this.StaffSurfacePositionBox.Location = new System.Drawing.Point(119, 153);
+			this.StaffSurfacePositionBox.Maximum = new decimal(new int[] {
+			65536,
+			0,
+			0,
+			0});
+			this.StaffSurfacePositionBox.Minimum = new decimal(new int[] {
+			65536,
+			0,
+			0,
+			-2147483648});
+			this.StaffSurfacePositionBox.Name = "StaffSurfacePositionBox";
+			this.StaffSurfacePositionBox.Size = new System.Drawing.Size(425, 39);
+			this.StaffSurfacePositionBox.Suffix = "px";
+			this.StaffSurfacePositionBox.TabIndex = 10;
+			//
 			// StaffSurfacePaddingLeftLbl
 			//
 			this.StaffSurfacePaddingLeftLbl.AutoSize = true;
@@ -34599,6 +35012,32 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.StaffSurfacePaddingLeftLbl.TabIndex = 5;
 			this.StaffSurfacePaddingLeftLbl.Text = "谱左边距";
 			this.StaffSurfacePaddingLeftLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// StaffSurfacePaddingLeftBox
+			//
+			this.StaffSurfacePaddingLeftBox.Constrain = new decimal(new int[] {
+			500,
+			0,
+			0,
+			0});
+			this.StaffSurfacePaddingLeftBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffSurfacePaddingLeftBox.Enabled = false;
+			this.StaffSurfacePaddingLeftBox.EnableDecimalPlaces = true;
+			this.StaffSurfacePaddingLeftBox.Location = new System.Drawing.Point(119, 99);
+			this.StaffSurfacePaddingLeftBox.Maximum = new decimal(new int[] {
+			65536,
+			0,
+			0,
+			0});
+			this.StaffSurfacePaddingLeftBox.Name = "StaffSurfacePaddingLeftBox";
+			this.StaffSurfacePaddingLeftBox.Size = new System.Drawing.Size(425, 39);
+			this.StaffSurfacePaddingLeftBox.Suffix = "px";
+			this.StaffSurfacePaddingLeftBox.TabIndex = 8;
+			this.StaffSurfacePaddingLeftBox.Value = new decimal(new int[] {
+			500,
+			0,
+			0,
+			0});
 			//
 			// StaffSurfacePositionLbl
 			//
@@ -34665,6 +35104,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel4.Size = new System.Drawing.Size(1094, 42);
 			this.flowLayoutPanel4.TabIndex = 0;
 			//
+			// StaffFreezeAtNoteOffCheck
+			//
+			this.StaffFreezeAtNoteOffCheck.AutoSize = true;
+			this.StaffFreezeAtNoteOffCheck.Checked = true;
+			this.StaffFreezeAtNoteOffCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.StaffFreezeAtNoteOffCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffFreezeAtNoteOffCheck.Location = new System.Drawing.Point(371, 3);
+			this.StaffFreezeAtNoteOffCheck.Name = "StaffFreezeAtNoteOffCheck";
+			this.StaffFreezeAtNoteOffCheck.Size = new System.Drawing.Size(238, 36);
+			this.StaffFreezeAtNoteOffCheck.TabIndex = 7;
+			this.StaffFreezeAtNoteOffCheck.Text = "定格在音符结尾处";
+			this.StaffFreezeAtNoteOffCheck.UserChecked = true;
+			this.StaffFreezeAtNoteOffCheck.UseVisualStyleBackColor = true;
+			//
 			// StaffLengthenToBarEndCheck
 			//
 			this.StaffLengthenToBarEndCheck.AutoSize = true;
@@ -34709,7 +35162,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarTab.Location = new System.Drawing.Point(8, 46);
 			this.SonarTab.Name = "SonarTab";
 			this.SonarTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SonarTab.Size = new System.Drawing.Size(1126, 1162);
+			this.SonarTab.Size = new System.Drawing.Size(1126, 1160);
 			this.SonarTab.TabIndex = 6;
 			this.SonarTab.Text = "声呐";
 			this.SonarTab.UseVisualStyleBackColor = true;
@@ -34731,7 +35184,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(1110, 1146);
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(1110, 1144);
 			this.tableLayoutPanel11.TabIndex = 0;
 			//
 			// SonarSwitchesFlow
@@ -34834,7 +35287,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarList.Location = new System.Drawing.Point(3, 58);
 			this.SonarList.Name = "SonarList";
 			this.SonarList.ShowItemToolTips = true;
-			this.SonarList.Size = new System.Drawing.Size(1104, 487);
+			this.SonarList.Size = new System.Drawing.Size(1104, 485);
 			this.SonarList.TabIndex = 1;
 			this.SonarList.UseCompatibleStateImageBehavior = false;
 			this.SonarList.View = System.Windows.Forms.View.Details;
@@ -34870,7 +35323,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarButtonsTable.Controls.Add(this.SonarDeleteBtn, 1, 0);
 			this.SonarButtonsTable.Controls.Add(this.SonarResetBtn, 0, 0);
 			this.SonarButtonsTable.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 551);
+			this.SonarButtonsTable.Location = new System.Drawing.Point(3, 549);
 			this.SonarButtonsTable.Name = "SonarButtonsTable";
 			this.SonarButtonsTable.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.SonarButtonsTable.RowCount = 1;
@@ -34949,7 +35402,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SonarParamsGroup.AutoSize = true;
 			this.SonarParamsGroup.Controls.Add(this.SonarParamsPanel);
 			this.SonarParamsGroup.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 625);
+			this.SonarParamsGroup.Location = new System.Drawing.Point(3, 623);
 			this.SonarParamsGroup.Name = "SonarParamsGroup";
 			this.SonarParamsGroup.Size = new System.Drawing.Size(1104, 518);
 			this.SonarParamsGroup.TabIndex = 3;
@@ -35932,7 +36385,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.YtpTab.Location = new System.Drawing.Point(8, 46);
 			this.YtpTab.Name = "YtpTab";
 			this.YtpTab.Padding = new System.Windows.Forms.Padding(8);
-			this.YtpTab.Size = new System.Drawing.Size(1126, 1162);
+			this.YtpTab.Size = new System.Drawing.Size(1126, 1160);
 			this.YtpTab.TabIndex = 5;
 			this.YtpTab.Text = "YTP";
 			this.YtpTab.UseVisualStyleBackColor = true;
@@ -36026,6 +36479,37 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			0,
 			0});
 			//
+			// YtpMinLenBox
+			//
+			this.YtpMinLenBox.Constrain = new decimal(new int[] {
+			10,
+			0,
+			0,
+			0});
+			this.YtpMinLenBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.YtpMinLenBox.EnableDecimalPlaces = true;
+			this.YtpMinLenBox.Location = new System.Drawing.Point(119, 3);
+			this.YtpMinLenBox.Maximum = new decimal(new int[] {
+			30000,
+			0,
+			0,
+			0});
+			this.YtpMinLenBox.Minimum = new decimal(new int[] {
+			10,
+			0,
+			0,
+			0});
+			this.YtpMinLenBox.Name = "YtpMinLenBox";
+			this.YtpMinLenBox.Size = new System.Drawing.Size(425, 39);
+			this.YtpMinLenBox.Suffix = "ms";
+			this.YtpMinLenBox.TabIndex = 8;
+			this.YtpMinLenBox.Value = new decimal(new int[] {
+			10,
+			0,
+			0,
+			0});
+			this.YtpMinLenBox.ValueChanged += new System.EventHandler(this.YtpLenBox_ValueChanged);
+			//
 			// YtpMaxLenLbl
 			//
 			this.YtpMaxLenLbl.AutoSize = true;
@@ -36037,6 +36521,37 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.YtpMaxLenLbl.TabIndex = 2;
 			this.YtpMaxLenLbl.Text = "最大长度";
 			this.YtpMaxLenLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// YtpMaxLenBox
+			//
+			this.YtpMaxLenBox.Constrain = new decimal(new int[] {
+			5000,
+			0,
+			0,
+			0});
+			this.YtpMaxLenBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.YtpMaxLenBox.EnableDecimalPlaces = true;
+			this.YtpMaxLenBox.Location = new System.Drawing.Point(666, 3);
+			this.YtpMaxLenBox.Maximum = new decimal(new int[] {
+			30000,
+			0,
+			0,
+			0});
+			this.YtpMaxLenBox.Minimum = new decimal(new int[] {
+			10,
+			0,
+			0,
+			0});
+			this.YtpMaxLenBox.Name = "YtpMaxLenBox";
+			this.YtpMaxLenBox.Size = new System.Drawing.Size(425, 39);
+			this.YtpMaxLenBox.Suffix = "ms";
+			this.YtpMaxLenBox.TabIndex = 9;
+			this.YtpMaxLenBox.Value = new decimal(new int[] {
+			5000,
+			0,
+			0,
+			0});
+			this.YtpMaxLenBox.ValueChanged += new System.EventHandler(this.YtpLenBox_ValueChanged);
 			//
 			// YtpEffectsGroup
 			//
@@ -36135,7 +36650,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MoshTab.Location = new System.Drawing.Point(8, 46);
 			this.MoshTab.Name = "MoshTab";
 			this.MoshTab.Padding = new System.Windows.Forms.Padding(3);
-			this.MoshTab.Size = new System.Drawing.Size(1126, 1162);
+			this.MoshTab.Size = new System.Drawing.Size(1126, 1160);
 			this.MoshTab.TabIndex = 7;
 			this.MoshTab.Text = "抹失";
 			this.MoshTab.UseVisualStyleBackColor = true;
@@ -36432,7 +36947,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.HelperTab.Location = new System.Drawing.Point(8, 46);
 			this.HelperTab.Name = "HelperTab";
 			this.HelperTab.Padding = new System.Windows.Forms.Padding(1, 6, 1, 6);
-			this.HelperTab.Size = new System.Drawing.Size(1126, 1162);
+			this.HelperTab.Size = new System.Drawing.Size(1126, 1160);
 			this.HelperTab.TabIndex = 4;
 			this.HelperTab.Text = "工具";
 			this.HelperTab.UseVisualStyleBackColor = true;
@@ -36974,26 +37489,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.Name = "ConfigForm";
 			this.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-			this.Text = "Otomad Helper for Vegas - 配置";
+			this.Text = "Otomad Helper for Vegas Pro - 配置";
 			this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.ConfigForm_HelpButtonClicked);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ConfigForm_FormClosing);
 			this.Load += new System.EventHandler(this.ConfigForm_Load);
 			this.ResizeEnd += new System.EventHandler(this.ConfigForm_Resize);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePaddingRightBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePositionBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePaddingLeftBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.YtpMinLenBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.YtpMaxLenBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.MatchCutRepeatRoundBox)).EndInit();
 			this.menu.ResumeLayout(false);
 			this.menu.PerformLayout();
 			this.panel1.ResumeLayout(false);
@@ -37003,9 +37505,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTabScrollPanel.ResumeLayout(false);
 			this.SourceTabScrollPanel.PerformLayout();
 			this.MultiSourceConfigGroup.ResumeLayout(false);
-			this.MultiSourceCombTabs.ResumeLayout(false);
-			this.MultiSourceOffTab.ResumeLayout(false);
-			this.MultiSourceOffTab.PerformLayout();
+			this.MultiSourceCombOrganizerTabs.ResumeLayout(false);
 			this.LuckyDipTab.ResumeLayout(false);
 			this.LuckyDipTab.PerformLayout();
 			this.LuckyDipPanel.ResumeLayout(false);
@@ -37014,20 +37514,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.LuckyDipBarOrBeatPeriodBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.LuckyDipBarOrBeatPreparationBox)).EndInit();
-			this.LuckyDipLotionBathIntervalPanel.ResumeLayout(false);
-			this.LuckyDipLotionBathIntervalPanel.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.LuckyDipLotionBathIntervalBox)).EndInit();
 			this.MatchCutTab.ResumeLayout(false);
 			this.MatchCutTab.PerformLayout();
 			this.MatchCutPanel.ResumeLayout(false);
 			this.MatchCutPanel.PerformLayout();
-			this.MatchCutOrderPanel.ResumeLayout(false);
-			this.MatchCutOrderPanel.PerformLayout();
 			this.MatchCutRepeatPanel.ResumeLayout(false);
 			this.MatchCutRepeatPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MatchCutRepeatBox)).EndInit();
 			this.MatchCutRepeatRoundPanel.ResumeLayout(false);
 			this.MatchCutRepeatRoundPanel.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.MatchCutRepeatRoundBox)).EndInit();
 			this.MatchCutSustainPanel.ResumeLayout(false);
 			this.MatchCutSustainPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MatchCutSustainCacheCapacityBox)).EndInit();
@@ -37035,8 +37531,35 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LinearMapTab.PerformLayout();
 			this.LinearMapPanel.ResumeLayout(false);
 			this.LinearMapPanel.PerformLayout();
-			this.flowLayoutPanel7.ResumeLayout(false);
-			this.flowLayoutPanel7.PerformLayout();
+			this.ShupelunkerTab.ResumeLayout(false);
+			this.ShupelunkerTab.PerformLayout();
+			this.ShupelunkerPanel.ResumeLayout(false);
+			this.ShupelunkerPanel.PerformLayout();
+			this.ShupelunkerOrTartarPanel.ResumeLayout(false);
+			this.ShupelunkerOrTartarPanel.PerformLayout();
+			this.ShupelunkerUnallocatedPanel.ResumeLayout(false);
+			this.ShupelunkerUnallocatedPanel.PerformLayout();
+			this.ShupelunkerOffsetPanel.ResumeLayout(false);
+			this.ShupelunkerOffsetPanel.PerformLayout();
+			this.MultiSourceConfigSplitterWrapper.ResumeLayout(false);
+			this.MultiSourceCombPickerTabs.ResumeLayout(false);
+			this.MultiSourceOffTab.ResumeLayout(false);
+			this.MultiSourceOffTab.PerformLayout();
+			this.MysteryBoxTab.ResumeLayout(false);
+			this.MysteryBoxTab.PerformLayout();
+			this.MysteryBoxPanel.ResumeLayout(false);
+			this.MysteryBoxPanel.PerformLayout();
+			this.LuckyDipLotionBathIntervalPanel.ResumeLayout(false);
+			this.LuckyDipLotionBathIntervalPanel.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.LuckyDipLotionBathIntervalBox)).EndInit();
+			this.SyncopatorTab.ResumeLayout(false);
+			this.SyncopatorTab.PerformLayout();
+			this.SyncopatorPanel.ResumeLayout(false);
+			this.SyncopatorPanel.PerformLayout();
+			this.MatchCutOrderPanel.ResumeLayout(false);
+			this.MatchCutOrderPanel.PerformLayout();
+			this.AffixAsPitchLblPanel.ResumeLayout(false);
+			this.AffixAsPitchLblPanel.PerformLayout();
 			this.SourceConfigGroup.ResumeLayout(false);
 			this.SourceConfigGroup.PerformLayout();
 			this.SourceConfigTablePanel.ResumeLayout(false);
@@ -37053,6 +37576,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel4.PerformLayout();
 			this.flowLayoutPanel1.ResumeLayout(false);
 			this.flowLayoutPanel1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).EndInit();
 			this.flowLayoutPanel9.ResumeLayout(false);
 			this.flowLayoutPanel9.PerformLayout();
 			this.flowLayoutPanel11.ResumeLayout(false);
@@ -37077,6 +37602,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel6.PerformLayout();
 			this.flowLayoutPanel3.ResumeLayout(false);
 			this.flowLayoutPanel3.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).EndInit();
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
 			this.MidiBpmFlowPanel.ResumeLayout(false);
@@ -37117,6 +37644,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel17.PerformLayout();
 			this.AudioPreviewAttrLayoutPanel.ResumeLayout(false);
 			this.AudioPreviewAttrLayoutPanel.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).EndInit();
 			this.AudioVelocityGroup.ResumeLayout(false);
 			this.AudioVelocityGroup.PerformLayout();
 			this.tableLayoutPanel13.ResumeLayout(false);
@@ -37180,10 +37708,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.StaffLinesParamsGroup.PerformLayout();
 			this.tableLayoutPanel7.ResumeLayout(false);
 			this.tableLayoutPanel7.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).EndInit();
 			this.StaffNotesParamsGroup.ResumeLayout(false);
 			this.StaffNotesParamsGroup.PerformLayout();
 			this.tableLayoutPanel10.ResumeLayout(false);
 			this.tableLayoutPanel10.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePaddingRightBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePositionBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePaddingLeftBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffNotesShiftBox)).EndInit();
 			this.flowLayoutPanel4.ResumeLayout(false);
 			this.flowLayoutPanel4.PerformLayout();
@@ -37226,6 +37759,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel16.ResumeLayout(false);
 			this.tableLayoutPanel16.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.YtpClipsCountBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.YtpMinLenBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.YtpMaxLenBox)).EndInit();
 			this.YtpEffectsGroup.ResumeLayout(false);
 			this.YtpEffectsGroup.PerformLayout();
 			this.MoshTab.ResumeLayout(false);
@@ -37714,13 +38249,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public GroupedRadioButton MatchCutOrderSequentialRadio;
 		public GroupedRadioButton MatchCutOrderReversedRadio;
 		public GroupedRadioButton MatchCutOrderShuffleRadio;
-		public System.Windows.Forms.CheckBox MatchCutLuckyDipCheck;
 		public RememberedCheckBox MatchCutApplyEffectsByRoundCheck;
 		public System.Windows.Forms.TableLayoutPanel MatchCutRepeatPanel;
 		public System.Windows.Forms.Label MatchCutRepeatLbl;
 		public System.Windows.Forms.NumericUpDown MatchCutRepeatBox;
 		public System.Windows.Forms.FlowLayoutPanel LuckyDipPanel;
-		public System.Windows.Forms.CheckBox LuckyDipLimitToSelectedCheck;
 		public System.Windows.Forms.CheckBox LuckyDipTrackCheck;
 		public System.Windows.Forms.CheckBox LuckyDipMarkerCheck;
 		public System.Windows.Forms.CheckBox LuckyDipBarOrBeatCheck;
@@ -37742,13 +38275,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.CheckBox StaffLengthenToBarEndCheck;
 		public System.Windows.Forms.Panel SourceTabScrollPanel;
 		public System.Windows.Forms.FlowLayoutPanel LinearMapPanel;
-		public System.Windows.Forms.CheckBox LinearMapDescendingCheck;
 		public System.Windows.Forms.CheckBox MatchCutAccumulateHarmonicsCheck;
 		public System.Windows.Forms.CheckBox LuckyDipLotionBathCheck;
 		public System.Windows.Forms.TableLayoutPanel LuckyDipLotionBathIntervalPanel;
 		public System.Windows.Forms.Label LuckyDipLotionBathIntervalLbl;
 		public TimecodeBox LuckyDipLotionBathIntervalBox;
-		public System.Windows.Forms.TabControl MultiSourceCombTabs;
+		public ButtonTabControl MultiSourceCombOrganizerTabs;
 		public System.Windows.Forms.TabPage MultiSourceOffTab;
 		public System.Windows.Forms.Label MultiSourceOffInfoLbl;
 		public System.Windows.Forms.TabPage LuckyDipTab;
@@ -37842,10 +38374,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.TableLayoutPanel MatchCutRepeatRoundPanel;
 		public System.Windows.Forms.Label MatchCutRepeatRoundLbl;
 		public System.Windows.Forms.NumericUpDown MatchCutRepeatRoundBox;
-		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel7;
-		public System.Windows.Forms.Label LinearMapSelectionModeLbl;
-		public System.Windows.Forms.RadioButton LinearMapSelectionModeLuckyDipRadio;
-		public System.Windows.Forms.RadioButton LinearMapSelectionModeMatchCutRadio;
 		public RememberedCheckBox LinearMapReuseCheck;
 		public System.Windows.Forms.Button PlaySelectedTrackBtn;
 		public System.Windows.Forms.CheckBox AudioAutoBasePitchCheck;
@@ -37886,6 +38414,36 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.CheckBox AudioMuteDrumKitsCheck;
 		public System.Windows.Forms.Label VideoFreezeLastFrameLbl;
 		public System.Windows.Forms.Button VideoFreezeLastFrameBtn;
+		public ButtonTabControl MultiSourceCombPickerTabs;
+		public System.Windows.Forms.TabPage MysteryBoxTab;
+		public System.Windows.Forms.TabPage SyncopatorTab;
+		public System.Windows.Forms.FlowLayoutPanel MysteryBoxPanel;
+		public System.Windows.Forms.FlowLayoutPanel SyncopatorPanel;
+		public System.Windows.Forms.CheckBox EnhanceSelectCheck;
+		public System.Windows.Forms.FlowLayoutPanel AffixAsPitchLblPanel;
+		public System.Windows.Forms.Label AffixAsPitchLbl;
+		public GroupedRadioButton AffixAsPitchOffRadio;
+		public GroupedRadioButton AffixAsPitchPrefixRadio;
+		public GroupedRadioButton AffixAsPitchSuffixRadio;
+		private System.Windows.Forms.Label AudioOverallShiftUnitLbl;
+		public System.Windows.Forms.FlowLayoutPanel ShupelunkerPanel;
+		public System.Windows.Forms.FlowLayoutPanel ShupelunkerOrTartarPanel;
+		public System.Windows.Forms.RadioButton ShupelunkerRadio;
+		public System.Windows.Forms.RadioButton TartarRadio;
+		public System.Windows.Forms.FlowLayoutPanel ShupelunkerUnallocatedPanel;
+		public System.Windows.Forms.Label ShupelunkerUnallocatedLbl;
+		public System.Windows.Forms.CheckBox ShupelunkerUnallocatedOctavesCheck;
+		public System.Windows.Forms.CheckBox ShupelunkerUnallocatedFillUpCheck;
+		public System.Windows.Forms.CheckBox ShupelunkerUnallocatedFillDownCheck;
+		public System.Windows.Forms.CheckBox ShupelunkerUnallocatedDefaultCheck;
+		public System.Windows.Forms.CheckBox ShupelunkerExclusiveTrackCheck;
+		public System.Windows.Forms.FlowLayoutPanel ShupelunkerOffsetPanel;
+		public System.Windows.Forms.Label ShupelunkerOffsetLbl;
+		public System.Windows.Forms.ComboBox ShupelunkerOffsetCombo;
+		private System.Windows.Forms.Label ShupelunkerOffsetUnitLbl;
+		public RememberedCheckBox TartarReuseCheck;
+		public System.Windows.Forms.Splitter MultiSourceConfigSplitter;
+		public System.Windows.Forms.Panel MultiSourceConfigSplitterWrapper;
 	}
 	#endregion
 
@@ -37994,12 +38552,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				LuckyDipBarOrBeatCheck.CheckedChanged += e;
 				StaffLengthenToBarEndCheck.CheckedChanged += e;
 				LuckyDipLotionBathCheck.CheckedChanged += e;
-				MatchCutLuckyDipCheck.CheckedChanged += e;
-				LuckyDipLimitToSelectedCheck.CheckedChanged += e;
 				AudioStackCheck.CheckedChanged += e;
 				VideoStackCheck.CheckedChanged += e;
 				MatchCutSustainCheck.CheckedChanged += e;
-				LinearMapSelectionModeLuckyDipRadio.CheckedChanged += e;
 				AudioMuteDrumKitsCheck.CheckedChanged += e;
 			}
 			AudioMainKeyCombo.MouseWheel += AudioMainKeyCombo_MouseWheel;
@@ -38357,7 +38912,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			VideoStartThresholdCurveCombo.SetIndex(configIni.Read("StartThresholdCurve", 1), 1);
 			VideoStackCheck.Checked = configIni.Read("Stack", false);
 			VideoTimeUnremappingCheck.UserChecked = configIni.Read("TimeUnremapping", false);
-			RestrictKeyframesLengthMode = configIni.Read("RestrictKeyframesLengthMode", RestrictLengthModeType.MIN_LENGTH);
+			RestrictKeyframesLengthMode = configIni.Read("RestrictKeyframesLengthMode", ConstrainLengthModeType.MIN_LENGTH);
 			RestrictKeyframesLengthBox.Value = configIni.Read("RestrictKeyframesLengthValue", 1000);
 			visualTruncate.ReadIni();
 			configIni.EndSection();
@@ -38393,7 +38948,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				BelowTopAdjustmentTrackCheck.Checked = configIni.Read("BelowTopAdjustmentTracks", true);
 			RemoveSourceTrackEventsCheck.UserChecked = configIni.Read("RemoveSourceTrackEvents", false);
 			SelectAllGeneratedEventsCheck.Checked = configIni.Read("SelectAllGeneratedEvents", false);
-			RestrictLengthMode = configIni.Read("RestrictLengthMode", RestrictLengthModeType.UNRESTRICTED);
+			RestrictLengthMode = configIni.Read("RestrictLengthMode", ConstrainLengthModeType.UNCONSTRAINED);
 			RestrictLengthBox.Value = configIni.Read("RestrictLengthValue", 1000);
 			LayoutInfos.Grid.enabled = configIni.Read("EnableGridLayoutForTracks", false);
 			LayoutInfos.GradientTracks.enabled = configIni.Read("EnableGradientForTracks", false);
@@ -38416,8 +38971,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			#region 多素材配置
 			configIni.StartSection("Multisource");
-			MultisourceComb = configIni.Read("Mode", MultisourceCombMode.OFF);
-			LuckyDipLimitToSelectedCheck.Checked = configIni.Read("LuckyDipLimitToSelected", false);
+			MultisourceCombPicker = configIni.Read("Picker", MultisourceCombMode.OFF);
+			MultisourceCombOrganizer = configIni.Read("Organizer", MultisourceCombMode.MYSTERY_BOX);
 			LuckyDipTrackCheck.Checked = configIni.Read("LuckyDipTrack", true);
 			LuckyDipMarkerCheck.Checked = configIni.Read("LuckyDipMarker", true);
 			LuckyDipBarOrBeatCheck.Checked = configIni.Read("LuckyDipBarOrBeat", true);
@@ -38427,18 +38982,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			LuckyDipBarOrBeatPreparationUnitCombo.SetIndex(configIni.Read("LuckyDipBarOrBeatPreparationUnit", 0), 0);
 			LuckyDipLotionBathCheck.Checked = configIni.Read("LuckyDipLotionBath", false);
 			LuckyDipLotionBathIntervalBox.DoubleValue = configIni.Read("LuckyDipLotionBathInterval", 1000d);
-			MatchCutOrder = configIni.Read("MatchCutOrder", MatchCutOrder.SEQUENTIAL);
-			MatchCutLuckyDipCheck.Checked = configIni.Read("MatchCutLuckyDip", false);
+			MatchCutOrder = configIni.Read("MatchCutOrder", SyncopatorOrder.SEQUENTIAL);
 			MatchCutApplyEffectsByRoundCheck.UserChecked = configIni.Read("MatchCutApplyEffectsByRound", false);
 			MatchCutAccumulateHarmonicsCheck.Checked = configIni.Read("MatchCutAccumulateHarmonics", false);
 			MatchCutRepeatBox.SetValue(configIni.Read("MatchCutRepeatOne", 1), 1);
 			MatchCutRepeatRoundBox.SetValue(configIni.Read("MatchCutRepeatRound", 0), 0);
 			MatchCutSustainCheck.Checked = configIni.Read("MatchCutSustain", false);
 			MatchCutSustainCacheCapacityBox.Value = configIni.Read("MatchCutSustainCacheCapacity", 4m);
-			LinearMapDescendingCheck.Checked = configIni.Read("LinearMapDescending", false);
 			LinearMapReuseCheck.UserChecked = configIni.Read("LinearMapReuse", true);
-			if (configIni.Read("LinearMapSelectionMode", false)) LinearMapSelectionModeLuckyDipRadio.Checked = true;
-			else LinearMapSelectionModeMatchCutRadio.Checked = true;
 			configIni.EndSection();
 			#endregion
 
@@ -38677,8 +39228,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			#region 多素材配置
 			configIni.StartSection("Multisource");
-			configIni.Write("Mode", MultisourceComb);
-			configIni.Write("LuckyDipLimitToSelected", LuckyDipLimitToSelectedCheck.Checked);
+			configIni.Write("Picker", MultisourceCombPicker);
+			configIni.Write("Organizer", MultisourceCombOrganizer);
 			configIni.Write("LuckyDipTrack", LuckyDipTrackCheck.Checked);
 			configIni.Write("LuckyDipMarker", LuckyDipMarkerCheck.Checked);
 			configIni.Write("LuckyDipBarOrBeat", LuckyDipBarOrBeatCheck.Checked);
@@ -38689,16 +39240,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("LuckyDipLotionBath", LuckyDipLotionBathCheck.Checked);
 			configIni.Write("LuckyDipLotionBathInterval", LuckyDipLotionBathIntervalBox.DoubleValue);
 			configIni.Write("MatchCutOrder", MatchCutOrder);
-			configIni.Write("MatchCutLuckyDip", MatchCutLuckyDipCheck.Checked);
 			configIni.Write("MatchCutApplyEffectsByRound", MatchCutApplyEffectsByRoundCheck.UserChecked);
 			configIni.Write("MatchCutAccumulateHarmonics", MatchCutAccumulateHarmonicsCheck.Checked);
 			configIni.Write("MatchCutRepeatOne", MatchCutRepeatBox.Value);
 			configIni.Write("MatchCutRepeatRound", MatchCutRepeatRoundBox.Value);
 			configIni.Write("MatchCutSustain", MatchCutSustainCheck.Checked);
 			configIni.Write("MatchCutSustainCacheCapacity", MatchCutSustainCacheCapacityBox.Value);
-			configIni.Write("LinearMapDescending", LinearMapDescendingCheck.Checked);
 			configIni.Write("LinearMapReuse", LinearMapReuseCheck.UserChecked);
-			configIni.Write("LinearMapSelectionMode", LinearMapSelectionModeLuckyDipRadio.Checked);
 			configIni.EndSection();
 			#endregion
 
@@ -39699,8 +40247,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioPreferredTrackLbl.Text = VideoPreferredTrackLbl.Text = str.preferred_track;
 			MultiSourceConfigGroup.Text = str.multisource_comb;
 			MultiSourceOffTab.Text = str.off;
-			LuckyDipTab.Text = MatchCutLuckyDipCheck.Text = str.lucky_dip;
-			LuckyDipLimitToSelectedCheck.Text = str.lucky_dip_limit_to_selected;
+			LuckyDipTab.Text = MysteryBoxTab.Text = str.lucky_dip;
 			LuckyDipTrackCheck.Text = str.lucky_dip_track;
 			LuckyDipMarkerCheck.Text = str.lucky_dip_marker;
 			LuckyDipBarOrBeatCheck.Text = str.lucky_dip_bar_or_beat;
@@ -39710,7 +40257,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			LuckyDipBarOrBeatPeriodUnitCombo.Items[1] = LuckyDipBarOrBeatPreparationUnitCombo.Items[1] = str.beat;
 			LuckyDipLotionBathCheck.Text = str.lotion_bath;
 			LuckyDipLotionBathIntervalLbl.Text = str.interval;
-			MatchCutTab.Text = str.match_cut;
+			MatchCutTab.Text = SyncopatorTab.Text = str.match_cut;
 			MatchCutOrderLbl.Text = str.order;
 			MatchCutOrderSequentialRadio.Text = str.sequential;
 			MatchCutOrderReversedRadio.Text = str.reversed;
@@ -39720,13 +40267,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MatchCutRepeatRoundLbl.Text = str.match_cut_repeat_round;
 			MatchCutAccumulateHarmonicsCheck.Text = str.match_cut_accumulate_harmonics;
 			LinearMapTab.Text = str.linear_map;
-			LinearMapDescendingCheck.Text = str.descending;
 			LinearMapReuseCheck.Text = str.linear_map_allow_reuse_existed;
-			LinearMapSelectionModeLbl.Text = str.linear_map_selection_mode;
-			LinearMapSelectionModeLuckyDipRadio.Text = str.lucky_dip;
-			LinearMapSelectionModeMatchCutRadio.Text = str.match_cut;
 			ConsonantTab.Text = str.consonant_time;
-			ShupelunkerTab.Text = str.shupelunker + " / " + str.tartar;
+			ShupelunkerTab.Text = str.shupelunker + "/" + str.tartar;
 			MidiAutoChangeProjectPropertiesLbl.Text = str.auto_change_project_ruler_properties;
 			MidiAutoChangeProjectBpmCheck.Text = str.tempo;
 			MidiAutoChangeProjectBeatCheck.Text = str.midi_beat;
@@ -40720,27 +41263,27 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			set { MidiUseBpm = (MidiUseBpm)value; }
 		}
 
-		public RestrictLengthModeType RestrictLengthMode {
+		public ConstrainLengthModeType RestrictLengthMode {
 			get {
-				return RestrictMaxLengthRadio.Checked ? RestrictLengthModeType.MAX_LENGTH :
-					RestrictFixedLengthRadio.Checked ? RestrictLengthModeType.FIXED_LENGTH :
-					RestrictLengthModeType.UNRESTRICTED;
+				return RestrictMaxLengthRadio.Checked ? ConstrainLengthModeType.MAX_LENGTH :
+					RestrictFixedLengthRadio.Checked ? ConstrainLengthModeType.FIXED_LENGTH :
+					ConstrainLengthModeType.UNCONSTRAINED;
 			}
 			set {
-				UnrestrictLengthRadio.Related.Selected = value == RestrictLengthModeType.MAX_LENGTH ? RestrictMaxLengthRadio :
-					value == RestrictLengthModeType.FIXED_LENGTH ? RestrictFixedLengthRadio : UnrestrictLengthRadio;
+				UnrestrictLengthRadio.Related.Selected = value == ConstrainLengthModeType.MAX_LENGTH ? RestrictMaxLengthRadio :
+					value == ConstrainLengthModeType.FIXED_LENGTH ? RestrictFixedLengthRadio : UnrestrictLengthRadio;
 			}
 		}
 
-		public RestrictLengthModeType RestrictKeyframesLengthMode {
+		public ConstrainLengthModeType RestrictKeyframesLengthMode {
 			get {
-				return UnrestrictKeyframesLengthRadio.Checked ? RestrictLengthModeType.UNRESTRICTED :
-					RestrictKeyframesFixedLengthRadio.Checked ? RestrictLengthModeType.FIXED_LENGTH :
-					RestrictLengthModeType.MIN_LENGTH;
+				return UnrestrictKeyframesLengthRadio.Checked ? ConstrainLengthModeType.UNCONSTRAINED :
+					RestrictKeyframesFixedLengthRadio.Checked ? ConstrainLengthModeType.FIXED_LENGTH :
+					ConstrainLengthModeType.MIN_LENGTH;
 			}
 			set {
-				UnrestrictKeyframesLengthRadio.Related.Selected = value == RestrictLengthModeType.UNRESTRICTED ? UnrestrictKeyframesLengthRadio :
-					value == RestrictLengthModeType.FIXED_LENGTH ? RestrictKeyframesFixedLengthRadio : RestrictKeyframesMinLengthRadio;
+				UnrestrictKeyframesLengthRadio.Related.Selected = value == ConstrainLengthModeType.UNCONSTRAINED ? UnrestrictKeyframesLengthRadio :
+					value == ConstrainLengthModeType.FIXED_LENGTH ? RestrictKeyframesFixedLengthRadio : RestrictKeyframesMinLengthRadio;
 			}
 		}
 
@@ -41843,18 +42386,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioBasePitchIntervalLbl.Text = (interval > 0 ? "+" : interval < 0 ? "−" : "±") + Math.Abs(interval);
 		}
 
-		public MultisourceCombMode MultisourceComb {
-			get { return (MultisourceCombMode)MultiSourceCombTabs.SelectedIndex; }
-			set { MultiSourceCombTabs.SelectedIndex = (int)value; }
+		public MultisourceCombMode MultisourceCombPicker {
+			get { return (MultisourceCombMode)MultiSourceCombPickerTabs.SelectedIndex; }
+			set { MultiSourceCombPickerTabs.SetIndex((int)value); }
 		}
 
-		public MatchCutOrder MatchCutOrder {
-			get { return MatchCutOrderShuffleRadio.Checked ? MatchCutOrder.SHUFFLED : MatchCutOrderReversedRadio.Checked ? MatchCutOrder.REVERSED : MatchCutOrder.SEQUENTIAL; }
+		public MultisourceCombMode MultisourceCombOrganizer {
+			get { return (MultisourceCombMode)(MultiSourceCombOrganizerTabs.SelectedIndex + 1); }
+			set { MultiSourceCombOrganizerTabs.SetIndex((int)value - 1); }
+		}
+
+		public SyncopatorOrder MatchCutOrder {
+			get { return MatchCutOrderShuffleRadio.Checked ? SyncopatorOrder.SHUFFLED : MatchCutOrderReversedRadio.Checked ? SyncopatorOrder.REVERSED : SyncopatorOrder.SEQUENTIAL; }
 			set {
 				switch (value) {
-					case MatchCutOrder.SEQUENTIAL: default: MatchCutOrderSequentialRadio.Checked = true; break;
-					case MatchCutOrder.REVERSED: MatchCutOrderReversedRadio.Checked = true; break;
-					case MatchCutOrder.SHUFFLED: MatchCutOrderShuffleRadio.Checked = true; break;
+					case SyncopatorOrder.SEQUENTIAL: default: MatchCutOrderSequentialRadio.Checked = true; break;
+					case SyncopatorOrder.REVERSED: MatchCutOrderReversedRadio.Checked = true; break;
+					case SyncopatorOrder.SHUFFLED: MatchCutOrderShuffleRadio.Checked = true; break;
 				}
 			}
 		}
@@ -41884,7 +42432,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void MultiSourceCombTabs_SelectedIndexChanged(object sender, EventArgs e) {
-			TabControl[] tabControls = sender is TabControl ? new TabControl[] { (TabControl)sender } : new TabControl[] { MultiSourceCombTabs };
+			TabControl[] tabControls = sender is TabControl ? new TabControl[] { (TabControl)sender } : new TabControl[] { MultiSourceCombOrganizerTabs, MultiSourceCombPickerTabs };
 
 			foreach (TabControl tabControl in tabControls) {
 				if (tabControl == null || tabControl.SelectedTab == null) continue;
@@ -41909,6 +42457,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			// 其它逻辑相关代码
 			SetStackAndTimeUnremappingEnabled();
+
+			MultiSourceCombOrganizerTabs.Visible = MultiSourceConfigSplitterWrapper.Visible = MultisourceCombPicker != MultisourceCombMode.OFF;
 		}
 
 		private void SetStackAndTimeUnremappingEnabled() {
@@ -41916,7 +42466,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioStackCheck.Enabled = VideoStackCheck.Enabled = isMultiMidiTracksSelected;
 			MidiAutoLayoutTracksGroup.Enabled = isMultiMidiTracksSelected || VideoMultitrackForChordsCheck.Checked;
 
-			AudioTimeUnremappingCheck.Status = VideoTimeUnremappingCheck.Status = MultiSourceCombTabs.SelectedIndex == 0 ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
+			AudioTimeUnremappingCheck.Status = VideoTimeUnremappingCheck.Status =
+				MultisourceCombPicker == MultisourceCombMode.OFF ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
 
 			if (!(AudioConfigCheck.Checked && AudioConfigCheck.Enabled)) AudioStackCheck.Enabled = AudioTimeUnremappingCheck.Enabled = false;
 			if (!(VideoConfigCheck.Checked && VideoConfigCheck.Enabled)) VideoStackCheck.Enabled = VideoTimeUnremappingCheck.Enabled = false;
@@ -42090,6 +42641,35 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					audioOverallShiftComboBoxItems.FirstOrDefault(item => item.Value == 0);
 				AudioOverallShiftCombo.SelectedItem = audioOverallShiftComboBoxItem;
 			}
+		}
+
+		private void TrackGroupRadio_CheckedChanged(object sender, EventArgs e) {
+			CollapseTrackGroupCheck.Enabled = TrackGroupReuseCheck.Enabled = TrackGroupByTrackRadio.Checked || TrackGroupBySessionRadio.Checked;
+			AudioBusTrackReuseCheck.Enabled = AudioBusTrackByTrackRadio.Checked || AudioBusTrackBySessionRadio.Checked;
+		}
+
+		private void EnhanceSelectCheck_CheckedChanged(object sender, EventArgs e) {
+			if (EnhanceSelectCheck.Checked) AudioAutoBasePitchCheck.Checked = true;
+		}
+
+		private void TartarRadio_CheckedChanged(object sender, EventArgs e) {
+			ShupelunkerUnallocatedPanel.Enabled = ShupelunkerOffsetPanel.Enabled = !TartarRadio.Checked;
+			TartarReuseCheck.Status = TartarRadio.Checked ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.True;
+		}
+
+		private void PitchOffsetCombo_Leave(object sender, EventArgs e) {
+			const char MINUS = '−', PLUS_MINUS = '±';
+			ComboBox combo = sender as ComboBox;
+			if (combo == null) return;
+			Match matched = Regex.Match(combo.Text.Replace(MINUS, '-'), @"[-−]?\d+");
+			int value = 0;
+			if (matched.Success) {
+				string value_string = matched.Value;
+				int.TryParse(value_string, out value); // 无需在意 TryParse 的返回值，因为失败会直接赋 0，不影响结果。
+			}
+			value = Math.Min(Math.Max(value, -127), 127);
+			combo.Text = string.Concat(value < 0 ? MINUS : value > 0 ? '+' : PLUS_MINUS, Math.Abs(value));
+			combo.SelectionStart = combo.Text.Length;
 		}
 	}
 
@@ -42788,7 +43368,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			automator_configform_info = "自动为添加到视频剪辑中的每种效果在各帧添加随机关键帧。",
 			stutter_configform_info = "通过随机时间间隔的正放与倒放来制造卡顿效果。",
 			camera_shake_configform_info = "运用平移/裁切来摇晃或摆动剪辑。",
-			otomad_helper_config = "Otomad Helper for Vegas - 配置",
+			otomad_helper_config = "Otomad Helper for Vegas Pro - 配置",
 			reset_config_successful = "重置完成，请重新启动脚本。",
 			reset_config_successful_title = "重置用户配置",
 			sure_to_reset_config = "确定要重置用户配置吗？\n\n重置后你的用户配置数据将会丢失。",
@@ -42989,7 +43569,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			match_cut = "踩点",
 			linear_map = "素材乐团",
 			consonant_time = "辅音时间",
-			lucky_dip_limit_to_selected = "限制在所选素材",
 			lucky_dip_track = "使每条音轨不同",
 			lucky_dip_marker = "每处标记切换一次",
 			lucky_dip_bar_or_beat = "每小节或每拍切换一次",
@@ -43046,7 +43625,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			audio_bus_track_reuse = "重用非空同名音频总线轨道",
 			track_group_reuse = "重用非空同名轨道组",
 			match_cut_repeat_round = "每轮重复总数",
-			linear_map_selection_mode = "挑取模式",
 			apply_now = "立即应用",
 			match_cut_repeat_round_tooltip = "设为 0 意味着可以无限循环。",
 			auto_base_pitch = "自动校音 (实验性)",
@@ -43759,7 +44337,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				automator_configform_info = "Adds random keyframes to each frame automatically for each effect you have added to the video clips",
 				stutter_configform_info = "Stutters the clips by forwarding and reversing them in randomized intervals",
 				camera_shake_configform_info = "Shakes or wiggles the clips by using Pan/Crop",
-				otomad_helper_config = "Otomad Helper for Vegas - Config",
+				otomad_helper_config = "Otomad Helper for Vegas Pro - Config",
 				reset_config_successful = "The reset is complete, please restart the script.",
 				reset_config_successful_title = "Reset User Configuration",
 				sure_to_reset_config = "Are you sure you want to reset the user configuration?\n\nYour user configuration data will be lost.",
@@ -43960,7 +44538,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				match_cut = "Source Syncopator",
 				linear_map = "Source Orchestra",
 				consonant_time = "Consonant time",
-				lucky_dip_limit_to_selected = "Limited to selected sources",
 				lucky_dip_track = "Make each track different",
 				lucky_dip_marker = "Switch once per marker",
 				lucky_dip_bar_or_beat = "Switch once per bar or beat",
@@ -44017,7 +44594,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				audio_bus_track_reuse = "Reuse audio bus tracks that have same nonempty name",
 				track_group_reuse = "Reuse groups that have same nonempty name",
 				match_cut_repeat_round = "Total repetition rounds",
-				linear_map_selection_mode = "Selection mode",
 				apply_now = "Apply now",
 				match_cut_repeat_round_tooltip = "Set to 0 means it can loop infinitely.",
 			};
@@ -44672,7 +45248,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				automator_configform_info = "自動為添加到視訊短片中的每種效果在各畫格添加隨機關鍵畫格。",
 				stutter_configform_info = "通過隨機時間間隔的正放與倒放來製造卡頓效果。",
 				camera_shake_configform_info = "運用平移/裁切來搖晃或擺動剪輯。",
-				otomad_helper_config = "Otomad Helper for Vegas - 設定",
+				otomad_helper_config = "Otomad Helper for Vegas Pro - 設定",
 				reset_config_successful = "重設完成，請重新啟動腳本。",
 				reset_config_successful_title = "重設使用者組態",
 				sure_to_reset_config = "確定要重設使用者組態嗎？\n\n重設後你的使用者組態設定資料將會遺失。",
@@ -44873,7 +45449,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				match_cut = "踩點",
 				linear_map = "素材樂團",
 				consonant_time = "輔音時間",
-				lucky_dip_limit_to_selected = "限制在所選素材",
 				lucky_dip_track = "使每條音軌不同",
 				lucky_dip_marker = "每處標記切換一次",
 				lucky_dip_bar_or_beat = "每小節或每拍切換一次",
@@ -44930,7 +45505,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				audio_bus_track_reuse = "重用非空同名音訊匯流軌道",
 				track_group_reuse = "重用非空同名軌道組",
 				match_cut_repeat_round = "每輪重複總數",
-				linear_map_selection_mode = "挑取模式",
 				apply_now = "立即應用",
 				match_cut_repeat_round_tooltip = "設為 0 意味著可以無限循環。",
 			};
@@ -45587,7 +46161,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				automator_configform_info = "動画クリップに追加した各エフェクトごとに、各フレームにランダムなキーフレームを自動的に追加します。",
 				stutter_configform_info = "ランダムな間隔で早送りや巻き戻しを行うことで、クリップを途切れ途切れにします。",
 				camera_shake_configform_info = "パン/クロップを使用して、クリップを揺らしたり、ねじったりします。",
-				otomad_helper_config = "Otomad Helper for Vegas - 設定",
+				otomad_helper_config = "Otomad Helper for Vegas Pro - 設定",
 				reset_config_successful = "リセットが完了しました。スクリプトを再起動してください。",
 				reset_config_successful_title = "ユーザ設定のリセット",
 				sure_to_reset_config = "ユーザー構成をリセットしてもよろしいですか？\n\nリセット後、ユーザープロファイルデータは失われます。",
@@ -45788,7 +46362,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				match_cut = "マッチカット",
 				linear_map = "素材オーケストラ",
 				consonant_time = "子音時間",
-				lucky_dip_limit_to_selected = "選択したソースに限定",
 				lucky_dip_track = "各トラックを異なるものにする",
 				lucky_dip_marker = "マーカーごとに1回切り替える",
 				lucky_dip_bar_or_beat = "小節または拍ごとに1回切り替える",
@@ -45845,7 +46418,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				audio_bus_track_reuse = "同じ名前を持つオーディオバストラックを再利用",
 				track_group_reuse = "同じ名前を持つグループを再利用",
 				match_cut_repeat_round = "合計反復ラウンド数",
-				linear_map_selection_mode = "選択モード",
 				apply_now = "今すぐ応募",
 				match_cut_repeat_round_tooltip = "0に設定すると、無限ループが可能になります。",
 			};
@@ -46502,7 +47074,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				automator_configform_info = "Автоматически добавляет случайные ключевые кадры к каждому кадру для каждого эффекта, добавленного к видеоклипам.",
 				stutter_configform_info = "Заикает клипы, перематывая их вперед и назад через случайные интервалы.",
 				camera_shake_configform_info = "Дрожит или трясет клипы с помощью панорамирования/кадрирования.",
-				otomad_helper_config = "Otomad Helper for Vegas - Конфигурация",
+				otomad_helper_config = "Otomad Helper for Vegas Pro - Конфигурация",
 				reset_config_successful = "Сброс завершен, перезапустите скрипт.",
 				reset_config_successful_title = "Сбросить конфигурацию пользователя",
 				sure_to_reset_config = "Вы уверены, что хотите сбросить настройки пользователя?\n\nДанные вашего профиля пользователя будут потеряны после сброса.",
@@ -46703,7 +47275,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				match_cut = "Источник синкопатора",
 				linear_map = "Источник Оркестра",
 				consonant_time = "Время согласных",
-				lucky_dip_limit_to_selected = "Ограничено выбранными источниками",
 				lucky_dip_track = "Сделать каждую дорожку уникальной",
 				lucky_dip_marker = "Переключаться один раз для каждого маркера",
 				lucky_dip_bar_or_beat = "Переключаться один раз для каждого такта или доли",
@@ -46760,7 +47331,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				audio_bus_track_reuse = "Повторное использование аудиошинных дорожек с одинаковым непустым именем",
 				track_group_reuse = "Повторное использование групп с одинаковым непустым именем",
 				match_cut_repeat_round = "Общее количество повторений в раундах",
-				linear_map_selection_mode = "Режим выбора",
 				apply_now = "Подать заявку сейчас",
 				match_cut_repeat_round_tooltip = "Если установить значение 0, это позволит циклу длиться бесконечно.",
 			};
@@ -47617,7 +48187,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				match_cut = "Nguồn Syncopator",
 				linear_map = "Nguồn Orchestra",
 				consonant_time = "Thời gian phụ âm",
-				lucky_dip_limit_to_selected = "Giới hạn các nguồn đã chọn",
 				lucky_dip_track = "Làm cho mỗi track khác nhau",
 				lucky_dip_marker = "Đổi một lần cho mỗi điểm đánh dấu ",
 				lucky_dip_bar_or_beat = "Đổi vị trí một lần mỗi nhịp hoặc phách",
@@ -47674,7 +48243,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				audio_bus_track_reuse = "Sử dụng lại các đường dẫn bus âm thanh có cùng tên không rỗng",
 				track_group_reuse = "Sử dụng lại các nhóm có cùng tên không rỗng",
 				match_cut_repeat_round = "Tổng số vòng lặp",
-				linear_map_selection_mode = "Chế độ lựa chọn",
 				apply_now = "Đăng ký ngay",
 				match_cut_repeat_round_tooltip = "Đặt thành 0 có nghĩa là nó có thể lặp vô hạn.",
 			};
@@ -48531,7 +49099,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				match_cut = "Sinkopator Sumber",
 				linear_map = "Orkestra Sumber",
 				consonant_time = "Waktu konsonan",
-				lucky_dip_limit_to_selected = "Terbatas pada sumber yang dipilih",
 				lucky_dip_track = "Buat setiap trek berbeda",
 				lucky_dip_marker = "Beralih sekali per penanda",
 				lucky_dip_bar_or_beat = "Beralih sekali per bar atau ketukan",
@@ -48588,7 +49155,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				audio_bus_track_reuse = "Gunakan kembali trek bus audio yang memiliki nama yang sama dan tidak kosong",
 				track_group_reuse = "Gunakan kembali grup yang memiliki nama yang sama dan tidak kosong",
 				match_cut_repeat_round = "Jumlah putaran pengulangan total",
-				linear_map_selection_mode = "Mode pemilihan",
 				apply_now = "Daftar sekarang",
 				match_cut_repeat_round_tooltip = "Jika diatur ke 0, berarti dapat berulang tanpa henti.",
 			};

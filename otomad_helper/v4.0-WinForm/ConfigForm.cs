@@ -1457,6 +1457,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (tabControl.Height != newHeight)
 					tabControl.Height = newHeight;
 			}
+
+			MultiSourceCombOrganizerTabs.Visible = MultiSourceConfigSplitterWrapper.Visible = MultiSourceCombPickerTabs.SelectedIndex != 0;
 		}
 
 		private void CommingSoon() {
