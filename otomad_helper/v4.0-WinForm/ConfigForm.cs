@@ -109,9 +109,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endif
 			SourceConfigGroup.AllowDrop = MidiConfigGroup.AllowDrop = true;
 			SonarList_SelectedIndexChanged_Timer.Tick += SonarList_SelectedIndexChanged_Timer_Tick;
-			foreach (Control tabPage in new TabPage[] { ConsonantTab, ShupelunkerTab })
-				tabPage.Enabled = false;
 			Load += MultiSourceCombTabs_SelectedIndexChanged;
+			foreach (ComboBox combo in new ComboBox[] { AudioOverallShiftCombo, ShupelunkerOffsetCombo })
+				combo.AutoSelectOff();
 			#endregion
 
 			#region 优化界面颜色和外观
@@ -1434,25 +1434,29 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void MultiSourceCombTabs_SelectedIndexChanged(object sender, EventArgs e) {
-			TabControl tabControl = sender as TabControl;
-			if (tabControl == null || tabControl.SelectedTab == null) return;
+			TabControl[] tabControls = sender is TabControl ? new TabControl[] { (TabControl)sender } : new TabControl[] { MultiSourceCombOrganizerTabs, MultiSourceCombPickerTabs };
 
-			TabPage page = tabControl.SelectedTab;
-			int contentHeight = 0;
+			foreach (TabControl tabControl in tabControls) {
+				if (tabControl == null || tabControl.SelectedTab == null)
+					continue;
 
-			// 1. 获取内部唯一控件的高度
-			if (page.Controls.Count > 0) {
-				Control mainCtrl = page.Controls[0];
-				// 如果控件是隐藏的，Bottom 可能为 0，确保它可见或直接取 PreferredSize
-				contentHeight = mainCtrl.PreferredSize.Height;
+				TabPage page = tabControl.SelectedTab;
+				int contentHeight = 0;
+
+				// 1. 获取内部唯一控件的高度
+				if (page.Controls.Count > 0) {
+					Control mainCtrl = page.Controls[0];
+					// 如果控件是隐藏的，Bottom 可能为 0，确保它可见或直接取 PreferredSize
+					contentHeight = mainCtrl.PreferredSize.Height;
+				}
+
+				// 3. 更新高度（加少量 Padding 补差，避免出现滚动条）
+				int newHeight = contentHeight + page.Padding.Vertical;
+
+				// 只有在高度确实改变时才赋值，减少界面闪烁
+				if (tabControl.Height != newHeight)
+					tabControl.Height = newHeight;
 			}
-
-			// 3. 更新高度（加少量 Padding 补差，避免出现滚动条）
-			int newHeight = contentHeight + page.Padding.Vertical;
-
-			// 只有在高度确实改变时才赋值，减少界面闪烁
-			if (tabControl.Height != newHeight)
-				tabControl.Height = newHeight;
 		}
 
 		private void CommingSoon() {
@@ -1476,7 +1480,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void ConfigForm_Load(object sender, EventArgs e) {
-			MultiSourceCombTabs.SetEnabled(ConsonantTab, false);
+			MultiSourceCombOrganizerTabs.SetEnabled(ConsonantTab, false);
 			FixTabPageTransparentColor();
 		}
 
@@ -1551,6 +1555,30 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void TrackGroupRadio_CheckedChanged(object sender, EventArgs e) {
 			CollapseTrackGroupCheck.Enabled = TrackGroupReuseCheck.Enabled = TrackGroupByTrackRadio.Checked || TrackGroupBySessionRadio.Checked;
 			AudioBusTrackReuseCheck.Enabled = AudioBusTrackByTrackRadio.Checked || AudioBusTrackBySessionRadio.Checked;
+		}
+
+		private void EnhanceSelectCheck_CheckedChanged(object sender, EventArgs e) {
+			if (EnhanceSelectCheck.Checked) AudioAutoBasePitchCheck.Checked = true;
+		}
+
+		private void TartarRadio_CheckedChanged(object sender, EventArgs e) {
+			ShupelunkerUnallocatedPanel.Enabled = ShupelunkerOffsetPanel.Enabled = !TartarRadio.Checked;
+			TartarReuseCheck.Status = TartarRadio.Checked ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.True;
+		}
+
+		private void PitchOffsetCombo_Leave(object sender, EventArgs e) {
+			const char MINUS = '−', PLUS_MINUS = '±';
+			ComboBox combo = sender as ComboBox;
+			if (combo == null) return;
+			Match matched = Regex.Match(combo.Text.Replace(MINUS, '-'), @"[-−]?\d+");
+			int value = 0;
+			if (matched.Success) {
+				string value_string = matched.Value;
+				int.TryParse(value_string, out value); // 无需在意 TryParse 的返回值，因为失败会直接赋 0，不影响结果。
+			}
+			value = Math.Min(Math.Max(value, -127), 127);
+			combo.Text = string.Concat(value < 0 ? MINUS : value > 0 ? '+' : PLUS_MINUS, Math.Abs(value));
+			combo.SelectionStart = combo.Text.Length;
 		}
 	}
 }

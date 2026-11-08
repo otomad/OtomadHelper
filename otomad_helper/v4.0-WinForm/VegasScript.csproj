@@ -184,6 +184,7 @@
     <Compile Include="ColorButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ComboBoxAutoSelectExtension.cs" />
     <Compile Include="CustomFadeGainForm.cs">
       <SubType>Form</SubType>
     </Compile>

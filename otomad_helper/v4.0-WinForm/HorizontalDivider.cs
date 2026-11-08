@@ -16,7 +16,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			base.Text = "";
 			base.BorderStyle = BorderStyle.Fixed3D;
 			base.AutoSize = false;
-			base.MaximumSize = new Size(int.MaxValue, HEIGHT);
+			base.MaximumSize = new Size(ushort.MaxValue, HEIGHT);
 			base.Height = HEIGHT;
 			Margin = new Padding(0, 3, 0, 3);
 			Dock = DockStyle.Top;
