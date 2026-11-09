@@ -140,7 +140,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutRepeatRoundBox = new System.Windows.Forms.NumericUpDown();
 			this.MatchCutApplyEffectsByRoundCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.MatchCutAccumulateHarmonicsCheck = new System.Windows.Forms.CheckBox();
-			this.MatchCutSustainCheck = new System.Windows.Forms.CheckBox();
+			this.MatchCutSustainCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.MatchCutSustainPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.MatchCutSustainCacheCapacityLbl = new System.Windows.Forms.Label();
 			this.MatchCutSustainCacheCapacityBox = new System.Windows.Forms.NumericUpDown();
@@ -172,7 +172,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceOffInfoLbl = new System.Windows.Forms.Label();
 			this.MysteryBoxTab = new System.Windows.Forms.TabPage();
 			this.MysteryBoxPanel = new System.Windows.Forms.FlowLayoutPanel();
-			this.EnhanceSelectCheck = new System.Windows.Forms.CheckBox();
+			this.EnhanceSelectCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.LuckyDipLotionBathCheck = new System.Windows.Forms.CheckBox();
 			this.LuckyDipLotionBathIntervalPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.LuckyDipLotionBathIntervalLbl = new System.Windows.Forms.Label();
@@ -11222,7 +11222,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public GroupedRadioButton MoveCursorBeforeFirstNoteRadio;
 		public System.Windows.Forms.Label MoveCursorAfterCompletionLbl;
 		public GroupedRadioButton MoveCursorAfterLastNoteRadio;
-		public System.Windows.Forms.CheckBox MatchCutSustainCheck;
+		public RememberedCheckBox MatchCutSustainCheck;
 		public System.Windows.Forms.TableLayoutPanel MatchCutSustainPanel;
 		public System.Windows.Forms.Label MatchCutSustainCacheCapacityLbl;
 		public System.Windows.Forms.NumericUpDown MatchCutSustainCacheCapacityBox;
@@ -11346,7 +11346,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.TabPage SyncopatorTab;
 		public System.Windows.Forms.FlowLayoutPanel MysteryBoxPanel;
 		public System.Windows.Forms.FlowLayoutPanel SyncopatorPanel;
-		public System.Windows.Forms.CheckBox EnhanceSelectCheck;
+		public RememberedCheckBox EnhanceSelectCheck;
 		public System.Windows.Forms.FlowLayoutPanel AffixAsPitchLblPanel;
 		public System.Windows.Forms.Label AffixAsPitchLbl;
 		public GroupedRadioButton AffixAsPitchOffRadio;
