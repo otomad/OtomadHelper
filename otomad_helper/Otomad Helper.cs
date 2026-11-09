@@ -38558,7 +38558,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				AudioMuteDrumKitsCheck.CheckedChanged += e;
 				ShupelunkerRadio.CheckedChanged += e;
 				TartarRadio.CheckedChanged += e;
-				MultiSourceCombPickerTabs.SelectedIndexChanged += e;
 			}
 			AudioMainKeyCombo.MouseWheel += AudioMainKeyCombo_MouseWheel;
 			SourceConfigGroup.AllowDrop = MidiConfigGroup.AllowDrop = true;
@@ -38751,6 +38750,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void ConfigForm_Load(object sender, EventArgs e) {
 			isLoaded = true;
 			MidiTrackListView.SelectedItems.Clear();
+			MultiSourceCombOrganizerTabs.SetEnabled(ConsonantTab, false);
 		}
 
 		public event EventHandler LoadedOrImmediate {
@@ -42462,6 +42462,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			SetStackAndTimeUnremappingEnabled();
 
 			MultiSourceCombOrganizerTabs.Visible = MultiSourceConfigSplitterWrapper.Visible = MultisourceCombPicker != MultisourceCombMode.OFF;
+			MatchCutSustainCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
+			LinearMapReuseCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.Unlocked;
 		}
 
 		private void SetStackAndTimeUnremappingEnabled() {
