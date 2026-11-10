@@ -38881,9 +38881,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 程序图标
 			#if VEGAS_ENVIRONMENT
 			try {
+				string iconPath = System.IO.Path.ChangeExtension(ScriptPath, "ico");
 				int iconSize = (int)(16 * Dpi);
-				//icon = Icon = Icon.ExtractAssociatedIcon(System.IO.Path.ChangeExtension(ScriptPath, "ico"));
-				icon = Icon = new Icon(System.IO.Path.ChangeExtension(ScriptPath, "ico"), new Size(iconSize, iconSize));
+				icon = Icon = new Icon(iconPath, new Size(iconSize, iconSize));
+				LoadSizableIcon(iconPath); // 窗体左上角小图标和任务栏大图标分别用不同尺寸的图标。
 			} catch (Exception) { } // 如果路径不存在则不受影响
 			#else
 			icon = Icon = Properties.Resources.Otomad_Helper;
@@ -42272,10 +42273,144 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		[DllImport("user32.dll")]
 		internal static extern int SendMessage(IntPtr hWnd, int wMsg, bool wParam, int lParam);
 		internal const int WM_SETREDRAW = 0xB;
+		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		private static extern IntPtr LoadImage(IntPtr hinst, string lpszName, uint uType, int cxDesired, int cyDesired, uint fuLoad);
 
 		public void SetRedraw(bool enabled, Control control = null) {
 			control = control ?? this;
 			SendMessage(control.Handle, WM_SETREDRAW, enabled ? 1 : 0, IntPtr.Zero);
+		}
+
+		private struct PendingPosition {
+			public long offsetPos;
+			public int index;
+			public PendingPosition(long offsetPos, int index) { this.offsetPos = offsetPos; this.index = index; }
+		}
+
+		public static List<int> GetIconAllSizes(string iconPath) {
+			List<int> sizes = new List<int>();
+
+			try {
+				using (FileStream fs = new FileStream(iconPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+				using (BinaryReader br = new BinaryReader(fs)) {
+					// 1. 读取 ICO 文件头
+					br.ReadUInt16(); // 保留字，必须为 0
+					ushort type = br.ReadUInt16(); // 资源类型：1 代表图标 (Icon)
+					if (type != 1) return sizes; // 不是有效的 ico 文件
+
+					ushort count = br.ReadUInt16(); // 图标数量
+
+					// 用来保存需要二次检查真实尺寸的图标目录项信息
+					List<PendingPosition> pendingPositions = new List<PendingPosition>();
+
+					// 2. 遍历目录项
+					for (int i = 0; i < count; i++) {
+						byte width = br.ReadByte();
+						byte height = br.ReadByte();
+						br.ReadByte(); // 调色板
+						br.ReadByte(); // 保留
+						br.ReadUInt16(); // 平面数
+						br.ReadUInt16(); // BPP
+						br.ReadUInt32(); // 图像大小 (Bytes)
+						uint imageOffset = br.ReadUInt32(); // 图像数据在文件中的物理偏移量
+
+						int w = width, h = height;
+
+						if (w == 0 || h == 0) {
+							// 如果为 0，说明尺寸 >= 256px，先记录其数据偏移位置，稍后精准解析
+							pendingPositions.Add(new PendingPosition(imageOffset, sizes.Count));
+							// 先放一个临时占位尺寸
+							sizes.Add(256);
+						} else if (w == h) {
+							// 非正方形图标直接忽略。
+							sizes.Add(w);
+						}
+					}
+
+					// 3. 针对所有标记为 0 (>=256px) 的超大图标，深入数据区读取真实宽高
+					foreach (PendingPosition item in pendingPositions) {
+						fs.Position = item.offsetPos;
+
+						// 读取前 8 个字节检查是否为 PNG 格式 (PNG 签名: 89 50 4E 47 0D 0A 1A 0A)
+						byte[] magic = br.ReadBytes(8);
+						if (magic.Length == 8 && magic[0] == 0x89 && magic[1] == 0x50 && magic[2] == 0x4E && magic[3] == 0x47) {
+							// 它是 PNG 格式。跳过 4 字节的 IHDR 长度和 4 字节的 "IHDR" 标识
+							br.ReadUInt32(); // Chunk Length
+							br.ReadUInt32(); // Chunk Type ("IHDR")
+
+							// 接下来就是大端序（Big-Endian）的 4 字节宽度和 4 字节高度
+							byte[] wBytes = br.ReadBytes(4);
+							byte[] hBytes = br.ReadBytes(4);
+
+							if (BitConverter.IsLittleEndian) {
+								Array.Reverse(wBytes);
+								Array.Reverse(hBytes);
+							}
+
+							int realWidth = BitConverter.ToInt32(wBytes, 0);
+							int realHeight = BitConverter.ToInt32(hBytes, 0);
+
+							// 更新为真实的超大尺寸（如 512, 1024 等）
+							if (realWidth == realHeight)
+								sizes[item.index] = realWidth;
+						} else {
+							// 如果不是 PNG，则是旧版未压缩的 BMP 格式（DIB 头部）
+							// 此时重新将流定位到数据区开头
+							fs.Position = item.offsetPos;
+							uint headerSize = br.ReadUInt32(); // BITMAPINFOHEADER 结构大小
+
+							// 无论是标准还是扩展的 BMP 头，接下来的 4 字节都是宽度，再 4 字节是高度
+							int bmpWidth = br.ReadInt32();
+							int bmpHeight = br.ReadInt32();
+
+							// 经典的 ICO 内置 BMP 高度通常是双倍的（包含 XOR 和 AND 掩码）
+							if (bmpHeight > bmpWidth)
+								bmpHeight /= 2;
+
+							if (bmpWidth == bmpHeight)
+								sizes[item.index] = bmpWidth;
+						}
+					}
+				}
+
+				sizes = sizes.Distinct().ToList();
+				sizes.Sort();
+				return sizes;
+			} catch (Exception) {
+				return new List<int>(0);
+			}
+		}
+
+		private void LoadSizableIcon(string iconPath) {
+			const int WM_SETICON = 0x80;
+			const int ICON_SMALL = 0; // 对应窗体左上角 (16x16)
+			const int ICON_BIG = 1; // 对应任务栏 (32x32)
+			const uint IMAGE_ICON = 1;
+			const uint LR_LOADFROMFILE = 0x00000010;
+
+			List<int> allSizes = GetIconAllSizes(iconPath);
+			if (allSizes.IsEmpty()) return;
+			float dpi = Dpi;
+			Func<int, int> GetSuitableSize = expectedSize => {
+				expectedSize = (int)(expectedSize * dpi);
+				expectedSize = allSizes.Cast<int?>().FirstOrDefault(i => i >= expectedSize) ?? allSizes.Max();
+				return expectedSize;
+			};
+
+			// 1. 明确加载 16x16 图标并发送给窗体左上角
+			int size = GetSuitableSize(16);
+			IntPtr hSmallIcon = LoadImage(IntPtr.Zero, iconPath, IMAGE_ICON, size, size, LR_LOADFROMFILE);
+
+			// 2. 明确加载 32x32 图标并发送给任务栏
+			size = GetSuitableSize(32);
+			IntPtr hBigIcon = LoadImage(IntPtr.Zero, iconPath, IMAGE_ICON, size, size, LR_LOADFROMFILE);
+
+			Load += delegate {
+				if (hSmallIcon != IntPtr.Zero)
+					SendMessage(Handle, WM_SETICON, ICON_SMALL, hSmallIcon);
+				if (hBigIcon != IntPtr.Zero)
+					SendMessage(Handle, WM_SETICON, ICON_BIG, hBigIcon);
+			};
 		}
 
 		public void ResetSonarToDefault() {
