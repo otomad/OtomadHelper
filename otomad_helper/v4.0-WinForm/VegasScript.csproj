@@ -204,6 +204,9 @@
     <Compile Include="HorizontalDivider.Designer.cs">
       <DependentUpon>HorizontalDivider.cs</DependentUpon>
     </Compile>
+    <Compile Include="NoAutoScrollPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PvRhythmVisualEffectAdvancedForm.cs">
       <SubType>Form</SubType>
     </Compile>

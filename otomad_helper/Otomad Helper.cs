@@ -185,7 +185,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>超出音域替代方法</summary>*/ private AudioAltTuningMethod AConfigAltMethod { get { return (AudioAltTuningMethod)configForm.AudioAltMethodCombo.SelectedIndex; } }
 		/**<summary>不调鼓组</summary>*/ private bool AConfigNoTuningDrumKits { get { return configForm.AudioNoTuningDrumKitsCheck.Checked; } }
 		/**<summary>静音鼓组</summary>*/ private bool AConfigMuteDrumKits { get { return configForm.AudioMuteDrumKitsCheck.Checked; } }
-		/**<summary>整体偏移</summary>*/ private int AConfigOverallShift { get { return configForm.AudioOverallShift; } }
+		/**<summary>整体偏移</summary>*/ private int AConfigOverallShift { get { return ParsePitchOffset(configForm.AudioOverallShiftCombo.Text); } }
 		#if VER_GEQ_16
 		/**<summary>弹性属性</summary>*/ private ElastiqueStretchAttributes? AConfigElastiqueAttr { get { return AConfigMethod == AudioTuningMethod.ELASTIQUE ?
 			(ElastiqueStretchAttributes?)configForm.AudioStretchAttrCombo.SelectedIndex : null; } }
@@ -735,6 +735,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			else if (c == typeof(OFXInterpolationType))
 				return (TCurve)new object[] { OFXInterpolationType.Linear, OFXInterpolationType.Fast, OFXInterpolationType.Slow, OFXInterpolationType.Smooth, OFXInterpolationType.Sharp, OFXInterpolationType.Hold }[index];
 			throw new Exceptions.UnsupportedCurveEnumException(c);
+		}
+
+		public const char MINUS = '−', PLUS_MINUS = '±';
+
+		public static string GetPitchOffsetDisplayText(int offset) {
+			return string.Concat(offset < 0 ? MINUS : offset > 0 ? '+' : PLUS_MINUS, Math.Abs(offset));
+		}
+
+		public static int ParsePitchOffset(string text) {
+			Match matched = Regex.Match(text.Replace(MINUS, '-'), @"[-−]?\d+");
+			int value = 0;
+			if (matched.Success) {
+				string value_string = matched.Value;
+				int.TryParse(value_string, out value); // 无需在意 TryParse 的返回值，因为失败会直接赋 0，不影响结果。
+			}
+			value = Math.Min(Math.Max(value, -127), 127);
+			return value;
 		}
 
 		/// <summary>
@@ -5189,6 +5206,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		LUMIN_INVERT,
 		/// <summary>颜色反转。</summary>
 		COLOR_INVERT,
+	}
+
+	/// <summary>
+	/// 词缀表示音高。
+	/// </summary>
+	public enum AffixAsPitch {
+		/// <summary>关。</summary>
+		OFF,
+		/// <summary>前缀。</summary>
+		PREFIX,
+		/// <summary>后缀。</summary>
+		SUFFIX,
 	}
 
 	/// <summary>
@@ -25873,19 +25902,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 	}
 
-	public class AudioOverallShiftComboBoxItem {
-		public int Value { get; set; }
-
-		public AudioOverallShiftComboBoxItem(int value) {
-			Value = value;
-		}
-
-		public override string ToString() {
-			string value = (Value > 0 ? "+" : Value < 0 ? "−" : "±") + Math.Abs(Value);
-			return value + " " + Lang.str.semitone_attr;
-		}
-	}
-
 	partial class VisualTruncateOptionsForm {
 		/// <summary>
 		/// Required designer variable.
@@ -26688,8 +26704,26 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 如果是设计模式，什么都不做，保持原生 TabControl 的外观供开发使用
 			if (DesignMode) return;
 
+			Form form = FindForm();
+			bool _isInitialized = isInitialized;
+			if (!_isInitialized) {
+				SuspendDrawing(form);
+				afterInitializeRuntimeComponentsTimer.Tick += delegate {
+					afterInitializeRuntimeComponentsTimer.Stop();
+					ResumeDrawing(form);
+				};
+				afterInitializeRuntimeComponentsTimer.Start();
+			}
 			InitializeRuntimeComponents();
 		}
+
+		private readonly System.Windows.Forms.Timer afterInitializeRuntimeComponentsTimer = new System.Windows.Forms.Timer() { Interval = 100 };
+
+		/// <summary>
+		/// 记住外部父容器的滚动条位置。
+		/// </summary>
+		[Category("Behavior"), Description("记住外部父容器的滚动条位置。"), DefaultValue(false)]
+		public bool RememberParentScrollPosition { get; set; }
 
 		private void InitializeRuntimeComponents() {
 			// 如果已经初始化过，直接拦截，彻底打破死循环
@@ -26701,13 +26735,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			// 捕捉并记录外部多层父容器可能存在的滚动条位置
 			Dictionary<ScrollableControl, Point> parentScrollPositions = new Dictionary<ScrollableControl, Point>();
-			Control currentParent = originalParent;
-			while (currentParent != null) {
-				ScrollableControl sc = currentParent as ScrollableControl;
-				if (sc != null && sc.AutoScroll) {
-					parentScrollPositions[sc] = sc.AutoScrollPosition;
+			if (RememberParentScrollPosition) {
+				Control currentParent = originalParent;
+				while (currentParent != null) {
+					ScrollableControl sc = currentParent as ScrollableControl;
+					if (sc != null && sc.AutoScroll) {
+						parentScrollPositions[sc] = sc.AutoScrollPosition;
+					}
+					currentParent = currentParent.Parent;
 				}
-				currentParent = currentParent.Parent;
 			}
 
 			// 1. 保存原控件的所有布局和容器属性
@@ -26849,9 +26885,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			originalParent.ResumeLayout(true);
 
 			// 完美恢复初始化时所有祖先容器的滚动条原位置
-			foreach (KeyValuePair<ScrollableControl, Point> kvp in parentScrollPositions) {
-				kvp.Key.AutoScrollPosition = new Point(Math.Abs(kvp.Value.X), Math.Abs(kvp.Value.Y));
-			}
+			if (RememberParentScrollPosition)
+				foreach (KeyValuePair<ScrollableControl, Point> kvp in parentScrollPositions) {
+					kvp.Key.AutoScrollPosition = new Point(Math.Abs(kvp.Value.X), Math.Abs(kvp.Value.Y));
+				}
 
 			// 组件完全组装完毕，恢复外壳同步锁
 			isSyncingVisible = false;
@@ -26859,6 +26896,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		// 核心辅助机制 1：无滚动强制执行区（确保切换时外部容器滚动条纹丝不动）
 		private void LockAndExecuteWithNoScroll(Dictionary<ScrollableControl, Point> scrollPositions, Action action) {
+			if (!RememberParentScrollPosition) {
+				action();
+				return;
+			}
+
 			// 1. 刷新和快照当前的实际滚动位置
 			Dictionary<ScrollableControl, Point> currentPositions = new Dictionary<ScrollableControl, Point>();
 			foreach (ScrollableControl key in scrollPositions.Keys) {
@@ -27070,6 +27112,42 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public int Bottom;
 		}
 	}
+
+	/// <summary>
+	/// 阻止控件引发自动滚动的容器。
+	/// </summary>
+	public class NoAutoScrollPanel : Panel {
+		/// <summary>
+		/// 要阻止引发自动滚动行为的控件列表。<br />
+		/// 如果为空，则会阻止所有子控件。
+		/// </summary>
+		public List<Control> NoAutoScrollControls { get; private set; }
+
+		public NoAutoScrollPanel() {
+			// 启用自动滚动
+			AutoScroll = true;
+			NoAutoScrollControls = new List<Control>();
+		}
+
+		/// <summary>
+		/// 阻止容器将控件滚动到视野中的核心方法。
+		/// </summary>
+		/// <remarks>
+		/// 当子控件获得焦点请求滚动时，返回当前视口相对于容器的真实坐标。<br />
+		/// 这样系统会计算出“当前视口距离等于目标距离”，从而实现 0 像素位移。
+		/// </remarks>
+		protected override Point ScrollToControl(Control activeControl) {
+			// 如果 NoAutoScrollControls 为空，则阻止所有子控件引发的自动滚动。
+			if (NoAutoScrollControls.Count == 0)
+				return AutoScrollPosition;
+			else {
+				// 仅阻止特定控件的行为。
+				if (NoAutoScrollControls.Contains(activeControl))
+					return AutoScrollPosition;
+				return base.ScrollToControl(activeControl);
+			}
+		}
+	}
 	#endregion
 
 	#region 设计器部分
@@ -27188,7 +27266,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.Tabs = new System.Windows.Forms.TabControl();
 			this.SourceTab = new System.Windows.Forms.TabPage();
-			this.SourceTabScrollPanel = new System.Windows.Forms.Panel();
+			this.SourceTabScrollPanel = new Otomad.VegasScripts.OtomadHelper.V4.NoAutoScrollPanel();
 			this.MultiSourceConfigGroup = new System.Windows.Forms.GroupBox();
 			this.MultiSourceCombOrganizerTabs = new Otomad.VegasScripts.OtomadHelper.V4.ButtonTabControl();
 			this.LuckyDipTab = new System.Windows.Forms.TabPage();
@@ -28892,7 +28970,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPeriodLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LuckyDipBarOrBeatPeriodLbl.Location = new System.Drawing.Point(32, 0);
 			this.LuckyDipBarOrBeatPeriodLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-			this.LuckyDipBarOrBeatPeriodLbl.MinimumSize = new System.Drawing.Size(100, 0);
+			this.LuckyDipBarOrBeatPeriodLbl.MinimumSize = new System.Drawing.Size(100, 44);
 			this.LuckyDipBarOrBeatPeriodLbl.Name = "LuckyDipBarOrBeatPeriodLbl";
 			this.LuckyDipBarOrBeatPeriodLbl.Size = new System.Drawing.Size(100, 44);
 			this.LuckyDipBarOrBeatPeriodLbl.TabIndex = 14;
@@ -28935,7 +29013,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.LuckyDipBarOrBeatPreparationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LuckyDipBarOrBeatPreparationLbl.Location = new System.Drawing.Point(32, 44);
 			this.LuckyDipBarOrBeatPreparationLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-			this.LuckyDipBarOrBeatPreparationLbl.MinimumSize = new System.Drawing.Size(100, 0);
+			this.LuckyDipBarOrBeatPreparationLbl.MinimumSize = new System.Drawing.Size(100, 44);
 			this.LuckyDipBarOrBeatPreparationLbl.Name = "LuckyDipBarOrBeatPreparationLbl";
 			this.LuckyDipBarOrBeatPreparationLbl.Size = new System.Drawing.Size(100, 44);
 			this.LuckyDipBarOrBeatPreparationLbl.TabIndex = 14;
@@ -29365,7 +29443,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ShupelunkerOffsetPanel.Location = new System.Drawing.Point(3, 87);
 			this.ShupelunkerOffsetPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.ShupelunkerOffsetPanel.Name = "ShupelunkerOffsetPanel";
-			this.ShupelunkerOffsetPanel.Size = new System.Drawing.Size(734, 54);
+			this.ShupelunkerOffsetPanel.Size = new System.Drawing.Size(734, 48);
 			this.ShupelunkerOffsetPanel.TabIndex = 19;
 			//
 			// ShupelunkerOffsetLbl
@@ -29373,9 +29451,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ShupelunkerOffsetLbl.AutoSize = true;
 			this.ShupelunkerOffsetLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ShupelunkerOffsetLbl.Location = new System.Drawing.Point(3, 0);
-			this.ShupelunkerOffsetLbl.MinimumSize = new System.Drawing.Size(0, 54);
+			this.ShupelunkerOffsetLbl.MinimumSize = new System.Drawing.Size(0, 48);
 			this.ShupelunkerOffsetLbl.Name = "ShupelunkerOffsetLbl";
-			this.ShupelunkerOffsetLbl.Size = new System.Drawing.Size(62, 54);
+			this.ShupelunkerOffsetLbl.Size = new System.Drawing.Size(62, 48);
 			this.ShupelunkerOffsetLbl.TabIndex = 19;
 			this.ShupelunkerOffsetLbl.Text = "偏移";
 			this.ShupelunkerOffsetLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -29415,9 +29493,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ShupelunkerOffsetUnitLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ShupelunkerOffsetUnitLbl.Location = new System.Drawing.Point(248, 0);
 			this.ShupelunkerOffsetUnitLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-			this.ShupelunkerOffsetUnitLbl.MaximumSize = new System.Drawing.Size(0, 52);
+			this.ShupelunkerOffsetUnitLbl.MaximumSize = new System.Drawing.Size(0, 48);
 			this.ShupelunkerOffsetUnitLbl.Name = "ShupelunkerOffsetUnitLbl";
-			this.ShupelunkerOffsetUnitLbl.Size = new System.Drawing.Size(62, 52);
+			this.ShupelunkerOffsetUnitLbl.Size = new System.Drawing.Size(62, 48);
 			this.ShupelunkerOffsetUnitLbl.TabIndex = 18;
 			this.ShupelunkerOffsetUnitLbl.Text = "半音";
 			this.ShupelunkerOffsetUnitLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -29427,7 +29505,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ShupelunkerExclusiveTrackCheck.AutoSize = true;
 			this.ShupelunkerExclusiveTrackCheck.Checked = true;
 			this.ShupelunkerExclusiveTrackCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.ShupelunkerExclusiveTrackCheck.Location = new System.Drawing.Point(6, 144);
+			this.ShupelunkerExclusiveTrackCheck.Location = new System.Drawing.Point(6, 138);
 			this.ShupelunkerExclusiveTrackCheck.Name = "ShupelunkerExclusiveTrackCheck";
 			this.ShupelunkerExclusiveTrackCheck.Size = new System.Drawing.Size(142, 36);
 			this.ShupelunkerExclusiveTrackCheck.TabIndex = 18;
@@ -29440,7 +29518,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.TartarReuseCheck.Checked = true;
 			this.TartarReuseCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.TartarReuseCheck.Enabled = false;
-			this.TartarReuseCheck.Location = new System.Drawing.Point(6, 186);
+			this.TartarReuseCheck.Location = new System.Drawing.Point(6, 180);
 			this.TartarReuseCheck.Name = "TartarReuseCheck";
 			this.TartarReuseCheck.Size = new System.Drawing.Size(142, 36);
 			this.TartarReuseCheck.Status = Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox.StatusType.True;
@@ -31725,9 +31803,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioOverallShiftUnitLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioOverallShiftUnitLbl.Location = new System.Drawing.Point(180, 0);
 			this.AudioOverallShiftUnitLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-			this.AudioOverallShiftUnitLbl.MaximumSize = new System.Drawing.Size(0, 52);
+			this.AudioOverallShiftUnitLbl.MaximumSize = new System.Drawing.Size(0, 54);
 			this.AudioOverallShiftUnitLbl.Name = "AudioOverallShiftUnitLbl";
-			this.AudioOverallShiftUnitLbl.Size = new System.Drawing.Size(62, 52);
+			this.AudioOverallShiftUnitLbl.Size = new System.Drawing.Size(62, 54);
 			this.AudioOverallShiftUnitLbl.TabIndex = 18;
 			this.AudioOverallShiftUnitLbl.Text = "半音";
 			this.AudioOverallShiftUnitLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -38273,7 +38351,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.Button AudioVelocityResetBtn;
 		public System.Windows.Forms.Button VideoVelocityResetBtn;
 		public System.Windows.Forms.CheckBox StaffLengthenToBarEndCheck;
-		public System.Windows.Forms.Panel SourceTabScrollPanel;
+		public NoAutoScrollPanel SourceTabScrollPanel;
 		public System.Windows.Forms.FlowLayoutPanel LinearMapPanel;
 		public System.Windows.Forms.CheckBox MatchCutAccumulateHarmonicsCheck;
 		public System.Windows.Forms.CheckBox LuckyDipLotionBathCheck;
@@ -38484,9 +38562,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 修复数字旋钮在高分屏边距异常、列表视图列宽不足
 			foreach (NumericUpDown control in this.GetChildrenOfType<NumericUpDown>())
 				control.Margin = new Padding(3);
+			// 让数字旋钮、组合框、文本框垂直居中
+			Control[] excludeFromVerticalAlignmentControls = { LuckyDipBarOrBeatPeriodUnitCombo, LuckyDipBarOrBeatPreparationUnitCombo }; // 部分控件调整垂直居中后反而出现异常，因此排除它们。
 			foreach (Control control in this.GetChildrenOfType<Control>())
 				if (control is NumericUpDown || control is ComboBox || control is TextBox)
-					control.Anchor = control == VideoEffectInitialValueCombo ? AnchorStyles.Left : AnchorStyles.Left | AnchorStyles.Right;
+					if (!excludeFromVerticalAlignmentControls.Contains(control))
+						control.Anchor = control == VideoEffectInitialValueCombo ? AnchorStyles.Left : AnchorStyles.Left | AnchorStyles.Right;
 			float dpi = Dpi;
 			foreach (ListView listView in new ListView[] { MidiTrackListView, SonarList }) {
 				listView.BeginUpdate();
@@ -38751,6 +38832,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			isLoaded = true;
 			MidiTrackListView.SelectedItems.Clear();
 			MultiSourceCombOrganizerTabs.SetEnabled(ConsonantTab, false);
+			foreach (ComboBox combo in new ComboBox[] { ShupelunkerOffsetCombo, AudioOverallShiftCombo })
+				combo.SelectionLength = 0;
 		}
 
 		public event EventHandler LoadedOrImmediate {
@@ -38855,7 +38938,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioStretchMethodCombo.SetIndex(configIni.Read("StretchMethod", 2), 2);
 			AudioNoTuningDrumKitsCheck.Checked = configIni.Read("NoTuningDrumKits", true);
 			AudioMuteDrumKitsCheck.Checked = configIni.Read("MuteDrumKits", false);
-			AudioOverallShift = configIni.Read("OverallShift", 0);
+			AudioOverallShiftCombo.Text = EntryPoint.GetPitchOffsetDisplayText(configIni.Read("OverallShift", 0));
 			AudioPluckSpliceBox.SetValue(configIni.Read("PluckSplice", 40), 40);
 			AudioPluckDuckBox.SetValue(configIni.Read("PluckDuck", 100), 100);
 			AudioPluckOffsetBox.SetValue(configIni.Read("PluckOffset", 100), 100);
@@ -38993,6 +39076,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MatchCutSustainCheck.Checked = configIni.Read("MatchCutSustain", false);
 			MatchCutSustainCacheCapacityBox.Value = configIni.Read("MatchCutSustainCacheCapacity", 4m);
 			LinearMapReuseCheck.UserChecked = configIni.Read("LinearMapReuse", true);
+			EnhanceSelectCheck.UserChecked = configIni.Read("EnhanceSelect", false);
+			AffixAsPitch = configIni.Read("AffixAsPitch", AffixAsPitch.OFF);
+			if (configIni.Read("TartarRatherThanShupelunker", false)) TartarRadio.Checked = true;
+			else ShupelunkerRadio.Checked = true;
+			ShupelunkerUnallocatedOctavesCheck.Checked = configIni.Read("ShupelunkerUnallocatedOctaves", true);
+			ShupelunkerUnallocatedFillUpCheck.Checked = configIni.Read("ShupelunkerUnallocatedFillUp", true);
+			ShupelunkerUnallocatedFillDownCheck.Checked = configIni.Read("ShupelunkerUnallocatedFillDown", true);
+			ShupelunkerUnallocatedDefaultCheck.Checked = configIni.Read("ShupelunkerUnallocatedDefault", true);
+			ShupelunkerOffsetCombo.Text = EntryPoint.GetPitchOffsetDisplayText(configIni.Read("ShupelunkerOffset", 0));
+			ShupelunkerExclusiveTrackCheck.Checked = configIni.Read("ShupelunkerExclusiveTrack", true);
+			TartarReuseCheck.UserChecked = configIni.Read("TartarReuse", true);
 			configIni.EndSection();
 			#endregion
 
@@ -39128,7 +39222,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("StretchMethod", AudioStretchMethodCombo.UserSelectedIndex);
 			configIni.Write("NoTuningDrumKits", AudioNoTuningDrumKitsCheck.Checked);
 			configIni.Write("MuteDrumKits", AudioMuteDrumKitsCheck.Checked);
-			configIni.Write("OverallShift", AudioOverallShift);
+			configIni.Write("OverallShift", EntryPoint.ParsePitchOffset(AudioOverallShiftCombo.Text));
 			configIni.Write("PluckSplice", AudioPluckSpliceBox.Value);
 			configIni.Write("PluckDuck", AudioPluckDuckBox.Value);
 			configIni.Write("PluckOffset", AudioPluckOffsetBox.Value);
@@ -39250,6 +39344,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("MatchCutSustain", MatchCutSustainCheck.Checked);
 			configIni.Write("MatchCutSustainCacheCapacity", MatchCutSustainCacheCapacityBox.Value);
 			configIni.Write("LinearMapReuse", LinearMapReuseCheck.UserChecked);
+			configIni.Write("EnhanceSelect", EnhanceSelectCheck.UserChecked);
+			configIni.Write("AffixAsPitch", AffixAsPitch);
+			configIni.Write("TartarRatherThanShupelunker", TartarRadio.Checked);
+			configIni.Write("ShupelunkerUnallocatedOctaves", ShupelunkerUnallocatedOctavesCheck.Checked);
+			configIni.Write("ShupelunkerUnallocatedFillUp", ShupelunkerUnallocatedFillUpCheck.Checked);
+			configIni.Write("ShupelunkerUnallocatedFillDown", ShupelunkerUnallocatedFillDownCheck.Checked);
+			configIni.Write("ShupelunkerUnallocatedDefault", ShupelunkerUnallocatedDefaultCheck.Checked);
+			configIni.Write("ShupelunkerOffset", EntryPoint.ParsePitchOffset(ShupelunkerOffsetCombo.Text));
+			configIni.Write("ShupelunkerExclusiveTrack", ShupelunkerExclusiveTrackCheck.Checked);
+			configIni.Write("TartarReuse", TartarReuseCheck.UserChecked);
 			configIni.EndSection();
 			#endregion
 
@@ -40314,9 +40418,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			darkSolidMaterialToolStripMenuItem.Text = str.theme_dark + " - " + str.theme_solid;
 			AudioOverallShiftLbl.Text = str.overall_shift;
 			AudioMuteDrumKitsCheck.Text = str.mute_drum_kits;
-			AudioOverallShiftCombo.Items.Clear();
-			for (int value = -96; value <= 96; value += 12)
-				AudioOverallShiftCombo.Items.Add(new AudioOverallShiftComboBoxItem(value));
 			visualTruncate.Translate();
 			Text = str.otomad_helper_config;
 		}
@@ -42410,6 +42511,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 		}
 
+		public AffixAsPitch AffixAsPitch {
+			get { return AffixAsPitchPrefixRadio.Checked ? AffixAsPitch.PREFIX : AffixAsPitchSuffixRadio.Checked ? AffixAsPitch.SUFFIX : AffixAsPitch.OFF; }
+			set {
+				switch (value) {
+					case AffixAsPitch.OFF: default: AffixAsPitchOffRadio.Checked = true; break;
+					case AffixAsPitch.PREFIX: AffixAsPitchPrefixRadio.Checked = true; break;
+					case AffixAsPitch.SUFFIX: AffixAsPitchSuffixRadio.Checked = true; break;
+				}
+			}
+		}
+
 		private void VelocityResetBtn_Click(object sender, EventArgs e) {
 			if (sender != AudioVelocityResetBtn && sender != VideoVelocityResetBtn) return;
 			NumericUpDownWithUnit velocityLess, velocityMore, gainLess, gainMore;
@@ -42461,9 +42573,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 其它逻辑相关代码
 			SetStackAndTimeUnremappingEnabled();
 
-			MultiSourceCombOrganizerTabs.Visible = MultiSourceConfigSplitterWrapper.Visible = MultisourceCombPicker != MultisourceCombMode.OFF;
+			//MultiSourceConfigGroup.Controls.SetChildIndex(MultiSourceConfigSplitterWrapper, 1);
+			MultiSourceConfigSplitterWrapper.Visible = MultiSourceCombOrganizerTabs.Visible = MultisourceCombPicker != MultisourceCombMode.OFF; // 注意不能改变这里对Visible赋值的等号先后顺序，否则会导致最终控件呈现的顺序错误。
 			MatchCutSustainCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
 			LinearMapReuseCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.Unlocked;
+			if (isLoaded && sender != this) SourceTabScrollPanel.AutoScrollPosition = new Point(0, ushort.MaxValue);
 		}
 
 		private void SetStackAndTimeUnremappingEnabled() {
@@ -42635,19 +42749,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			OpenLink(link);
 		}
 
-		public int AudioOverallShift {
-			get {
-				return AudioOverallShiftCombo.SelectedItem is AudioOverallShiftComboBoxItem ? ((AudioOverallShiftComboBoxItem)AudioOverallShiftCombo.SelectedItem).Value : 0;
-			}
-			set {
-				IEnumerable<AudioOverallShiftComboBoxItem> audioOverallShiftComboBoxItems = AudioOverallShiftCombo.Items.OfType<AudioOverallShiftComboBoxItem>();
-				AudioOverallShiftComboBoxItem audioOverallShiftComboBoxItem =
-					audioOverallShiftComboBoxItems.FirstOrDefault(item => item.Value == value) ??
-					audioOverallShiftComboBoxItems.FirstOrDefault(item => item.Value == 0);
-				AudioOverallShiftCombo.SelectedItem = audioOverallShiftComboBoxItem;
-			}
-		}
-
 		private void TrackGroupRadio_CheckedChanged(object sender, EventArgs e) {
 			CollapseTrackGroupCheck.Enabled = TrackGroupReuseCheck.Enabled = TrackGroupByTrackRadio.Checked || TrackGroupBySessionRadio.Checked;
 			AudioBusTrackReuseCheck.Enabled = AudioBusTrackByTrackRadio.Checked || AudioBusTrackBySessionRadio.Checked;
@@ -42663,17 +42764,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void PitchOffsetCombo_Leave(object sender, EventArgs e) {
-			const char MINUS = '−', PLUS_MINUS = '±';
 			ComboBox combo = sender as ComboBox;
 			if (combo == null) return;
-			Match matched = Regex.Match(combo.Text.Replace(MINUS, '-'), @"[-−]?\d+");
-			int value = 0;
-			if (matched.Success) {
-				string value_string = matched.Value;
-				int.TryParse(value_string, out value); // 无需在意 TryParse 的返回值，因为失败会直接赋 0，不影响结果。
-			}
-			value = Math.Min(Math.Max(value, -127), 127);
-			combo.Text = string.Concat(value < 0 ? MINUS : value > 0 ? '+' : PLUS_MINUS, Math.Abs(value));
+			combo.Text = EntryPoint.GetPitchOffsetDisplayText(EntryPoint.ParsePitchOffset(combo.Text));
 			combo.SelectionStart = combo.Text.Length;
 		}
 	}
@@ -43670,7 +43763,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			reverse_the_order = "反转顺序",
 			options = "选项",
 			overall_shift = "整体偏移",
-			semitone_attr = "半音",
+			semitone = "半音",
 			lengthenable = "可延长 (关)",
 			freeze_end_frames = "冻结尾帧",
 			trim_end_frames = "截断尾帧",
