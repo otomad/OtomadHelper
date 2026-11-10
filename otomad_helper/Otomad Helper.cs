@@ -27411,6 +27411,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiAutoLayoutTracksInfo = new System.Windows.Forms.Label();
 			this.MidiConfigGroup = new System.Windows.Forms.GroupBox();
 			this.MidiConfigTablePanel = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+			this.InsertBeatChangeMarkerCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
+			this.InsertMarkerLbl = new System.Windows.Forms.Label();
+			this.InsertMidiMarkerCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
+			this.InsertBpmChangeMarkerCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.RestrictLengthLbl = new System.Windows.Forms.Label();
 			this.ChooseMidiLbl = new System.Windows.Forms.Label();
 			this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
@@ -27884,6 +27889,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel23.SuspendLayout();
 			this.MidiConfigGroup.SuspendLayout();
 			this.MidiConfigTablePanel.SuspendLayout();
+			this.tableLayoutPanel5.SuspendLayout();
 			this.tableLayoutPanel6.SuspendLayout();
 			this.flowLayoutPanel3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).BeginInit();
@@ -30457,12 +30463,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackListView.Enabled = false;
 			this.MidiTrackListView.FullRowSelect = true;
 			this.MidiTrackListView.HideSelection = false;
-			this.MidiTrackListView.Location = new System.Drawing.Point(8, 524);
+			this.MidiTrackListView.Location = new System.Drawing.Point(8, 574);
 			this.MidiTrackListView.MinimumSize = new System.Drawing.Size(4, 200);
 			this.MidiTrackListView.MultiSelect = false;
 			this.MidiTrackListView.Name = "MidiTrackListView";
 			this.MidiTrackListView.ShowItemToolTips = true;
-			this.MidiTrackListView.Size = new System.Drawing.Size(1110, 492);
+			this.MidiTrackListView.Size = new System.Drawing.Size(1110, 442);
 			this.MidiTrackListView.TabIndex = 23;
 			this.MidiTrackListView.UseCompatibleStateImageBehavior = false;
 			this.MidiTrackListView.View = System.Windows.Forms.View.Details;
@@ -30536,7 +30542,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackCommandPanel.Controls.Add(this.MidiTrackSelectAllCheck, 0, 0);
 			this.MidiTrackCommandPanel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.MidiTrackCommandPanel.Enabled = false;
-			this.MidiTrackCommandPanel.Location = new System.Drawing.Point(8, 472);
+			this.MidiTrackCommandPanel.Location = new System.Drawing.Point(8, 522);
 			this.MidiTrackCommandPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.MidiTrackCommandPanel.MinimumSize = new System.Drawing.Size(0, 52);
 			this.MidiTrackCommandPanel.Name = "MidiTrackCommandPanel";
@@ -30759,7 +30765,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigGroup.Location = new System.Drawing.Point(8, 8);
 			this.MidiConfigGroup.Name = "MidiConfigGroup";
 			this.MidiConfigGroup.Padding = new System.Windows.Forms.Padding(8);
-			this.MidiConfigGroup.Size = new System.Drawing.Size(1110, 464);
+			this.MidiConfigGroup.Size = new System.Drawing.Size(1110, 514);
 			this.MidiConfigGroup.TabIndex = 2;
 			this.MidiConfigGroup.TabStop = false;
 			this.MidiConfigGroup.Text = "MIDI 属性";
@@ -30772,7 +30778,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigTablePanel.AutoSize = true;
 			this.MidiConfigTablePanel.ColumnCount = 1;
 			this.MidiConfigTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.MidiConfigTablePanel.Controls.Add(this.RestrictLengthLbl, 0, 7);
+			this.MidiConfigTablePanel.Controls.Add(this.tableLayoutPanel5, 0, 7);
+			this.MidiConfigTablePanel.Controls.Add(this.RestrictLengthLbl, 0, 8);
 			this.MidiConfigTablePanel.Controls.Add(this.ChooseMidiLbl, 0, 0);
 			this.MidiConfigTablePanel.Controls.Add(this.tableLayoutPanel6, 0, 1);
 			this.MidiConfigTablePanel.Controls.Add(this.flowLayoutPanel3, 0, 2);
@@ -30780,11 +30787,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigTablePanel.Controls.Add(this.MidiBpmLbl, 0, 3);
 			this.MidiConfigTablePanel.Controls.Add(this.MidiBpmFlowPanel, 0, 4);
 			this.MidiConfigTablePanel.Controls.Add(this.tableLayoutPanel12, 0, 5);
-			this.MidiConfigTablePanel.Controls.Add(this.RestrictLengthFlow, 0, 8);
+			this.MidiConfigTablePanel.Controls.Add(this.RestrictLengthFlow, 0, 9);
 			this.MidiConfigTablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MidiConfigTablePanel.Location = new System.Drawing.Point(8, 40);
 			this.MidiConfigTablePanel.Name = "MidiConfigTablePanel";
-			this.MidiConfigTablePanel.RowCount = 9;
+			this.MidiConfigTablePanel.RowCount = 10;
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -30792,16 +30799,84 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.MidiConfigTablePanel.Size = new System.Drawing.Size(1094, 416);
+			this.MidiConfigTablePanel.Size = new System.Drawing.Size(1094, 466);
 			this.MidiConfigTablePanel.TabIndex = 1;
+			//
+			// tableLayoutPanel5
+			//
+			this.tableLayoutPanel5.AutoSize = true;
+			this.tableLayoutPanel5.ColumnCount = 5;
+			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel5.Controls.Add(this.InsertBeatChangeMarkerCheck, 3, 0);
+			this.tableLayoutPanel5.Controls.Add(this.InsertMarkerLbl, 0, 0);
+			this.tableLayoutPanel5.Controls.Add(this.InsertMidiMarkerCheck, 1, 0);
+			this.tableLayoutPanel5.Controls.Add(this.InsertBpmChangeMarkerCheck, 2, 0);
+			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 331);
+			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+			this.tableLayoutPanel5.RowCount = 1;
+			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel5.Size = new System.Drawing.Size(1088, 44);
+			this.tableLayoutPanel5.TabIndex = 16;
+			//
+			// InsertBeatChangeMarkerCheck
+			//
+			this.InsertBeatChangeMarkerCheck.AutoSize = true;
+			this.InsertBeatChangeMarkerCheck.Enabled = false;
+			this.InsertBeatChangeMarkerCheck.Location = new System.Drawing.Point(523, 3);
+			this.InsertBeatChangeMarkerCheck.Name = "InsertBeatChangeMarkerCheck";
+			this.InsertBeatChangeMarkerCheck.Size = new System.Drawing.Size(142, 36);
+			this.InsertBeatChangeMarkerCheck.TabIndex = 7;
+			this.InsertBeatChangeMarkerCheck.Text = "拍号变化";
+			this.InsertBeatChangeMarkerCheck.UseVisualStyleBackColor = true;
+			//
+			// InsertMarkerLbl
+			//
+			this.InsertMarkerLbl.AutoSize = true;
+			this.InsertMarkerLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.InsertMarkerLbl.Location = new System.Drawing.Point(0, 0);
+			this.InsertMarkerLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.InsertMarkerLbl.MinimumSize = new System.Drawing.Size(0, 42);
+			this.InsertMarkerLbl.Name = "InsertMarkerLbl";
+			this.InsertMarkerLbl.Size = new System.Drawing.Size(110, 44);
+			this.InsertMarkerLbl.TabIndex = 4;
+			this.InsertMarkerLbl.Text = "插入标记";
+			this.InsertMarkerLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// InsertMidiMarkerCheck
+			//
+			this.InsertMidiMarkerCheck.AutoSize = true;
+			this.InsertMidiMarkerCheck.Enabled = false;
+			this.InsertMidiMarkerCheck.Location = new System.Drawing.Point(121, 3);
+			this.InsertMidiMarkerCheck.Name = "InsertMidiMarkerCheck";
+			this.InsertMidiMarkerCheck.Size = new System.Drawing.Size(248, 36);
+			this.InsertMidiMarkerCheck.TabIndex = 5;
+			this.InsertMidiMarkerCheck.Text = "MIDI 播放列表标记";
+			this.InsertMidiMarkerCheck.UseVisualStyleBackColor = true;
+			//
+			// InsertBpmChangeMarkerCheck
+			//
+			this.InsertBpmChangeMarkerCheck.AutoSize = true;
+			this.InsertBpmChangeMarkerCheck.Enabled = false;
+			this.InsertBpmChangeMarkerCheck.Location = new System.Drawing.Point(375, 3);
+			this.InsertBpmChangeMarkerCheck.Name = "InsertBpmChangeMarkerCheck";
+			this.InsertBpmChangeMarkerCheck.Size = new System.Drawing.Size(142, 36);
+			this.InsertBpmChangeMarkerCheck.TabIndex = 6;
+			this.InsertBpmChangeMarkerCheck.Text = "速度变化";
+			this.InsertBpmChangeMarkerCheck.UseVisualStyleBackColor = true;
 			//
 			// RestrictLengthLbl
 			//
 			this.RestrictLengthLbl.AutoSize = true;
 			this.RestrictLengthLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RestrictLengthLbl.Location = new System.Drawing.Point(4, 336);
+			this.RestrictLengthLbl.Location = new System.Drawing.Point(4, 386);
 			this.RestrictLengthLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
 			this.RestrictLengthLbl.Name = "RestrictLengthLbl";
 			this.RestrictLengthLbl.Size = new System.Drawing.Size(1086, 32);
@@ -31189,7 +31264,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.RestrictLengthFlow.Controls.Add(this.RestrictLengthBox);
 			this.RestrictLengthFlow.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.RestrictLengthFlow.Enabled = false;
-			this.RestrictLengthFlow.Location = new System.Drawing.Point(3, 371);
+			this.RestrictLengthFlow.Location = new System.Drawing.Point(3, 421);
 			this.RestrictLengthFlow.Name = "RestrictLengthFlow";
 			this.RestrictLengthFlow.Size = new System.Drawing.Size(1088, 42);
 			this.RestrictLengthFlow.TabIndex = 15;
@@ -37676,6 +37751,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigGroup.PerformLayout();
 			this.MidiConfigTablePanel.ResumeLayout(false);
 			this.MidiConfigTablePanel.PerformLayout();
+			this.tableLayoutPanel5.ResumeLayout(false);
+			this.tableLayoutPanel5.PerformLayout();
 			this.tableLayoutPanel6.ResumeLayout(false);
 			this.tableLayoutPanel6.PerformLayout();
 			this.flowLayoutPanel3.ResumeLayout(false);
@@ -38503,7 +38580,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public GroupedRadioButton AffixAsPitchOffRadio;
 		public GroupedRadioButton AffixAsPitchPrefixRadio;
 		public GroupedRadioButton AffixAsPitchSuffixRadio;
-		private System.Windows.Forms.Label AudioOverallShiftUnitLbl;
+		public System.Windows.Forms.Label AudioOverallShiftUnitLbl;
 		public System.Windows.Forms.FlowLayoutPanel ShupelunkerPanel;
 		public System.Windows.Forms.FlowLayoutPanel ShupelunkerOrTartarPanel;
 		public System.Windows.Forms.RadioButton ShupelunkerRadio;
@@ -38518,10 +38595,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.FlowLayoutPanel ShupelunkerOffsetPanel;
 		public System.Windows.Forms.Label ShupelunkerOffsetLbl;
 		public System.Windows.Forms.ComboBox ShupelunkerOffsetCombo;
-		private System.Windows.Forms.Label ShupelunkerOffsetUnitLbl;
+		public System.Windows.Forms.Label ShupelunkerOffsetUnitLbl;
 		public RememberedCheckBox TartarReuseCheck;
 		public System.Windows.Forms.Splitter MultiSourceConfigSplitter;
 		public System.Windows.Forms.Panel MultiSourceConfigSplitterWrapper;
+		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+		public System.Windows.Forms.Label InsertMarkerLbl;
+		public RememberedCheckBox InsertMidiMarkerCheck;
+		public RememberedCheckBox InsertBpmChangeMarkerCheck;
+		public RememberedCheckBox InsertBeatChangeMarkerCheck;
 	}
 	#endregion
 
@@ -39044,6 +39126,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MidiEndSecondBox.DoubleValue = configIni.Read("MidiEndTime", 0d);
 			MidiAutoChangeProjectBpmCheck.Checked = configIni.Read("MidiAutoChangeProjectBpm", false);
 			MidiAutoChangeProjectBeatCheck.Checked = configIni.Read("MidiAutoChangeProjectBeat", false);
+			InsertMidiMarkerCheck.Checked = configIni.Read("InsertMidiMarker", false);
+			InsertBpmChangeMarkerCheck.Checked = configIni.Read("InsertBpmChangeMarker", false);
+			InsertBeatChangeMarkerCheck.Checked = configIni.Read("InsertBeatChangeMarker", false);
 			MoveCursorAfterCompletion = configIni.Read("MoveCursorAfterCompletion", MoveCursorAfterCompletion.BEFORE_FIRST_NOTE);
 			GroupTrackBy = configIni.Read("GroupTrackBy", GroupTrackBy.TRACK);
 			CollapseTrackGroupCheck.Checked = configIni.Read("CollapseTrackGroup", true);
@@ -39312,7 +39397,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("MidiEndTime", MidiEndSecondBox.DoubleValue);
 			configIni.Write("MidiAutoChangeProjectBpm", MidiAutoChangeProjectBpmCheck.Checked);
 			configIni.Write("MidiAutoChangeProjectBeat", MidiAutoChangeProjectBeatCheck.Checked);
-			configIni.Write("MidiAutoChangeProjectBeat", MidiAutoChangeProjectBeatCheck.Checked);
+			configIni.Write("InsertMidiMarker", InsertMidiMarkerCheck.Checked);
+			configIni.Write("InsertBpmChangeMarker", InsertBpmChangeMarkerCheck.Checked);
+			configIni.Write("InsertBeatChangeMarker", InsertBeatChangeMarkerCheck.Checked);
 			configIni.Write("MidiSeparateDrums", MidiTrackSeparateDrumsCheck.Checked);
 			configIni.Write("MoveCursorAfterCompletion", MoveCursorAfterCompletion);
 			configIni.Write("GroupTrackBy", GroupTrackBy);
@@ -39622,6 +39709,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			// 重新筛选并渲染
 			MidiTrackSeparateDrumsCheck_CheckedChanged(preserveScroll: false);
+			MidiTrackListView_SelectedIndexChanged(null, null);
 		}
 
 		// 拖拽相关变量
@@ -39704,6 +39792,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			insertionIndex = -1;
 
 			MidiTrackSeparateDrumsCheck_CheckedChanged(preserveScroll: true);
+			MidiTrackListView_SelectedIndexChanged(null, null);
 		}
 
 		#region 辅助类：用于对 midiTrackListViewItems 进行内存排序
@@ -40751,6 +40840,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				= MidiAutoChangeProjectBpmCheck.Enabled
 				= MidiAutoChangeProjectBeatCheck.Enabled
 				= true;
+			InsertMidiMarkerCheck.Status = !midi.MarkerTrack.IsEmpty() ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
+			InsertBpmChangeMarkerCheck.Status = midi.IsVariableBpm ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
+			InsertBeatChangeMarkerCheck.Status = midi.IsVariableBeat ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
 			LoadedOrImmediate += MidiAutoChangeProjectPropertiesApplyBtn_CheckEnabled;
 			Lang str = Lang.str;
 			string bpm_str = ProcessBpmDouble(midi.Bpm);
