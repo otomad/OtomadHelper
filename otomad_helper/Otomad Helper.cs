@@ -223,6 +223,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>限长大小</summary>*/ private double RestrictLengthValue { get { return configForm.RestrictLengthBox.DoubleValue; } }
 		/**<summary>自动改速</summary>*/ private bool AutoChangeProjectBpm { get { return configForm.MidiAutoChangeProjectBpmCheck.Checked; } }
 		/**<summary>自动改拍</summary>*/ private bool AutoChangeProjectBeat { get { return configForm.MidiAutoChangeProjectBeatCheck.Checked; } }
+		/**<summary>插入标记</summary>*/ private bool InsertMidiMarker { get { return configForm.InsertMidiMarkerCheck.Checked; } }
+		/**<summary>变速标记</summary>*/ private bool InsertBpmChangeMarker { get { return configForm.InsertBpmChangeMarkerCheck.Checked; } }
+		/**<summary>变拍标记</summary>*/ private bool InsertBeatChangeMarker { get { return configForm.InsertBeatChangeMarkerCheck.Checked; } }
 		#endregion
 
 		#region 媒体属性
@@ -252,9 +255,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		#endregion
 
 		#region 多素材属性
-		/**<summary>需多素材</summary>*/ private bool ShouldMultisource { get { return YtpConfig || CombConfigLuckyDip || CombConfigMatchCut || CombConfigLinearMap; } }
+		/**<summary>需多素材</summary>*/ private bool ShouldMultisource { get { return YtpConfig || CombConfigOn; } }
+		/**<summary>启　　用</summary>*/ private bool CombConfigOn { get { return CombConfigMysteryBoxPicker || CombConfigSyncopatorPicker; } }
 		#region 素材盲盒
-		/**<summary>启　　用</summary>*/ private bool CombConfigLuckyDip { get { return configForm.LuckyDipTab.Selected(); } }
+		/**<summary>挑　　取</summary>*/ private bool CombConfigMysteryBoxPicker { get { return configForm.MysteryBoxTab.Selected(); } }
+		/**<summary>启　　用</summary>*/ private bool CombConfigLuckyDip { get { return CombConfigOn && configForm.LuckyDipTab.Selected(); } }
 		/**<summary>音轨差异</summary>*/ private bool CombConfigLuckyDipTrack { get { return configForm.LuckyDipTrackCheck.Checked; } }
 		/**<summary>小节或拍</summary>*/ private bool CombConfigLuckyDipBarOrBeat { get { return configForm.LuckyDipBarOrBeatCheck.Checked; } }
 		/**<summary>周　　期</summary>*/ private BarOrBeat CombConfigLuckyDipBarOrBeatPeriod { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPeriodBox.Value, configForm.LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex); } }
@@ -265,7 +270,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>间　　隔</summary>*/ private int? CombConfigLuckyDipLotionBathInterval { get { return CombConfigLuckyDipLimitToSelected ? null : (int?)configForm.LuckyDipLotionBathIntervalBox.Value; } }
 		#endregion
 		#region 踩　　点
-		/**<summary>启　　用</summary>*/ private bool CombConfigMatchCut { get { return configForm.MatchCutTab.Selected(); } }
+		/**<summary>挑　　取</summary>*/ private bool CombConfigSyncopatorPicker { get { return configForm.SyncopatorTab.Selected(); } }
+		/**<summary>启　　用</summary>*/ private bool CombConfigMatchCut { get { return CombConfigOn && configForm.MatchCutTab.Selected(); } }
 		/**<summary>次　　序</summary>*/ private SyncopatorOrder CombConfigMatchCutOrder { get { return configForm.MatchCutOrder; } }
 		/**<summary>单个重复</summary>*/ private int CombConfigMatchCutRepeatOneCount { get { return (int)configForm.MatchCutRepeatBox.Value; } }
 		/**<summary>总共重复</summary>*/ private int CombConfigMatchCutRepeatRoundCount { get { return (int)configForm.MatchCutRepeatRoundBox.Value; } }
@@ -276,7 +282,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>缓存容量</summary>*/ private int CombConfigMatchCutSustainCacheCapacity { get { return (int)configForm.MatchCutSustainCacheCapacityBox.Value; } }
 		#endregion
 		#region 素材乐团
-		/**<summary>启　　用</summary>*/ private bool CombConfigLinearMap { get { return configForm.LinearMapTab.Selected(); } }
+		/**<summary>启　　用</summary>*/ private bool CombConfigLinearMap { get { return CombConfigOn && configForm.LinearMapTab.Selected(); } }
 		/**<summary>递　　减</summary>*/ private bool CombConfigLinearMapDescending { get { return false; }}// configForm.LinearMapDescendingCheck.Checked && !CombConfigLinearMapSelectionModeLuckyDip; } }
 		/**<summary>允许重用</summary>*/ private bool CombConfigLinearMapAllowReuse { get { return configForm.LinearMapReuseCheck.Checked || CombConfigLinearMapSelectionModeLuckyDip; } }
 		/**<summary>素材盲盒</summary>*/ private bool CombConfigLinearMapSelectionModeLuckyDip { get { return false; }}// configForm.LinearMapSelectionModeLuckyDipRadio.Checked; } }
@@ -1686,14 +1692,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 				double startTime, duration;
 				double? staffVisualizedDuration = null; // 编译器很笨，不知道计算逻辑路径而强制要求初始化值，即便完全不会被用到。
-				if (!MidiUseVariableMidiBpm) {
-					startTime = midiEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter;
-					duration = noteOnEvent.NoteLength * midi.MsPerQuarter / midi.TicksPerQuarter;
-				} else {
-					Tuple<double, double> _ = bpmIntegrator.GetActualTime(midiEvent.AbsoluteTime, noteOnEvent.NoteLength);
-					startTime = _.Item1;
-					duration = _.Item2;
-				}
+				MidiEventActualTime midiEventActualTime = MidiEventActualTime.GetActualTime(noteOnEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
+				midiEventActualTime.Assign(out startTime, out duration);
 				int pitch = noteEvent.NoteNumber;
 				int _pitch = pitch + SheetConfigShift; // 五线谱音符偏移量。
 				int velocity = noteEvent.Velocity;
@@ -2098,14 +2098,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (!(midiEvent is ControlChangeEvent)) continue;
 						ControlChangeEvent controlChangeEvent = midiEvent as ControlChangeEvent;
 						if (controlChangeEvent.Controller == MidiController.Pan) {
-							startTime = !MidiUseVariableMidiBpm ?
-								midiEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter :
-								startTime = bpmIntegrator.GetActualTime(midiEvent.AbsoluteTime);
+							startTime = MidiEventActualTime.GetActualTime(midiEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
 
 							if (startTime < MidiConfigStartTime) continue;
 							if (startTime > MidiConfigEndTime && sliceComposition) break;
 
-							Timecode start = Timecode.FromMilliseconds(startTime);
+							Timecode start = Timecode.FromMilliseconds(generateBeginTime + startTime);
 							int pan = controlChangeEvent.ControllerValue;
 							ForATracks(audioTrack => {
 								Envelope envelope = audioTrack.Envelopes.FindByType(EnvelopeType.Pan);
@@ -2113,6 +2111,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 									envelope = new Envelope(EnvelopeType.Pan);
 									audioTrack.Envelopes.Add(envelope);
 								}
+								envelope.Points[0].Curve = AConfigAutoPanCurve;
 								EnvelopePoint point = envelope.Points.GetPointAtX(start);
 								if (point == null)
 									envelope.Points.Add(new EnvelopePoint(start, -GetPan(pan), AConfigAutoPanCurve));
@@ -2166,16 +2165,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					}
 					if (progressForm.RequestAbort) break;
 
-					double startTime;
-					if (!MidiUseVariableMidiBpm)
-						startTime = pitchEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter;
-					else
-						startTime = bpmIntegrator.GetActualTime(pitchEvent.AbsoluteTime);
+					double startTime = MidiEventActualTime.GetActualTime(pitchEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
 
 					if (startTime < MidiConfigStartTime) continue;
 					if (startTime > MidiConfigEndTime && sliceComposition) break;
 
-					Timecode start = Timecode.FromMilliseconds(startTime);
+					Timecode start = Timecode.FromMilliseconds(generateBeginTime + startTime);
 					double key = PitchBend2Key(pitchEvent.Pitch);
 					if (VConfigGlissandoAmount == 0) { ShowError(new Exceptions.InvalidGlissandoAmountException()); return false; }
 					double amount = key / VConfigGlissandoAmount;
@@ -2261,6 +2256,30 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			if (AConfigShouldLegato && AConfig)
 				ApplyLegatoOnGeneration(trackHelper.audioTracks, aMaxGap, AConfigStretch);
+			#endregion
+
+			#region 插入标记
+			if (InsertBeatChangeMarker && midi.IsVariableBeat) {
+				foreach (TimeSignatureEvent timeSignatureEvent in midi.TimeSignatureTrack) {
+					double startTime = MidiEventActualTime.GetActualTime(timeSignatureEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
+					if (startTime < MidiConfigStartTime) continue; if (startTime > MidiConfigEndTime) break;
+					InsertMarkerIfNotExisted(Timecode.FromMilliseconds(generateBeginTime + startTime), timeSignatureEvent.TimeSignature);
+				}
+			}
+			if (InsertBpmChangeMarker && midi.IsVariableBpm) {
+				foreach (TempoEvent tempoEvent in midi.MsPerQuarterTrack) {
+					double startTime = MidiEventActualTime.GetActualTime(tempoEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
+					if (startTime < MidiConfigStartTime) continue; if (startTime > MidiConfigEndTime) break;
+					InsertMarkerIfNotExisted(Timecode.FromMilliseconds(generateBeginTime + startTime), tempoEvent.Tempo.ToString());
+				}
+			}
+			if (InsertMidiMarker) {
+				foreach (TextEvent textEvent in midi.MarkerTrack) {
+					double startTime = MidiEventActualTime.GetActualTime(textEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
+					if (startTime < MidiConfigStartTime) continue; if (startTime > MidiConfigEndTime) break;
+					InsertMarkerIfNotExisted(Timecode.FromMilliseconds(generateBeginTime + startTime), textEvent.Text);
+				}
+			}
 			#endregion
 
 			foreach (Track track in trackHelper.AllTracks)
@@ -2465,6 +2484,30 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			originalEvent.FadeOut.Curve = secondEvent.FadeIn.Curve = fadeType;
 			originalEvent.FadeOut.Length = secondEvent.FadeIn.Length = overlapDuration;
 			return secondEvent;
+		}
+
+		/// <summary>
+		/// 查找是否在指定时间码处有指定标签文本的标记。
+		/// </summary>
+		/// <param name="position">时间码。</param>
+		/// <param name="label">特定的标签文本。</param>
+		/// <returns>标记。</returns>
+		public Marker FindMarkerAtTime(Timecode position, string label) {
+			foreach (Marker marker in vegas.Project.Markers) {
+				if (marker.Label == label && Math.Abs(marker.Position.ToMilliseconds() - position.ToMilliseconds()) < 1) return marker;
+				if (marker.Position > position) return null;
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// 在指定时间码处插入带有标签文本的标记，只要它尚不存在。
+		/// </summary>
+		/// <param name="position">时间码。</param>
+		/// <param name="label">标签文本。</param>
+		public void InsertMarkerIfNotExisted(Timecode position, string label) {
+			if (FindMarkerAtTime(position, label) != null) return;
+			vegas.Project.Markers.Add(new Marker(position, label));
 		}
 
 		private bool requestRestartScript = false;
@@ -7857,16 +7900,63 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </summary>
 		/// <param name="absoluteStart">开始刻。</param>
 		/// <param name="absoluteDuration">时长刻。</param>
-		/// <returns>一个元组，其<c>Item1</c>和<c>Item2</c>值分别为音频播放的实际时刻与时长。</returns>
-		public Tuple<double, double> GetActualTime(double absoluteStart, double absoluteDuration) {
+		/// <returns>包含音频播放的实际时刻与时长的值类型对象。</returns>
+		public MidiEventActualTime GetActualTime(double absoluteStart, double absoluteDuration) {
 			double start = GetActualTime(absoluteStart);
 			double duration = GetActualTime(absoluteStart + absoluteDuration) - start;
-			return new Tuple<double, double>(start, duration);
+			return new MidiEventActualTime(start, duration);
 		}
 		public double GetStaffDurationFromQuarters(long currentTicks, double measureEndQuarters) {
 			double measureEndTicks = measureEndQuarters * midi.TicksPerQuarter;
 			return GetActualTime(measureEndTicks) - GetActualTime(currentTicks);
 		}
+	}
+
+	/// <summary>
+	/// 包含 MIDI 音符事件的实际时刻与时长的结构体。
+	/// </summary>
+	public struct MidiEventActualTime {
+		/// <summary>实际开始时刻。<br />单位：毫秒。</summary>
+		public double Start { get; private set; }
+		/// <summary>实际时长。<br />单位：毫秒。</summary>
+		public double Duration { get; private set; }
+		public MidiEventActualTime(double start, double duration) : this() { Start = start; Duration = duration; }
+
+		/// <summary>
+		/// 通过一个 MIDI 音符开事件来获取其播放的实际时刻与时长（毫秒）。
+		/// </summary>
+		/// <param name="noteOnEvent">音符开事件。</param>
+		/// <param name="isVariableBpm">显式指定是否使用可变速度。</param>
+		/// <param name="integrator">可变速度积分器。</param>
+		/// <param name="midi">MIDI 对象。</param>
+		/// <returns>包含音频播放的实际时刻与时长的值类型对象。</returns>
+		public static MidiEventActualTime GetActualTime(NoteOnEvent noteOnEvent, bool isVariableBpm, VariableBpmIntegrator integrator, MIDI midi) {
+			return !isVariableBpm ?
+				new MidiEventActualTime(
+					noteOnEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter,
+					noteOnEvent.NoteLength * midi.MsPerQuarter / midi.TicksPerQuarter
+				) :
+				integrator.GetActualTime(noteOnEvent.AbsoluteTime, noteOnEvent.NoteLength);
+		}
+
+		/// <inheritdoc cref="GetActualTime(NoteOnEvent, bool, VariableBpmIntegrator, MIDI)" />
+		/// <summary>
+		/// 通过一个 MIDI 通用事件来获取其播放的实际时刻（毫秒）。
+		/// </summary>
+		/// <param name="midiEvent">MIDI 通用事件。</param>
+		/// <returns>音频播放的实际时刻。</returns>
+		public static double GetActualTime(MidiEvent midiEvent, bool isVariableBpm, VariableBpmIntegrator integrator, MIDI midi) {
+			return !isVariableBpm ?
+				midiEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter :
+				integrator.GetActualTime(midiEvent.AbsoluteTime);
+		}
+
+		/// <summary>
+		/// 将实际开始时刻与实际时长赋值给本地变量。
+		/// </summary>
+		/// <param name="start">实际开始时刻。</param>
+		/// <param name="duration">实际时长。</param>
+		public void Assign(out double start, out double duration) { start = Start; duration = Duration; }
 	}
 
 	/// <summary>
@@ -39127,9 +39217,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MidiEndSecondBox.DoubleValue = configIni.Read("MidiEndTime", 0d);
 			MidiAutoChangeProjectBpmCheck.Checked = configIni.Read("MidiAutoChangeProjectBpm", false);
 			MidiAutoChangeProjectBeatCheck.Checked = configIni.Read("MidiAutoChangeProjectBeat", false);
-			InsertMidiMarkerCheck.Checked = configIni.Read("InsertMidiMarker", false);
-			InsertBpmChangeMarkerCheck.Checked = configIni.Read("InsertBpmChangeMarker", false);
-			InsertBeatChangeMarkerCheck.Checked = configIni.Read("InsertBeatChangeMarker", false);
+			InsertMidiMarkerCheck.UserChecked = configIni.Read("InsertMidiMarker", false);
+			InsertBpmChangeMarkerCheck.UserChecked = configIni.Read("InsertBpmChangeMarker", false);
+			InsertBeatChangeMarkerCheck.UserChecked = configIni.Read("InsertBeatChangeMarker", false);
 			MoveCursorAfterCompletion = configIni.Read("MoveCursorAfterCompletion", MoveCursorAfterCompletion.BEFORE_FIRST_NOTE);
 			GroupTrackBy = configIni.Read("GroupTrackBy", GroupTrackBy.TRACK);
 			CollapseTrackGroupCheck.Checked = configIni.Read("CollapseTrackGroup", true);
@@ -39398,9 +39488,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("MidiEndTime", MidiEndSecondBox.DoubleValue);
 			configIni.Write("MidiAutoChangeProjectBpm", MidiAutoChangeProjectBpmCheck.Checked);
 			configIni.Write("MidiAutoChangeProjectBeat", MidiAutoChangeProjectBeatCheck.Checked);
-			configIni.Write("InsertMidiMarker", InsertMidiMarkerCheck.Checked);
-			configIni.Write("InsertBpmChangeMarker", InsertBpmChangeMarkerCheck.Checked);
-			configIni.Write("InsertBeatChangeMarker", InsertBeatChangeMarkerCheck.Checked);
+			configIni.Write("InsertMidiMarker", InsertMidiMarkerCheck.UserChecked);
+			configIni.Write("InsertBpmChangeMarker", InsertBpmChangeMarkerCheck.UserChecked);
+			configIni.Write("InsertBeatChangeMarker", InsertBeatChangeMarkerCheck.UserChecked);
 			configIni.Write("MidiSeparateDrums", MidiTrackSeparateDrumsCheck.Checked);
 			configIni.Write("MoveCursorAfterCompletion", MoveCursorAfterCompletion);
 			configIni.Write("GroupTrackBy", GroupTrackBy);
