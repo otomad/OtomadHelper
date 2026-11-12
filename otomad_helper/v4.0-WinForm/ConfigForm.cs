@@ -1582,5 +1582,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			combo.Text = string.Concat(value < 0 ? MINUS : value > 0 ? '+' : PLUS_MINUS, Math.Abs(value));
 			combo.SelectionStart = combo.Text.Length;
 		}
+
+		private void AudioAutoBasePitchCheck_CheckedChanged(object sender, EventArgs e) {
+			bool @checked = AudioAutoBasePitchCheck.Checked;
+			AudioMainKeyCombo.ForeColor = AudioMainOctaveCombo.ForeColor = @checked ? SystemColors.GrayText : SystemColors.WindowText;
+		}
 	}
 }

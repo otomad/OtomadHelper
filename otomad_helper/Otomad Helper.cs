@@ -26723,6 +26723,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </summary>
 		public void SetEnabled(TabPage page, bool enabled) {
 			if (page == null) return;
+			page.Enabled = enabled;
 
 			// 1. 同步更新运行时的 RadioButton 状态
 			RadioButton radio = radioButtons.FirstOrDefault(r => r != null && r.Tag == page);
@@ -26923,6 +26924,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					AutoSize = true,
 					TextAlign = System.Drawing.ContentAlignment.MiddleCenter,
 					Margin = new Padding(2),
+					Enabled = page.Enabled,
 				};
 
 				if (!string.IsNullOrEmpty(page.ToolTipText))
@@ -30923,6 +30925,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.InsertBeatChangeMarkerCheck.Location = new System.Drawing.Point(523, 3);
 			this.InsertBeatChangeMarkerCheck.Name = "InsertBeatChangeMarkerCheck";
 			this.InsertBeatChangeMarkerCheck.Size = new System.Drawing.Size(142, 36);
+			this.InsertBeatChangeMarkerCheck.Status = Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox.StatusType.False;
 			this.InsertBeatChangeMarkerCheck.TabIndex = 7;
 			this.InsertBeatChangeMarkerCheck.Text = "拍号变化";
 			this.InsertBeatChangeMarkerCheck.UseVisualStyleBackColor = true;
@@ -30958,6 +30961,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.InsertBpmChangeMarkerCheck.Location = new System.Drawing.Point(375, 3);
 			this.InsertBpmChangeMarkerCheck.Name = "InsertBpmChangeMarkerCheck";
 			this.InsertBpmChangeMarkerCheck.Size = new System.Drawing.Size(142, 36);
+			this.InsertBpmChangeMarkerCheck.Status = Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox.StatusType.False;
 			this.InsertBpmChangeMarkerCheck.TabIndex = 6;
 			this.InsertBpmChangeMarkerCheck.Text = "速度变化";
 			this.InsertBpmChangeMarkerCheck.UseVisualStyleBackColor = true;
@@ -32264,6 +32268,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioAutoBasePitchCheck.TabIndex = 6;
 			this.AudioAutoBasePitchCheck.Text = "自动校音 (实验性)";
 			this.AudioAutoBasePitchCheck.UseVisualStyleBackColor = true;
+			this.AudioAutoBasePitchCheck.CheckedChanged += new System.EventHandler(this.AudioAutoBasePitchCheck_CheckedChanged);
 			//
 			// AudioPreviewLbl
 			//
@@ -38819,6 +38824,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			SonarList_SelectedIndexChanged_Timer.Tick += SonarList_SelectedIndexChanged_Timer_Tick;
 			Load += MultiSourceCombTabs_SelectedIndexChanged;
 			titleBarMaterialToolStripMenuItems = titleBarMaterialToolStripMenuItem.DropDownItems.OfType<ToolStripRadioButtonMenuItem>().ToArray();
+			MultiSourceCombOrganizerTabs.SetEnabled(ConsonantTab, false);
 			foreach (ComboBox combo in new ComboBox[] { AudioOverallShiftCombo, ShupelunkerOffsetCombo })
 				combo.AutoSelectOff();
 			#if VEGAS_ENVIRONMENT
@@ -38827,8 +38833,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endregion
 
 			#region 加载项目轨道信息
-			List<AudioTrack> audioTracks = vegas.Project.Tracks.Where(track => track.MediaType == MediaType.Audio).Cast<AudioTrack>().ToList();
-			List<VideoTrack> videoTracks = vegas.Project.Tracks.Where(track => track.MediaType == MediaType.Video).Cast<VideoTrack>().ToList();
+			List<AudioTrack> audioTracks = vegas.Project.Tracks.OfType<AudioTrack>().ToList();
+			List<VideoTrack> videoTracks = vegas.Project.Tracks.OfType<VideoTrack>().ToList();
 			AudioPreferredTrackCombo.Items.Add(new PreferredNewTrackWrapper(Lang.str.new_track));
 			VideoPreferredTrackCombo.Items.Add(new PreferredNewTrackWrapper(Lang.str.new_track));
 			AudioPreferredTrackCombo.SelectedIndex = VideoPreferredTrackCombo.SelectedIndex = 0;
@@ -38841,6 +38847,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			audioTracks.ForEach(track => AudioPreferredTrackCombo.Items.Add(new PreferredTrackWrapper<AudioTrack>(track, GetTrackDisplayValue(track))));
 			videoTracks.ForEach(track => VideoPreferredTrackCombo.Items.Add(new PreferredTrackWrapper<VideoTrack>(track, GetTrackDisplayValue(track))));
 			RemoveSourceTrackEventsCheck_CheckedChanged(null, null);
+			AudioAutoBasePitchCheck_CheckedChanged(null, null);
 			#endregion
 
 			#region 检查版本支持情况
@@ -39004,7 +39011,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void ConfigForm_Load(object sender, EventArgs e) {
 			isLoaded = true;
 			MidiTrackListView.SelectedItems.Clear();
-			MultiSourceCombOrganizerTabs.SetEnabled(ConsonantTab, false);
 			foreach (ComboBox combo in new ComboBox[] { ShupelunkerOffsetCombo, AudioOverallShiftCombo })
 				combo.SelectionLength = 0;
 		}
@@ -43085,6 +43091,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (combo == null) return;
 			combo.Text = EntryPoint.GetPitchOffsetDisplayText(EntryPoint.ParsePitchOffset(combo.Text));
 			combo.SelectionStart = combo.Text.Length;
+		}
+
+		private void AudioAutoBasePitchCheck_CheckedChanged(object sender, EventArgs e) {
+			bool @checked = AudioAutoBasePitchCheck.Checked;
+			ComboBox[] combos = new ComboBox[] { AudioMainKeyCombo, AudioMainOctaveCombo };
+			MethodInfo recreateHandle = typeof(Control).GetMethod("RecreateHandle", BindingFlags.Instance | BindingFlags.NonPublic);
+			foreach (ComboBox combo in combos) {
+				combo.FlatStyle = @checked ? FlatStyle.Popup : FlatStyle.System;
+				recreateHandle.Invoke(combo, null); // 强制重建把手，以成功应用颜色。
+				combo.ForeColor = @checked ? SystemColors.GrayText : SystemColors.WindowText;
+			}
 		}
 	}
 
