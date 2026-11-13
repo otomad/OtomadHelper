@@ -194,7 +194,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		#endif
 		/**<summary>伸缩变调</summary>*/ private bool AConfigLockStretchPitch { get { return configForm.AudioLockStretchPitchCheck.Checked; } }
 		/**<summary>保留共振</summary>*/ private bool AConfigReserveFormant { get { return configForm.AudioReserveFormantCheck.Checked; } }
-		/**<summary>气泡低音</summary>*/ private bool AConfigVocalFry { get { return configForm.AudioVocalFryCheck.Checked; } }
+		/**<summary>一刻模式</summary>*/ private bool AConfig1Tick { get { return configForm.AudioVocalFryCheck.Checked; } }
 		/**<summary>创建分组</summary>*/ private bool ConfigCreateEventGroup { get { return configForm.CreateEventGroupInAudioCheck.Checked; } }
 		/**<summary>复音多轨</summary>*/ private bool AConfigMultitrack { get { return configForm.AudioMultitrackForChordsCheck.Checked; } }
 		/**<summary>首选轨道</summary>*/ private PreferredTrackWrapper<AudioTrack> AConfigPreferredTrack { get { return configForm.AudioPreferredTrackCombo.SelectedItem as PreferredTrackWrapper<AudioTrack>; } }
@@ -258,34 +258,34 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>需多素材</summary>*/ private bool ShouldMultisource { get { return YtpConfig || CombConfigOn; } }
 		/**<summary>启　　用</summary>*/ private bool CombConfigOn { get { return CombConfigMysteryBoxPicker || CombConfigSyncopatorPicker; } }
 		#region 素材盲盒
-		/**<summary>挑　　取</summary>*/ private bool CombConfigMysteryBoxPicker { get { return configForm.MysteryBoxTab.Selected(); } }
-		/**<summary>启　　用</summary>*/ private bool CombConfigLuckyDip { get { return CombConfigOn && configForm.LuckyDipTab.Selected(); } }
-		/**<summary>音轨差异</summary>*/ private bool CombConfigLuckyDipTrack { get { return configForm.LuckyDipTrackCheck.Checked; } }
-		/**<summary>小节或拍</summary>*/ private bool CombConfigLuckyDipBarOrBeat { get { return configForm.LuckyDipBarOrBeatCheck.Checked; } }
-		/**<summary>周　　期</summary>*/ private BarOrBeat CombConfigLuckyDipBarOrBeatPeriod { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPeriodBox.Value, configForm.LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex); } }
-		/**<summary>预　　备</summary>*/ private BarOrBeat CombConfigLuckyDipBarOrBeatPreparation { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPreparationBox.Value, configForm.LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndex); } }
-		/**<summary>标　　记</summary>*/ private bool CombConfigLuckyDipMarker { get { return configForm.LuckyDipMarkerCheck.Checked; } }
-		/**<summary>限制选中</summary>*/ private bool CombConfigLuckyDipLimitToSelected { get { return false; } }// configForm.LuckyDipLimitToSelectedCheck.Checked; } }
-		/**<summary>润浴战法</summary>*/ private bool CombConfigLuckyDipLotionBath { get { return configForm.LuckyDipLotionBathCheck.Checked; } }
-		/**<summary>间　　隔</summary>*/ private int? CombConfigLuckyDipLotionBathInterval { get { return CombConfigLuckyDipLimitToSelected ? null : (int?)configForm.LuckyDipLotionBathIntervalBox.Value; } }
+		/**<summary>挑　　取</summary>*/ private bool CombConfigMysteryBoxPicker { get { return configForm.MysteryBoxTab.IsSelected(); } }
+		/**<summary>润浴战法</summary>*/ private bool CombConfigMysteryBoxLotionBath { get { return CombConfigMysteryBoxPicker && configForm.LuckyDipLotionBathCheck.Checked; } }
+		/**<summary>间　　隔</summary>*/ private int? CombConfigMysteryBoxLotionBathInterval { get { return (!CombConfigMysteryBoxPicker || !CombConfigMysteryBoxLotionBath) ? null : (int?)configForm.LuckyDipLotionBathIntervalBox.Value; } }
+		/**<summary>启　　用</summary>*/ private bool CombConfigMysteryBox { get { return CombConfigOn && configForm.LuckyDipTab.IsSelected(); } }
+		/**<summary>音轨差异</summary>*/ private bool CombConfigMysteryBoxTrack { get { return CombConfigMysteryBox && configForm.LuckyDipTrackCheck.Checked; } }
+		/**<summary>小节或拍</summary>*/ private bool CombConfigMysteryBoxBarOrBeat { get { return CombConfigMysteryBox && configForm.LuckyDipBarOrBeatCheck.Checked; } }
+		/**<summary>周　　期</summary>*/ private BarOrBeat CombConfigMysteryBoxBarOrBeatPeriod { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPeriodBox.Value, configForm.LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex); } }
+		/**<summary>预　　备</summary>*/ private BarOrBeat CombConfigMysteryBoxBarOrBeatPreparation { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPreparationBox.Value, configForm.LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndex); } }
+		/**<summary>标　　记</summary>*/ private bool CombConfigMysteryBoxMarker { get { return CombConfigMysteryBox && configForm.LuckyDipMarkerCheck.Checked; } }
+		///**<summary>限制选中</summary>*/ private bool CombConfigMysteryBoxLimitToSelected { get { return false; } }// configForm.LuckyDipLimitToSelectedCheck.Checked; } }
 		#endregion
 		#region 踩　　点
-		/**<summary>挑　　取</summary>*/ private bool CombConfigSyncopatorPicker { get { return configForm.SyncopatorTab.Selected(); } }
-		/**<summary>启　　用</summary>*/ private bool CombConfigMatchCut { get { return CombConfigOn && configForm.MatchCutTab.Selected(); } }
-		/**<summary>次　　序</summary>*/ private SyncopatorOrder CombConfigMatchCutOrder { get { return configForm.MatchCutOrder; } }
-		/**<summary>单个重复</summary>*/ private int CombConfigMatchCutRepeatOneCount { get { return (int)configForm.MatchCutRepeatBox.Value; } }
-		/**<summary>总共重复</summary>*/ private int CombConfigMatchCutRepeatRoundCount { get { return (int)configForm.MatchCutRepeatRoundBox.Value; } }
-		/**<summary>素材盲盒</summary>*/ private bool CombConfigMatchCutLuckyDip { get { return false; }}// configForm.MatchCutLuckyDipCheck.Checked; } }
-		/**<summary>轮次效果</summary>*/ private bool CombConfigMatchCutApplyEffectsByRound { get { return configForm.MatchCutApplyEffectsByRoundCheck.Checked; } }
-		/**<summary>累加泛音</summary>*/ private bool CombConfigMatchCutAccumulateHarmonics { get { return configForm.MatchCutAccumulateHarmonicsCheck.Checked; } }
-		/**<summary>相同音高</summary>*/ private bool CombConfigMatchCutSustain { get { return configForm.MatchCutSustainCheck.Checked; } }
-		/**<summary>缓存容量</summary>*/ private int CombConfigMatchCutSustainCacheCapacity { get { return (int)configForm.MatchCutSustainCacheCapacityBox.Value; } }
+		/**<summary>挑　　取</summary>*/ private bool CombConfigSyncopatorPicker { get { return configForm.SyncopatorTab.IsSelected(); } }
+		/**<summary>次　　序</summary>*/ private SyncopatorOrder CombConfigSyncopatorOrder { get { return configForm.MatchCutOrder; } }
+		/**<summary>启　　用</summary>*/ private bool CombConfigSyncopator { get { return CombConfigOn && configForm.MatchCutTab.IsSelected(); } }
+		/**<summary>单个重复</summary>*/ private int CombConfigSyncopatorRepeatOneCount { get { return (int)configForm.MatchCutRepeatBox.Value; } }
+		/**<summary>总共重复</summary>*/ private int CombConfigSyncopatorRepeatRoundCount { get { return (int)configForm.MatchCutRepeatRoundBox.Value; } }
+		///**<summary>素材盲盒</summary>*/ private bool CombConfigSyncopatorLuckyDip { get { return false; }}// configForm.MatchCutLuckyDipCheck.Checked; } }
+		/**<summary>轮次效果</summary>*/ private bool CombConfigSyncopatorApplyEffectsByRound { get { return CombConfigSyncopator && configForm.MatchCutApplyEffectsByRoundCheck.Checked; } }
+		/**<summary>累加泛音</summary>*/ private bool CombConfigSyncopatorAccumulateHarmonics { get { return CombConfigSyncopator && configForm.MatchCutAccumulateHarmonicsCheck.Checked; } }
+		/**<summary>相同音高</summary>*/ private bool CombConfigSyncopatorSustain { get { return CombConfigSyncopator && configForm.MatchCutSustainCheck.Checked; } }
+		/**<summary>缓存容量</summary>*/ private int CombConfigSyncopatorSustainCacheCapacity { get { return (int)configForm.MatchCutSustainCacheCapacityBox.Value; } }
 		#endregion
 		#region 素材乐团
-		/**<summary>启　　用</summary>*/ private bool CombConfigLinearMap { get { return CombConfigOn && configForm.LinearMapTab.Selected(); } }
-		/**<summary>递　　减</summary>*/ private bool CombConfigLinearMapDescending { get { return false; }}// configForm.LinearMapDescendingCheck.Checked && !CombConfigLinearMapSelectionModeLuckyDip; } }
-		/**<summary>允许重用</summary>*/ private bool CombConfigLinearMapAllowReuse { get { return configForm.LinearMapReuseCheck.Checked || CombConfigLinearMapSelectionModeLuckyDip; } }
-		/**<summary>素材盲盒</summary>*/ private bool CombConfigLinearMapSelectionModeLuckyDip { get { return false; }}// configForm.LinearMapSelectionModeLuckyDipRadio.Checked; } }
+		/**<summary>启　　用</summary>*/ private bool CombConfigOrchestra { get { return CombConfigOn && configForm.LinearMapTab.IsSelected(); } }
+		///**<summary>递　　减</summary>*/ private bool CombConfigOrchestraDescending { get { return false; }}// configForm.LinearMapDescendingCheck.Checked && !CombConfigOrchestraSelectionModeLuckyDip; } }
+		/**<summary>允许重用</summary>*/ private bool CombConfigOrchestraAllowReuse { get { return configForm.LinearMapReuseCheck.Checked || CombConfigMysteryBoxPicker; } }
+		///**<summary>素材盲盒</summary>*/ private bool CombConfigOrchestraSelectionModeLuckyDip { get { return false; }}// configForm.LinearMapSelectionModeLuckyDipRadio.Checked; } }
 		#endregion
 		#endregion
 
@@ -541,7 +541,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </remarks>
 		/// <param name="fileName">要导入的媒体文件路径。</param>
 		/// <param name="mediaPoolOnly">是否仅添加媒体到项目媒体中？</param>
-		/// <param name="enablePromptMatchFirstVideo">如果导入第一个媒体，则显示提示？（仅 Vegas Pro 22 Build 122 可用）</param>
+		/// <param name="enablePromptMatchFirstVideo">如果导入第一个媒体，则显示提示“是否要将项目视频设置设为与此媒体匹配？”？（仅 Vegas Pro 22 Build 122 及以上可用）</param>
 		internal void ImportFile(string fileName, bool mediaPoolOnly, bool enablePromptMatchFirstVideo = false) {
 			#if VER_GEQ_23
 			vegas.ImportFile(fileName, mediaPoolOnly, enablePromptMatchFirstVideo);
@@ -1398,7 +1398,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (!MidiUseMidiBpm && !MidiUseVariableMidiBpm)
 					midi.Bpm = MidiUseCustomBpm ? MidiUseCustomBpmValue : ProjectBpm;
 				if (!hasTimeSignature && SheetConfig) { ShowError(new Exceptions.GenerateStaffVisualizerWithoutTimeSignatureException()); return false; }
-				if (!hasTimeSignature && CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat && (CombConfigLuckyDipBarOrBeatPeriod.Unit == BarOrBeat.Units.Bar || CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Bar && CombConfigLuckyDipBarOrBeatPreparation.Value != 0)) { ShowError(new Exceptions.LuckyDipBarWithoutTimeSignatureException()); return false; }
+				if (!hasTimeSignature && CombConfigMysteryBox && CombConfigMysteryBoxBarOrBeat && (CombConfigMysteryBoxBarOrBeatPeriod.Unit == BarOrBeat.Units.Bar || CombConfigMysteryBoxBarOrBeatPreparation.Unit == BarOrBeat.Units.Bar && CombConfigMysteryBoxBarOrBeatPreparation.Value != 0)) { ShowError(new Exceptions.MysteryBoxBarWithoutTimeSignatureException()); return false; }
 			}
 			Plugin.Init(vegas);
 			if (AConfig && AConfigMethod == AudioTuningMethod.PITCH_SHIFT) requestShowProgress = true;
@@ -1488,7 +1488,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return false;
 			}
 			#endif
-			if (CombConfigLinearMap && !CombConfigLinearMapAllowReuse && eventSets.Count < MidiConfigTracks.SelectedChannelCount) {
+			if (CombConfigOrchestra && !CombConfigOrchestraAllowReuse && eventSets.Count < MidiConfigTracks.SelectedChannelCount) {
 				progressForm.Close();
 				MessageBox.Show(Lang.str.linear_map_allow_reuse_existed_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				return false;
@@ -1497,15 +1497,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			#region 可变速度、拍号处理
 			bpmIntegrator = bpmIntegrator ?? (MidiUseVariableMidiBpm ? new VariableBpmIntegrator(midi, MidiUseVariableMidiBpmForm == 1) : null);
-			beatIntegrator = beatIntegrator ?? (CombConfigLuckyDip && CombConfigLuckyDipBarOrBeat || SheetConfig ? new VariableTimeSignatureIntegrator(midi) : null);
-			if (CombConfigLuckyDip && CombConfigLuckyDipMarker && CombConfigLuckyDipBarOrBeat && midi.MarkerTrack != null && midi.MarkerDodgedMeasureTrack == null)
-				beatIntegrator.InitMarkerDodgedMeasureTrack(CombConfigLuckyDipBarOrBeatPeriod, CombConfigLuckyDipBarOrBeatPreparation);
+			beatIntegrator = beatIntegrator ?? (CombConfigMysteryBox && CombConfigMysteryBoxBarOrBeat || SheetConfig ? new VariableTimeSignatureIntegrator(midi) : null);
+			if (CombConfigMysteryBox && CombConfigMysteryBoxMarker && CombConfigMysteryBoxBarOrBeat && midi.MarkerTrack != null && midi.MarkerDodgedMeasureTrack == null)
+				beatIntegrator.InitMarkerDodgedMeasureTrack(CombConfigMysteryBoxBarOrBeatPeriod, CombConfigMysteryBoxBarOrBeatPreparation);
 			#endregion
 
 			#region 如果修改了素材的入点和出点的时间
 			EventSet activeSource = eventSets.Primary;
 			double sourceStartTime = SourceConfigStartTime, sourceEndTime = SourceConfigEndTime;
-			bool adjustTime = sourceStartTime != 0 || sourceEndTime != 0 || CombConfigLuckyDip || CombConfigMatchCutLuckyDip || CombConfigLinearMap && CombConfigLinearMapSelectionModeLuckyDip;
+			bool adjustTime = sourceStartTime != 0 || sourceEndTime != 0 || CombConfigMysteryBoxPicker;
 			Action ResetSourceTrimTime = () => {
 				sourceStartTime = SourceConfigStartTime; sourceEndTime = SourceConfigEndTime;
 				if (adjustTime) while (sourceEndTime <= sourceStartTime) sourceEndTime += Math.Max(activeSource.audioLength, activeSource.videoLength);
@@ -1529,28 +1529,30 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			#region 踩点
 			object[] baseShuffledSeed = { consistencyTracksSeed ?? NewSeed() };
-			long matchCutRound = 0, prevMatchCutRound = 0, matchCutIndex = 0;
-			DictionaryQueue<int, EventSet> matchCutPitchQueue = CombConfigMatchCut && CombConfigMatchCutSustain ? new DictionaryQueue<int, EventSet>(CombConfigMatchCutSustainCacheCapacity) : null;
+			long syncopatorRound = 0, prevSyncopatorRound = 0, syncopatorIndex = 0;
+			DictionaryQueue<int, EventSet> syncopatorPitchQueue = CombConfigSyncopatorSustain ? new DictionaryQueue<int, EventSet>(CombConfigSyncopatorSustainCacheCapacity) : null;
 			Action<object[]> NextSourceByDuration = seeds => {
 				if (!ShouldMultisource) return;
 				seeds = seeds ?? baseShuffledSeed;
 				bool calcByVideos = AConfig && VConfig ? eventSets.IsRemainingVideos != false : !AConfig;
 				activeSource = Randoms.SourceRandomSelector.GetRandomByDuration(eventSets, calcByVideos, seeds);
 			};
-			Action<SyncopatorOrder, object[], long, bool, bool> NextSourceByOrder = (order, seeds, step, isStrictStep, isCalledByLuckyDip) => {
+			Action<SyncopatorOrder, object[], long, bool, bool> NextSourceByOrder = (order, seeds, step, isStrictStep, isCalledByMysteryBox) => {
 				if (!ShouldMultisource) return;
 				if (order != SyncopatorOrder.SHUFFLED) {
-					bool matchCutLooped;
+					bool syncopatorLooped;
+					int direction = order == SyncopatorOrder.SEQUENTIAL ? 1 : -1;
 					if (!isStrictStep) {
-						int direction = order == SyncopatorOrder.SEQUENTIAL ? 1 : -1;
-						activeSource = eventSets.ElementWrappedAt(eventSets.IndexOf(activeSource) + direction, out matchCutLooped) ?? eventSets.Primary;
-					} else
-						activeSource = eventSets[FloorMod(unchecked((int)step), eventSets.Count, out matchCutLooped)] ?? eventSets.Primary;
-					if (matchCutLooped) matchCutRound++;
+						activeSource = eventSets.ElementWrappedAt(eventSets.IndexOf(activeSource) + direction, out syncopatorLooped) ?? eventSets.Primary;
+					} else {
+						int index = FloorMod(unchecked((int)step * direction), eventSets.Count, out syncopatorLooped);
+						activeSource = eventSets.ElementAtOrDefault(index) ?? eventSets.Primary;
+					}
+					if (syncopatorLooped) syncopatorRound++;
 				} else {
 					seeds = seeds ?? baseShuffledSeed;
-					int stepOffset = isCalledByLuckyDip ? -1 : -2; // 未知原因造成的步数偏移量，而且还跟挑取模式有关。
-					activeSource = Randoms.SourceRandomSelector.GetRandomInPool(eventSets, step + stepOffset, ref matchCutRound, seeds);
+					int stepOffset = isCalledByMysteryBox ? -1 : -2; // 未知原因造成的步数偏移量，而且还跟挑取模式有关。
+					activeSource = Randoms.SourceRandomSelector.GetRandomInPool(eventSets, step + stepOffset, ref syncopatorRound, seeds);
 				}
 			};
 			#endregion
@@ -1558,16 +1560,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 素材盲盒
 			long prevMeasures = 0, prevQuarters = 0;
 			int prevMarkerIndex = -1;
-			Action<long> NextLuckyDipSource = step => {
-				if ((CombConfigLuckyDip && CombConfigLuckyDipLimitToSelected) && !(CombConfigMatchCut && CombConfigMatchCutLuckyDip))
-					if (CombConfigLuckyDip && CombConfigLuckyDipLotionBath) NextSourceByOrder(SyncopatorOrder.SEQUENTIAL, baseShuffledSeed, !CombConfigLuckyDipTrack ? step : step + MidiConfigTracks.CurrentChannel, true, true);
-					else NextSourceByOrder(SyncopatorOrder.SHUFFLED, baseShuffledSeed, step, true, true);
-				else if (CombConfigLuckyDip && CombConfigLuckyDipLotionBath) {
+			Action<long> NextMysteryBoxSource = step => {
+				if (CombConfigSyncopatorPicker) // 踩点
+					NextSourceByOrder(CombConfigSyncopatorOrder, baseShuffledSeed, CombConfigMysteryBox && CombConfigMysteryBoxTrack ? step + MidiConfigTracks.CurrentChannel : step, true, true);
+				else if (CombConfigMysteryBoxLotionBath) { // 素材盲盒 - 润肤浴战法
 					int _;
-					NextSequentialSourceByStep(CombConfigLuckyDipLotionBathInterval.Value, !CombConfigLuckyDipTrack ? step : step + MidiConfigTracks.CurrentChannel, out activeSource, out _, out sourceStartTime);
+					NextSequentialSourceByStep(CombConfigMysteryBoxLotionBathInterval.Value, !CombConfigMysteryBoxTrack ? step : step + MidiConfigTracks.CurrentChannel, out activeSource, out _, out sourceStartTime);
 					double maxLength = Math.Max(activeSource.audioLength, activeSource.videoLength);
 					sourceEndTime = sourceStartTime + maxLength;
-				} else {
+				} else { // 素材盲盒
 					object[] seeds = { baseShuffledSeed[0], step };
 					NextSourceByDuration(seeds);
 					double maxLength = Math.Max(activeSource.audioLength, activeSource.videoLength);
@@ -1575,16 +1576,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					sourceEndTime = sourceStartTime + maxLength;
 				}
 			};
-			if (CombConfigLuckyDip && CombConfigLuckyDipTrack && !CombConfigLuckyDipLotionBath && MidiConfigTracks.CurrentChannel != 0)
-				NextLuckyDipSource(-1);
+			if (CombConfigMysteryBox && CombConfigMysteryBoxTrack && !CombConfigMysteryBoxLotionBath && MidiConfigTracks.CurrentChannel != 0)
+				NextMysteryBoxSource(-1);
 			#endregion
 
 			#region 素材乐团
-			if (CombConfigLinearMap)
-				if (!CombConfigLinearMapSelectionModeLuckyDip)
-					activeSource = eventSets.ElementWrappedAt(!CombConfigLinearMapDescending ? MidiConfigTracks.CurrentChannel : -MidiConfigTracks.CurrentChannel - 1) ?? eventSets.Primary;
-				else if (MidiConfigTracks.CurrentChannel != 0)
-					NextLuckyDipSource(MidiConfigTracks.CurrentChannel);
+			if (CombConfigOrchestra)
+				if (CombConfigSyncopatorPicker) { // 踩点
+					if (CombConfigSyncopatorOrder != SyncopatorOrder.SHUFFLED)
+						activeSource = eventSets.ElementWrappedAt(CombConfigSyncopatorOrder == SyncopatorOrder.SEQUENTIAL ? MidiConfigTracks.CurrentChannel : -MidiConfigTracks.CurrentChannel - 1) ?? eventSets.Primary;
+					else {
+						long _round = 0;
+						activeSource = Randoms.SourceRandomSelector.GetRandomInPool(eventSets, MidiConfigTracks.CurrentChannel, ref _round, baseShuffledSeed);
+					}
+				} else if (MidiConfigTracks.CurrentChannel != 0) // 素材盲盒
+					NextMysteryBoxSource(MidiConfigTracks.CurrentChannel);
 			#endregion
 
 			#region 规范化音频
@@ -1625,62 +1631,62 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				bool isDrumKit = noteEvent.Channel == 10;
 
 				#region 素材盲盒
-				if (CombConfigLuckyDip) {
+				if (CombConfigMysteryBox) {
 					bool targetStepEnabled = false, markerIndexEnabled = false;
 					long targetStep = 0; int markerIndex = 0;
-					if (CombConfigLuckyDipBarOrBeat) {
+					if (CombConfigMysteryBoxBarOrBeat) {
 						long measures = beatIntegrator.GetMeasureIndex(noteEvent), quarters = beatIntegrator.GetQuarterIndex(noteEvent);
-						if (CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Beat && quarters >= CombConfigLuckyDipBarOrBeatPreparation.Value ||
-							CombConfigLuckyDipBarOrBeatPreparation.Unit == BarOrBeat.Units.Bar && measures >= CombConfigLuckyDipBarOrBeatPreparation.Value) {
-							targetStepEnabled = VariableTimeSignatureIntegrator.ShouldChangeSource(measures, prevMeasures, quarters, prevQuarters, out targetStep, CombConfigLuckyDipBarOrBeatPeriod, CombConfigLuckyDipBarOrBeatPreparation);
+						if (CombConfigMysteryBoxBarOrBeatPreparation.Unit == BarOrBeat.Units.Beat && quarters >= CombConfigMysteryBoxBarOrBeatPreparation.Value ||
+							CombConfigMysteryBoxBarOrBeatPreparation.Unit == BarOrBeat.Units.Bar && measures >= CombConfigMysteryBoxBarOrBeatPreparation.Value) {
+							targetStepEnabled = VariableTimeSignatureIntegrator.ShouldChangeSource(measures, prevMeasures, quarters, prevQuarters, out targetStep, CombConfigMysteryBoxBarOrBeatPeriod, CombConfigMysteryBoxBarOrBeatPreparation);
 						}
 						prevMeasures = measures; prevQuarters = quarters;
 					}
-					if (CombConfigLuckyDipMarker && midi.MarkerTrack != null) {
-						TextEvent marker = midi.GetLeadingMarker(noteEvent, out markerIndex, CombConfigLuckyDipBarOrBeat);
+					if (CombConfigMysteryBoxMarker && midi.MarkerTrack != null) {
+						TextEvent marker = midi.GetLeadingMarker(noteEvent, out markerIndex, CombConfigMysteryBoxBarOrBeat);
 						markerIndexEnabled = markerIndex != prevMarkerIndex && marker != null && marker.AbsoluteTime != 0;
 						if (markerIndexEnabled) prevMarkerIndex = markerIndex;
 					}
 					//_testName = targetStep.ToString() + markerIndex.ToString();
 					if (targetStepEnabled || markerIndexEnabled)
-						NextLuckyDipSource(targetStep + markerIndex);
+						NextMysteryBoxSource(targetStep + markerIndex);
 				}
 				#endregion
 
 				#region 踩点
-				if (CombConfigMatchCut) {
+				if (CombConfigSyncopator) {
 					EventSet pitchCachedSource = null, prevActiveSource = activeSource;
 					// 冠音
-					bool isUpperNote = CombConfigMatchCutAccumulateHarmonics || !isHarmonicInChords;
+					bool isUpperNote = CombConfigSyncopatorAccumulateHarmonics || !isHarmonicInChords;
 					if (isUpperNote) {
-						if (CombConfigMatchCutSustain) {
-							var previousPair = matchCutPitchQueue.LastPair;
-							matchCutPitchQueue.TryGetAndRefreshValue(noteOnEvent.NoteNumber, out pitchCachedSource);
-							var currentPair = pitchCachedSource == null ? null : matchCutPitchQueue.LastPair;
+						if (CombConfigSyncopatorSustain) {
+							var previousPair = syncopatorPitchQueue.LastPair;
+							syncopatorPitchQueue.TryGetAndRefreshValue(noteOnEvent.NoteNumber, out pitchCachedSource);
+							var currentPair = pitchCachedSource == null ? null : syncopatorPitchQueue.LastPair;
 							// 如果上一项刚好与本次缓存音高的素材相同，但音高却不相同，则放弃缓存的素材而改用新素材。
 							if (pitchCachedSource != null && previousPair != null && currentPair != null &&
 								previousPair.Value.Value == currentPair.Value.Value && previousPair.Value.Key != currentPair.Value.Key) pitchCachedSource = null;
 						}
-						if (pitchCachedSource == null) matchCutIndex++;
+						if (pitchCachedSource == null) syncopatorIndex++;
 					}
 					if (pitchCachedSource != null)
 						activeSource = pitchCachedSource;
 					else {
-						if (matchCutIndex > 1 && isUpperNote && matchCutIndex % CombConfigMatchCutRepeatOneCount == 0) {
+						if (syncopatorIndex > 1 && isUpperNote && syncopatorIndex % CombConfigSyncopatorRepeatOneCount == 0) {
 						ReSelectASourceBecauseSameAsPreviousPitchCachedSource:
-							long step = matchCutIndex / CombConfigMatchCutRepeatOneCount;
-							if (!CombConfigMatchCutLuckyDip) NextSourceByOrder(CombConfigMatchCutOrder, null, step, false, false);
-							else NextLuckyDipSource(step);
+							long step = syncopatorIndex / CombConfigSyncopatorRepeatOneCount;
+							if (CombConfigSyncopatorPicker) NextSourceByOrder(CombConfigSyncopatorOrder, null, step, false, false);
+							else NextMysteryBoxSource(step);
 							// 如果下一项刚好与前一缓存音高的素材相同，则立即再换一个素材。
-							if (CombConfigMatchCutSustain && activeSource == prevActiveSource && eventSets.Count > 1) {
-								matchCutIndex++;
+							if (CombConfigSyncopatorSustain && activeSource == prevActiveSource && eventSets.Count > 1) {
+								syncopatorIndex++;
 								goto ReSelectASourceBecauseSameAsPreviousPitchCachedSource;
 							}
 						}
-						if (CombConfigMatchCutSustain && isUpperNote)
-							matchCutPitchQueue.Add(noteOnEvent.NoteNumber, activeSource);
-						//_testName = matchCutRound.ToString();
-						if (CombConfigMatchCutRepeatRoundCount != 0 && matchCutRound >= CombConfigMatchCutRepeatRoundCount) {
+						if (CombConfigSyncopatorSustain && isUpperNote)
+							syncopatorPitchQueue.Add(noteOnEvent.NoteNumber, activeSource);
+						//_testName = syncopatorRound.ToString();
+						if (CombConfigSyncopatorRepeatRoundCount != 0 && syncopatorRound >= CombConfigSyncopatorRepeatRoundCount) {
 							progressForm.Close();
 							MessageBox.Show(Lang.str.match_cut_loop_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 							return false;
@@ -1925,7 +1931,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							}
 							if (AConfigFadein != 0 || AConfigFadeout != 0)
 								CustomFadeGainForm.FadeGain(granulars, 1 - AConfigFadein / 100, 1 - AConfigFadeout / 100, true);
-							if (AConfigVocalFry)
+							if (AConfig1Tick)
 								granulars.ForEach(evt => evt.Length = oneTick);
 						}
 						#endregion
@@ -1955,7 +1961,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (SheetConfig) anim = animForStaff;
 						else if (!anims.TryGetValue(videoTrack, out anim))
 							anims.Add(videoTrack, anim = NewAnim());
-						bool pitchHold = anim.EqualsLastPitch(CombConfigMatchCut && CombConfigMatchCutAccumulateHarmonics ? pitch : currentUpperNoteNumber);
+						bool pitchHold = anim.EqualsLastPitch(CombConfigSyncopator && CombConfigSyncopatorAccumulateHarmonics ? pitch : currentUpperNoteNumber);
 						double originalRate = videoEvent.PlaybackRate;
 						if (adjustTime) AdjustDeviation(videoEvent, sourceStartTime, sourceEndTime);
 						if (VConfigStretch == StretchType.FLEXING_AND_EXTENDING && duration != videoLength ||
@@ -2069,12 +2075,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							return true;
 						};
 						if (!applyToVideoEventsAfterLegato.AddIfRequired(ApplyParameters)) return false;
-						if (!(CombConfigMatchCut && CombConfigMatchCutApplyEffectsByRound) || matchCutRound != prevMatchCutRound) {
+						if (!(CombConfigSyncopator && CombConfigSyncopatorApplyEffectsByRound) || syncopatorRound != prevSyncopatorRound) {
 							if (SheetConfig) {
 								NoteOnEvent nextNoteEvent = NextNoteEvent();
 								if (nextNoteEvent != null && nextNoteEvent.AbsoluteTime != noteOnEvent.AbsoluteTime) anim.Next();
 							} else anim.Next();
-							prevMatchCutRound = matchCutRound;
+							prevSyncopatorRound = syncopatorRound;
 						}
 					}
 				endVConfig:;
@@ -3791,7 +3797,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configForm.MidiPlayer_Stop();
 			bool succeed = true;
 			if (!YtpConfig) MidiConfigTracks.CompleteConfig();
-			if (!(CombConfigLuckyDipTrack || CombConfigLinearMap && !CombConfigLinearMapSelectionModeLuckyDip)) consistencyTracksSeed = NewSeed();
+			if (!(CombConfigMysteryBoxTrack || CombConfigOrchestra && CombConfigSyncopatorPicker)) consistencyTracksSeed = NewSeed();
 			try {
 				if (YtpConfig || !IsMultiMidiChannel) {
 					succeed = succeed && GenerateOtomad();
@@ -4773,7 +4779,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return collection.ElementAtOrDefault(EntryPoint.Clamp(index, 0, collection.Count() - 1));
 		}
 
-		public static bool Selected(this TabPage tabPage) {
+		/// <summary>
+		/// 判断选项卡页是否被选中。
+		/// </summary>
+		/// <param name="tabPage">选项卡页面。</param>
+		/// <returns>是否被选中？</returns>
+		public static bool IsSelected(this TabPage tabPage) {
 			TabControl tabControl = tabPage.Parent as TabControl;
 			if (tabControl == null) return false;
 			return tabControl.SelectedTab == tabPage;
@@ -8654,11 +8665,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public GenerateStaffVisualizerWithoutTimeSignatureException() : base(Lang.str.generate_staff_visualizer_without_time_signature_exception) { }
 		}
 
-		public class LuckyDipBarWithoutTimeSignatureException : Exception {
+		public class MysteryBoxBarWithoutTimeSignatureException : Exception {
 			/// <summary>
 			/// MIDI 文件缺失拍号信息，无法在素材盲盒中按小节切换一次素材。
 			/// </summary>
-			public LuckyDipBarWithoutTimeSignatureException() : base(Lang.str.lucky_dip_bar_without_time_signature_exception) { }
+			public MysteryBoxBarWithoutTimeSignatureException() : base(Lang.str.lucky_dip_bar_without_time_signature_exception) { }
 		}
 	}
 
@@ -9151,6 +9162,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 提取整段音频的音高曲线。返回 MIDI 值数组及每帧时间位置（秒）。
 		/// medianWindow 大于 1 时应用中值滤波；jumpWindow 大于 1 时应用剧烈跳跃平滑。
 		/// </summary>
+		/// <exception cref="OperationCanceledException">用户终止继续提取音高时抛出。</exception>
 		public static Tuple<double[], double[]> ExtractPitchCurve(
 			DiscreteSignal signal,
 			double lowFreq = 80,
@@ -9228,81 +9240,85 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			double jumpThreshold = 4,
 			double preRollMs = 2500) {
 
-			DiscreteSignal signal = LoadAudioAsSignal(filePath);
-			double totalDurationMs = signal.Length * 1000.0 / signal.SamplingRate;
-			if (timeMs < 0 || timeMs > totalDurationMs) {
+			try {
+				DiscreteSignal signal = LoadAudioAsSignal(filePath);
+				double totalDurationMs = signal.Length * 1000.0 / signal.SamplingRate;
+				if (timeMs < 0 || timeMs > totalDurationMs) {
+					return null;
+				}
+
+				// 提取目标时间附近 2.5 秒前置 + 最大后置搜索时间 + 2.5 秒后置
+				double postRollMs = maxLookAheadMs + preRollMs;
+				double segmentStartMs = Math.Max(0, timeMs - preRollMs);
+				double segmentEndMs = Math.Min(totalDurationMs, timeMs + postRollMs);
+				double segmentDurationMs = segmentEndMs - segmentStartMs;
+				if (segmentDurationMs <= 0) {
+					return null;
+				}
+
+				int startSample = (int)Math.Floor(segmentStartMs / 1000.0 * signal.SamplingRate);
+				int endSample = (int)Math.Ceiling(segmentEndMs / 1000.0 * signal.SamplingRate);
+				startSample = Math.Max(0, Math.Min(startSample, signal.Length));
+				endSample = Math.Max(startSample, Math.Min(endSample, signal.Length));
+				int segmentLength = endSample - startSample;
+				if (segmentLength <= 0) {
+					return null;
+				}
+
+				float[] segmentSamples = new float[segmentLength];
+				Array.Copy(signal.Samples, startSample, segmentSamples, 0, segmentLength);
+				DiscreteSignal segment = new DiscreteSignal(signal.SamplingRate, segmentSamples);
+
+				Tuple<double[], double[]> curve = ExtractPitchCurve(
+					segment, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold);
+				double[] midiValues = curve.Item1;
+				double[] timePositions = curve.Item2;
+
+				if (timePositions.Length == 0) {
+					return null;
+				}
+
+				double relativeTimeSec = (timeMs - segmentStartMs) / 1000.0;
+				double winStartSec = relativeTimeSec - windowMs / 2000.0;
+				double winEndSec = relativeTimeSec + windowMs / 2000.0;
+
+				List<double> validInWindow = new List<double>();
+				for (int i = 0; i < timePositions.Length; i++) {
+					double t = timePositions[i];
+					if (t < winStartSec) {
+						continue;
+					}
+					if (t > winEndSec) {
+						break;
+					}
+					if (!double.IsNaN(midiValues[i])) {
+						validInWindow.Add(midiValues[i]);
+					}
+				}
+				double? median = ComputeMedian(validInWindow);
+				if (median != null) {
+					return median;
+				}
+
+				double searchStartSec = relativeTimeSec;
+				double searchEndSec = relativeTimeSec + maxLookAheadMs / 1000.0;
+				for (int i = 0; i < timePositions.Length; i++) {
+					double t = timePositions[i];
+					if (t < searchStartSec) {
+						continue;
+					}
+					if (t > searchEndSec) {
+						break;
+					}
+					if (!double.IsNaN(midiValues[i])) {
+						return (int)Math.Round(midiValues[i], MidpointRounding.AwayFromZero);
+					}
+				}
+
+				return null;
+			} catch (Exception) {
 				return null;
 			}
-
-			// 提取目标时间附近 2.5 秒前置 + 最大后置搜索时间 + 2.5 秒后置
-			double postRollMs = maxLookAheadMs + preRollMs;
-			double segmentStartMs = Math.Max(0, timeMs - preRollMs);
-			double segmentEndMs = Math.Min(totalDurationMs, timeMs + postRollMs);
-			double segmentDurationMs = segmentEndMs - segmentStartMs;
-			if (segmentDurationMs <= 0) {
-				return null;
-			}
-
-			int startSample = (int)Math.Floor(segmentStartMs / 1000.0 * signal.SamplingRate);
-			int endSample = (int)Math.Ceiling(segmentEndMs / 1000.0 * signal.SamplingRate);
-			startSample = Math.Max(0, Math.Min(startSample, signal.Length));
-			endSample = Math.Max(startSample, Math.Min(endSample, signal.Length));
-			int segmentLength = endSample - startSample;
-			if (segmentLength <= 0) {
-				return null;
-			}
-
-			float[] segmentSamples = new float[segmentLength];
-			Array.Copy(signal.Samples, startSample, segmentSamples, 0, segmentLength);
-			DiscreteSignal segment = new DiscreteSignal(signal.SamplingRate, segmentSamples);
-
-			Tuple<double[], double[]> curve = ExtractPitchCurve(
-				segment, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold);
-			double[] midiValues = curve.Item1;
-			double[] timePositions = curve.Item2;
-
-			if (timePositions.Length == 0) {
-				return null;
-			}
-
-			double relativeTimeSec = (timeMs - segmentStartMs) / 1000.0;
-			double winStartSec = relativeTimeSec - windowMs / 2000.0;
-			double winEndSec = relativeTimeSec + windowMs / 2000.0;
-
-			List<double> validInWindow = new List<double>();
-			for (int i = 0; i < timePositions.Length; i++) {
-				double t = timePositions[i];
-				if (t < winStartSec) {
-					continue;
-				}
-				if (t > winEndSec) {
-					break;
-				}
-				if (!double.IsNaN(midiValues[i])) {
-					validInWindow.Add(midiValues[i]);
-				}
-			}
-			double? median = ComputeMedian(validInWindow);
-			if (median != null) {
-				return median;
-			}
-
-			double searchStartSec = relativeTimeSec;
-			double searchEndSec = relativeTimeSec + maxLookAheadMs / 1000.0;
-			for (int i = 0; i < timePositions.Length; i++) {
-				double t = timePositions[i];
-				if (t < searchStartSec) {
-					continue;
-				}
-				if (t > searchEndSec) {
-					break;
-				}
-				if (!double.IsNaN(midiValues[i])) {
-					return (int)Math.Round(midiValues[i], MidpointRounding.AwayFromZero);
-				}
-			}
-
-			return null;
 		}
 
 		/// <summary>
@@ -42489,8 +42505,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			float dpi = Dpi;
 			Func<int, int> GetSuitableSize = expectedSize => {
 				expectedSize = (int)(expectedSize * dpi);
-				expectedSize = allSizes.Cast<int?>().FirstOrDefault(i => i >= expectedSize) ?? allSizes.Max();
-				return expectedSize;
+				// BinarySearch：
+				// - 找到相等元素时返回其索引（>= 0）
+				// - 找不到时返回“插入点的按位取反值”（< 0）
+				int index = allSizes.BinarySearch(expectedSize);
+				if (index >= 0) return allSizes[index];
+				else {
+					// ~index 是第一个大于 target 的元素索引，也就是第一个 > target 的位置
+					index = ~index;
+					// 如果插入点越界，说明 target 大于列表最大值，取最大值
+					return index < allSizes.Count ? allSizes[index] : allSizes.Last();
+				}
 			};
 
 			// 1. 明确加载 16x16 图标并发送给窗体左上角
