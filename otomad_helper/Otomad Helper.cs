@@ -339,8 +339,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private readonly HashSet<Track> generatedTracks = new HashSet<Track>();
 		private int? nextTrackIndex = null;
 		internal static readonly Timecode oneTick = Timecode.FromMilliseconds(1);
-		VariableBpmIntegrator bpmIntegrator = null;
-		VariableTimeSignatureIntegrator beatIntegrator = null;
+		private VariableBpmIntegrator bpmIntegrator = null;
+		private VariableTimeSignatureIntegrator beatIntegrator = null;
+		public static Encoding ScoreEncoding = Encoding.Default;
 		/**
 		 * <summary>
 		 * <para>多素材属性 - 实例对象变量</para>
@@ -7601,7 +7602,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public class TrackInfo : ICloneable {
 			public string Index;
 			public int Channel;
-			public string Name = "";
+			public byte[] NameBytes;
+			public string Name { get { return NameBytes == null ? "" : EntryPoint.ScoreEncoding.GetString(NameBytes); } }
 			public string Instrument = "";
 			public int NotesCount = 0;
 			public string BeginNote = "";
@@ -7692,7 +7694,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						TextEvent textEvent = midiEvent as TextEvent;
 						if (textEvent.MetaEventType == MetaEventType.SequenceTrackName) {
 							string latin1Text = textEvent.Text; // 乐轨名称
-							info.Name = Latin1ToAnsi(latin1Text);
+							info.NameBytes = GetLatin1BytesOfName(latin1Text);
 						}
 					}
 					if (midiEvent is TextEvent && MarkerTrack.IsEmpty()) {
@@ -7807,7 +7809,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <param name="latin1">错误读取为 Latin1 编码的字符串。</param>
 		/// <returns>ANSI 编码字符串。</returns>
 		public static string Latin1ToAnsi(string latin1) {
-			byte[] bytes = Encoding.GetEncoding(LATIN1).GetBytes(latin1);
+			byte[] bytes = GetLatin1BytesOfName(latin1);
 			return Encoding.Default.GetString(bytes);
 		}
 		/// <summary>
@@ -7818,6 +7820,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public static string AnsiToLatin1(string ansi) {
 			byte[] bytes = Encoding.Default.GetBytes(ansi);
 			return Encoding.GetEncoding(LATIN1).GetString(bytes);
+		}
+		public static byte[] GetLatin1BytesOfName(string latin1) {
+			return Encoding.GetEncoding(LATIN1).GetBytes(latin1);
 		}
 	}
 
@@ -9656,6 +9661,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 打开 MIDI 设备
 			int result = midiOutOpen(out player.midiHandle, MIDI_MAPPER, IntPtr.Zero, IntPtr.Zero, 0);
 			if (result != 0) return null; // 无法打开 Windows 默认 MIDI 输出设备。
+			S.s = result;
 			return player;
 		}
 
@@ -27426,6 +27432,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ConsonantTab = new System.Windows.Forms.TabPage();
 			this.MultiSourceConfigSplitterWrapper = new System.Windows.Forms.Panel();
 			this.MultiSourceConfigSplitter = new System.Windows.Forms.Splitter();
+			this.MultiSourceConfigSelectedAsFirstCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.MultiSourceCombPickerTabs = new Otomad.VegasScripts.OtomadHelper.V4.ButtonTabControl();
 			this.MultiSourceOffTab = new System.Windows.Forms.TabPage();
 			this.MultiSourceOffInfoLbl = new System.Windows.Forms.Label();
@@ -27519,6 +27526,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiAutoLayoutTracksInfo = new System.Windows.Forms.Label();
 			this.MidiConfigGroup = new System.Windows.Forms.GroupBox();
 			this.MidiConfigTablePanel = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanel24 = new System.Windows.Forms.TableLayoutPanel();
+			this.MidiEncodingCombo = new System.Windows.Forms.ComboBox();
+			this.MidiEncodingLbl = new System.Windows.Forms.Label();
 			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
 			this.InsertBeatChangeMarkerCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.InsertMarkerLbl = new System.Windows.Forms.Label();
@@ -27997,6 +28007,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel23.SuspendLayout();
 			this.MidiConfigGroup.SuspendLayout();
 			this.MidiConfigTablePanel.SuspendLayout();
+			this.tableLayoutPanel24.SuspendLayout();
 			this.tableLayoutPanel5.SuspendLayout();
 			this.tableLayoutPanel6.SuspendLayout();
 			this.flowLayoutPanel3.SuspendLayout();
@@ -28960,12 +28971,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceConfigGroup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.MultiSourceConfigGroup.Controls.Add(this.MultiSourceCombOrganizerTabs);
 			this.MultiSourceConfigGroup.Controls.Add(this.MultiSourceConfigSplitterWrapper);
+			this.MultiSourceConfigGroup.Controls.Add(this.MultiSourceConfigSelectedAsFirstCheck);
 			this.MultiSourceConfigGroup.Controls.Add(this.MultiSourceCombPickerTabs);
 			this.MultiSourceConfigGroup.Dock = System.Windows.Forms.DockStyle.Top;
 			this.MultiSourceConfigGroup.Location = new System.Drawing.Point(8, 754);
 			this.MultiSourceConfigGroup.Name = "MultiSourceConfigGroup";
 			this.MultiSourceConfigGroup.Padding = new System.Windows.Forms.Padding(8);
-			this.MultiSourceConfigGroup.Size = new System.Drawing.Size(1076, 583);
+			this.MultiSourceConfigGroup.Size = new System.Drawing.Size(1076, 619);
 			this.MultiSourceConfigGroup.TabIndex = 4;
 			this.MultiSourceConfigGroup.TabStop = false;
 			this.MultiSourceConfigGroup.Text = "多素材梳子";
@@ -28979,7 +28991,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceCombOrganizerTabs.Controls.Add(this.ConsonantTab);
 			this.MultiSourceCombOrganizerTabs.Dock = System.Windows.Forms.DockStyle.Top;
 			this.MultiSourceCombOrganizerTabs.HeaderTitle = "组织器";
-			this.MultiSourceCombOrganizerTabs.Location = new System.Drawing.Point(8, 245);
+			this.MultiSourceCombOrganizerTabs.Location = new System.Drawing.Point(8, 281);
 			this.MultiSourceCombOrganizerTabs.Name = "MultiSourceCombOrganizerTabs";
 			this.MultiSourceCombOrganizerTabs.SelectedIndex = 0;
 			this.MultiSourceCombOrganizerTabs.ShowToolTips = true;
@@ -29018,8 +29030,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// LuckyDipTrackCheck
 			//
 			this.LuckyDipTrackCheck.AutoSize = true;
-			this.LuckyDipTrackCheck.Checked = true;
-			this.LuckyDipTrackCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.LuckyDipTrackCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LuckyDipTrackCheck.Location = new System.Drawing.Point(6, 6);
 			this.LuckyDipTrackCheck.Name = "LuckyDipTrackCheck";
@@ -29655,7 +29665,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.MultiSourceConfigSplitterWrapper.Controls.Add(this.MultiSourceConfigSplitter);
 			this.MultiSourceConfigSplitterWrapper.Dock = System.Windows.Forms.DockStyle.Top;
-			this.MultiSourceConfigSplitterWrapper.Location = new System.Drawing.Point(8, 236);
+			this.MultiSourceConfigSplitterWrapper.Location = new System.Drawing.Point(8, 272);
 			this.MultiSourceConfigSplitterWrapper.Name = "MultiSourceConfigSplitterWrapper";
 			this.MultiSourceConfigSplitterWrapper.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
 			this.MultiSourceConfigSplitterWrapper.Size = new System.Drawing.Size(1060, 9);
@@ -29672,6 +29682,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceConfigSplitter.Size = new System.Drawing.Size(1060, 1);
 			this.MultiSourceConfigSplitter.TabIndex = 0;
 			this.MultiSourceConfigSplitter.TabStop = false;
+			//
+			// MultiSourceConfigSelectedAsFirstCheck
+			//
+			this.MultiSourceConfigSelectedAsFirstCheck.AutoSize = true;
+			this.MultiSourceConfigSelectedAsFirstCheck.Checked = true;
+			this.MultiSourceConfigSelectedAsFirstCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.MultiSourceConfigSelectedAsFirstCheck.Dock = System.Windows.Forms.DockStyle.Top;
+			this.MultiSourceConfigSelectedAsFirstCheck.Location = new System.Drawing.Point(8, 236);
+			this.MultiSourceConfigSelectedAsFirstCheck.Name = "MultiSourceConfigSelectedAsFirstCheck";
+			this.MultiSourceConfigSelectedAsFirstCheck.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
+			this.MultiSourceConfigSelectedAsFirstCheck.Size = new System.Drawing.Size(1060, 36);
+			this.MultiSourceConfigSelectedAsFirstCheck.TabIndex = 13;
+			this.MultiSourceConfigSelectedAsFirstCheck.Text = "挑取首项沿用选区首项";
+			this.MultiSourceConfigSelectedAsFirstCheck.UserChecked = true;
+			this.MultiSourceConfigSelectedAsFirstCheck.UseVisualStyleBackColor = true;
 			//
 			// MultiSourceCombPickerTabs
 			//
@@ -29868,6 +29893,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutOrderSequentialRadio.TabStop = true;
 			this.MatchCutOrderSequentialRadio.Text = "顺序";
 			this.MatchCutOrderSequentialRadio.UseVisualStyleBackColor = true;
+			this.MatchCutOrderSequentialRadio.CheckedChanged += new System.EventHandler(this.SyncopatorOrderRadio_CheckedChanged);
 			//
 			// MatchCutOrderReversedRadio
 			//
@@ -29880,6 +29906,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutOrderReversedRadio.TabIndex = 1;
 			this.MatchCutOrderReversedRadio.Text = "逆序";
 			this.MatchCutOrderReversedRadio.UseVisualStyleBackColor = true;
+			this.MatchCutOrderReversedRadio.CheckedChanged += new System.EventHandler(this.SyncopatorOrderRadio_CheckedChanged);
 			//
 			// MatchCutOrderShuffleRadio
 			//
@@ -29892,6 +29919,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MatchCutOrderShuffleRadio.TabIndex = 2;
 			this.MatchCutOrderShuffleRadio.Text = "乱序";
 			this.MatchCutOrderShuffleRadio.UseVisualStyleBackColor = true;
+			this.MatchCutOrderShuffleRadio.CheckedChanged += new System.EventHandler(this.SyncopatorOrderRadio_CheckedChanged);
 			//
 			// AffixAsPitchLblPanel
 			//
@@ -30571,12 +30599,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackListView.Enabled = false;
 			this.MidiTrackListView.FullRowSelect = true;
 			this.MidiTrackListView.HideSelection = false;
-			this.MidiTrackListView.Location = new System.Drawing.Point(8, 574);
+			this.MidiTrackListView.Location = new System.Drawing.Point(8, 622);
 			this.MidiTrackListView.MinimumSize = new System.Drawing.Size(4, 200);
 			this.MidiTrackListView.MultiSelect = false;
 			this.MidiTrackListView.Name = "MidiTrackListView";
 			this.MidiTrackListView.ShowItemToolTips = true;
-			this.MidiTrackListView.Size = new System.Drawing.Size(1110, 442);
+			this.MidiTrackListView.Size = new System.Drawing.Size(1110, 394);
 			this.MidiTrackListView.TabIndex = 23;
 			this.MidiTrackListView.UseCompatibleStateImageBehavior = false;
 			this.MidiTrackListView.View = System.Windows.Forms.View.Details;
@@ -30650,7 +30678,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiTrackCommandPanel.Controls.Add(this.MidiTrackSelectAllCheck, 0, 0);
 			this.MidiTrackCommandPanel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.MidiTrackCommandPanel.Enabled = false;
-			this.MidiTrackCommandPanel.Location = new System.Drawing.Point(8, 522);
+			this.MidiTrackCommandPanel.Location = new System.Drawing.Point(8, 570);
 			this.MidiTrackCommandPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.MidiTrackCommandPanel.MinimumSize = new System.Drawing.Size(0, 52);
 			this.MidiTrackCommandPanel.Name = "MidiTrackCommandPanel";
@@ -30873,7 +30901,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigGroup.Location = new System.Drawing.Point(8, 8);
 			this.MidiConfigGroup.Name = "MidiConfigGroup";
 			this.MidiConfigGroup.Padding = new System.Windows.Forms.Padding(8);
-			this.MidiConfigGroup.Size = new System.Drawing.Size(1110, 514);
+			this.MidiConfigGroup.Size = new System.Drawing.Size(1110, 562);
 			this.MidiConfigGroup.TabIndex = 2;
 			this.MidiConfigGroup.TabStop = false;
 			this.MidiConfigGroup.Text = "MIDI 属性";
@@ -30886,6 +30914,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigTablePanel.AutoSize = true;
 			this.MidiConfigTablePanel.ColumnCount = 1;
 			this.MidiConfigTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.MidiConfigTablePanel.Controls.Add(this.tableLayoutPanel24, 0, 10);
 			this.MidiConfigTablePanel.Controls.Add(this.tableLayoutPanel5, 0, 7);
 			this.MidiConfigTablePanel.Controls.Add(this.RestrictLengthLbl, 0, 8);
 			this.MidiConfigTablePanel.Controls.Add(this.ChooseMidiLbl, 0, 0);
@@ -30899,7 +30928,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigTablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MidiConfigTablePanel.Location = new System.Drawing.Point(8, 40);
 			this.MidiConfigTablePanel.Name = "MidiConfigTablePanel";
-			this.MidiConfigTablePanel.RowCount = 10;
+			this.MidiConfigTablePanel.RowCount = 11;
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -30908,10 +30940,51 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.MidiConfigTablePanel.Size = new System.Drawing.Size(1094, 466);
+			this.MidiConfigTablePanel.Size = new System.Drawing.Size(1094, 514);
 			this.MidiConfigTablePanel.TabIndex = 1;
+			//
+			// tableLayoutPanel24
+			//
+			this.tableLayoutPanel24.AutoSize = true;
+			this.tableLayoutPanel24.ColumnCount = 2;
+			this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel24.Controls.Add(this.MidiEncodingCombo, 1, 0);
+			this.tableLayoutPanel24.Controls.Add(this.MidiEncodingLbl, 0, 0);
+			this.tableLayoutPanel24.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel24.Location = new System.Drawing.Point(3, 467);
+			this.tableLayoutPanel24.Name = "tableLayoutPanel24";
+			this.tableLayoutPanel24.RowCount = 1;
+			this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel24.Size = new System.Drawing.Size(1088, 44);
+			this.tableLayoutPanel24.TabIndex = 17;
+			//
+			// MidiEncodingCombo
+			//
+			this.MidiEncodingCombo.DisplayMember = "DisplayName";
+			this.MidiEncodingCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MidiEncodingCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.MidiEncodingCombo.Enabled = false;
+			this.MidiEncodingCombo.FormattingEnabled = true;
+			this.MidiEncodingCombo.Location = new System.Drawing.Point(121, 3);
+			this.MidiEncodingCombo.Name = "MidiEncodingCombo";
+			this.MidiEncodingCombo.Size = new System.Drawing.Size(964, 40);
+			this.MidiEncodingCombo.TabIndex = 5;
+			this.MidiEncodingCombo.SelectedIndexChanged += new System.EventHandler(this.MidiEncodingCombo_SelectedIndexChanged);
+			//
+			// MidiEncodingLbl
+			//
+			this.MidiEncodingLbl.AutoSize = true;
+			this.MidiEncodingLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MidiEncodingLbl.Location = new System.Drawing.Point(0, 0);
+			this.MidiEncodingLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.MidiEncodingLbl.MinimumSize = new System.Drawing.Size(0, 42);
+			this.MidiEncodingLbl.Name = "MidiEncodingLbl";
+			this.MidiEncodingLbl.Size = new System.Drawing.Size(110, 44);
+			this.MidiEncodingLbl.TabIndex = 4;
+			this.MidiEncodingLbl.Text = "编码　　";
+			this.MidiEncodingLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
 			// tableLayoutPanel5
 			//
@@ -30931,7 +31004,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
 			this.tableLayoutPanel5.RowCount = 1;
 			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel5.Size = new System.Drawing.Size(1088, 44);
+			this.tableLayoutPanel5.Size = new System.Drawing.Size(1088, 42);
 			this.tableLayoutPanel5.TabIndex = 16;
 			//
 			// InsertBeatChangeMarkerCheck
@@ -30954,7 +31027,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.InsertMarkerLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
 			this.InsertMarkerLbl.MinimumSize = new System.Drawing.Size(0, 42);
 			this.InsertMarkerLbl.Name = "InsertMarkerLbl";
-			this.InsertMarkerLbl.Size = new System.Drawing.Size(110, 44);
+			this.InsertMarkerLbl.Size = new System.Drawing.Size(110, 42);
 			this.InsertMarkerLbl.TabIndex = 4;
 			this.InsertMarkerLbl.Text = "插入标记";
 			this.InsertMarkerLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -30986,7 +31059,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.RestrictLengthLbl.AutoSize = true;
 			this.RestrictLengthLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RestrictLengthLbl.Location = new System.Drawing.Point(4, 386);
+			this.RestrictLengthLbl.Location = new System.Drawing.Point(4, 384);
 			this.RestrictLengthLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
 			this.RestrictLengthLbl.Name = "RestrictLengthLbl";
 			this.RestrictLengthLbl.Size = new System.Drawing.Size(1086, 32);
@@ -31374,7 +31447,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.RestrictLengthFlow.Controls.Add(this.RestrictLengthBox);
 			this.RestrictLengthFlow.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.RestrictLengthFlow.Enabled = false;
-			this.RestrictLengthFlow.Location = new System.Drawing.Point(3, 421);
+			this.RestrictLengthFlow.Location = new System.Drawing.Point(3, 419);
 			this.RestrictLengthFlow.Name = "RestrictLengthFlow";
 			this.RestrictLengthFlow.Size = new System.Drawing.Size(1088, 42);
 			this.RestrictLengthFlow.TabIndex = 15;
@@ -37769,6 +37842,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.SourceTabScrollPanel.ResumeLayout(false);
 			this.SourceTabScrollPanel.PerformLayout();
 			this.MultiSourceConfigGroup.ResumeLayout(false);
+			this.MultiSourceConfigGroup.PerformLayout();
 			this.MultiSourceCombOrganizerTabs.ResumeLayout(false);
 			this.LuckyDipTab.ResumeLayout(false);
 			this.LuckyDipTab.PerformLayout();
@@ -37862,6 +37936,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MidiConfigGroup.PerformLayout();
 			this.MidiConfigTablePanel.ResumeLayout(false);
 			this.MidiConfigTablePanel.PerformLayout();
+			this.tableLayoutPanel24.ResumeLayout(false);
+			this.tableLayoutPanel24.PerformLayout();
 			this.tableLayoutPanel5.ResumeLayout(false);
 			this.tableLayoutPanel5.PerformLayout();
 			this.tableLayoutPanel6.ResumeLayout(false);
@@ -38715,6 +38791,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public RememberedCheckBox InsertMidiMarkerCheck;
 		public RememberedCheckBox InsertBpmChangeMarkerCheck;
 		public RememberedCheckBox InsertBeatChangeMarkerCheck;
+		public RememberedCheckBox MultiSourceConfigSelectedAsFirstCheck;
+		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel24;
+		public System.Windows.Forms.Label MidiEncodingLbl;
+		public System.Windows.Forms.ComboBox MidiEncodingCombo;
 	}
 	#endregion
 
@@ -38756,7 +38836,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			foreach (NumericUpDown control in this.GetChildrenOfType<NumericUpDown>())
 				control.Margin = new Padding(3);
 			// 让数字旋钮、组合框、文本框垂直居中
-			Control[] excludeFromVerticalAlignmentControls = { LuckyDipBarOrBeatPeriodUnitCombo, LuckyDipBarOrBeatPreparationUnitCombo }; // 部分控件调整垂直居中后反而出现异常，因此排除它们。
+			Control[] excludeFromVerticalAlignmentControls = { LuckyDipBarOrBeatPeriodUnitCombo, LuckyDipBarOrBeatPreparationUnitCombo, MidiEncodingCombo }; // 部分控件调整垂直居中后反而出现异常，因此排除它们。
 			foreach (Control control in this.GetChildrenOfType<Control>())
 				if (control is NumericUpDown || control is ComboBox || control is TextBox)
 					if (!excludeFromVerticalAlignmentControls.Contains(control))
@@ -39257,7 +39337,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.StartSection("Multisource");
 			MultisourceCombPicker = configIni.Read("Picker", MultisourceCombMode.OFF);
 			MultisourceCombOrganizer = configIni.Read("Organizer", MultisourceCombMode.MYSTERY_BOX);
-			LuckyDipTrackCheck.Checked = configIni.Read("LuckyDipTrack", true);
+			LuckyDipTrackCheck.Checked = configIni.Read("LuckyDipTrack", false);
 			LuckyDipMarkerCheck.Checked = configIni.Read("LuckyDipMarker", true);
 			LuckyDipBarOrBeatCheck.Checked = configIni.Read("LuckyDipBarOrBeat", true);
 			LuckyDipBarOrBeatPeriodBox.SetValue(configIni.Read("LuckyDipBarOrBeatPeriodValue", 4), 4);
@@ -39713,6 +39793,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			MidiTrackSeparateDrumsCheck_CheckedChanged();
 			MidiTrackListView.SelectedItems.Clear();
+		}
+
+		private void MidiEncodingCombo_SelectedIndexChanged(object sender, EventArgs e) {
+			EntryPoint.ScoreEncoding = MidiEncodingCombo.SelectedItem is EncodingInfo ? ((EncodingInfo)MidiEncodingCombo.SelectedItem).GetEncoding() : Encoding.Default;
+			if (midiTrackListViewItems != null)
+				foreach (ListViewItem item in midiTrackListViewItems) {
+					MIDI.TrackInfo track = item.Tag as MIDI.TrackInfo;
+					if (track == null) continue;
+					item.SubItems[NameHeader.Index].Text = track.Name;
+				}
 		}
 
 		private List<ListViewItem> midiTrackListViewItems;
@@ -40621,6 +40711,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioOverallShiftLbl.Text = str.overall_shift;
 			AudioMuteDrumKitsCheck.Text = str.mute_drum_kits;
 			visualTruncate.Translate();
+			MidiEncodingLbl.Text = str.encoding;
+			MidiEncodingCombo.Items.Clear();
+			MidiEncodingCombo.Items.Add(string.Format("{0} ({1})", str.system_default_encoding, Encoding.Default.EncodingName));
+			MidiEncodingCombo.Items.AddRange(Encoding.GetEncodings());
+			MidiEncodingCombo.SelectedIndex = 0;
 			Text = str.otomad_helper_config;
 		}
 
@@ -40855,6 +40950,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			LinearMapReuseCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.Unlocked;
 			TartarReuseCheck.Status = TartarRadio.Checked ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.True;
 			ShupelunkerUnallocatedPanel.Enabled = ShupelunkerOffsetPanel.Enabled = ShupelunkerRadio.Checked;
+			UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus();
 
 			PreviewBeepWaveFormCombo.Enabled = PreviewBeepEngineCombo.SelectedIndex == 2;
 			SetStackAndTimeUnremappingEnabled();
@@ -40952,6 +41048,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				= RestrictLengthFlow.Enabled
 				= MidiAutoChangeProjectBpmCheck.Enabled
 				= MidiAutoChangeProjectBeatCheck.Enabled
+				= MidiEncodingCombo.Enabled
 				= true;
 			InsertMidiMarkerCheck.Status = !midi.MarkerTrack.IsEmpty() ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
 			InsertBpmChangeMarkerCheck.Status = midi.IsVariableBpm ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
@@ -42921,11 +43018,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 其它逻辑相关代码
 			SetStackAndTimeUnremappingEnabled();
 
-			//MultiSourceConfigGroup.Controls.SetChildIndex(MultiSourceConfigSplitterWrapper, 1);
-			MultiSourceConfigSplitterWrapper.Visible = MultiSourceCombOrganizerTabs.Visible = MultisourceCombPicker != MultisourceCombMode.OFF; // 注意不能改变这里对Visible赋值的等号先后顺序，否则会导致最终控件呈现的顺序错误。
+			MultiSourceConfigSelectedAsFirstCheck.Visible = MultiSourceConfigSplitterWrapper.Visible = MultiSourceCombOrganizerTabs.Visible =
+				MultisourceCombPicker != MultisourceCombMode.OFF; // 注意不能改变这里对Visible赋值的等号先后顺序，否则会导致最终控件呈现的顺序错误。
 			MatchCutSustainCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
 			LinearMapReuseCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.Unlocked;
+			UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus();
 			if (isLoaded && sender != this) SourceTabScrollPanel.AutoScrollPosition = new Point(0, ushort.MaxValue);
+		}
+
+		private void SyncopatorOrderRadio_CheckedChanged(object sender, EventArgs e) { UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus(); }
+		private void UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus() {
+			MultiSourceConfigSelectedAsFirstCheck.Status =
+				MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX && LuckyDipLotionBathCheck.Checked ||
+				MultisourceCombPicker == MultisourceCombMode.SYNCOPATOR && MatchCutOrder == SyncopatorOrder.SEQUENTIAL ?
+				RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.Unlocked;
 		}
 
 		private void SetStackAndTimeUnremappingEnabled() {
@@ -42992,9 +43098,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MIDI.TrackInfo track = MidiTrackListView.SelectedItems.Cast<ListViewItem>().Select(item => item.Tag as MIDI.TrackInfo).FirstOrDefault();
 			if (track == null || track.NotesCount == 0 || track.Events.Count == 0) return;
 
-			PlaySelectedTrackBtn.Text = Lang.str.stop;
 			OverflowToolTip.SetToolTip(PlaySelectedTrackBtn, null);
 			midiPlayer.PlaybackFinished += MidiPlayer_PlaybackFinished;
+			if (midiPlayer.IsPlaying) PlaySelectedTrackBtn.Text = Lang.str.stop;
 
 			double bpm = MidiProjectBpmCheck.Checked ? vegas.Project.Ruler.BeatsPerMinute :
 				MidiCustomBpmCheck.Checked ? (double)MidiCustomBpmBox.Value : parent.midi.Bpm;
@@ -44138,6 +44244,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			idle_effect_color_invert = "颜色反转",
 			idle_effect_monochrome = "黑白",
 			truncate_visual_options = "截断画面选项",
+			encoding = "编码　　",
+			system_default_encoding = "系统默认编码",
 			__eol__ = null;
 
 		static Lang() {

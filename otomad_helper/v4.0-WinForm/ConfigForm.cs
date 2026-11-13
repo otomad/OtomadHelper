@@ -1587,5 +1587,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			bool @checked = AudioAutoBasePitchCheck.Checked;
 			AudioMainKeyCombo.ForeColor = AudioMainOctaveCombo.ForeColor = @checked ? SystemColors.GrayText : SystemColors.WindowText;
 		}
+
+		private void SyncopatorOrderRadio_CheckedChanged(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void MidiEncodingCombo_SelectedIndexChanged(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
 	}
 }
