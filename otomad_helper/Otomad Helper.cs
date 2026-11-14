@@ -257,8 +257,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		#region 多素材属性
 		/**<summary>需多素材</summary>*/ private bool ShouldMultisource { get { return YtpConfig || CombConfigOn; } }
 		/**<summary>启　　用</summary>*/ private bool CombConfigOn { get { return CombConfigMysteryBoxPicker || CombConfigSyncopatorPicker; } }
+		/**<summary>选区靠前</summary>*/ private bool CombConfigSelectedAsFirst { get { return CombConfigOn && configForm.MultiSourceConfigSelectedAsFirstCheck.Checked; } }
 		#region 素材盲盒
 		/**<summary>挑　　取</summary>*/ private bool CombConfigMysteryBoxPicker { get { return configForm.MysteryBoxTab.IsSelected(); } }
+		/**<summary>强化选择</summary>*/ private bool CombConfigEnhanceSelect { get { return CombConfigMysteryBoxPicker && configForm.EnhanceSelectCheck.Checked; } }
 		/**<summary>润浴战法</summary>*/ private bool CombConfigMysteryBoxLotionBath { get { return CombConfigMysteryBoxPicker && configForm.LuckyDipLotionBathCheck.Checked; } }
 		/**<summary>间　　隔</summary>*/ private int? CombConfigMysteryBoxLotionBathInterval { get { return (!CombConfigMysteryBoxPicker || !CombConfigMysteryBoxLotionBath) ? null : (int?)configForm.LuckyDipLotionBathIntervalBox.Value; } }
 		/**<summary>启　　用</summary>*/ private bool CombConfigMysteryBox { get { return CombConfigOn && configForm.LuckyDipTab.IsSelected(); } }
@@ -267,15 +269,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>周　　期</summary>*/ private BarOrBeat CombConfigMysteryBoxBarOrBeatPeriod { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPeriodBox.Value, configForm.LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex); } }
 		/**<summary>预　　备</summary>*/ private BarOrBeat CombConfigMysteryBoxBarOrBeatPreparation { get { return new BarOrBeat(configForm.LuckyDipBarOrBeatPreparationBox.Value, configForm.LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndex); } }
 		/**<summary>标　　记</summary>*/ private bool CombConfigMysteryBoxMarker { get { return CombConfigMysteryBox && configForm.LuckyDipMarkerCheck.Checked; } }
-		///**<summary>限制选中</summary>*/ private bool CombConfigMysteryBoxLimitToSelected { get { return false; } }// configForm.LuckyDipLimitToSelectedCheck.Checked; } }
 		#endregion
 		#region 踩　　点
 		/**<summary>挑　　取</summary>*/ private bool CombConfigSyncopatorPicker { get { return configForm.SyncopatorTab.IsSelected(); } }
 		/**<summary>次　　序</summary>*/ private SyncopatorOrder CombConfigSyncopatorOrder { get { return configForm.MatchCutOrder; } }
+		/**<summary>词缀音高</summary>*/ private AffixAsPitch CombConfigSyncopatorAffixAsPitch { get { return configForm.AffixAsPitch; } }
 		/**<summary>启　　用</summary>*/ private bool CombConfigSyncopator { get { return CombConfigOn && configForm.MatchCutTab.IsSelected(); } }
 		/**<summary>单个重复</summary>*/ private int CombConfigSyncopatorRepeatOneCount { get { return (int)configForm.MatchCutRepeatBox.Value; } }
 		/**<summary>总共重复</summary>*/ private int CombConfigSyncopatorRepeatRoundCount { get { return (int)configForm.MatchCutRepeatRoundBox.Value; } }
-		///**<summary>素材盲盒</summary>*/ private bool CombConfigSyncopatorLuckyDip { get { return false; }}// configForm.MatchCutLuckyDipCheck.Checked; } }
 		/**<summary>轮次效果</summary>*/ private bool CombConfigSyncopatorApplyEffectsByRound { get { return CombConfigSyncopator && configForm.MatchCutApplyEffectsByRoundCheck.Checked; } }
 		/**<summary>累加泛音</summary>*/ private bool CombConfigSyncopatorAccumulateHarmonics { get { return CombConfigSyncopator && configForm.MatchCutAccumulateHarmonicsCheck.Checked; } }
 		/**<summary>相同音高</summary>*/ private bool CombConfigSyncopatorSustain { get { return CombConfigSyncopator && configForm.MatchCutSustainCheck.Checked; } }
@@ -283,14 +284,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		#endregion
 		#region 素材乐团
 		/**<summary>启　　用</summary>*/ private bool CombConfigOrchestra { get { return CombConfigOn && configForm.LinearMapTab.IsSelected(); } }
-		///**<summary>递　　减</summary>*/ private bool CombConfigOrchestraDescending { get { return false; }}// configForm.LinearMapDescendingCheck.Checked && !CombConfigOrchestraSelectionModeLuckyDip; } }
 		/**<summary>允许重用</summary>*/ private bool CombConfigOrchestraAllowReuse { get { return configForm.LinearMapReuseCheck.Checked || CombConfigMysteryBoxPicker; } }
-		///**<summary>素材盲盒</summary>*/ private bool CombConfigOrchestraSelectionModeLuckyDip { get { return false; }}// configForm.LinearMapSelectionModeLuckyDipRadio.Checked; } }
+		#endregion
+		#region 原音系战法/鞑靼战法
+		/**<summary>启　　用</summary>*/ private bool CombConfigShupelunkerTartar { get { return CombConfigOn && configForm.ShupelunkerTab.IsSelected(); } }
+		/**<summary>鞑靼战法</summary>*/ private bool CombConfigTartar { get { return CombConfigShupelunkerTartar && configForm.TartarRadio.Checked; } }
+		/**<summary>八　　度</summary>*/ private bool CombConfigShupelunkerUnallocatedOctaves { get { return CombConfigShupelunkerTartar && configForm.ShupelunkerUnallocatedOctavesCheck.Checked; } }
+		/**<summary>向上填充</summary>*/ private bool CombConfigShupelunkerUnallocatedFillUp { get { return CombConfigShupelunkerTartar && configForm.ShupelunkerUnallocatedFillUpCheck.Checked; } }
+		/**<summary>向下填充</summary>*/ private bool CombConfigShupelunkerUnallocatedFillDown { get { return CombConfigShupelunkerTartar && configForm.ShupelunkerUnallocatedFillDownCheck.Checked; } }
+		/**<summary>缺省兜底</summary>*/ private bool CombConfigShupelunkerUnallocatedDefault { get { return CombConfigShupelunkerTartar && configForm.ShupelunkerUnallocatedDefaultCheck.Checked; } }
+		/**<summary>偏　　移</summary>*/ private int CombConfigShupelunkerOffset { get { return ParsePitchOffset(configForm.ShupelunkerOffsetCombo.Text); } }
+		/**<summary>独占轨道</summary>*/ private bool CombConfigShupelunkerExclusiveTrack { get { return CombConfigShupelunkerTartar && configForm.ShupelunkerExclusiveTrackCheck.Checked; } }
+		/**<summary>允许重用</summary>*/ private bool CombConfigTartarAllowReuse { get { return CombConfigShupelunkerTartar && configForm.TartarReuseCheck.Checked; } }
 		#endregion
 		#endregion
 
 		#region 五线谱属性
-		/**<summary>启　　用</summary>*/ private bool SheetConfig { get { return configForm.StaffVisualizerConfigCheck.Checked; } }
+		/**<summary>启　　用</summary>*/
+		private bool SheetConfig { get { return configForm.StaffVisualizerConfigCheck.Checked; } }
 		/**<summary>生成谱面</summary>*/ private bool SheetConfigGenerateStaffLines { get { return configForm.StaffGenerateLinesCheck.Checked; } }
 		/**<summary>相对位置</summary>*/ private bool SheetConfigRelative { get { return configForm.StaffRelativeValueCheck.Checked; } }
 		/**<summary>谱左边距</summary>*/ private int SheetConfigPaddingLeft { get { return (int)configForm.StaffSurfacePaddingLeftBox.Value; } }
@@ -370,12 +381,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>
 		/// 根据主音高名称转换为主音高对应的值。
 		/// </summary>
-		/// <param name="key">音名</param>
-		/// <param name="oct">八度</param>
+		/// <param name="noteName">音名</param>
+		/// <param name="octave">八度</param>
 		/// <returns>主音高结果值</returns>
-		public static int PitchMap(string key, string oct) {
-			List<string> keys = new List<string>("C,C#,D,D#,E,F,F#,G,G#,A,A#,B".Split(','));
-			int value = keys.IndexOf(key) + int.Parse(oct) * 12;
+		public static int PitchMap(string noteName, string octave) {
+			List<string> noteNames = "C,C#,D,D#,E,F,F#,G,G#,A,A#,B".Split(',').ToList();
+			int noteNameIndex = noteNames.IndexOf(noteName.ToUpperInvariant());
+			if (noteNameIndex == -1) {
+				if (noteName.EndsWith("#"))
+					noteNameIndex = noteNames.IndexOf(noteName[0].ToString().ToUpperInvariant()) + 1;
+				else if (noteName.EndsWith("b", StringComparison.InvariantCultureIgnoreCase) && noteName.Length == 2)
+					noteNameIndex = noteNames.IndexOf(noteName[0].ToString().ToUpperInvariant()) - 1;
+				if (noteNameIndex == -1)
+					noteNameIndex = 0;
+			}
+			int value = noteNameIndex + int.Parse(octave) * 12;
 			return value;
 		}
 
@@ -875,18 +895,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					return audioReverse != null || videoReverse != null;
 				}
 			}
-			private double _lastOffset = 0;
-			private double? _autoBasePitch = -1;
+			private Dictionary<double, double?> autoBasePitchMap = new Dictionary<double, double?>();
 			public double? GetAutoBasePitch(double offset) {
-				if (_autoBasePitch == -1 || offset != _lastOffset) {
-					_lastOffset = offset;
+				if (!autoBasePitchMap.ContainsKey(offset)) {
 					if (audioEvent == null || audioEvent.Takes.Count == 0 || !audioEvent.ActiveTake.Media.IsLocalMedia()) return null;
 					string path = audioEvent.ActiveTake.Media.FilePath;
 					double mediaLength = audioEvent.ActiveTake.Media.Length.ToMilliseconds();
 					double ms = (audioEvent.ActiveTake.Offset.ToMilliseconds() + offset) % mediaLength;
 					const double ADDITIONAL_OFFSET = 100;
 					if (mediaLength - ms > ADDITIONAL_OFFSET) ms += ADDITIONAL_OFFSET;
-					_autoBasePitch = PitchDetector.GetPitchAt(path, ms);
+					return autoBasePitchMap[offset] = PitchDetector.GetPitchAt(path, ms);
 
 					/*PitchDetector.RenderToDesktop(
 						filePath: path,
@@ -896,7 +914,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						endMs: ms + audioEvent.Length.ToMilliseconds()
 					);*/
 				}
-				return _autoBasePitch;
+				return autoBasePitchMap[offset];
+			}
+			private double? _affixAsPitch = -1;
+			public double? GetPitchFromAffix(AffixAsPitch affix) {
+				if (_affixAsPitch == -1)
+					_affixAsPitch =
+						(audioEvent == null ? null : EntryPoint.GetPitchFromAffix(audioEvent, affix)) ??
+						(videoEvent == null ? null : EntryPoint.GetPitchFromAffix(videoEvent, affix));
+				return _affixAsPitch;
 			}
 		}
 
@@ -1853,11 +1879,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (AConfigVelocity) audioEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Audio), AConfigVelocityMultiplyGain);
 
 						#region 应用变调
-						double basePitch = AConfigBasePitch;
-						if (AConfigAutoBasePitch) {
-							double? autoBasePitch = activeSource.GetAutoBasePitch(adjustTime ? sourceStartTime : 0);
-							if (autoBasePitch != null) basePitch = autoBasePitch.Value;
-						}
+						double? basePitchOrNull = null;
+						if (CombConfigSyncopatorPicker && CombConfigSyncopatorAffixAsPitch != AffixAsPitch.OFF)
+							basePitchOrNull = activeSource.GetPitchFromAffix(CombConfigSyncopatorAffixAsPitch);
+						if (basePitchOrNull == null && AConfigAutoBasePitch)
+							basePitchOrNull = activeSource.GetAutoBasePitch(adjustTime ? sourceStartTime : 0);
+						double basePitch = basePitchOrNull ?? AConfigBasePitch;
 						double pitchDelta = pitch - basePitch + AConfigOverallShift;
 						bool backToUsePlugin = false;
 					BackToUsePlugin:
@@ -2351,6 +2378,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			foreach (VideoMotionKeyframe key in videoEvent.VideoMotion.Keyframes)
 				key.RotateBy(anim.RotationDeg);
 			return ApplyPvRhythmVisualEffectPartialMethod(videoEvent, anim);
+		}
+
+		public static double? GetPitchFromAffix(TrackEvent trackEvent, AffixAsPitch affix) {
+			if (affix == AffixAsPitch.OFF) return null;
+			const string pattern = @"([A-G][#b]?)(10|\d)";
+			Regex re = new Regex(affix == AffixAsPitch.PREFIX ? "^" + pattern : pattern + "$", RegexOptions.IgnoreCase);
+			GroupCollection groups = re.Match(trackEvent.ActiveTake.Name.Replace('♯', '#').Replace('♭', 'b')).Groups;
+			if (groups.Count != 3) return null;
+			string noteName = groups[1].Value, octave = groups[2].Value;
+			return PitchMap(noteName, octave);
 		}
 
 		private static class PitchStretchConstants {
@@ -26629,10 +26666,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				LengthenableRadio, FreezeEndFramesRadio, TrimEndFramesRadio, SplitThenFreezeRadio,
 				SplitThenResumeRadio, PingPongWithoutSplitRadio, PingPongWithSplitRadio, LoopWithSplitRadio,
 			};
+			foreach (RadioButton radio in truncateOptionRadios)
+				radio.CheckedChanged += TruncateOptionRadio_CheckedChanged;
 			AllowRadioButtonsDoubleClick();
 			NegativeCombo.Anchor = AnchorStyles.Left;
 			IdleEffect_CheckedChanged(null, null);
 			Option_CheckedChanged(null, null);
+		}
+
+		public delegate void TruncateOptionRadioCheckedChangedEventHandler(bool isOn);
+		public event TruncateOptionRadioCheckedChangedEventHandler TruncateOptionRadioCheckedChanged;
+		private void TruncateOptionRadio_CheckedChanged(object sender, EventArgs e) {
+			InvokeTruncateOptionRadioCheckedChanged();
+		}
+		public void InvokeTruncateOptionRadioCheckedChanged() {
+			if (TruncateOptionRadioCheckedChanged != null) TruncateOptionRadioCheckedChanged(!LengthenableRadio.Checked);
 		}
 
 		private void IdleEffect_CheckedChanged(object sender, EventArgs e) {
@@ -29660,7 +29708,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.ShupelunkerOffsetLbl.AutoSize = true;
 			this.ShupelunkerOffsetLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ShupelunkerOffsetLbl.Location = new System.Drawing.Point(3, 0);
+			this.ShupelunkerOffsetLbl.Location = new System.Drawing.Point(0, 0);
+			this.ShupelunkerOffsetLbl.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
 			this.ShupelunkerOffsetLbl.MinimumSize = new System.Drawing.Size(0, 48);
 			this.ShupelunkerOffsetLbl.Name = "ShupelunkerOffsetLbl";
 			this.ShupelunkerOffsetLbl.Size = new System.Drawing.Size(62, 48);
@@ -29690,7 +29739,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			"+72",
 			"+84",
 			"+96"});
-			this.ShupelunkerOffsetCombo.Location = new System.Drawing.Point(71, 3);
+			this.ShupelunkerOffsetCombo.Location = new System.Drawing.Point(68, 3);
 			this.ShupelunkerOffsetCombo.Name = "ShupelunkerOffsetCombo";
 			this.ShupelunkerOffsetCombo.Size = new System.Drawing.Size(174, 40);
 			this.ShupelunkerOffsetCombo.TabIndex = 4;
@@ -29701,7 +29750,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.ShupelunkerOffsetUnitLbl.AutoSize = true;
 			this.ShupelunkerOffsetUnitLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ShupelunkerOffsetUnitLbl.Location = new System.Drawing.Point(248, 0);
+			this.ShupelunkerOffsetUnitLbl.Location = new System.Drawing.Point(245, 0);
 			this.ShupelunkerOffsetUnitLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
 			this.ShupelunkerOffsetUnitLbl.MaximumSize = new System.Drawing.Size(0, 48);
 			this.ShupelunkerOffsetUnitLbl.Name = "ShupelunkerOffsetUnitLbl";
@@ -39009,6 +39058,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MultiSourceCombOrganizerTabs.SetEnabled(ConsonantTab, false);
 			foreach (ComboBox combo in new ComboBox[] { AudioOverallShiftCombo, ShupelunkerOffsetCombo })
 				combo.AutoSelectOff();
+			visualTruncate.TruncateOptionRadioCheckedChanged += on => VideoFreezeLastFrameBtn.ForeColor = on ? Color.Green : Color.Red;
+			visualTruncate.InvokeTruncateOptionRadioCheckedChanged();
 			#if VEGAS_ENVIRONMENT
 			((Action)ReadIni).OnErrorBreak();
 			#endif
@@ -43129,6 +43180,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			LinearMapReuseCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.Unlocked;
 			UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus();
 			if (isLoaded && sender != this) SourceTabScrollPanel.AutoScrollPosition = new Point(0, ushort.MaxValue);
+			ShupelunkerOffsetCombo.SelectionLength = 0;
 		}
 
 		private void SyncopatorOrderRadio_CheckedChanged(object sender, EventArgs e) { UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus(); }
