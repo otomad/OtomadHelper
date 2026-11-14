@@ -8676,6 +8676,39 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// </summary>
 			public MysteryBoxBarWithoutTimeSignatureException() : base(Lang.str.lucky_dip_bar_without_time_signature_exception) { }
 		}
+
+		public class WindowsMidiPlayerMidiOutOpenInternalException : Exception {
+			public readonly WindowsMidiPlayer.MmResult Result;
+			/// <remarks>
+			/// 该异常仅用于抛出，显示错误信息时请传递给 <see cref="WindowsMidiPlayerMidiOutOpenException" /> 调用。
+			/// </remarks>
+			public WindowsMidiPlayerMidiOutOpenInternalException(WindowsMidiPlayer.MmResult result) : base(string.Format("Error code: {0} ({1})", result, (int)result)) { Result = result; }
+		}
+
+		public class WindowsMidiPlayerMidiOutOpenException : Exception {
+			/// <summary>
+			/// Windows MIDI 播放器打开失败，根据 Windows 多媒体错误码抛出详细异常。
+			/// </summary>
+			public WindowsMidiPlayerMidiOutOpenException(WindowsMidiPlayerMidiOutOpenInternalException e) : base(GetMessage(e.Result), e) { }
+
+			private static string GetMessage(WindowsMidiPlayer.MmResult result) {
+				if (result == WindowsMidiPlayer.MmResult.MMSYSERR_NOERROR) return string.Empty;
+				Lang str = Lang.str;
+				string reason;
+				switch (result) {
+					case WindowsMidiPlayer.MmResult.MMSYSERR_ERROR: reason = str.midi_out_open_exception_1; break;
+					case WindowsMidiPlayer.MmResult.MMSYSERR_BADDEVICEID: reason = str.midi_out_open_exception_2; break;
+					case WindowsMidiPlayer.MmResult.MMSYSERR_ALLOCATED: reason = str.midi_out_open_exception_4; break;
+					case WindowsMidiPlayer.MmResult.MMSYSERR_NOMEM: reason = str.midi_out_open_exception_6; break;
+					case WindowsMidiPlayer.MmResult.MMSYSERR_NOTSUPPORTED: reason = str.midi_out_open_exception_7; break;
+					case WindowsMidiPlayer.MmResult.MMSYSERR_BADERRNUM: reason = str.midi_out_open_exception_8; break;
+					case WindowsMidiPlayer.MmResult.MMSYSERR_INVALPARAM: reason = str.midi_out_open_exception_11; break;
+					case WindowsMidiPlayer.MmResult.MIDIERR_NODEVICE: reason = str.midi_out_open_exception_64; break;
+					default: reason = string.Format(str.midi_out_open_exception_unknown, result); break;
+				}
+				return str.midi_out_open_exception_header + "\n\n" + reason;
+			}
+		}
 	}
 
 	/// <summary>
@@ -9644,7 +9677,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	public class WindowsMidiPlayer : IDisposable {
 		// 引入 Windows 多媒体 API
 		[DllImport("winmm.dll")]
-		private static extern int midiOutOpen(out IntPtr lphmo, int uDeviceID, IntPtr dwCallback, IntPtr dwInstance, int dwFlags);
+		private static extern MmResult midiOutOpen(out IntPtr lphmo, int uDeviceID, IntPtr dwCallback, IntPtr dwInstance, int dwFlags);
 
 		[DllImport("winmm.dll")]
 		private static extern int midiOutShortMsg(IntPtr hmo, uint dwMsg);
@@ -9655,14 +9688,29 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private IntPtr midiHandle = IntPtr.Zero;
 		private const int MIDI_MAPPER = -1; // 使用系统默认的 MIDI 映射器（通常是微软内置的 GS 波表合成器）
 
-		private WindowsMidiPlayer() { }
-		public static WindowsMidiPlayer Create() {
-			WindowsMidiPlayer player = new WindowsMidiPlayer();
-			// 打开 MIDI 设备
-			int result = midiOutOpen(out player.midiHandle, MIDI_MAPPER, IntPtr.Zero, IntPtr.Zero, 0);
-			if (result != 0) return null; // 无法打开 Windows 默认 MIDI 输出设备。
-			S.s = result;
-			return player;
+		/// <exception cref="Exceptions.WindowsMidiPlayerMidiOutOpenInternalException">打开 MIDI 播放器失败。</exception>
+		public WindowsMidiPlayer() {
+			// 1. 首先尝试打开默认的 MIDI 映射器 (-1)
+			MmResult result = midiOutOpen(out midiHandle, MIDI_MAPPER, IntPtr.Zero, IntPtr.Zero, 0);
+			// 2. 如果映射器返回 4 (已被占用)，尝试自动降级：直接打开 0 号设备 (Microsoft GS 波表合成器)
+			if (result == MmResult.MMSYSERR_ALLOCATED) result = midiOutOpen(out midiHandle, 0, IntPtr.Zero, IntPtr.Zero, 0);
+			// 3. 如果依然失败，根据 Windows 多媒体错误码抛出详细异常
+			if (result != MmResult.MMSYSERR_NOERROR) throw new Exceptions.WindowsMidiPlayerMidiOutOpenInternalException(result);
+		}
+
+		/// <summary>
+		/// <see cref="midiOutOpen(out IntPtr, int, IntPtr, IntPtr, int)" /> 函数返回的错误代码。
+		/// </summary>
+		public enum MmResult {
+			MMSYSERR_NOERROR,
+			MMSYSERR_ERROR,
+			MMSYSERR_BADDEVICEID,
+			MMSYSERR_ALLOCATED = 4,
+			MMSYSERR_NOMEM = 6,
+			MMSYSERR_NOTSUPPORTED,
+			MMSYSERR_BADERRNUM,
+			MMSYSERR_INVALPARAM = 11,
+			MIDIERR_NODEVICE = 64, // MIDI 专属错误起点为 64
 		}
 
 		/// <summary>
@@ -9781,7 +9829,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	}
 
 	public class WinFormMidiPlayer : IDisposable {
-		private readonly WindowsMidiPlayer _nativePlayer = WindowsMidiPlayer.Create();
+		private readonly WindowsMidiPlayer _nativePlayer;
+		private readonly Exceptions.WindowsMidiPlayerMidiOutOpenInternalException _nativePlayerException;
 		private readonly System.Windows.Forms.Timer _playbackTimer = new System.Windows.Forms.Timer();
 		private bool _isPlaying = false;
 
@@ -9800,10 +9849,28 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public event EventHandler PlaybackFinished;
 
 		public bool IsPlaying { get { return _isPlaying; } }
+		public bool CanPlay { get { return _nativePlayer != null; } }
 
 		public WinFormMidiPlayer() {
+			try {
+				_nativePlayer = new WindowsMidiPlayer();
+			} catch (Exceptions.WindowsMidiPlayerMidiOutOpenInternalException e) {
+				_nativePlayerException = e;
+			}
 			// 初始化 WinForm 定时器
 			_playbackTimer.Tick += OnTimerTick;
+		}
+
+		/// <summary>
+		/// 如果打开 MIDI 播放器失败，则显示报错。
+		/// </summary>
+		/// <returns>是否有报错？</returns>
+		public bool ShowErrorIfSo() {
+			if (_nativePlayer == null && _nativePlayerException != null) {
+				EntryPoint.ShowError(new Exceptions.WindowsMidiPlayerMidiOutOpenException(_nativePlayerException), ShowErrorState.SILENCE);
+				return true;
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -9811,7 +9878,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </summary>
 		public void PlayTrack(IList<MidiEvent> rawEvents, int deltaTicks = 120, double bpm = 120, byte defaultInstrument = 0) {
 			_deltaTicksPerQuarterNote = deltaTicks;
-			if (_isPlaying || _nativePlayer == null) return;
+			if (_isPlaying || ShowErrorIfSo()) return;
 			if (rawEvents == null || rawEvents.Count == 0) return;
 
 			_isPlaying = true;
@@ -9931,6 +9998,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void ProcessMidiEvent(MidiEvent midiEvent) {
+			if (_nativePlayer == null) return;
+
 			PatchChangeEvent patchChange = midiEvent as PatchChangeEvent;
 			if (patchChange != null) {
 				_nativePlayer.SetInstrument(patchChange.Channel - 1, (byte)patchChange.Patch);
@@ -40689,8 +40758,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MatchCutSustainCacheCapacityLbl.Text = str.pitch_cache_capacity;
 			AudioAutoBasePitchCheck.Text = str.auto_base_pitch;
 			OverflowToolTip.SetToolTip(AudioAutoBasePitchCheck, str.auto_base_pitch_tooltip);
-			PlaySelectedTrackBtn.Text = str.play;
-			OverflowToolTip.SetToolTip(PlaySelectedTrackBtn, str.play_selected_track);
+			MidiPlayer_PlaybackFinished(null, null);
 			AudioNoTuningDrumKitsCheck.Text = str.no_tuning_drum_kits;
 			AudioPluckGroup.Text = str.chorus_crisp;
 			AudioPluckSpliceLbl.Text = str.splice_position;
@@ -43095,6 +43163,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return;
 			}
 
+			if (midiPlayer.ShowErrorIfSo()) return;
+
 			MIDI.TrackInfo track = MidiTrackListView.SelectedItems.Cast<ListViewItem>().Select(item => item.Tag as MIDI.TrackInfo).FirstOrDefault();
 			if (track == null || track.NotesCount == 0 || track.Events.Count == 0) return;
 
@@ -43113,8 +43183,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void MidiPlayer_PlaybackFinished(object sender, EventArgs e) {
-			PlaySelectedTrackBtn.Text = Lang.str.play;
-			OverflowToolTip.SetToolTip(PlaySelectedTrackBtn, Lang.str.play_selected_track);
+			if (midiPlayer.CanPlay) {
+				PlaySelectedTrackBtn.Text = Lang.str.play;
+				OverflowToolTip.SetToolTip(PlaySelectedTrackBtn, Lang.str.play_selected_track);
+			} else {
+				PlaySelectedTrackBtn.Text = Lang.str.cannot_play;
+				OverflowToolTip.SetToolTip(PlaySelectedTrackBtn, null);
+			}
 		}
 
 		private void Tabs_SelectedIndexChanged(object sender, EventArgs e) {
@@ -44246,6 +44321,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			truncate_visual_options = "截断画面选项",
 			encoding = "编码　　",
 			system_default_encoding = "系统默认编码",
+			midi_out_open_exception_header = "无法打开 Windows MIDI 输出设备。",
+			midi_out_open_exception_1 = "【错误代码 1：未指定的系统错误】\n原因：Windows 音频子系统发生内部异常。\n解决：请尝试重启 Windows 音频服务（services.msc 中的 Windows Audio），或重启电脑。",
+			midi_out_open_exception_2 = "【错误代码 2：无效的设备 ID】\n原因：当前电脑未安装任何可用的 MIDI 播放设备，或声卡驱动异常。\n解决：请打开“设备管理器”检查声卡驱动是否正常，并确保系统自带的“Microsoft GS Wavetable Synth”未被禁用。",
+			midi_out_open_exception_4 = "【错误代码 4：MIDI 音频设备正被占用】\n原因：系统的 MIDI 合成器当前正被其他软件独占使用，或者之前有播放程序异常退出，导致音频设备未能正常释放。\n解决：1. 请关闭可能正在使用音频或 MIDI 的软件（如编曲软件、网页音乐播放器等）后重试；\n2. 打开任务管理器，结束可能残留的相关音频进程；\n3. 如果仍无法解决，请尝试重启 Windows 音频服务（在服务中重启“Windows Audio”）或直接重启电脑以释放被锁定的设备。",
+			midi_out_open_exception_6 = "【错误代码 6：内存不足】\n原因：系统没有足够的可用内存来分配或锁定 MIDI 缓冲区。\n解决：请关闭部分占用内存较大的应用程序后重试。",
+			midi_out_open_exception_7 = "【错误代码 7：功能不受支持】\n原因：当前选定的音频设备不支持标准的 MIDI 输出指令。\n解决：请在 Windows 声音设置中更改默认播放设备。",
+			midi_out_open_exception_8 = "【错误代码 8：无效的错误编号】\n原因：驱动程序返回了系统无法识别的错误状态。\n解决：建议更新或重新安装您的声卡驱动程序。",
+			midi_out_open_exception_11 = "【错误代码 11：传递了无效的参数】\n原因：调用 midiOutOpen 时传入的标志位或回调函数指针格式不正确。\n解决：属于程序内部 API 传参错误，请检查 P/Invoke 函数签名定义。",
+			midi_out_open_exception_64 = "【错误代码 64：找不到 MIDI 端口】\n原因：MIDI 映射器无法找到任何可用的底层 MIDI 硬件或软件合成器端口。\n解决：请检查系统中是否存在有效的 MIDI 输出设备，或尝试重启音频服务。",
+			midi_out_open_exception_unknown = "【错误代码 {0}：未知的 MIDI 设备打开失败】\n原因：底层 Windows 多媒体接口返回了未收录的错误状态。\n解决：请检查声卡驱动状态、系统音量合成器或重启应用程序。",
+			cannot_play = "无法播放",
 			__eol__ = null;
 
 		static Lang() {
