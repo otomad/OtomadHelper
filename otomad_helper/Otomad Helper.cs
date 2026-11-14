@@ -1627,6 +1627,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				//string _testName = null;
 				NoteEvent noteEvent = midiEvent as NoteEvent;
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
+				// 跳过某些 MIDI 中伪装成音符关的音符开。例如未关联音符关事件、力度为 0。
+				if (!noteOnEvent.isAuthentic()) continue;
 				bool isHarmonicInChords = prevNoteOnEvent != null && noteOnEvent.AbsoluteTime == prevNoteOnEvent.AbsoluteTime;
 				if (!isHarmonicInChords) currentUpperNoteNumber = noteOnEvent.NoteNumber;
 				bool isDrumKit = noteEvent.Channel == 10;
@@ -2266,25 +2268,27 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endregion
 
 			#region 插入标记
-			if (InsertBeatChangeMarker && midi.IsVariableBeat) {
-				foreach (TimeSignatureEvent timeSignatureEvent in midi.TimeSignatureTrack) {
-					double startTime = MidiEventActualTime.GetActualTime(timeSignatureEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
-					if (startTime < MidiConfigStartTime) continue; if (startTime > MidiConfigEndTime) break;
-					InsertMarkerIfNotExisted(Timecode.FromMilliseconds(generateBeginTime + startTime), timeSignatureEvent.TimeSignature);
+			if (MidiConfigTracks.CurrentChannel == 0) {
+				if (InsertBeatChangeMarker && midi.IsVariableBeat) {
+					foreach (TimeSignatureEvent timeSignatureEvent in midi.TimeSignatureTrack) {
+						double startTime = MidiEventActualTime.GetActualTime(timeSignatureEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
+						if (startTime < MidiConfigStartTime) continue; if (startTime > MidiConfigEndTime && sliceComposition) break;
+						InsertMarkerIfNotExisted(Timecode.FromMilliseconds(generateBeginTime + startTime), timeSignatureEvent.TimeSignature);
+					}
 				}
-			}
-			if (InsertBpmChangeMarker && midi.IsVariableBpm) {
-				foreach (TempoEvent tempoEvent in midi.MsPerQuarterTrack) {
-					double startTime = MidiEventActualTime.GetActualTime(tempoEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
-					if (startTime < MidiConfigStartTime) continue; if (startTime > MidiConfigEndTime) break;
-					InsertMarkerIfNotExisted(Timecode.FromMilliseconds(generateBeginTime + startTime), tempoEvent.Tempo.ToString());
+				if (InsertBpmChangeMarker && midi.IsVariableBpm) {
+					foreach (TempoEvent tempoEvent in midi.MsPerQuarterTrack) {
+						double startTime = MidiEventActualTime.GetActualTime(tempoEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
+						if (startTime < MidiConfigStartTime) continue; if (startTime > MidiConfigEndTime && sliceComposition) break;
+						InsertMarkerIfNotExisted(Timecode.FromMilliseconds(generateBeginTime + startTime), Math.Round(tempoEvent.Tempo, 3, MidpointRounding.AwayFromZero).ToString());
+					}
 				}
-			}
-			if (InsertMidiMarker) {
-				foreach (TextEvent textEvent in midi.MarkerTrack) {
-					double startTime = MidiEventActualTime.GetActualTime(textEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
-					if (startTime < MidiConfigStartTime) continue; if (startTime > MidiConfigEndTime) break;
-					InsertMarkerIfNotExisted(Timecode.FromMilliseconds(generateBeginTime + startTime), textEvent.Text);
+				if (InsertMidiMarker) {
+					foreach (TextEvent textEvent in midi.MarkerTrack) {
+						double startTime = MidiEventActualTime.GetActualTime(textEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
+						if (startTime < MidiConfigStartTime) continue; if (startTime > MidiConfigEndTime && sliceComposition) break;
+						InsertMarkerIfNotExisted(Timecode.FromMilliseconds(generateBeginTime + startTime), textEvent.Text);
+					}
 				}
 			}
 			#endregion
@@ -4869,6 +4873,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			} finally {
 				graphics.Dispose();
 			}
+		}
+
+		/// <summary>
+		/// 判断一个音符开事件是否<b>不是</b>由一个音符关事件假冒的。
+		/// </summary>
+		public static bool isAuthentic(this NoteOnEvent noteOnEvent) {
+			return noteOnEvent != null && noteOnEvent.OffEvent != null && noteOnEvent.Velocity != 0;
 		}
 	}
 
@@ -7558,7 +7569,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>
 		/// 时值元数据信息事件所在的音轨。
 		/// </summary>
-		public IEnumerable<TempoEvent> MsPerQuarterTrack { get; private set; }
+		public List<TempoEvent> MsPerQuarterTrack { get; private set; }
 		/// <summary>
 		/// 拍号的显示值。
 		/// </summary>
@@ -7574,7 +7585,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>
 		/// 拍号元数据信息事件所在的音轨。
 		/// </summary>
-		public IEnumerable<TimeSignatureEvent> TimeSignatureTrack { get; private set; }
+		public List<TimeSignatureEvent> TimeSignatureTrack { get; private set; }
 		/// <summary>
 		/// 标记元数据信息事件所在的音轨。
 		/// </summary>
@@ -7646,6 +7657,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					}
 					if (x is NoteOnEvent && y is NoteOnEvent) {
 						NoteOnEvent xn = x as NoteOnEvent, yn = y as NoteOnEvent;
+						if (xn.OffEvent == null || yn.OffEvent == null) // 没有音符关的音符开。
+							return xn.OffEvent == null ? 1 : yn.OffEvent == null ? -1 : 0;
 						if (xn.NoteLength != yn.NoteLength) // 再比较两者的持续时间，持续时间更长的在前。
 							return yn.NoteLength - xn.NoteLength;
 					}
@@ -7661,18 +7674,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return Clone();
 			}
 		}
-		public MIDI(string path) : base(path) {
+		public MIDI(string path) : base(path, false) {
 			Path = path;
 			List<TrackInfo> trackInfos = new List<TrackInfo>();
 			TicksPerQuarter = DeltaTicksPerQuarterNote;
 			MsPerQuarter = 0; // 毫秒每拍
 			TimeSignature = "";
+			IList<MidiEvent> msPerQuarterTrack = null, timeSignatureTrack = null;
 			int index = 1; // 序号从 1 起始。
 			for (int i = 0; i < Events.Tracks; i++) {
 				TrackInfo info = new TrackInfo { Channel = -1, Events = Events[i] };
 				foreach (MidiEvent midiEvent in info.Events) {
-					if (midiEvent is NoteEvent && !(midiEvent is NoteOnEvent)) {
-						NoteEvent noteEvent = midiEvent as NoteEvent;
+					if (midiEvent is NoteOnEvent) {
+						NoteOnEvent noteEvent = midiEvent as NoteOnEvent;
+						// 跳过某些 MIDI 中伪装成音符关的音符开。例如未关联音符关事件、力度为 0。
+						if (!noteEvent.isAuthentic()) continue;
 						if (info.NotesCount++ == 0) {
 							info.BeginNote = noteEvent.NoteName; // 起音判断
 							info.BeginNoteNumber = noteEvent.NoteNumber;
@@ -7686,9 +7702,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					}
 					if (midiEvent is TempoEvent && MsPerQuarter == 0) {
 						TempoEvent tempoEvent = midiEvent as TempoEvent;
-						MsPerQuarter = Convert.ToDouble(tempoEvent.MicrosecondsPerQuarterNote) / 1000; // 每四分音符多少毫秒
+						MsPerQuarter = (double)tempoEvent.MicrosecondsPerQuarterNote / 1000; // 每四分音符多少毫秒
 						// tempoEvent.Tempo; // 用 Tempo 表示 BPM
-						MsPerQuarterTrack = info.Events.OfType<TempoEvent>();
+						msPerQuarterTrack = info.Events;
 					}
 					if (midiEvent is TextEvent && !info.HasName) {
 						TextEvent textEvent = midiEvent as TextEvent;
@@ -7710,7 +7726,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						TimeSignature = timeSignatureEvent.TimeSignature; // 初始节拍
 						TimeSignatureNumerator = timeSignatureEvent.Numerator;
 						TimeSignatureDenominator = timeSignatureEvent.GetDenominator();
-						TimeSignatureTrack = info.Events.OfType<TimeSignatureEvent>();
+						timeSignatureTrack = info.Events;
 					}
 					if (midiEvent is ControlChangeEvent && !info.IsVariablePan) {
 						ControlChangeEvent controlChangeEvent = midiEvent as ControlChangeEvent;
@@ -7736,7 +7752,33 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (isDrumKit) trackInfos.AddRange(SeparateDrumsFromTrack(info));
 				}
 			}
+			OptimizeMsPerQuarterAndTimeSignatureTrack(msPerQuarterTrack, timeSignatureTrack);
 			TrackInfos = trackInfos;
+		}
+		private void OptimizeMsPerQuarterAndTimeSignatureTrack(IList<MidiEvent> msPerQuarterSourceTrack, IList<MidiEvent> timeSignatureSourceTrack) {
+			MsPerQuarterTrack = new List<TempoEvent>();
+			TimeSignatureTrack = new List<TimeSignatureEvent>();
+			if (MsPerQuarter == 0) return;
+			Func<MidiEvent, double> GetMs = midiEvent => Math.Floor(midiEvent.AbsoluteTime * MsPerQuarter / TicksPerQuarter);
+			if (msPerQuarterSourceTrack != null)
+				foreach (TempoEvent tempoEvent in msPerQuarterSourceTrack.OfType<TempoEvent>()) {
+					TempoEvent prevTempoEvent = MsPerQuarterTrack.LastOrDefault();
+					if (prevTempoEvent != null) {
+						if (GetMs(prevTempoEvent) == GetMs(tempoEvent)) MsPerQuarterTrack.RemoveAt(MsPerQuarterTrack.Count - 1);
+						else if (prevTempoEvent.MicrosecondsPerQuarterNote == tempoEvent.MicrosecondsPerQuarterNote) continue;
+					}
+					MsPerQuarterTrack.Add(tempoEvent);
+				}
+			if (timeSignatureSourceTrack != null)
+				foreach (TimeSignatureEvent timeSignatureEvent in timeSignatureSourceTrack.OfType<TimeSignatureEvent>()) {
+					TimeSignatureEvent prevTimeSignatureEvent = TimeSignatureTrack.LastOrDefault();
+					if (prevTimeSignatureEvent != null) {
+						if (GetMs(prevTimeSignatureEvent) == GetMs(timeSignatureEvent)) TimeSignatureTrack.RemoveAt(TimeSignatureTrack.Count - 1);
+						else if (prevTimeSignatureEvent.Numerator == timeSignatureEvent.Numerator && prevTimeSignatureEvent.Denominator == timeSignatureEvent.Denominator) continue;
+					}
+					TimeSignatureTrack.Add(timeSignatureEvent);
+				}
+			//S.s = string.Join(",", MsPerQuarterTrack.Select(i => GetMs(i)));
 		}
 		/// <summary><b>S</b>cientific <b>P</b>itch <b>N</b>otation <b>Re</b>gex</summary>
 		internal static readonly Regex spnRe = new Regex(@"^[A-G]#?\d+$");
@@ -7751,7 +7793,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (!drums.ContainsKey(noteNumber)) {
 					TrackInfo drum = drumKitsTrack.Clone();
 					drum.Events = drum.Events.Where(note => !(note is NoteEvent) || ((NoteEvent)note).NoteNumber == noteNumber).ToList();
-					drum.NotesCount = drum.Events.Count(note => note is NoteEvent && !(note is NoteOnEvent));
+					drum.NotesCount = drum.Events.Count(note => note is NoteOnEvent && ((NoteOnEvent)note).isAuthentic());
 					drum.BeginNote = noteEvent.NoteName;
 					drum.DrumKit = DrumKitState.SeparatedDrum;
 					drums.Add(noteNumber, drum);
@@ -7796,8 +7838,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			return result;
 		}
-		public bool IsVariableBeat { get { return TimeSignatureTrack != null && TimeSignatureTrack.DistinctBy(evt => ValueTuple.Create(evt.Numerator, evt.Denominator)).Count() > 1; } }
-		public bool IsVariableBpm { get { return MsPerQuarterTrack != null && MsPerQuarterTrack.DistinctBy(tempo => tempo.Tempo).Count() > 1; } }
+		public bool IsVariableBeat { get { return TimeSignatureTrack != null && TimeSignatureTrack.Count > 1; } }
+		public bool IsVariableBpm { get { return MsPerQuarterTrack != null && MsPerQuarterTrack.Count > 1; } }
 
 		/// <summary>
 		/// Latin1 编码又称为 ISO-8859-1 编码。
@@ -7947,6 +7989,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <param name="midi">MIDI 对象。</param>
 		/// <returns>包含音频播放的实际时刻与时长的值类型对象。</returns>
 		public static MidiEventActualTime GetActualTime(NoteOnEvent noteOnEvent, bool isVariableBpm, VariableBpmIntegrator integrator, MIDI midi) {
+			// 如果某个音符开事件未关联音符关事件，此时音符长度值不可用，此时使用一个四分音符固定长度值代替。
+			//int noteLength = noteOnEvent.OffEvent != null ? noteOnEvent.NoteLength : midi.TicksPerQuarter;
 			return !isVariableBpm ?
 				new MidiEventActualTime(
 					noteOnEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter,
@@ -20512,13 +20556,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public void Next() {
 			if (Count != 0) {
 				RemoveAt(0);
-				currentChannel++;
+				CurrentChannel++;
 			}
 		}
 		private int selectedChannelCount = 0;
 		public int SelectedChannelCount { get { return selectedChannelCount; } }
-		private int currentChannel = 0;
-		public int CurrentChannel { get { return currentChannel; } }
+		public int CurrentChannel { get; private set; }
 		public void CompleteConfig() {
 			selectedChannelCount = Count;
 			// 将鼓组轨道移至末尾
@@ -20530,7 +20573,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 		public double GetPercent(double currentTrackPercent) {
 			double aChannelPercent = 100.0 / selectedChannelCount;
-			double completedChannelPercent = currentChannel * aChannelPercent;
+			double completedChannelPercent = CurrentChannel * aChannelPercent;
 			double currentChannelPercent = currentTrackPercent / 100.0 * aChannelPercent;
 			return completedChannelPercent + currentChannelPercent;
 		}
@@ -39830,6 +39873,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 				UpdateMidiInfo(midi);
 				SetCheckedEnabled(null, null);
+				MidiTrackListView_SelectedIndexChanged(null, null);
 				#endregion
 			}
 			return ok;
@@ -39938,7 +39982,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MidiTrackListView.Height++;
 			#endregion
 			//MidiTrackListView.EndUpdate();
-			MidiPlayer_Stop();
+			MidiTrackListView_SelectedIndexChanged(null, null);
 			MidiTrackListView_InternalItemChecking = false;
 		}
 
@@ -43189,7 +43233,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			OverflowToolTip.SetToolTip(PlaySelectedTrackBtn, null);
 			midiPlayer.PlaybackFinished += MidiPlayer_PlaybackFinished;
-			if (midiPlayer.IsPlaying) PlaySelectedTrackBtn.Text = Lang.str.stop;
+			PlaySelectedTrackBtn.Text = Lang.str.stop;
 
 			double bpm = MidiProjectBpmCheck.Checked ? vegas.Project.Ruler.BeatsPerMinute :
 				MidiCustomBpmCheck.Checked ? (double)MidiCustomBpmBox.Value : parent.midi.Bpm;
