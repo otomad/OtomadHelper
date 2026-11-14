@@ -7569,7 +7569,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>
 		/// 时值元数据信息事件所在的音轨。
 		/// </summary>
-		public List<TempoEvent> MsPerQuarterTrack { get; private set; }
+		public IEnumerable<TempoEvent> MsPerQuarterTrack { get; private set; }
 		/// <summary>
 		/// 拍号的显示值。
 		/// </summary>
@@ -7585,7 +7585,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>
 		/// 拍号元数据信息事件所在的音轨。
 		/// </summary>
-		public List<TimeSignatureEvent> TimeSignatureTrack { get; private set; }
+		public IEnumerable<TimeSignatureEvent> TimeSignatureTrack { get; private set; }
 		/// <summary>
 		/// 标记元数据信息事件所在的音轨。
 		/// </summary>
@@ -7704,7 +7704,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						TempoEvent tempoEvent = midiEvent as TempoEvent;
 						MsPerQuarter = (double)tempoEvent.MicrosecondsPerQuarterNote / 1000; // 每四分音符多少毫秒
 						// tempoEvent.Tempo; // 用 Tempo 表示 BPM
-						msPerQuarterTrack = info.Events;
+						MsPerQuarterTrack = info.Events.OfType<TempoEvent>();
 					}
 					if (midiEvent is TextEvent && !info.HasName) {
 						TextEvent textEvent = midiEvent as TextEvent;
@@ -7726,7 +7726,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						TimeSignature = timeSignatureEvent.TimeSignature; // 初始节拍
 						TimeSignatureNumerator = timeSignatureEvent.Numerator;
 						TimeSignatureDenominator = timeSignatureEvent.GetDenominator();
-						timeSignatureTrack = info.Events;
+						TimeSignatureTrack = info.Events.OfType<TimeSignatureEvent>();
 					}
 					if (midiEvent is ControlChangeEvent && !info.IsVariablePan) {
 						ControlChangeEvent controlChangeEvent = midiEvent as ControlChangeEvent;
@@ -7752,33 +7752,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (isDrumKit) trackInfos.AddRange(SeparateDrumsFromTrack(info));
 				}
 			}
-			OptimizeMsPerQuarterAndTimeSignatureTrack(msPerQuarterTrack, timeSignatureTrack);
 			TrackInfos = trackInfos;
-		}
-		private void OptimizeMsPerQuarterAndTimeSignatureTrack(IList<MidiEvent> msPerQuarterSourceTrack, IList<MidiEvent> timeSignatureSourceTrack) {
-			MsPerQuarterTrack = new List<TempoEvent>();
-			TimeSignatureTrack = new List<TimeSignatureEvent>();
-			if (MsPerQuarter == 0) return;
-			Func<MidiEvent, double> GetMs = midiEvent => Math.Floor(midiEvent.AbsoluteTime * MsPerQuarter / TicksPerQuarter);
-			if (msPerQuarterSourceTrack != null)
-				foreach (TempoEvent tempoEvent in msPerQuarterSourceTrack.OfType<TempoEvent>()) {
-					TempoEvent prevTempoEvent = MsPerQuarterTrack.LastOrDefault();
-					if (prevTempoEvent != null) {
-						if (GetMs(prevTempoEvent) == GetMs(tempoEvent)) MsPerQuarterTrack.RemoveAt(MsPerQuarterTrack.Count - 1);
-						else if (prevTempoEvent.MicrosecondsPerQuarterNote == tempoEvent.MicrosecondsPerQuarterNote) continue;
-					}
-					MsPerQuarterTrack.Add(tempoEvent);
-				}
-			if (timeSignatureSourceTrack != null)
-				foreach (TimeSignatureEvent timeSignatureEvent in timeSignatureSourceTrack.OfType<TimeSignatureEvent>()) {
-					TimeSignatureEvent prevTimeSignatureEvent = TimeSignatureTrack.LastOrDefault();
-					if (prevTimeSignatureEvent != null) {
-						if (GetMs(prevTimeSignatureEvent) == GetMs(timeSignatureEvent)) TimeSignatureTrack.RemoveAt(TimeSignatureTrack.Count - 1);
-						else if (prevTimeSignatureEvent.Numerator == timeSignatureEvent.Numerator && prevTimeSignatureEvent.Denominator == timeSignatureEvent.Denominator) continue;
-					}
-					TimeSignatureTrack.Add(timeSignatureEvent);
-				}
-			//S.s = string.Join(",", MsPerQuarterTrack.Select(i => GetMs(i)));
 		}
 		/// <summary><b>S</b>cientific <b>P</b>itch <b>N</b>otation <b>Re</b>gex</summary>
 		internal static readonly Regex spnRe = new Regex(@"^[A-G]#?\d+$");
@@ -7838,8 +7812,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			return result;
 		}
-		public bool IsVariableBeat { get { return TimeSignatureTrack != null && TimeSignatureTrack.Count > 1; } }
-		public bool IsVariableBpm { get { return MsPerQuarterTrack != null && MsPerQuarterTrack.Count > 1; } }
+		public bool IsVariableBeat { get { return TimeSignatureTrack != null && TimeSignatureTrack.DistinctBy(evt => ValueTuple.Create(evt.Numerator, evt.Denominator)).Count() > 1; } }
+		public bool IsVariableBpm { get { return MsPerQuarterTrack != null && MsPerQuarterTrack.DistinctBy(tempo => tempo.Tempo).Count() > 1; } }
 
 		/// <summary>
 		/// Latin1 编码又称为 ISO-8859-1 编码。
@@ -39432,9 +39406,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MidiEndSecondBox.DoubleValue = configIni.Read("MidiEndTime", 0d);
 			MidiAutoChangeProjectBpmCheck.Checked = configIni.Read("MidiAutoChangeProjectBpm", false);
 			MidiAutoChangeProjectBeatCheck.Checked = configIni.Read("MidiAutoChangeProjectBeat", false);
-			InsertMidiMarkerCheck.UserChecked = configIni.Read("InsertMidiMarker", false);
-			InsertBpmChangeMarkerCheck.UserChecked = configIni.Read("InsertBpmChangeMarker", false);
-			InsertBeatChangeMarkerCheck.UserChecked = configIni.Read("InsertBeatChangeMarker", false);
+			InsertMidiMarkerCheck.UserChecked = configIni.Read("InsertMidiMarker", true);
+			InsertBpmChangeMarkerCheck.UserChecked = configIni.Read("InsertBpmChangeMarker", true);
+			InsertBeatChangeMarkerCheck.UserChecked = configIni.Read("InsertBeatChangeMarker", true);
 			MoveCursorAfterCompletion = configIni.Read("MoveCursorAfterCompletion", MoveCursorAfterCompletion.BEFORE_FIRST_NOTE);
 			GroupTrackBy = configIni.Read("GroupTrackBy", GroupTrackBy.TRACK);
 			CollapseTrackGroupCheck.Checked = configIni.Read("CollapseTrackGroup", true);
