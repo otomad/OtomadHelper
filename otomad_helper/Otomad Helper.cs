@@ -39361,6 +39361,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				else ChooseSourceCombo.SelectedIndex = (int)MediaSourceFrom.SELECTED_CLIP; // SELECTED_MEDIA;
 			} else ChooseSourceCombo.SelectedIndex = (int)parent.SuggestSelectedSourceFrom;
 			MidiTrackSeparateDrumsCheck.Checked = configIni.Read("MidiSeparateDrums", false);
+			ScoreEncodingCodePage = configIni.Read("MidiEncoding", 0);
 			if (OpenMidiFile(configIni.Read("LastMidiFile", null), true, false)) {
 				string lastMidiTrackCheckedAndSorted = configIni.Read("LastMidiTrackCheckedAndSorted", "");
 				MidiTrackListView_InternalItemChecking = true;
@@ -39406,23 +39407,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.StartSection("Multisource");
 			MultisourceCombPicker = configIni.Read("Picker", MultisourceCombMode.OFF);
 			MultisourceCombOrganizer = configIni.Read("Organizer", MultisourceCombMode.MYSTERY_BOX);
-			LuckyDipTrackCheck.Checked = configIni.Read("LuckyDipTrack", false);
-			LuckyDipMarkerCheck.Checked = configIni.Read("LuckyDipMarker", true);
-			LuckyDipBarOrBeatCheck.Checked = configIni.Read("LuckyDipBarOrBeat", true);
-			LuckyDipBarOrBeatPeriodBox.SetValue(configIni.Read("LuckyDipBarOrBeatPeriodValue", 4), 4);
-			LuckyDipBarOrBeatPeriodUnitCombo.SetIndex(configIni.Read("LuckyDipBarOrBeatPeriodUnit", 0), 0);
-			LuckyDipBarOrBeatPreparationBox.SetValue(configIni.Read("LuckyDipBarOrBeatPreparationValue", 0), 0);
-			LuckyDipBarOrBeatPreparationUnitCombo.SetIndex(configIni.Read("LuckyDipBarOrBeatPreparationUnit", 0), 0);
-			LuckyDipLotionBathCheck.Checked = configIni.Read("LuckyDipLotionBath", false);
-			LuckyDipLotionBathIntervalBox.DoubleValue = configIni.Read("LuckyDipLotionBathInterval", 1000d);
-			MatchCutOrder = configIni.Read("MatchCutOrder", SyncopatorOrder.SEQUENTIAL);
-			MatchCutApplyEffectsByRoundCheck.UserChecked = configIni.Read("MatchCutApplyEffectsByRound", false);
-			MatchCutAccumulateHarmonicsCheck.Checked = configIni.Read("MatchCutAccumulateHarmonics", false);
-			MatchCutRepeatBox.SetValue(configIni.Read("MatchCutRepeatOne", 1), 1);
-			MatchCutRepeatRoundBox.SetValue(configIni.Read("MatchCutRepeatRound", 0), 0);
-			MatchCutSustainCheck.Checked = configIni.Read("MatchCutSustain", false);
-			MatchCutSustainCacheCapacityBox.Value = configIni.Read("MatchCutSustainCacheCapacity", 4m);
-			LinearMapReuseCheck.UserChecked = configIni.Read("LinearMapReuse", true);
+			MultiSourceConfigSelectedAsFirstCheck.UserChecked = configIni.Read("SelectedAsFirst", true);
+			LuckyDipTrackCheck.Checked = configIni.Read("MysteryBoxTrack", false);
+			LuckyDipMarkerCheck.Checked = configIni.Read("MysteryBoxMarker", true);
+			LuckyDipBarOrBeatCheck.Checked = configIni.Read("MysteryBoxBarOrBeat", true);
+			LuckyDipBarOrBeatPeriodBox.SetValue(configIni.Read("MysteryBoxBarOrBeatPeriodValue", 4), 4);
+			LuckyDipBarOrBeatPeriodUnitCombo.SetIndex(configIni.Read("MysteryBoxBarOrBeatPeriodUnit", 0), 0);
+			LuckyDipBarOrBeatPreparationBox.SetValue(configIni.Read("MysteryBoxBarOrBeatPreparationValue", 0), 0);
+			LuckyDipBarOrBeatPreparationUnitCombo.SetIndex(configIni.Read("MysteryBoxBarOrBeatPreparationUnit", 0), 0);
+			LuckyDipLotionBathCheck.Checked = configIni.Read("MysteryBoxLotionBath", false);
+			LuckyDipLotionBathIntervalBox.DoubleValue = configIni.Read("MysteryBoxLotionBathInterval", 1000d);
+			MatchCutOrder = configIni.Read("SyncopatorOrder", SyncopatorOrder.SEQUENTIAL);
+			MatchCutApplyEffectsByRoundCheck.UserChecked = configIni.Read("SyncopatorApplyEffectsByRound", false);
+			MatchCutAccumulateHarmonicsCheck.Checked = configIni.Read("SyncopatorAccumulateHarmonics", false);
+			MatchCutRepeatBox.SetValue(configIni.Read("SyncopatorRepeatOne", 1), 1);
+			MatchCutRepeatRoundBox.SetValue(configIni.Read("SyncopatorRepeatRound", 0), 0);
+			MatchCutSustainCheck.Checked = configIni.Read("SyncopatorSustain", false);
+			MatchCutSustainCacheCapacityBox.Value = configIni.Read("SyncopatorSustainCacheCapacity", 4m);
+			LinearMapReuseCheck.UserChecked = configIni.Read("OrchestraReuse", true);
 			EnhanceSelectCheck.UserChecked = configIni.Read("EnhanceSelect", false);
 			AffixAsPitch = configIni.Read("AffixAsPitch", AffixAsPitch.OFF);
 			if (configIni.Read("TartarRatherThanShupelunker", false)) TartarRadio.Checked = true;
@@ -39663,6 +39665,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("InsertBpmChangeMarker", InsertBpmChangeMarkerCheck.UserChecked);
 			configIni.Write("InsertBeatChangeMarker", InsertBeatChangeMarkerCheck.UserChecked);
 			configIni.Write("MidiSeparateDrums", MidiTrackSeparateDrumsCheck.Checked);
+			configIni.Write("MidiEncoding", ScoreEncodingCodePage);
 			configIni.Write("MoveCursorAfterCompletion", MoveCursorAfterCompletion);
 			configIni.Write("GroupTrackBy", GroupTrackBy);
 			configIni.Write("CollapseTrackGroup", CollapseTrackGroupCheck.Checked);
@@ -39676,23 +39679,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.StartSection("Multisource");
 			configIni.Write("Picker", MultisourceCombPicker);
 			configIni.Write("Organizer", MultisourceCombOrganizer);
-			configIni.Write("LuckyDipTrack", LuckyDipTrackCheck.Checked);
-			configIni.Write("LuckyDipMarker", LuckyDipMarkerCheck.Checked);
-			configIni.Write("LuckyDipBarOrBeat", LuckyDipBarOrBeatCheck.Checked);
-			configIni.Write("LuckyDipBarOrBeatPeriodValue", LuckyDipBarOrBeatPeriodBox.Value);
-			configIni.Write("LuckyDipBarOrBeatPeriodUnit", LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex);
-			configIni.Write("LuckyDipBarOrBeatPreparationValue", LuckyDipBarOrBeatPreparationBox.Value);
-			configIni.Write("LuckyDipBarOrBeatPreparationUnit", LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndex);
-			configIni.Write("LuckyDipLotionBath", LuckyDipLotionBathCheck.Checked);
-			configIni.Write("LuckyDipLotionBathInterval", LuckyDipLotionBathIntervalBox.DoubleValue);
-			configIni.Write("MatchCutOrder", MatchCutOrder);
-			configIni.Write("MatchCutApplyEffectsByRound", MatchCutApplyEffectsByRoundCheck.UserChecked);
-			configIni.Write("MatchCutAccumulateHarmonics", MatchCutAccumulateHarmonicsCheck.Checked);
-			configIni.Write("MatchCutRepeatOne", MatchCutRepeatBox.Value);
-			configIni.Write("MatchCutRepeatRound", MatchCutRepeatRoundBox.Value);
-			configIni.Write("MatchCutSustain", MatchCutSustainCheck.Checked);
-			configIni.Write("MatchCutSustainCacheCapacity", MatchCutSustainCacheCapacityBox.Value);
-			configIni.Write("LinearMapReuse", LinearMapReuseCheck.UserChecked);
+			configIni.Write("SelectedAsFirst", MultiSourceConfigSelectedAsFirstCheck.Checked);
+			configIni.Write("MysteryBoxTrack", LuckyDipTrackCheck.Checked);
+			configIni.Write("MysteryBoxMarker", LuckyDipMarkerCheck.Checked);
+			configIni.Write("MysteryBoxBarOrBeat", LuckyDipBarOrBeatCheck.Checked);
+			configIni.Write("MysteryBoxBarOrBeatPeriodValue", LuckyDipBarOrBeatPeriodBox.Value);
+			configIni.Write("MysteryBoxBarOrBeatPeriodUnit", LuckyDipBarOrBeatPeriodUnitCombo.SelectedIndex);
+			configIni.Write("MysteryBoxBarOrBeatPreparationValue", LuckyDipBarOrBeatPreparationBox.Value);
+			configIni.Write("MysteryBoxBarOrBeatPreparationUnit", LuckyDipBarOrBeatPreparationUnitCombo.SelectedIndex);
+			configIni.Write("MysteryBoxLotionBath", LuckyDipLotionBathCheck.Checked);
+			configIni.Write("MysteryBoxLotionBathInterval", LuckyDipLotionBathIntervalBox.DoubleValue);
+			configIni.Write("SyncopatorOrder", MatchCutOrder);
+			configIni.Write("SyncopatorApplyEffectsByRound", MatchCutApplyEffectsByRoundCheck.UserChecked);
+			configIni.Write("SyncopatorAccumulateHarmonics", MatchCutAccumulateHarmonicsCheck.Checked);
+			configIni.Write("SyncopatorRepeatOne", MatchCutRepeatBox.Value);
+			configIni.Write("SyncopatorRepeatRound", MatchCutRepeatRoundBox.Value);
+			configIni.Write("SyncopatorSustain", MatchCutSustainCheck.Checked);
+			configIni.Write("SyncopatorSustainCacheCapacity", MatchCutSustainCacheCapacityBox.Value);
+			configIni.Write("OrchestraReuse", LinearMapReuseCheck.UserChecked);
 			configIni.Write("EnhanceSelect", EnhanceSelectCheck.UserChecked);
 			configIni.Write("AffixAsPitch", AffixAsPitch);
 			configIni.Write("TartarRatherThanShupelunker", TartarRadio.Checked);
@@ -39872,6 +39876,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (track == null) continue;
 					item.SubItems[NameHeader.Index].Text = track.Name;
 				}
+		}
+
+		private int ScoreEncodingCodePage {
+			get {
+				return MidiEncodingCombo.SelectedItem is EncodingInfo ? ((EncodingInfo)MidiEncodingCombo.SelectedItem).GetEncoding().CodePage : 0;
+			}
+			set {
+				foreach (object item in MidiEncodingCombo.Items) {
+					int codePage = item is EncodingInfo ? ((EncodingInfo)item).CodePage : 0;
+					if (codePage == value) {
+						MidiEncodingCombo.SelectedItem = item;
+						break;
+					}
+				}
+			}
 		}
 
 		private List<ListViewItem> midiTrackListViewItems;
