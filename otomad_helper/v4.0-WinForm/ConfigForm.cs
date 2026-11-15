@@ -1595,5 +1595,22 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void MidiEncodingCombo_SelectedIndexChanged(object sender, EventArgs e) {
 			Console.WriteLine(DatamoshInfoLbl);
 		}
+
+		private void VideoTransitionOffBtn_Click(object sender, EventArgs e) {
+			#if VEGAS_ENVIRONMENT
+			VideoTransitionDurationTxt.Text = Timecode.FromSeconds(0).ToString();
+			#else
+			VideoTransitionDurationTxt.Text = "00:00.000";
+			#endif
+		}
+
+		private void VideoTransitionDurationTxt_Leave(object sender, EventArgs e) {
+			#if VEGAS_ENVIRONMENT
+			Timecode timecode = Timecode.FromString(VideoTransitionDurationTxt.Text);
+			VideoTransitionOffBtn.Visible = timecode.ToMilliseconds() != 0;
+			#else
+			VideoTransitionOffBtn.Visible = VideoTransitionDurationTxt.Text != "00:00.000";
+			#endif
+		}
 	}
 }

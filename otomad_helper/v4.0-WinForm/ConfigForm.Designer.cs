@@ -683,6 +683,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.VideoTransitionGroup = new System.Windows.Forms.GroupBox();
+			this.VideoTransitionTable = new System.Windows.Forms.TableLayoutPanel();
+			this.VideoTransitionReciprocalCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoTransitionDurationLbl = new System.Windows.Forms.Label();
+			this.VideoTransitionAlignLbl = new System.Windows.Forms.Label();
+			this.VideoTransitionAlignBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
+			this.VideoTransitionCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoTransitionDurationTxt = new System.Windows.Forms.TextBox();
+			this.VideoTransitionOffBtn = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.menu.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -862,6 +871,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
+			this.VideoTransitionGroup.SuspendLayout();
+			this.VideoTransitionTable.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -5708,6 +5719,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 
 			this.VideoTab.AutoScroll = true;
 			this.VideoTab.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
+			this.VideoTab.Controls.Add(this.VideoTransitionGroup);
 			this.VideoTab.Controls.Add(this.VideoParamsGroup);
 			this.VideoTab.Controls.Add(this.VideoEffectsGroup);
 			this.VideoTab.Controls.Add(this.VideoVelocityGroup);
@@ -10540,6 +10552,161 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			// 
+			// VideoTransitionGroup
+			// 
+			this.VideoTransitionGroup.AutoSize = true;
+			this.VideoTransitionGroup.Controls.Add(this.VideoTransitionTable);
+			this.VideoTransitionGroup.Dock = System.Windows.Forms.DockStyle.Top;
+			this.VideoTransitionGroup.Location = new System.Drawing.Point(8, 2074);
+			this.VideoTransitionGroup.Name = "VideoTransitionGroup";
+			this.VideoTransitionGroup.Padding = new System.Windows.Forms.Padding(8);
+			this.VideoTransitionGroup.Size = new System.Drawing.Size(1076, 180);
+			this.VideoTransitionGroup.TabIndex = 7;
+			this.VideoTransitionGroup.TabStop = false;
+			this.VideoTransitionGroup.Text = "过渡";
+			// 
+			// VideoTransitionTable
+			// 
+			this.VideoTransitionTable.AutoSize = true;
+			this.VideoTransitionTable.ColumnCount = 4;
+			this.VideoTransitionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.VideoTransitionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.VideoTransitionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.VideoTransitionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionOffBtn, 2, 1);
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionDurationTxt, 1, 1);
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionCurveCombo, 3, 0);
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionReciprocalCurveCombo, 3, 1);
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionDurationLbl, 0, 1);
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionAlignLbl, 0, 0);
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionAlignBox, 1, 0);
+			this.VideoTransitionTable.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoTransitionTable.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.VideoTransitionTable.Location = new System.Drawing.Point(8, 40);
+			this.VideoTransitionTable.Name = "VideoTransitionTable";
+			this.VideoTransitionTable.RowCount = 2;
+			this.VideoTransitionTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoTransitionTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoTransitionTable.Size = new System.Drawing.Size(1060, 132);
+			this.VideoTransitionTable.TabIndex = 0;
+			// 
+			// VideoTransitionReciprocalCurveCombo
+			// 
+			this.VideoTransitionReciprocalCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoTransitionReciprocalCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoTransitionReciprocalCurveCombo.FormattingEnabled = true;
+			this.VideoTransitionReciprocalCurveCombo.Items.AddRange(new object[] {
+            "线性",
+            "快速",
+            "慢速",
+            "平滑",
+            "急剧"});
+			this.VideoTransitionReciprocalCurveCombo.Location = new System.Drawing.Point(954, 72);
+			this.VideoTransitionReciprocalCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.VideoTransitionReciprocalCurveCombo.Name = "VideoTransitionReciprocalCurveCombo";
+			this.VideoTransitionReciprocalCurveCombo.Size = new System.Drawing.Size(102, 40);
+			this.VideoTransitionReciprocalCurveCombo.TabIndex = 11;
+			// 
+			// VideoTransitionDurationLbl
+			// 
+			this.VideoTransitionDurationLbl.AutoSize = true;
+			this.VideoTransitionDurationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoTransitionDurationLbl.Location = new System.Drawing.Point(3, 66);
+			this.VideoTransitionDurationLbl.MinimumSize = new System.Drawing.Size(0, 66);
+			this.VideoTransitionDurationLbl.Name = "VideoTransitionDurationLbl";
+			this.VideoTransitionDurationLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoTransitionDurationLbl.TabIndex = 9;
+			this.VideoTransitionDurationLbl.Text = "时长　　";
+			this.VideoTransitionDurationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoTransitionAlignLbl
+			// 
+			this.VideoTransitionAlignLbl.AutoSize = true;
+			this.VideoTransitionAlignLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoTransitionAlignLbl.Location = new System.Drawing.Point(3, 0);
+			this.VideoTransitionAlignLbl.MinimumSize = new System.Drawing.Size(0, 66);
+			this.VideoTransitionAlignLbl.Name = "VideoTransitionAlignLbl";
+			this.VideoTransitionAlignLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoTransitionAlignLbl.TabIndex = 1;
+			this.VideoTransitionAlignLbl.Text = "对齐　　";
+			this.VideoTransitionAlignLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoTransitionAlignBox
+			// 
+			this.VideoTransitionAlignBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoTransitionTable.SetColumnSpan(this.VideoTransitionAlignBox, 2);
+			this.VideoTransitionAlignBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.VideoTransitionAlignBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoTransitionAlignBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoTransitionAlignBox.Location = new System.Drawing.Point(124, 8);
+			this.VideoTransitionAlignBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoTransitionAlignBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoTransitionAlignBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+			this.VideoTransitionAlignBox.Name = "VideoTransitionAlignBox";
+			this.VideoTransitionAlignBox.NumericUpDownWidth = 65;
+			this.VideoTransitionAlignBox.Size = new System.Drawing.Size(818, 50);
+			this.VideoTransitionAlignBox.TabIndex = 5;
+			this.VideoTransitionAlignBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			// 
+			// VideoTransitionCurveCombo
+			// 
+			this.VideoTransitionCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoTransitionCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoTransitionCurveCombo.FormattingEnabled = true;
+			this.VideoTransitionCurveCombo.Items.AddRange(new object[] {
+            "线性",
+            "快速",
+            "慢速",
+            "平滑",
+            "急剧"});
+			this.VideoTransitionCurveCombo.Location = new System.Drawing.Point(954, 6);
+			this.VideoTransitionCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.VideoTransitionCurveCombo.Name = "VideoTransitionCurveCombo";
+			this.VideoTransitionCurveCombo.Size = new System.Drawing.Size(102, 40);
+			this.VideoTransitionCurveCombo.TabIndex = 12;
+			// 
+			// VideoTransitionDurationTxt
+			// 
+			this.VideoTransitionDurationTxt.Dock = System.Windows.Forms.DockStyle.Left;
+			this.VideoTransitionDurationTxt.Location = new System.Drawing.Point(140, 70);
+			this.VideoTransitionDurationTxt.Margin = new System.Windows.Forms.Padding(24, 4, 4, 4);
+			this.VideoTransitionDurationTxt.Name = "VideoTransitionDurationTxt";
+			this.VideoTransitionDurationTxt.Size = new System.Drawing.Size(318, 39);
+			this.VideoTransitionDurationTxt.TabIndex = 13;
+			this.VideoTransitionDurationTxt.Visible = false;
+			this.VideoTransitionDurationTxt.Leave += new System.EventHandler(this.VideoTransitionDurationTxt_Leave);
+			// 
+			// VideoTransitionOffBtn
+			// 
+			this.VideoTransitionOffBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			this.VideoTransitionOffBtn.AutoSize = true;
+			this.VideoTransitionOffBtn.Location = new System.Drawing.Point(800, 77);
+			this.VideoTransitionOffBtn.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.VideoTransitionOffBtn.MaximumSize = new System.Drawing.Size(480, 44);
+			this.VideoTransitionOffBtn.Name = "VideoTransitionOffBtn";
+			this.VideoTransitionOffBtn.Size = new System.Drawing.Size(150, 44);
+			this.VideoTransitionOffBtn.TabIndex = 14;
+			this.VideoTransitionOffBtn.Text = "关闭";
+			this.VideoTransitionOffBtn.UseVisualStyleBackColor = true;
+			this.VideoTransitionOffBtn.Visible = false;
+			this.VideoTransitionOffBtn.Click += new System.EventHandler(this.VideoTransitionOffBtn_Click);
+			// 
 			// ConfigForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -10866,6 +11033,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
+			this.VideoTransitionGroup.ResumeLayout(false);
+			this.VideoTransitionGroup.PerformLayout();
+			this.VideoTransitionTable.ResumeLayout(false);
+			this.VideoTransitionTable.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -11531,6 +11702,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel24;
 		public System.Windows.Forms.Label MidiEncodingLbl;
 		public System.Windows.Forms.ComboBox MidiEncodingCombo;
+		public System.Windows.Forms.GroupBox VideoTransitionGroup;
+		public System.Windows.Forms.TableLayoutPanel VideoTransitionTable;
+		public System.Windows.Forms.ComboBox VideoTransitionCurveCombo;
+		public System.Windows.Forms.ComboBox VideoTransitionReciprocalCurveCombo;
+		public System.Windows.Forms.Label VideoTransitionDurationLbl;
+		public System.Windows.Forms.Label VideoTransitionAlignLbl;
+		public IntegerTrackWithBox VideoTransitionAlignBox;
+		public System.Windows.Forms.TextBox VideoTransitionDurationTxt;
+		public System.Windows.Forms.Button VideoTransitionOffBtn;
 	}
 }
 
