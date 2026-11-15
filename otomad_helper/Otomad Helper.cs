@@ -1202,12 +1202,29 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </remarks>
 		public static TTrackEvent FastSplit<TTrackEvent>(TTrackEvent source, Timecode offset) where TTrackEvent : TrackEvent {
 			if (offset >= source.Length) return null;
+			try {
+				// 如果有关键帧，则不能用 FastSplit。
+				if (source is VideoEvent) { // 目前唯一用途是视频事件，因此先不写音频事件的逻辑代码。
+					VideoEvent videoEvent = (VideoEvent)(TrackEvent)source;
+					foreach (Envelope envelope in videoEvent.Envelopes)
+						if (envelope.Points.Count > 1) goto UseStandardSplit;
+					if (videoEvent.VideoMotion.Keyframes.Count > 1) goto UseStandardSplit;
+					foreach (Effect effect in videoEvent.Effects) {
+						if (effect.Keyframes.Count > 1) goto UseStandardSplit;
+						if (effect.IsOFX)
+							foreach (OFXParameter param in effect.OFXEffect.Parameters)
+								if (param.IsAnimated) goto UseStandardSplit;
+					}
+				}
+			} catch (Exception) { }
 			Timecode splitEventLength = source.Length - offset;
 			source.Length = offset;
 			TTrackEvent splitEvent = (TTrackEvent)source.Copy(source.Track, source.End);
 			splitEvent.Length = splitEventLength;
 			splitEvent.ActiveTake.Offset += offset;
 			return splitEvent;
+		UseStandardSplit:
+			return (TTrackEvent)source.Split(offset);
 		}
 
 		/// <summary>
@@ -2358,7 +2375,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (anim.Hue != 0) if (Plugin.hslAdjust != null) Plugin.ForVideoEvents.ChangeHue(videoEvent, anim.Hue); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return false; }
 			if (anim.HorizontalMirrored != 0 || anim.VerticalMirrored != 0) if (Plugin.mirror != null) Plugin.ForVideoEvents.Mirror(videoEvent, anim.HorizontalMirrored, anim.VerticalMirrored);
 				else { ShowError(new Exceptions.NoPluginNameException(Lang.str.mirror)); return false; }
-			if (anim.ObliqueDirect != 0) if (Plugin.picInPic != null) Plugin.ForVideoEvents.ObliqueExpansion(videoEvent, anim.ObliqueDirect); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
+			if (anim.ObliqueDirect != 0) if (Plugin.picInPic != null) Plugin.ForVideoEvents.Slant(videoEvent, anim.ObliqueDirect, Math.Abs(anim.ObliqueDirect) == 2); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
 			if (anim.PuyoShape != 0) if (Plugin.picInPic != null) Plugin.ForVideoEvents.PuyoPuyo(videoEvent, anim.PuyoShape); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
 			if (anim.SwingDirect != 0) if (Plugin.picInPic != null) Plugin.ForVideoEvents.Pendulum(videoEvent, anim.SwingDirect); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
 			// 单周期效果。
@@ -5389,7 +5406,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		VERTICAL_COMPRESSION,
 		VERTICAL_COMPRESSION_WITH_REBOUND,
 		VERTICAL_BOUNCE,
-		OBLIQUE_EXPANSION_AND_COMPRESSION,
+		SLANT_DOWN,
+		SLANT_UP,
 		PUYO_PUYO, // PUYO_POP
 		PENDULUM, // SWING
 		GAUSSIAN_BLUR,
@@ -5448,6 +5466,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					new string[] { str.effect_init_down },
 					new string[] { str.effect_init_outward },
 					new string[] { str.effect_init_right, str.effect_init_left },
+					new string[] { str.effect_init_left, str.effect_init_right },
 					new string[] { str.effect_init_flat, str.effect_init_thin },
 					new string[] { str.effect_init_right, str.effect_init_left },
 					new string[] { str.effect_init_blur },
@@ -5472,7 +5491,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					{ str.monochrome_class, new PvVisualEffectType[] { PvVisualEffectType.GREY } },
 					{ str.time_class, new PvVisualEffectType[] { PvVisualEffectType.PINGPONG, PvVisualEffectType.WHIRL, PvVisualEffectType.WOBBLE_PERIOD } },
 					//{ str.time_class_2, new PvVisualEffectType[] { PvVisualEffectType.SHARP_REWIND, PvVisualEffectType.WOBBLE_PERIOD } },
-					{ str.expansion_and_compression_class, new PvVisualEffectType[] { PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.VERTICAL_EXPANSION_WITH_REBOUND, PvVisualEffectType.VERTICAL_COMPRESSION, PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND, PvVisualEffectType.VERTICAL_BOUNCE, PvVisualEffectType.OBLIQUE_EXPANSION_AND_COMPRESSION, PvVisualEffectType.PUYO_PUYO} },
+					{ str.expansion_and_compression_class, new PvVisualEffectType[] { PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.VERTICAL_EXPANSION_WITH_REBOUND, PvVisualEffectType.VERTICAL_COMPRESSION, PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND, PvVisualEffectType.VERTICAL_BOUNCE, PvVisualEffectType.SLANT_DOWN, PvVisualEffectType.SLANT_UP, PvVisualEffectType.PUYO_PUYO} },
 					{ str.swing_class, new PvVisualEffectType[] { PvVisualEffectType.PENDULUM } },
 					{ str.blur_class, new PvVisualEffectType[] { PvVisualEffectType.GAUSSIAN_BLUR, PvVisualEffectType.RADIAL_BLUR } },
 					{ str.wipe_class, new PvVisualEffectType[] { PvVisualEffectType.WIPE_IN_THE_RIGHT, PvVisualEffectType.SPLIT_VERTICAL_OUT } },
@@ -5498,9 +5517,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		[Range()] private bool isInvertLumin = false;
 		[Range(0d, 1d)] private double hue = 0;
 		[Range()] private bool isGrey = false;
-		[Range(-1, 0, 1)] private int obliqueDirect = 0;
-		[Range(-1, 0, 1)] private int swingDirect = 0;
-		[Range(-1, 0, 1)] private int puyoShape = 0;
+		[Range(-1, 1, -2, 2)] private int obliqueDirect = 0;
+		[Range(-1, 1)] private int swingDirect = 0;
+		[Range(-1, 1)] private int puyoShape = 0;
 
 		[Range()] private bool isGaussianBlur_forRandomOnly = false;
 		[Range()] private bool isRadialBlur_forRandomOnly = false;
@@ -5651,8 +5670,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					case PvVisualEffectType.WHIRL:
 						horizontalFlip = isReverse = step == 1;
 						break;
-					case PvVisualEffectType.OBLIQUE_EXPANSION_AND_COMPRESSION:
+					case PvVisualEffectType.SLANT_DOWN:
 						obliqueDirect = step == 0 ? -1 : step == 1 ? 1 : 0;
+						break;
+					case PvVisualEffectType.SLANT_UP:
+						obliqueDirect = step == 0 ? -2 : step == 1 ? 2 : 0;
 						break;
 					case PvVisualEffectType.PUYO_PUYO:
 						puyoShape = step == 0 ? -1 : step == 1 ? 1 : 0;
@@ -6182,7 +6204,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// <param name="videoEvent">视频事件。</param>
 			/// <param name="_type">所选的映像节奏视觉效果。必须是垂直扩缩类中的效果才可使用。</param>
 			/// <param name="scale">缩小比例。<br /><strong>V4 (WinForm) 版本暂不支持修改。</strong></param>
-			public static void Expansion(VideoEvent videoEvent, PvVisualEffectType? _type, double scale = 0.8) {
+			/// <param name="swapInterpolation">交换两个关键帧插值曲线？仅在由 <see cref="Slant"/> 方法调用时使用。</param>
+			public static void Expansion(VideoEvent videoEvent, PvVisualEffectType? _type, double scale = 0.8, bool swapInterpolation = false) {
 				if (_type == null) return;
 				PvVisualEffectType type = (PvVisualEffectType)_type;
 				if (type < PvVisualEffectType.VERTICAL_EXPANSION || type > PvVisualEffectType.VERTICAL_BOUNCE) return;
@@ -6217,11 +6240,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					setY(centerTime, type == PvVisualEffectType.VERTICAL_EXPANSION_WITH_REBOUND);
 					setY(endTime, type == PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND);
 				}
-				scaleYParam.Keyframes[0].Interpolation = OFXInterpolationType.Fast;
-				scaleYParam.Keyframes[1].Interpolation = OFXInterpolationType.Slow;
+				scaleYParam.Keyframes[0].Interpolation = swapInterpolation ? OFXInterpolationType.Slow : OFXInterpolationType.Fast;
+				scaleYParam.Keyframes[1].Interpolation = swapInterpolation ? OFXInterpolationType.Fast : OFXInterpolationType.Slow;
 				if (!isVerticalBounce) {
-					locationParam.Keyframes[0].Interpolation = OFXInterpolationType.Fast;
-					locationParam.Keyframes[1].Interpolation = OFXInterpolationType.Slow;
+					locationParam.Keyframes[0].Interpolation = swapInterpolation ? OFXInterpolationType.Slow : OFXInterpolationType.Fast;
+					locationParam.Keyframes[1].Interpolation = swapInterpolation ? OFXInterpolationType.Fast : OFXInterpolationType.Slow;
 				}
 			}
 			/// <summary>
@@ -6230,7 +6253,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// <param name="videoEvent">视频事件。</param>
 			/// <param name="direct">变形方向。<br />正数表示向右变形，负数表示向左变形，0 表示不变形。</param>
 			/// <param name="scale">缩小比例。<br /><strong>V4 (WinForm) 版本暂不支持修改。</strong></param>
-			public static void ObliqueExpansion(VideoEvent videoEvent, int direct, double scale = 0.7) {
+			/// <param name="isSlantUp">是斜下扩缩还是斜上扩缩？默认为斜下扩缩。</param>
+			public static void Slant(VideoEvent videoEvent, int direct, bool isSlantUp = false, double scale = 0.7) {
 				if ((direct = Math.Sign(direct)) == 0) return;
 				VideoStream stream = videoEvent.ActiveTake.MediaStream as VideoStream;
 				int width = stream.Width, height = stream.Height;
@@ -6251,34 +6275,55 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					OFXParameter[] @params = { angleParam, scaleXParam, scaleYParam, shearParam, locationParam };
 					foreach (OFXParameter param in @params)
 						param.IsAnimated = true;
-					angleParam.SetValueAtTime(startTime, direct * angle);
-					scaleXParam.SetValueAtTime(startTime, scale * Math.Cos(radAngle));
-					scaleYParam.SetValueAtTime(startTime, 1 / Math.Cos(radAngle));
-					shearParam.SetValueAtTime(startTime, -direct * shear);
-					locationParam.SetValueAtTime(direct < 0 ? startTime : endTime, new OFXDouble2D { X = (1 + scale) / 4, Y = 0.5 });
-					angleParam.SetValueAtTime(centerTime, 0);
-					scaleXParam.SetValueAtTime(centerTime, scale);
-					scaleYParam.SetValueAtTime(centerTime, 1);
-					shearParam.SetValueAtTime(centerTime, 0);
-					angleParam.SetValueAtTime(endTime, -direct * angle);
-					scaleXParam.SetValueAtTime(endTime, scaleXParam.GetValueAtTime(startTime));
-					scaleYParam.SetValueAtTime(endTime, scaleYParam.GetValueAtTime(startTime));
-					shearParam.SetValueAtTime(endTime, direct * shear);
-					locationParam.SetValueAtTime(direct > 0 ? startTime : endTime, new OFXDouble2D { X = 1 - (1 + scale) / 4, Y = 0.5 });
+					OFXDouble2D centerLocation = new OFXDouble2D { X = 0.5, Y = 0.5 };
+					double xTranslate = (1 + scale) / 4;
+					if (!isSlantUp) {
+						angleParam.SetValueAtTime(startTime, direct * angle);
+						scaleXParam.SetValueAtTime(startTime, scale * Math.Cos(radAngle));
+						scaleYParam.SetValueAtTime(startTime, 1 / Math.Cos(radAngle));
+						shearParam.SetValueAtTime(startTime, -direct * shear);
+						locationParam.SetValueAtTime(direct < 0 ? startTime : endTime, new OFXDouble2D { X = xTranslate, Y = 0.5 });
+						angleParam.SetValueAtTime(centerTime, 0);
+						scaleXParam.SetValueAtTime(centerTime, scale);
+						scaleYParam.SetValueAtTime(centerTime, 1);
+						shearParam.SetValueAtTime(centerTime, 0);
+						locationParam.SetValueAtTime(centerTime, centerLocation);
+						angleParam.SetValueAtTime(endTime, -direct * angle);
+						scaleXParam.SetValueAtTime(endTime, scaleXParam.GetValueAtTime(startTime));
+						scaleYParam.SetValueAtTime(endTime, scaleYParam.GetValueAtTime(startTime));
+						shearParam.SetValueAtTime(endTime, direct * shear);
+						locationParam.SetValueAtTime(direct > 0 ? startTime : endTime, new OFXDouble2D { X = 1 - xTranslate, Y = 0.5 });
+					} else {
+						angleParam.SetValueAtTime(startTime, 0);
+						scaleXParam.SetValueAtTime(startTime, scale);
+						scaleYParam.SetValueAtTime(startTime, 1);
+						shearParam.SetValueAtTime(startTime, 0);
+						locationParam.SetValueAtTime(centerTime, centerLocation);
+						angleParam.SetValueAtTime(centerTime, direct * angle);
+						scaleXParam.SetValueAtTime(centerTime, scale * Math.Cos(radAngle));
+						scaleYParam.SetValueAtTime(centerTime, 1 / Math.Cos(radAngle));
+						shearParam.SetValueAtTime(centerTime, -direct * shear);
+						locationParam.SetValueAtTime(centerTime, new OFXDouble2D { X = direct < 0 ? xTranslate : 1 - xTranslate, Y = 0.5 });
+						angleParam.SetValueAtTime(endTime, 0);
+						scaleXParam.SetValueAtTime(endTime, scale);
+						scaleYParam.SetValueAtTime(endTime, 1);
+						shearParam.SetValueAtTime(endTime, 0);
+						locationParam.SetValueAtTime(endTime, centerLocation);
+					}
 					foreach (OFXParameter _param in @params) {
 						if (_param is OFXDoubleParameter) {
 							OFXDoubleParameter param = _param as OFXDoubleParameter;
-							foreach (OFXDoubleKeyframe keyframe in param.Keyframes)
-								keyframe.Interpolation = OFXInterpolationType.Linear;
+							param.Keyframes[0].Interpolation = OFXInterpolationType.Slow;
+							param.Keyframes[1].Interpolation = OFXInterpolationType.Fast;
 						}
 						if (_param is OFXDouble2DParameter) {
 							OFXDouble2DParameter param = _param as OFXDouble2DParameter;
-							foreach (OFXDouble2DKeyframe keyframe in param.Keyframes)
-								keyframe.Interpolation = OFXInterpolationType.Linear;
+							param.Keyframes[0].Interpolation = OFXInterpolationType.Slow;
+							param.Keyframes[1].Interpolation = OFXInterpolationType.Fast;
 						}
 					}
 				}
-				Expansion(videoEvent, PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND, scale);
+				Expansion(videoEvent, PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND, scale, true);
 			}
 			/// <summary>
 			/// 噗哟噗哟 / 魔法气泡效果。
@@ -26764,7 +26809,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		public void ReadIni() {
-			Truncate = configIni.Read("FreezeLastFrame", TruncateOption.LENGTHENABLE);
+			Truncate = configIni.Read("FreezeLastFrame", TruncateOption.PINGPONG_WITHOUT_SPLIT);
 			LoopRegionTrack.SetValue(configIni.Read("TruncateLoopRegion", 50), 50);
 			MonochromeTrack.SetValue(configIni.Read("TruncateMonochrome", 100), 100);
 			FadeTrack.SetValue(configIni.Read("TruncateFade", 50), 50);
@@ -40614,7 +40659,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				str.vertical_compression,
 				str.vertical_compression_with_rebound,
 				str.vertical_bounce,
-				str.oblique_expansion_and_compression,
+				str.slant_down, str.slant_up,
 				str.puyo_puyo, str.pendulum,
 				str.gaussian_blur, str.radial_blur,
 				str.wipe_in_the_right,
@@ -43915,7 +43960,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			vertical_compression = "垂直压缩",
 			vertical_compression_with_rebound = "垂直压缩并回弹",
 			vertical_bounce = "垂直弹起",
-			oblique_expansion_and_compression = "斜下扩缩",
+			slant_down = "斜下扩缩",
 			puyo_puyo = "魔法气泡",
 			pendulum = "摆锤",
 			gaussian_blur = "高斯模糊",
@@ -44421,6 +44466,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			midi_out_open_exception_64 = "【错误代码 64：找不到 MIDI 端口】\n原因：MIDI 映射器无法找到任何可用的底层 MIDI 硬件或软件合成器端口。\n解决：请检查系统中是否存在有效的 MIDI 输出设备，或尝试重启音频服务。",
 			midi_out_open_exception_unknown = "【错误代码 {0}：未知的 MIDI 设备打开失败】\n原因：底层 Windows 多媒体接口返回了未收录的错误状态。\n解决：请检查声卡驱动状态、系统音量合成器或重启应用程序。",
 			cannot_play = "无法播放",
+			slant_up = "斜上扩缩",
 			__eol__ = null;
 
 		static Lang() {
@@ -44897,7 +44943,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				vertical_compression = "Vertical Compression",
 				vertical_compression_with_rebound = "Vertical Compression with Rebound",
 				vertical_bounce = "Vertical Bounce",
-				oblique_expansion_and_compression = "Slant Down",
+				slant_down = "Slant Down",
 				puyo_puyo = "Puyo Pop",
 				pendulum = "Play Pendulum",
 				gaussian_blur = "Gaussian Blur",
@@ -45809,7 +45855,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				vertical_compression = "垂直壓縮",
 				vertical_compression_with_rebound = "垂直壓縮並回彈",
 				vertical_bounce = "垂直彈起",
-				oblique_expansion_and_compression = "斜下擴縮",
+				slant_down = "斜下擴縮",
 				puyo_puyo = "魔法氣泡",
 				pendulum = "擺錘",
 				gaussian_blur = "高斯模糊",
@@ -46721,7 +46767,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				vertical_compression = "縦圧縮",
 				vertical_compression_with_rebound = "縦圧縮とリバウンド",
 				vertical_bounce = "縦バウンス",
-				oblique_expansion_and_compression = "斜め拡縮",
+				slant_down = "斜め拡縮",
 				puyo_puyo = "ぷよぷよ",
 				pendulum = "振り子",
 				gaussian_blur = "ガウスブラー",
@@ -47634,7 +47680,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				vertical_compression = "Вертикальное сжатие",
 				vertical_compression_with_rebound = "Вертикальное сжатие и отскок",
 				vertical_bounce = "Вертикальный отскок",
-				oblique_expansion_and_compression = "Косое расширение",
+				slant_down = "Косое расширение",
 				puyo_puyo = "Пуйо Пуйо",
 				pendulum = "Маятник",
 				gaussian_blur = "Размытие по гауссу",
@@ -48546,7 +48592,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				vertical_compression = "Nén theo chiều dọc",
 				vertical_compression_with_rebound = "Nén theo chiều dọc với nảy lại",
 				vertical_bounce = "Nảy dọc",
-				oblique_expansion_and_compression = "Mở rộng nghiêng ra và nén lại",
+				slant_down = "Mở rộng nghiêng ra và nén lại",
 				puyo_puyo = "Puyo Pop",
 				pendulum = "Con lắc",
 				gaussian_blur = "Mờ kiểu Gaussian",
@@ -49458,7 +49504,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				vertical_compression = "Kompresi Vertikal",
 				vertical_compression_with_rebound = "Kompresi Vertikal dengan Rebound",
 				vertical_bounce = "Pantulan Vertikal",
-				oblique_expansion_and_compression = "Ekspansi dan Kompresi Miring",
+				slant_down = "Ekspansi dan Kompresi Miring",
 				puyo_puyo = "Pop Puyo",
 				pendulum = "Mainkan Pendulum",
 				gaussian_blur = "Gaussian Blur",
