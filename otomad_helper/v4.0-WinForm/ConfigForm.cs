@@ -1065,8 +1065,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void TimecodeText_Leave(object sender, EventArgs e) {
 			#if VEGAS_ENVIRONMENT
 			TextBox textBox = sender as TextBox;
-			Timecode timecode = Timecode.FromPositionString(textBox.Text);
-			textBox.Text = timecode.ToPositionString();
+			Timecode timecode = Timecode.FromString(textBox.Text);
+			textBox.Text = timecode.ToString();
 			#endif
 		}
 

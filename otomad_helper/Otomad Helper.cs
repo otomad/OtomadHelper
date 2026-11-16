@@ -157,6 +157,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>不重映射</summary>*/ private bool VConfigTimeUnremapping { get { return configForm.VideoTimeUnremappingCheck.Checked; } }
 		/**<summary>限长模式</summary>*/ private ConstrainLengthModeType RestrictKeyframesLengthMode { get { return configForm.RestrictKeyframesLengthMode; } }
 		/**<summary>限长大小</summary>*/ private Timecode RestrictKeyframesLengthValue { get { return configForm.RestrictKeyframesLengthBox.Timecode; } }
+		/**<summary>过　　渡</summary>*/ private bool VConfigTransition { get { return VConfigTransitionDuration.ToMilliseconds() != 0; } }
+		/**<summary>过渡对齐</summary>*/ private double VConfigTransitionAlign { get { return configForm.VideoTransitionAlignBox.DoubleValue; } }
+		/**<summary>过渡时长</summary>*/ private Timecode VConfigTransitionDuration { get { return Timecode.FromString(configForm.VideoTransitionDurationTxt.Text); } }
+		/**<summary>过渡曲线</summary>*/ private CurveType VConfigTransitionCurve { get { return GetCurveType(configForm.VideoTransitionCurveCombo.SelectedIndex); } }
+		/**<summary>过渡曲线</summary>*/ private CurveType VConfigTransitionReciprocalCurve { get { return GetCurveType(configForm.VideoTransitionReciprocalCurveCombo.SelectedIndex); } }
 		#endregion
 
 		#region 音频属性
@@ -1200,14 +1205,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <remarks>
 		/// 原版 <see cref="TrackEvent.Split(Timecode)" /> 如果源事件数据太多（我猜）可能会变卡，或者频繁刷新 UI。
 		/// </remarks>
-		public static TTrackEvent FastSplit<TTrackEvent>(TTrackEvent source, Timecode offset) where TTrackEvent : TrackEvent {
+		public static TTrackEvent FastSplit<TTrackEvent>(TTrackEvent source, Timecode offset, List<Envelope> excludeEnvelopes = null) where TTrackEvent : TrackEvent {
 			if (offset >= source.Length) return null;
 			try {
 				// 如果有关键帧，则不能用 FastSplit。
 				if (source is VideoEvent) { // 目前唯一用途是视频事件，因此先不写音频事件的逻辑代码。
 					VideoEvent videoEvent = (VideoEvent)(TrackEvent)source;
-					foreach (Envelope envelope in videoEvent.Envelopes)
+					foreach (Envelope envelope in videoEvent.Envelopes) {
+						if (excludeEnvelopes != null && excludeEnvelopes.Contains(envelope)) continue;
 						if (envelope.Points.Count > 1) goto UseStandardSplit;
+					}
 					if (videoEvent.VideoMotion.Keyframes.Count > 1) goto UseStandardSplit;
 					foreach (Effect effect in videoEvent.Effects) {
 						if (effect.Keyframes.Count > 1) goto UseStandardSplit;
@@ -1255,21 +1262,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			duration /= relativeRate;
 			Timecode length = Timecode.FromMilliseconds(duration);
 			TruncateOption truncate = VConfigTrunc;
-			if (truncate == TruncateOption.LENGTHENABLE || isTimeClassesPrve || videoEvent.Length <= length) return;
+			bool enableTransition = VConfig && VConfigTransition && VConfigTransitionAlign != -100;
+			double postpone = enableTransition ? VConfigTransitionDuration.ToMilliseconds() * (VConfigTransitionAlign + 100) / 200 : 0;
+			if (truncate == TruncateOption.LENGTHENABLE || isTimeClassesPrve || videoEvent.Length <= length && !enableTransition) return;
 			if (VConfigTruncLoopRegion == 0) // 时间类效果不要做来回或循环，以免冲突。
 				truncate = truncate == TruncateOption.PINGPONG_WITHOUT_SPLIT ? TruncateOption.FREEZE_END_FRAMES :
 					truncate == TruncateOption.PINGPONG_WITH_SPLIT || truncate == TruncateOption.LOOP_WITH_SPLIT ? TruncateOption.SPLIT_THEN_FREEZE : truncate;
 			List<VideoEvent> _truncatedEvents = truncatedEvents = new List<VideoEvent>();
 			Action<TrackEvent> AddTrunc = truncEvent => { if (truncEvent != null) _truncatedEvents.Add((VideoEvent)truncEvent); };
 			double filledLength = (videoEvent.Length - length).ToMilliseconds(), loopedLength = duration * VConfigTruncLoopRegion / 100, loopedStart = duration - loopedLength;
-			if (truncate == TruncateOption.SPLIT_THEN_RESUME) {
-				AddTrunc(videoEvent.Split(length));
-				return;
-			} else if (truncate == TruncateOption.TRIM_END_FRAMES) {
-				videoEvent.Length = length;
-				return;
-			} else if (truncate == TruncateOption.LOOP_WITH_SPLIT) {
-				videoEvent.Length = length;
+			Action LoopWithSplit = () => {
 				TrackEvent truncEvent = videoEvent;
 				for (double remainedLength = filledLength; remainedLength > 0; remainedLength -= loopedLength) {
 					truncEvent = videoEvent.Copy(videoEvent.Track, truncEvent.End);
@@ -1277,6 +1279,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					truncEvent.ActiveTake.Offset += Timecode.FromMilliseconds(loopedStart * videoEvent.PlaybackRate);
 					AddTrunc(truncEvent);
 				}
+			};
+			if (truncate == TruncateOption.SPLIT_THEN_RESUME) {
+				AddTrunc(videoEvent.Split(length));
+				return;
+			} else if (truncate == TruncateOption.TRIM_END_FRAMES && !enableTransition) {
+				videoEvent.Length = length;
+				return;
+			} else if (truncate == TruncateOption.LOOP_WITH_SPLIT && !enableTransition) {
+				videoEvent.Length = length;
+				LoopWithSplit();
 				return;
 			}
 			Envelope velocity = videoEvent.Envelopes.FindByType(EnvelopeType.Velocity) ?? new Envelope(EnvelopeType.Velocity);
@@ -1297,30 +1309,56 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (point == null) velocity2.Points.Add(new EnvelopePoint(x, y, CurveType.None));
 				else { point.Y = y; point.Curve = CurveType.None; }
 			};
-			if (truncate == TruncateOption.FREEZE_END_FRAMES) {
+			Action<Timecode, double> SetExtremePoint = (x, y) => {
+				Timecode originalLength = videoEvent.Length;
+				if (x > videoEvent.Length) videoEvent.Length = x;
+				EnvelopePoint point = velocity.Points.GetPointAtX(x);
+				if (point == null) velocity.Points.Add(new EnvelopePoint(x, y, CurveType.None));
+				else { point.Y = y; point.Curve = CurveType.None; }
+				videoEvent.Length = originalLength;
+			};
+			if (truncate == TruncateOption.TRIM_END_FRAMES && enableTransition) {
+				videoEvent.Length = length;
+				SetExtremePoint(length, 0);
+				return;
+			} else if (truncate == TruncateOption.LOOP_WITH_SPLIT && enableTransition) {
+				videoEvent.Length = length;
+				SetExtremePoint(length, 0);
+				LoopWithSplit();
+				return;
+			} else if (truncate == TruncateOption.FREEZE_END_FRAMES) {
 				SetPoint(length, 0);
 			} else if (truncate == TruncateOption.SPLIT_THEN_FREEZE) {
 				VideoEvent truncEvent = FastSplit(videoEvent, length); // 原版 Split 方法会卡成奥利给。
+				if (enableTransition) // 如果开启了过渡，则在原事件最后一帧处也加一个定格关键帧。
+					SetExtremePoint(length, 0);
 				if (truncEvent == null) return;
 				SetFirstPoint(truncEvent, 0);
 				AddTrunc(truncEvent);
 			} else if (truncate == TruncateOption.PINGPONG_WITHOUT_SPLIT) {
 				bool isForward = true;
-				for (double splitMs = duration; splitMs < duration + filledLength; splitMs += loopedLength) {
-					Timecode splitPos = Timecode.FromMilliseconds(splitMs);
-					isForward = !isForward;
-					SetPoint(splitPos, isForward ? 1 : -1);
-				}
+				SetEnvelopeByLengthen(videoEvent, postpone, () => {
+					for (double splitMs = duration; splitMs < duration + filledLength + postpone; splitMs += loopedLength) {
+						Timecode splitPos = Timecode.FromMilliseconds(splitMs);
+						isForward = !isForward;
+						SetPoint(splitPos, isForward ? 1 : -1);
+					}
+				});
 			} else if (truncate == TruncateOption.PINGPONG_WITH_SPLIT) {
 				// 原始计划行为是每次来回折返时都拆分一次，现在为了降低剪辑数目以优化性能，只在第一次拆分一次。
 				VideoEvent truncEvent = FastSplit(videoEvent, length);
+				if (enableTransition) // 如果开启了过渡，则在原事件最后一帧处也加一个倒放关键帧。
+					SetExtremePoint(length, -1);
+				if (truncEvent == null) return;
 				AddTrunc(truncEvent);
 				bool isForward = true;
-				for (double splitMs = 0; splitMs < filledLength; splitMs += loopedLength) {
-					Timecode splitPos = Timecode.FromMilliseconds(splitMs);
-					isForward = !isForward;
-					SetAnotherPoint(truncEvent, splitPos, isForward ? 1 : -1);
-				}
+				SetEnvelopeByLengthen(truncEvent, postpone, () => {
+					for (double splitMs = 0; splitMs < filledLength + postpone; splitMs += loopedLength) {
+						Timecode splitPos = Timecode.FromMilliseconds(splitMs);
+						isForward = !isForward;
+						SetAnotherPoint(truncEvent, splitPos, isForward ? 1 : -1);
+					}
+				});
 			}
 		}
 
@@ -1337,6 +1375,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					}
 				}
 			}
+		}
+
+		public static void SetEnvelopeByLengthen(TrackEvent trackEvent, double lengthenDuration, Action action) {
+			Timecode originalLength = trackEvent.Length;
+			trackEvent.Length += Timecode.FromMilliseconds(lengthenDuration);
+			action();
+			trackEvent.Length = originalLength;
 		}
 
 		public void AdjustDeviation(TrackEvent trackEvent, double startTime, double endTime) {
@@ -1482,7 +1527,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			bool sonarMode = currentChannel.IsDrumKit && SonarConfig;
 			int topIndex = GenerateBelowTopAdjustmentTrack ? GetFirstNotAdjustmentTrackIndex() : 0;
 			string reusedTrackGroupName = !TrackGroupReuse ? null : GroupTrackBy == GroupTrackBy.TRACK ? name : GroupTrackBy == GroupTrackBy.SESSION ? midi.Title : null;
-			Func<object, TrackGroup> GetGroupOfRefTrack = refTrack => GetTrackGroupOfTrack(refTrack is Track ? (Track)refTrack : refTrack is int ? vegas.Project.Tracks.ElementClamppedAtOrDefault((int)refTrack) : null);;
+			Func<object, TrackGroup> GetGroupOfRefTrack = refTrack => GetTrackGroupOfTrack(refTrack is Track ? (Track)refTrack : refTrack is int ? vegas.Project.Tracks.ElementClamppedAtOrDefault((int)refTrack) : null);
 			object refAudioTrack = !AConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsAPreferredTrack ? AConfigPreferredTrack.Track as object : topIndex as object;
 			object refVideoTrack = !VConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsVPreferredTrack ? VConfigPreferredTrack.Track as object : topIndex as object;
 			if (TrackGroupReuse && !string.IsNullOrEmpty(reusedTrackGroupName)) {
@@ -2303,12 +2348,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			double[] maxGaps = { 0, quarter, bar, double.MaxValue };
 			double vMaxGap = maxGaps[(int)VConfigLegato], aMaxGap = maxGaps[(int)AConfigLegato];
 			if (vShouldLegato) {
-				ApplyLegatoOnGeneration(trackHelper.videoTracks, vMaxGap, VConfigStretch);
+				ApplyLegatoOnGeneration(trackHelper.videoTracks, vMaxGap, VConfigStretch, trackHelper.refVideoTrackOriginalEvents);
 				foreach (Func<bool> action in applyToVideoEventsAfterLegato)
 					if (!action()) return false;
 			}
 			if (AConfigShouldLegato && AConfig)
-				ApplyLegatoOnGeneration(trackHelper.audioTracks, aMaxGap, AConfigStretch);
+				ApplyLegatoOnGeneration(trackHelper.audioTracks, aMaxGap, AConfigStretch, trackHelper.refAudioTrackOriginalEvents);
+			#endregion
+
+			#region 过渡
+			if (VConfig && VConfigTransition)
+				ApplyTransitions(trackHelper.videoTracks, trackHelper.refVideoTrackOriginalEvents);
 			#endregion
 
 			#region 插入标记
@@ -2350,11 +2400,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			return !progressForm.RequestAbort;
 		}
 
-		private static void ApplyLegatoOnGeneration<TTrack>(List<TTrack> tracks, double maxGap, StretchType stretch) where TTrack : Track {
+		private static void ApplyLegatoOnGeneration<TTrack>(List<TTrack> tracks, double maxGap, StretchType stretch, List<TrackEvent> excludeEvents) where TTrack : Track {
 			foreach (TTrack track in tracks) {
 				TrackEvents events = track.Events;
 				for (int i = 0; i < events.Count - 1; i++) {
 					TrackEvent currentEvent = events[i], nextEvent = events[i + 1];
+					if (excludeEvents != null && excludeEvents.Contains(currentEvent)) continue;
 					if ((nextEvent.Start - currentEvent.End).ToMilliseconds() <= maxGap) {
 						double oldLength = currentEvent.Length.ToMilliseconds();
 						currentEvent.End = nextEvent.Start;
@@ -2364,6 +2415,47 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							stretch == StretchType.FLEXING_ONLY && newLength < oldLength)
 							currentEvent.RelativeAdjustPlaybackRate(oldLength / newLength, forceStretch: true, changeLength: false);
 					}
+				}
+			}
+		}
+
+		private void ApplyTransitions<TTrack>(List<TTrack> tracks, List<TrackEvent> excludeEvents) where TTrack : Track {
+			double duration = VConfigTransitionDuration.ToMilliseconds();
+			double curAlign = (VConfigTransitionAlign + 100) / 200, nextAlign = curAlign - 1;
+			Timecode ZERO = Timecode.FromSeconds(0);
+			foreach (TTrack track in tracks) {
+				TrackEvents events = track.Events;
+				for (int i = 0; i < events.Count - 1; i++) {
+					TrackEvent curEvent = events[i], nextEvent = events[i + 1];
+					if (excludeEvents != null && (excludeEvents.Contains(curEvent) || excludeEvents.Contains(nextEvent))) continue;
+					Timecode postpone = Timecode.FromMilliseconds(duration * curAlign), prepone = Timecode.FromMilliseconds(duration * nextAlign);
+					if (curEvent.End + postpone <= nextEvent.Start + prepone) continue;
+					if (curEvent.End + postpone > nextEvent.End) postpone = nextEvent.End - curEvent.End;
+					if (nextEvent.Start + prepone < curEvent.Start - curEvent.FadeIn.Length) prepone = curEvent.Start - curEvent.FadeIn.Length - nextEvent.Start;
+					if (postpone < ZERO) postpone = ZERO;
+					if (prepone > ZERO) prepone = ZERO;
+					curEvent.Length += postpone;
+					nextEvent.AdjustStartLength(nextEvent.Start + prepone, nextEvent.Length - prepone, true);
+					if (nextEvent is VideoEvent && prepone < ZERO) {
+						//Timecode nextEventLength = nextEvent.Length;
+						foreach (Envelope envelope in ((VideoEvent)nextEvent).Envelopes) {
+							bool isVelocity = envelope.Type == EnvelopeType.Velocity;
+							if (!(envelope.Points.Count != 0 && (envelope.Points.Count != 1 || isVelocity && VConfigTrunc == TruncateOption.SPLIT_THEN_FREEZE))) continue;
+							//Timecode lastPointX = envelope.Points.Last().X;
+							//if (lastPointX > nextEvent.Length) nextEvent.Length = lastPointX;
+							for (int j = envelope.Points.Count - 1; j >= 1; j--)
+								envelope.Points[j].X -= prepone;
+							if (isVelocity) {
+								envelope.Points.Add(new EnvelopePoint(prepone.Multiply(-1), envelope.Points[0].Y));
+								envelope.Points[0].Y = 1;
+							}
+						}
+						//nextEvent.Length = nextEventLength;
+					}
+					Timecode fade = postpone - prepone;
+					nextEvent.FadeIn.Length = fade;
+					nextEvent.FadeIn.Curve = VConfigTransitionCurve;
+					nextEvent.FadeIn.ReciprocalCurve = VConfigTransitionReciprocalCurve;
 				}
 			}
 		}
@@ -15510,6 +15602,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		//private bool reusedTrackGroupNameValid { get { return !string.IsNullOrEmpty(reusedTrackGroupName); } }
 		public List<AudioTrack> audioTracks = new List<AudioTrack>();
 		public List<VideoTrack> videoTracks = new List<VideoTrack>();
+		public List<TrackEvent> refAudioTrackOriginalEvents = new List<TrackEvent>();
+		public List<TrackEvent> refVideoTrackOriginalEvents = new List<TrackEvent>();
 		private bool NoAudio { get { return audio == null; } }
 		private bool NoVideo { get { return video == null; } }
 		private readonly bool isAudioAboveVideo = false;
@@ -15549,6 +15643,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				AudioTrack track = audio as AudioTrack;
 				while (track != null) {
 					audioTracks.Add(track);
+					refAudioTrackOriginalEvents.AddRange(track.Events);
 					if (audioSingleTrack) break;
 					track = GetNextTrack(track);
 				}
@@ -15557,6 +15652,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				VideoTrack track = video as VideoTrack;
 				while (track != null) {
 					videoTracks.Add(track);
+					refVideoTrackOriginalEvents.AddRange(track.Events);
 					if (videoSingleTrack) break;
 					track = GetPreviousTrack(track);
 				}
@@ -27839,6 +27935,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioAutoPanCheck = new System.Windows.Forms.CheckBox();
 			this.AudioAutoPanCurveCombo = new System.Windows.Forms.ComboBox();
 			this.VideoTab = new System.Windows.Forms.TabPage();
+			this.VideoTransitionGroup = new System.Windows.Forms.GroupBox();
+			this.VideoTransitionTable = new System.Windows.Forms.TableLayoutPanel();
+			this.VideoTransitionOffBtn = new System.Windows.Forms.Button();
+			this.VideoTransitionDurationTxt = new System.Windows.Forms.TextBox();
+			this.VideoTransitionCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoTransitionReciprocalCurveCombo = new System.Windows.Forms.ComboBox();
+			this.VideoTransitionDurationLbl = new System.Windows.Forms.Label();
+			this.VideoTransitionAlignLbl = new System.Windows.Forms.Label();
+			this.VideoTransitionAlignBox = new Otomad.VegasScripts.OtomadHelper.V4.IntegerTrackWithBox();
 			this.VideoParamsGroup = new System.Windows.Forms.GroupBox();
 			this.VideoParamsTable = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel13 = new System.Windows.Forms.FlowLayoutPanel();
@@ -28226,6 +28331,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTogglePanel.SuspendLayout();
 			this.AudioAutoPanFlow.SuspendLayout();
 			this.VideoTab.SuspendLayout();
+			this.VideoTransitionGroup.SuspendLayout();
+			this.VideoTransitionTable.SuspendLayout();
 			this.VideoParamsGroup.SuspendLayout();
 			this.VideoParamsTable.SuspendLayout();
 			this.flowLayoutPanel13.SuspendLayout();
@@ -33152,6 +33259,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.VideoTab.AutoScroll = true;
 			this.VideoTab.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
+			this.VideoTab.Controls.Add(this.VideoTransitionGroup);
 			this.VideoTab.Controls.Add(this.VideoParamsGroup);
 			this.VideoTab.Controls.Add(this.VideoEffectsGroup);
 			this.VideoTab.Controls.Add(this.VideoVelocityGroup);
@@ -33165,6 +33273,160 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.VideoTab.TabIndex = 2;
 			this.VideoTab.Text = "画面";
 			this.VideoTab.UseVisualStyleBackColor = true;
+			//
+			// VideoTransitionGroup
+			//
+			this.VideoTransitionGroup.AutoSize = true;
+			this.VideoTransitionGroup.Controls.Add(this.VideoTransitionTable);
+			this.VideoTransitionGroup.Dock = System.Windows.Forms.DockStyle.Top;
+			this.VideoTransitionGroup.Location = new System.Drawing.Point(8, 2074);
+			this.VideoTransitionGroup.Name = "VideoTransitionGroup";
+			this.VideoTransitionGroup.Padding = new System.Windows.Forms.Padding(8);
+			this.VideoTransitionGroup.Size = new System.Drawing.Size(1076, 180);
+			this.VideoTransitionGroup.TabIndex = 7;
+			this.VideoTransitionGroup.TabStop = false;
+			this.VideoTransitionGroup.Text = "过渡";
+			//
+			// VideoTransitionTable
+			//
+			this.VideoTransitionTable.AutoSize = true;
+			this.VideoTransitionTable.ColumnCount = 4;
+			this.VideoTransitionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.VideoTransitionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.VideoTransitionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.VideoTransitionTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionOffBtn, 2, 1);
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionDurationTxt, 1, 1);
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionCurveCombo, 3, 0);
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionReciprocalCurveCombo, 3, 1);
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionDurationLbl, 0, 1);
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionAlignLbl, 0, 0);
+			this.VideoTransitionTable.Controls.Add(this.VideoTransitionAlignBox, 1, 0);
+			this.VideoTransitionTable.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoTransitionTable.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.VideoTransitionTable.Location = new System.Drawing.Point(8, 40);
+			this.VideoTransitionTable.Name = "VideoTransitionTable";
+			this.VideoTransitionTable.RowCount = 2;
+			this.VideoTransitionTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoTransitionTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.VideoTransitionTable.Size = new System.Drawing.Size(1060, 132);
+			this.VideoTransitionTable.TabIndex = 0;
+			//
+			// VideoTransitionOffBtn
+			//
+			this.VideoTransitionOffBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			this.VideoTransitionOffBtn.AutoSize = true;
+			this.VideoTransitionOffBtn.Location = new System.Drawing.Point(800, 77);
+			this.VideoTransitionOffBtn.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.VideoTransitionOffBtn.MaximumSize = new System.Drawing.Size(480, 44);
+			this.VideoTransitionOffBtn.Name = "VideoTransitionOffBtn";
+			this.VideoTransitionOffBtn.Size = new System.Drawing.Size(150, 44);
+			this.VideoTransitionOffBtn.TabIndex = 14;
+			this.VideoTransitionOffBtn.Text = "关闭";
+			this.VideoTransitionOffBtn.UseVisualStyleBackColor = true;
+			this.VideoTransitionOffBtn.Visible = false;
+			this.VideoTransitionOffBtn.Click += new System.EventHandler(this.VideoTransitionOffBtn_Click);
+			//
+			// VideoTransitionDurationTxt
+			//
+			this.VideoTransitionDurationTxt.Dock = System.Windows.Forms.DockStyle.Left;
+			this.VideoTransitionDurationTxt.Location = new System.Drawing.Point(140, 70);
+			this.VideoTransitionDurationTxt.Margin = new System.Windows.Forms.Padding(24, 4, 4, 4);
+			this.VideoTransitionDurationTxt.Name = "VideoTransitionDurationTxt";
+			this.VideoTransitionDurationTxt.Size = new System.Drawing.Size(318, 39);
+			this.VideoTransitionDurationTxt.TabIndex = 13;
+			this.VideoTransitionDurationTxt.Leave += new System.EventHandler(this.VideoTransitionDurationTxt_Leave);
+			//
+			// VideoTransitionCurveCombo
+			//
+			this.VideoTransitionCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoTransitionCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoTransitionCurveCombo.FormattingEnabled = true;
+			this.VideoTransitionCurveCombo.Items.AddRange(new object[] {
+			"线性",
+			"快速",
+			"慢速",
+			"平滑",
+			"急剧"});
+			this.VideoTransitionCurveCombo.Location = new System.Drawing.Point(954, 6);
+			this.VideoTransitionCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.VideoTransitionCurveCombo.Name = "VideoTransitionCurveCombo";
+			this.VideoTransitionCurveCombo.Size = new System.Drawing.Size(102, 40);
+			this.VideoTransitionCurveCombo.TabIndex = 12;
+			//
+			// VideoTransitionReciprocalCurveCombo
+			//
+			this.VideoTransitionReciprocalCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoTransitionReciprocalCurveCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoTransitionReciprocalCurveCombo.FormattingEnabled = true;
+			this.VideoTransitionReciprocalCurveCombo.Items.AddRange(new object[] {
+			"线性",
+			"快速",
+			"慢速",
+			"平滑",
+			"急剧"});
+			this.VideoTransitionReciprocalCurveCombo.Location = new System.Drawing.Point(954, 72);
+			this.VideoTransitionReciprocalCurveCombo.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+			this.VideoTransitionReciprocalCurveCombo.Name = "VideoTransitionReciprocalCurveCombo";
+			this.VideoTransitionReciprocalCurveCombo.Size = new System.Drawing.Size(102, 40);
+			this.VideoTransitionReciprocalCurveCombo.TabIndex = 11;
+			//
+			// VideoTransitionDurationLbl
+			//
+			this.VideoTransitionDurationLbl.AutoSize = true;
+			this.VideoTransitionDurationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoTransitionDurationLbl.Location = new System.Drawing.Point(3, 66);
+			this.VideoTransitionDurationLbl.MinimumSize = new System.Drawing.Size(0, 66);
+			this.VideoTransitionDurationLbl.Name = "VideoTransitionDurationLbl";
+			this.VideoTransitionDurationLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoTransitionDurationLbl.TabIndex = 9;
+			this.VideoTransitionDurationLbl.Text = "时长　　";
+			this.VideoTransitionDurationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// VideoTransitionAlignLbl
+			//
+			this.VideoTransitionAlignLbl.AutoSize = true;
+			this.VideoTransitionAlignLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoTransitionAlignLbl.Location = new System.Drawing.Point(3, 0);
+			this.VideoTransitionAlignLbl.MinimumSize = new System.Drawing.Size(0, 66);
+			this.VideoTransitionAlignLbl.Name = "VideoTransitionAlignLbl";
+			this.VideoTransitionAlignLbl.Size = new System.Drawing.Size(110, 66);
+			this.VideoTransitionAlignLbl.TabIndex = 1;
+			this.VideoTransitionAlignLbl.Text = "对齐　　";
+			this.VideoTransitionAlignLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// VideoTransitionAlignBox
+			//
+			this.VideoTransitionAlignBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoTransitionTable.SetColumnSpan(this.VideoTransitionAlignBox, 2);
+			this.VideoTransitionAlignBox.DefaultValue = new decimal(new int[] {
+			0,
+			0,
+			0,
+			0});
+			this.VideoTransitionAlignBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoTransitionAlignBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoTransitionAlignBox.Location = new System.Drawing.Point(124, 8);
+			this.VideoTransitionAlignBox.Margin = new System.Windows.Forms.Padding(8);
+			this.VideoTransitionAlignBox.Maximum = new decimal(new int[] {
+			100,
+			0,
+			0,
+			0});
+			this.VideoTransitionAlignBox.Minimum = new decimal(new int[] {
+			100,
+			0,
+			0,
+			-2147483648});
+			this.VideoTransitionAlignBox.Name = "VideoTransitionAlignBox";
+			this.VideoTransitionAlignBox.NumericUpDownWidth = 65;
+			this.VideoTransitionAlignBox.Size = new System.Drawing.Size(818, 50);
+			this.VideoTransitionAlignBox.TabIndex = 5;
+			this.VideoTransitionAlignBox.Value = new decimal(new int[] {
+			0,
+			0,
+			0,
+			0});
 			//
 			// VideoParamsGroup
 			//
@@ -38187,6 +38449,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioAutoPanFlow.PerformLayout();
 			this.VideoTab.ResumeLayout(false);
 			this.VideoTab.PerformLayout();
+			this.VideoTransitionGroup.ResumeLayout(false);
+			this.VideoTransitionGroup.PerformLayout();
+			this.VideoTransitionTable.ResumeLayout(false);
+			this.VideoTransitionTable.PerformLayout();
 			this.VideoParamsGroup.ResumeLayout(false);
 			this.VideoParamsGroup.PerformLayout();
 			this.VideoParamsTable.ResumeLayout(false);
@@ -38975,6 +39241,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel24;
 		public System.Windows.Forms.Label MidiEncodingLbl;
 		public System.Windows.Forms.ComboBox MidiEncodingCombo;
+		public System.Windows.Forms.GroupBox VideoTransitionGroup;
+		public System.Windows.Forms.TableLayoutPanel VideoTransitionTable;
+		public System.Windows.Forms.ComboBox VideoTransitionCurveCombo;
+		public System.Windows.Forms.ComboBox VideoTransitionReciprocalCurveCombo;
+		public System.Windows.Forms.Label VideoTransitionDurationLbl;
+		public System.Windows.Forms.Label VideoTransitionAlignLbl;
+		public IntegerTrackWithBox VideoTransitionAlignBox;
+		public System.Windows.Forms.TextBox VideoTransitionDurationTxt;
+		public System.Windows.Forms.Button VideoTransitionOffBtn;
 	}
 	#endregion
 
@@ -39375,8 +39650,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioFadeOutBox.SetValue(configIni.Read("FadeOut", 0m), 0m);
 			AudioFadeInTimeTxt.Text = configIni.Read("FadeInTimecode", Timecode.FromMilliseconds(0).ToString());
 			AudioFadeOutTimeTxt.Text = configIni.Read("FadeOutTimecode", Timecode.FromMilliseconds(0).ToString());
-			TimecodeText_Leave(AudioFadeInTimeTxt, null);
-			TimecodeText_Leave(AudioFadeOutTimeTxt, null);
+			TimecodeText_Leave(AudioFadeInTimeTxt, EventArgs.Empty);
+			TimecodeText_Leave(AudioFadeOutTimeTxt, EventArgs.Empty);
 			if (configIni.Read("SetFadeByTimecode", false)) AudioFadeSetAsTimecodeRadio.Checked = true;
 			else AudioFadeSetAsPercentRadio.Checked = true;
 			AudioFadeInCurveCombo.SetIndex(configIni.Read("FadeInCurve", 1), 1);
@@ -39423,8 +39698,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			VideoFadeOutBox.SetValue(configIni.Read("FadeOut", 0m), 0m);
 			VideoFadeInTimeTxt.Text = configIni.Read("FadeInTimecode", Timecode.FromMilliseconds(0).ToString());
 			VideoFadeOutTimeTxt.Text = configIni.Read("FadeOutTimecode", Timecode.FromMilliseconds(0).ToString());
-			TimecodeText_Leave(VideoFadeInTimeTxt, null);
-			TimecodeText_Leave(VideoFadeOutTimeTxt, null);
+			TimecodeText_Leave(VideoFadeInTimeTxt, EventArgs.Empty);
+			TimecodeText_Leave(VideoFadeOutTimeTxt, EventArgs.Empty);
 			if (configIni.Read("SetFadeByTimecode", false)) VideoFadeSetAsTimecodeRadio.Checked = true;
 			else VideoFadeSetAsPercentRadio.Checked = true;
 			VideoGlowBox.SetValue(configIni.Read("Glow", 0m), 0m);
@@ -39458,6 +39733,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			RestrictKeyframesLengthMode = configIni.Read("RestrictKeyframesLengthMode", ConstrainLengthModeType.MIN_LENGTH);
 			RestrictKeyframesLengthBox.Value = configIni.Read("RestrictKeyframesLengthValue", 1000);
 			visualTruncate.ReadIni();
+			VideoTransitionAlignBox.SetValue(configIni.Read("TransitionAlign", 0), 0);
+			VideoTransitionDurationTxt.Text = configIni.Read("TransitionDuration", Timecode.FromMilliseconds(0).ToString());
+			VideoTransitionDurationTxt_Leave(VideoTransitionDurationTxt, EventArgs.Empty);
+			VideoTransitionCurveCombo.SetIndex(configIni.Read("TransitionCurve", 3), 3);
+			VideoTransitionReciprocalCurveCombo.SetIndex(configIni.Read("TransitionReciprocalCurve", 3), 3);
 			configIni.EndSection();
 			#endregion
 
@@ -39744,6 +40024,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("RestrictKeyframesLengthMode", RestrictKeyframesLengthMode);
 			configIni.Write("RestrictKeyframesLengthValue", RestrictKeyframesLengthBox.Value);
 			visualTruncate.SaveIni();
+			configIni.Write("TransitionAlign", VideoTransitionAlignBox.Value);
+			configIni.Write("TransitionDuration", VideoTransitionDurationTxt.Text);
+			configIni.Write("TransitionCurve", VideoTransitionCurveCombo.SelectedIndex);
+			configIni.Write("TransitionReciprocalCurve", VideoTransitionReciprocalCurveCombo.SelectedIndex);
 			configIni.EndSection();
 			#endregion
 
@@ -39753,7 +40037,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("GenerateAt", (int)GenerateAt);
 			configIni.Write("GenerateAtCustomValue", GenerateAtCustomText.Text);
 			if (AcceptConfig) configIni.Write("LastMediaSourceFrom", ChooseSourceCombo.SelectedIndex);
-			if (!ChooseMidiText.Text.Contains("<")) { // 是否不为 "<未选择 MIDI 文件>"
+			if (!ChooseMidiText.Text.StartsWith("<")) { // 是否不为 "<未选择 MIDI 文件>"
 				configIni.Write("LastMidiFile", ChooseMidiText.Text);
 				configIni.Write("LastMidiTrackCheckedAndSorted", SerializeMidiTrackListViewItems());
 			} else RemoveLastMidiConfig();
@@ -42371,9 +42655,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void TimecodeText_Leave(object sender, EventArgs e) {
+			#if VEGAS_ENVIRONMENT
 			TextBox textBox = sender as TextBox;
 			Timecode timecode = Timecode.FromString(textBox.Text);
 			textBox.Text = timecode.ToString();
+			#endif
 		}
 
 		private void FadeSetAsRadio_CheckedChanged(object sender, EventArgs e) {
@@ -43442,6 +43728,25 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				recreateHandle.Invoke(combo, null); // 强制重建把手，以成功应用颜色。
 				combo.ForeColor = @checked ? SystemColors.GrayText : SystemColors.WindowText;
 			}
+		}
+
+		private void VideoTransitionOffBtn_Click(object sender, EventArgs e) {
+			#if VEGAS_ENVIRONMENT
+			VideoTransitionDurationTxt.Text = Timecode.FromSeconds(0).ToString();
+			#else
+			VideoTransitionDurationTxt.Text = "00:00.000";
+			#endif
+			VideoTransitionOffBtn.Visible = false;
+		}
+
+		private void VideoTransitionDurationTxt_Leave(object sender, EventArgs e) {
+			#if VEGAS_ENVIRONMENT
+			Timecode timecode = Timecode.FromString(VideoTransitionDurationTxt.Text);
+			VideoTransitionDurationTxt.Text = timecode.ToString();
+			VideoTransitionOffBtn.Visible = timecode.ToMilliseconds() != 0;
+			#else
+			VideoTransitionOffBtn.Visible = VideoTransitionDurationTxt.Text != "00:00.000";
+			#endif
 		}
 	}
 
