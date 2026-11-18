@@ -52,6 +52,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.pitchShiftPresetMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.unloadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.datamoshPathMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.changeDatamoshPathMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.resetDatamoshPathMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.enableLegacyProgressDialogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.titleBarMaterialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -174,7 +177,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MysteryBoxTab = new System.Windows.Forms.TabPage();
 			this.MysteryBoxPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.EnhanceSelectCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
-			this.LuckyDipLotionBathCheck = new System.Windows.Forms.CheckBox();
+			this.LuckyDipLotionBathCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.LuckyDipLotionBathIntervalPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.LuckyDipLotionBathIntervalLbl = new System.Windows.Forms.Label();
 			this.LuckyDipLotionBathIntervalBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
@@ -646,6 +649,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.StutterBtn = new Otomad.VegasScripts.OtomadHelper.V4.CommandLinkButton();
 			this.CameraShakeBtn = new Otomad.VegasScripts.OtomadHelper.V4.CommandLinkButton();
 			this.DatamoshNotInstalledTable = new System.Windows.Forms.TableLayoutPanel();
+			this.CustomDatamoshLocationLink = new System.Windows.Forms.LinkLabel();
 			this.DatamoshNotInstalledInfo = new System.Windows.Forms.Label();
 			this.DownloadDatamoshLink = new System.Windows.Forms.LinkLabel();
 			this.DatamoshInfoLbl = new System.Windows.Forms.Label();
@@ -1064,6 +1068,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.formSizeToolStripMenuItem,
 			this.toolStripSeparator6,
 			this.pitchShiftPresetMenuItem,
+			this.datamoshPathMenuItem,
 			this.toolStripSeparator1,
 			this.enableLegacyProgressDialogToolStripMenuItem,
 			this.titleBarMaterialToolStripMenuItem,
@@ -1081,13 +1086,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.saveConfigToolStripMenuItem.Name = "saveConfigToolStripMenuItem";
 			this.saveConfigToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.saveConfigToolStripMenuItem.Text = "保存用户配置(&S)";
 			//
 			// resetConfigToolStripMenuItem
 			//
 			this.resetConfigToolStripMenuItem.Name = "resetConfigToolStripMenuItem";
-			this.resetConfigToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.resetConfigToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.resetConfigToolStripMenuItem.Text = "重置用户配置(&R)";
 			this.resetConfigToolStripMenuItem.Click += new System.EventHandler(this.resetConfigToolStripMenuItem_Click);
 			//
@@ -1102,7 +1107,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.setToDefaultFormSizeToolStripMenuItem,
 			this.setToMinFormSizeToolStripMenuItem});
 			this.formSizeToolStripMenuItem.Name = "formSizeToolStripMenuItem";
-			this.formSizeToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.formSizeToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.formSizeToolStripMenuItem.Text = "窗体大小(&F)";
 			//
 			// rememberFormSizeToolStripMenuItem
@@ -1153,7 +1158,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// toolStripSeparator6
 			//
 			this.toolStripSeparator6.Name = "toolStripSeparator6";
-			this.toolStripSeparator6.Size = new System.Drawing.Size(427, 6);
+			this.toolStripSeparator6.Size = new System.Drawing.Size(432, 6);
 			//
 			// pitchShiftPresetMenuItem
 			//
@@ -1161,7 +1166,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.loadPresetsToolStripMenuItem,
 			this.unloadPresetsToolStripMenuItem});
 			this.pitchShiftPresetMenuItem.Name = "pitchShiftPresetMenuItem";
-			this.pitchShiftPresetMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.pitchShiftPresetMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.pitchShiftPresetMenuItem.Text = "移调插件预设(&P)";
 			//
 			// loadPresetsToolStripMenuItem
@@ -1178,16 +1183,37 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.unloadPresetsToolStripMenuItem.Text = "卸载预设(&U)...";
 			this.unloadPresetsToolStripMenuItem.Click += new System.EventHandler(this.LoadPresetsToolStripMenuItem_Click);
 			//
+			// datamoshPathMenuItem
+			//
+			this.datamoshPathMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.changeDatamoshPathMenuItem,
+			this.resetDatamoshPathMenuItem});
+			this.datamoshPathMenuItem.Name = "datamoshPathMenuItem";
+			this.datamoshPathMenuItem.Size = new System.Drawing.Size(435, 44);
+			this.datamoshPathMenuItem.Text = "数据抹失扩展包文件夹路径";
+			//
+			// changeDatamoshPathMenuItem
+			//
+			this.changeDatamoshPathMenuItem.Name = "changeDatamoshPathMenuItem";
+			this.changeDatamoshPathMenuItem.Size = new System.Drawing.Size(383, 44);
+			this.changeDatamoshPathMenuItem.Text = "更改为自定义路径(&C)...";
+			//
+			// resetDatamoshPathMenuItem
+			//
+			this.resetDatamoshPathMenuItem.Name = "resetDatamoshPathMenuItem";
+			this.resetDatamoshPathMenuItem.Size = new System.Drawing.Size(383, 44);
+			this.resetDatamoshPathMenuItem.Text = "重置为默认路径(&R)...";
+			//
 			// toolStripSeparator1
 			//
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(427, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(432, 6);
 			//
 			// enableLegacyProgressDialogToolStripMenuItem
 			//
 			this.enableLegacyProgressDialogToolStripMenuItem.CheckOnClick = true;
 			this.enableLegacyProgressDialogToolStripMenuItem.Name = "enableLegacyProgressDialogToolStripMenuItem";
-			this.enableLegacyProgressDialogToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.enableLegacyProgressDialogToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.enableLegacyProgressDialogToolStripMenuItem.Text = "启用旧版进度对话框";
 			//
 			// titleBarMaterialToolStripMenuItem
@@ -1203,7 +1229,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.darkMicaAltMaterialToolStripMenuItem,
 			this.darkSolidMaterialToolStripMenuItem});
 			this.titleBarMaterialToolStripMenuItem.Name = "titleBarMaterialToolStripMenuItem";
-			this.titleBarMaterialToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.titleBarMaterialToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.titleBarMaterialToolStripMenuItem.Text = "标题栏材质样式";
 			//
 			// lightAcrylicMaterialToolStripMenuItem
@@ -1288,32 +1314,32 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// toolStripSeparator12
 			//
 			this.toolStripSeparator12.Name = "toolStripSeparator12";
-			this.toolStripSeparator12.Size = new System.Drawing.Size(427, 6);
+			this.toolStripSeparator12.Size = new System.Drawing.Size(432, 6);
 			//
 			// exportConfigToolStripMenuItem
 			//
 			this.exportConfigToolStripMenuItem.Name = "exportConfigToolStripMenuItem";
-			this.exportConfigToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
-			this.exportConfigToolStripMenuItem.Text = "导出配置(&E)";
+			this.exportConfigToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
+			this.exportConfigToolStripMenuItem.Text = "导出配置(&E)...";
 			this.exportConfigToolStripMenuItem.Click += new System.EventHandler(this.ExportConfigToolStripMenuItem_Click);
 			//
 			// importConfigToolStripMenuItem
 			//
 			this.importConfigToolStripMenuItem.Name = "importConfigToolStripMenuItem";
-			this.importConfigToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
-			this.importConfigToolStripMenuItem.Text = "导入配置(&I)";
+			this.importConfigToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
+			this.importConfigToolStripMenuItem.Text = "导入配置(&I)...";
 			this.importConfigToolStripMenuItem.Click += new System.EventHandler(this.ImportConfigToolStripMenuItem_Click);
 			//
 			// toolStripSeparator11
 			//
 			this.toolStripSeparator11.Name = "toolStripSeparator11";
-			this.toolStripSeparator11.Size = new System.Drawing.Size(427, 6);
+			this.toolStripSeparator11.Size = new System.Drawing.Size(432, 6);
 			//
 			// exitDiscardingChangesToolStripMenuItem
 			//
 			this.exitDiscardingChangesToolStripMenuItem.Name = "exitDiscardingChangesToolStripMenuItem";
 			this.exitDiscardingChangesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
-			this.exitDiscardingChangesToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.exitDiscardingChangesToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.exitDiscardingChangesToolStripMenuItem.Text = "放弃更改并退出(&D)";
 			this.exitDiscardingChangesToolStripMenuItem.Click += new System.EventHandler(this.exitDiscardingChangesToolStripMenuItem_Click);
 			//
@@ -1321,7 +1347,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
 			this.exitToolStripMenuItem.ShortcutKeyDisplayString = "Esc";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.exitToolStripMenuItem.Text = "退出(&X)";
 			//
 			// helpToolStripMenuItem
@@ -2444,6 +2470,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceConfigSelectedAsFirstCheck.Text = "挑取首项沿用选区首项";
 			this.MultiSourceConfigSelectedAsFirstCheck.UserChecked = true;
 			this.MultiSourceConfigSelectedAsFirstCheck.UseVisualStyleBackColor = true;
+			this.MultiSourceConfigSelectedAsFirstCheck.Visible = false;
 			//
 			// MultiSourceCombPickerTabs
 			//
@@ -10127,8 +10154,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// DatamoshNotInstalledTable
 			//
 			this.DatamoshNotInstalledTable.AutoSize = true;
-			this.DatamoshNotInstalledTable.ColumnCount = 1;
+			this.DatamoshNotInstalledTable.ColumnCount = 2;
+			this.DatamoshNotInstalledTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.DatamoshNotInstalledTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.DatamoshNotInstalledTable.Controls.Add(this.CustomDatamoshLocationLink, 1, 1);
 			this.DatamoshNotInstalledTable.Controls.Add(this.DatamoshNotInstalledInfo, 0, 0);
 			this.DatamoshNotInstalledTable.Controls.Add(this.DownloadDatamoshLink, 0, 1);
 			this.DatamoshNotInstalledTable.Dock = System.Windows.Forms.DockStyle.Top;
@@ -10138,13 +10167,25 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.DatamoshNotInstalledTable.RowCount = 2;
 			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
 			this.DatamoshNotInstalledTable.Size = new System.Drawing.Size(1086, 84);
 			this.DatamoshNotInstalledTable.TabIndex = 8;
+			//
+			// CustomDatamoshLocationLink
+			//
+			this.CustomDatamoshLocationLink.AutoSize = true;
+			this.CustomDatamoshLocationLink.Dock = System.Windows.Forms.DockStyle.Left;
+			this.CustomDatamoshLocationLink.Location = new System.Drawing.Point(155, 44);
+			this.CustomDatamoshLocationLink.Name = "CustomDatamoshLocationLink";
+			this.CustomDatamoshLocationLink.Size = new System.Drawing.Size(278, 32);
+			this.CustomDatamoshLocationLink.TabIndex = 4;
+			this.CustomDatamoshLocationLink.TabStop = true;
+			this.CustomDatamoshLocationLink.Text = "自定义扩展包文件夹路径";
+			this.CustomDatamoshLocationLink.VisitedLinkColor = System.Drawing.Color.Blue;
 			//
 			// DatamoshNotInstalledInfo
 			//
 			this.DatamoshNotInstalledInfo.AutoSize = true;
+			this.DatamoshNotInstalledTable.SetColumnSpan(this.DatamoshNotInstalledInfo, 2);
 			this.DatamoshNotInstalledInfo.Dock = System.Windows.Forms.DockStyle.Top;
 			this.DatamoshNotInstalledInfo.Font = new System.Drawing.Font("微软雅黑", 9F);
 			this.DatamoshNotInstalledInfo.Location = new System.Drawing.Point(3, 12);
@@ -10156,13 +10197,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// DownloadDatamoshLink
 			//
 			this.DownloadDatamoshLink.AutoSize = true;
-			this.DownloadDatamoshLink.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.DownloadDatamoshLink.Dock = System.Windows.Forms.DockStyle.Left;
 			this.DownloadDatamoshLink.Location = new System.Drawing.Point(3, 44);
 			this.DownloadDatamoshLink.Name = "DownloadDatamoshLink";
-			this.DownloadDatamoshLink.Size = new System.Drawing.Size(1080, 32);
+			this.DownloadDatamoshLink.Padding = new System.Windows.Forms.Padding(0, 0, 12, 0);
+			this.DownloadDatamoshLink.Size = new System.Drawing.Size(146, 32);
 			this.DownloadDatamoshLink.TabIndex = 3;
 			this.DownloadDatamoshLink.TabStop = true;
 			this.DownloadDatamoshLink.Text = "下载扩展包";
+			this.DownloadDatamoshLink.VisitedLinkColor = System.Drawing.Color.Blue;
 			//
 			// DatamoshInfoLbl
 			//
@@ -11524,7 +11567,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public NoAutoScrollPanel SourceTabScrollPanel;
 		public System.Windows.Forms.FlowLayoutPanel LinearMapPanel;
 		public System.Windows.Forms.CheckBox MatchCutAccumulateHarmonicsCheck;
-		public System.Windows.Forms.CheckBox LuckyDipLotionBathCheck;
+		public RememberedCheckBox LuckyDipLotionBathCheck;
 		public System.Windows.Forms.TableLayoutPanel LuckyDipLotionBathIntervalPanel;
 		public System.Windows.Forms.Label LuckyDipLotionBathIntervalLbl;
 		public TimecodeBox LuckyDipLotionBathIntervalBox;
@@ -11710,6 +11753,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public IntegerTrackWithBox VideoTransitionAlignBox;
 		public System.Windows.Forms.TextBox VideoTransitionDurationTxt;
 		public System.Windows.Forms.Button VideoTransitionOffBtn;
+		public System.Windows.Forms.ToolStripMenuItem datamoshPathMenuItem;
+		public System.Windows.Forms.LinkLabel CustomDatamoshLocationLink;
+		public System.Windows.Forms.ToolStripMenuItem changeDatamoshPathMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem resetDatamoshPathMenuItem;
 	}
 }
 

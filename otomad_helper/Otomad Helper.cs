@@ -79,6 +79,7 @@ using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using NWaves.FeatureExtractors;
 using NWaves.FeatureExtractors.Options;
+using NWaves.FeatureExtractors.Multi;
 using NWaves.Signals;
 #if VER_GEQ_14 || VER_GEQ_16
 	using ScriptPortal.Vegas;
@@ -376,6 +377,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private bool IsFromBrowseFile { get { return SourceConfigFrom == MediaSourceFrom.BROWSE_FILE; } }
 		internal EventSet selectedEventSet { get; private set; }
 		internal EventSets eventSets;
+		internal PitchDetector.AnalysisResult enhancedAnalysis;
 		public double ProjectBpm { get { return vegas.Project.Ruler.BeatsPerMinute; } }
 		private AutoLayoutTracksInfos LayoutInfos { get { return configForm.LayoutInfos; } }
 		private bool IsMultiMidiChannel { get { return MidiConfigTracks.IsMultiMidiChannel; } }
@@ -900,26 +902,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					return audioReverse != null || videoReverse != null;
 				}
 			}
-			private Dictionary<double, double?> autoBasePitchMap = new Dictionary<double, double?>();
-			public double? GetAutoBasePitch(double offset) {
-				if (!autoBasePitchMap.ContainsKey(offset)) {
-					if (audioEvent == null || audioEvent.Takes.Count == 0 || !audioEvent.ActiveTake.Media.IsLocalMedia()) return null;
-					string path = audioEvent.ActiveTake.Media.FilePath;
-					double mediaLength = audioEvent.ActiveTake.Media.Length.ToMilliseconds();
-					double ms = (audioEvent.ActiveTake.Offset.ToMilliseconds() + offset) % mediaLength;
-					const double ADDITIONAL_OFFSET = 100;
-					if (mediaLength - ms > ADDITIONAL_OFFSET) ms += ADDITIONAL_OFFSET;
-					return autoBasePitchMap[offset] = PitchDetector.GetPitchAt(path, ms);
-
-					/*PitchDetector.RenderToDesktop(
-						filePath: path,
-						imageWidth: 3000,
-						imageHeight: 600,
-						startMs: ms,
-						endMs: ms + audioEvent.Length.ToMilliseconds()
-					);*/
-				}
-				return autoBasePitchMap[offset];
+			public double? GetAutoBasePitch(double offset, bool isMysteryBox = false) {
+				if (audioEvent == null || audioEvent.ActiveTake == null || !audioEvent.ActiveTake.Media.IsLocalMedia()) return null;
+				string path = audioEvent.ActiveTake.Media.FilePath;
+				double mediaLength = audioEvent.ActiveTake.Media.Length.ToMilliseconds();
+				double ms = (audioEvent.ActiveTake.Offset.ToMilliseconds() + offset) % mediaLength;
+				const double ADDITIONAL_OFFSET = 100;
+				if (mediaLength - ms > ADDITIONAL_OFFSET) ms += ADDITIONAL_OFFSET;
+				return PitchDetector.GetPitchAt(path, ms, useFullCurve: isMysteryBox);
 			}
 			private double? _affixAsPitch = -1;
 			public double? GetPitchFromAffix(AffixAsPitch affix) {
@@ -944,6 +934,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			internal IEnumerable<TrackEvent> OriginalClips { get; private set; }
 			public IEnumerable<AudioEvent> AudioSampleEvents { get { return eventSets.Select(set => set.audioEvent).OfType<AudioEvent>(); } }
 			public IEnumerable<VideoEvent> VideoSampleEvents { get { return eventSets.Select(set => set.videoEvent).OfType<VideoEvent>(); } }
+			private static bool _CheckLocalAudio(EventSet set) { return set.audioEvent != null && set.audioEvent.ActiveTake != null && set.audioEvent.ActiveTake.Media.IsLocalMedia(); }
+			public bool HasAudioEvents { get { return eventSets.Any(_CheckLocalAudio); } }
+			public List<PitchDetector.MediaSegment> EnhancedSegement { get { return eventSets.Where(_CheckLocalAudio).Select(set => new PitchDetector.MediaSegment(set)).ToList(); } }
 			/// <summary>
 			/// <list type="bullet">
 			/// <item><term><see langword="true" /></term><description>落单的视频剪辑更多。</description></item>
@@ -1582,6 +1575,47 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				MessageBox.Show(Lang.str.linear_map_allow_reuse_existed_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				return false;
 			}
+			if (CombConfigEnhanceSelect) {
+				if (!eventSets.HasAudioEvents) throw new Exception("没有音频素材！");
+				else if (enhancedAnalysis == null) enhancedAnalysis = PitchDetector.AnalyzeMediaSegments(eventSets.EnhancedSegement);
+			}
+			#if TEST // 测试强化选择音频分析功能能否可靠识别。
+			if (enhancedAnalysis != null) {
+				VideoTrack vTrack;
+				AudioTrack aTrack;
+				vegas.Project.Tracks.Add(aTrack = new AudioTrack(vegas.Project, 0, "hhhhh"));
+				vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, 0, "hhhhh"));
+				foreach (PitchDetector.PitchRegion region in enhancedAnalysis.PitchRegions) {
+					AudioEvent evt = Track_Append(aTrack, region.Source.Source.audioEvent, Timecode.FromSeconds(0), true);
+					VideoEvent vEvt = Track_Append(vTrack, region.Source.Source.videoEvent, Timecode.FromSeconds(0), true);
+					evt.Length = vEvt.Length = Timecode.FromMilliseconds(region.Duration);
+					evt.ActiveTake.Offset = vEvt.ActiveTake.Offset = Timecode.FromMilliseconds(region.StartTime);
+					evt.Method = TimeStretchPitchShift.Elastique;
+					evt.PitchSemis = 60 - region.MidiNote;
+				}
+				foreach (var drum in enhancedAnalysis.DrumCandidates.Typicalities) {
+					if (drum.Value != null) {
+						AudioEvent evt = Track_Append(aTrack, drum.Value.Source.Source.audioEvent, Timecode.FromSeconds(0), true);
+						VideoEvent vEvt = Track_Append(vTrack, drum.Value.Source.Source.videoEvent, Timecode.FromSeconds(0), true);
+						evt.Length = vEvt.Length = Timecode.FromMilliseconds(drum.Value.Duration);
+						evt.ActiveTake.Offset = vEvt.ActiveTake.Offset = Timecode.FromMilliseconds(drum.Value.StartTime);
+						evt.ActiveTake.Name = vEvt.ActiveTake.Name = drum.Key;
+						evt.Normalize = true;
+						evt.RecalculateNorm();
+					}
+				}
+				foreach (PitchDetector.DrumCandidate drum in PitchDetector.DrumCandidates.SortByCandidate(new List<PitchDetector.DrumCandidate>(enhancedAnalysis.DrumCandidates))) {
+					AudioEvent evt = Track_Append(aTrack, drum.Source.Source.audioEvent, Timecode.FromSeconds(0), true);
+					VideoEvent vEvt = Track_Append(vTrack, drum.Source.Source.videoEvent, Timecode.FromSeconds(0), true);
+					evt.Length = vEvt.Length = Timecode.FromMilliseconds(drum.Duration);
+					evt.ActiveTake.Offset = vEvt.ActiveTake.Offset = Timecode.FromMilliseconds(drum.StartTime);
+					evt.ActiveTake.Name = vEvt.ActiveTake.Name = drum.IsHighCandidate ? "HatLike" : "KickLike";
+					evt.Normalize = true;
+					evt.RecalculateNorm();
+				}
+				return false;
+			}
+			#endif
 			#endregion
 
 			#region 可变速度、拍号处理
@@ -1945,7 +1979,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (CombConfigSyncopatorPicker && CombConfigSyncopatorAffixAsPitch != AffixAsPitch.OFF)
 							basePitchOrNull = activeSource.GetPitchFromAffix(CombConfigSyncopatorAffixAsPitch);
 						if (basePitchOrNull == null && AConfigAutoBasePitch)
-							basePitchOrNull = activeSource.GetAutoBasePitch(adjustTime ? sourceStartTime : 0);
+							basePitchOrNull = activeSource.GetAutoBasePitch(adjustTime ? sourceStartTime : 0, CombConfigMysteryBoxPicker && !CombConfigEnhanceSelect);
 						double basePitch = basePitchOrNull ?? AConfigBasePitch;
 						double pitchDelta = pitch - basePitch + AConfigOverallShift;
 						bool backToUsePlugin = false;
@@ -9344,8 +9378,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 	public static class PitchDetector {
 		// 完整音频音高曲线缓存（键为文件路径）
-		private static readonly Dictionary<string, Tuple<double[], double[]>> _fullPitchCurveCache =
-			new Dictionary<string, Tuple<double[], double[]>>();
+		private static readonly Dictionary<string, Tuple<double[], double[]>> _fullPitchCurveCache = new Dictionary<string, Tuple<double[], double[]>>();
+		// 缓存 GetPitchAt 的音高值
+		private static readonly Dictionary<ValueTuple<string, double>, double?> _getPitchAtCache = new Dictionary<ValueTuple<string, double>, double?>();
 
 		/// <summary>
 		/// 加载任意格式音频为 NWaves 的单声道 DiscreteSignal。
@@ -9491,6 +9526,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			double jumpThreshold = 4,
 			double preRollMs = 2500,
 			bool useFullCurve = false) {
+			ValueTuple<string, double> cacheKey = ValueTuple.Create(filePath, timeMs);
+			if (_getPitchAtCache.ContainsKey(cacheKey)) return _getPitchAtCache[cacheKey];
+			Func<double?, double?> CacheResult = result => _getPitchAtCache[cacheKey] = result;
 
 			try {
 				if (useFullCurve) {
@@ -9501,7 +9539,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					double[] timePositions = curve.Item2;
 
 					if (timePositions.Length == 0) {
-						return null;
+						return CacheResult(null);
 					}
 
 					double relativeTimeSec = timeMs / 1000.0;
@@ -9523,7 +9561,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					}
 					double? median = ComputeMedian(validInWindow);
 					if (median != null) {
-						return median;
+						return CacheResult(median);
 					}
 
 					double searchStartSec = relativeTimeSec;
@@ -9537,17 +9575,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							break;
 						}
 						if (!double.IsNaN(midiValues[i])) {
-							return (int)Math.Round(midiValues[i], MidpointRounding.AwayFromZero);
+							return CacheResult(midiValues[i]);
 						}
 					}
-					return null;
+					return CacheResult(null);
 				} else {
-
 					// 原有分段计算逻辑
 					DiscreteSignal signal = LoadAudioAsSignal(filePath);
 					double totalDurationMs = signal.Length * 1000.0 / signal.SamplingRate;
 					if (timeMs < 0 || timeMs > totalDurationMs) {
-						return null;
+						return CacheResult(null);
 					}
 
 					// 提取目标时间附近 2.5 秒前置 + 最大后置搜索时间 + 2.5 秒后置
@@ -9556,7 +9593,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					double segmentEndMs = Math.Min(totalDurationMs, timeMs + postRollMs);
 					double segmentDurationMs = segmentEndMs - segmentStartMs;
 					if (segmentDurationMs <= 0) {
-						return null;
+						return CacheResult(null);
 					}
 
 					int startSample = (int)Math.Floor(segmentStartMs / 1000.0 * signal.SamplingRate);
@@ -9565,7 +9602,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					endSample = Math.Max(startSample, Math.Min(endSample, signal.Length));
 					int segmentLength = endSample - startSample;
 					if (segmentLength <= 0) {
-						return null;
+						return CacheResult(null);
 					}
 
 					float[] segmentSamples = new float[segmentLength];
@@ -9578,7 +9615,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					double[] timePositions = curve.Item2;
 
 					if (timePositions.Length == 0) {
-						return null;
+						return CacheResult(null);
 					}
 
 					double relativeTimeSec = (timeMs - segmentStartMs) / 1000.0;
@@ -9600,7 +9637,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					}
 					double? median = ComputeMedian(validInWindow);
 					if (median != null) {
-						return median;
+						return CacheResult(median);
 					}
 
 					double searchStartSec = relativeTimeSec;
@@ -9614,14 +9651,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							break;
 						}
 						if (!double.IsNaN(midiValues[i])) {
-							return (int)Math.Round(midiValues[i], MidpointRounding.AwayFromZero);
+							return CacheResult(midiValues[i]);
 						}
 					}
 				}
 
-				return null;
+				return CacheResult(null);
 			} catch (Exception) {
-				return null;
+				return CacheResult(null);
 			}
 		}
 
@@ -9740,6 +9777,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public class PitchRegion {
 			public double StartTime { get; set; }
 			public double EndTime { get; set; }
+			public double Duration { get { return EndTime - StartTime; } }
 			public double AveragePitchHz { get; set; }
 			public double MidiNote { get; set; }
 			public string NoteName { get; set; }
@@ -9750,7 +9788,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public class DrumCandidate {
 			public double StartTime { get; set; }
 			public double EndTime { get; set; }
-			public double Duration { get; set; }
+			public double Duration { get { return EndTime - StartTime; } }
 			public double AverageCentroid { get; set; }
 			public double AverageMidi { get; set; }
 
@@ -9885,14 +9923,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public double StartTime { get; set; }
 			/// <summary>截取持续时间（毫秒）。</summary>
 			public double Duration { get; set; }
-			public Take Take { get; private set; }
-			public static implicit operator MediaSegment(TrackEvent trackEvent) {
-				return new MediaSegment() {
-					FilePath = trackEvent.ActiveTake.MediaPath,
-					StartTime = trackEvent.ActiveTake.Offset.ToMilliseconds(),
-					Duration = trackEvent.Length.ToMilliseconds(),
-					Take = trackEvent.ActiveTake,
-				};
+			public EntryPoint.EventSet Source { get; private set; }
+			public MediaSegment(EntryPoint.EventSet source) {
+				FilePath = source.audioEvent.ActiveTake.MediaPath;
+				StartTime = source.audioEvent.ActiveTake.Offset.ToMilliseconds();
+				Duration = source.audioEvent.Length.ToMilliseconds();
+				Source = source;
 			}
 		}
 
@@ -9907,8 +9943,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			int medianWindow = 3,
 			int jumpWindow = 5,
 			double jumpThreshold = 4.0,
-			double frameDuration = 0.046,
-			double hopDuration = 0.0116) {
+			double frameDuration = 46.0,
+			double hopDuration = 11.6) {
 
 			DiscreteSignal signal = LoadAudioAsSignal(filePath);
 			return AnalyzeSignal(signal, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold, frameDuration, hopDuration);
@@ -9924,17 +9960,26 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			int medianWindow = 3,
 			int jumpWindow = 5,
 			double jumpThreshold = 4.0,
-			double frameDuration = 0.046,
-			double hopDuration = 0.0116,
+			double frameDuration = 46.0,
+			double hopDuration = 11.6,
 			bool refreshDrumTypical = true) {
+
+			// ExtractPitchCurve / NWaves 内部使用秒，先换算
+			double frameDurationSec = frameDuration / 1000.0;
+			double hopDurationSec = hopDuration / 1000.0;
 
 			// 1. 提取原始音高曲线（不做平滑），用于鼓声分类
 			Tuple<double[], double[]> rawCurve = ExtractPitchCurve(
-				signal, lowFreq, highFreq, 0, 0, 0, frameDuration, hopDuration);
+				signal, lowFreq, highFreq, 0, 0, 0, frameDurationSec, hopDurationSec);
 			double[] rawMidi = rawCurve.Item1;
 			double[] timePositions = rawCurve.Item2;
 
-			// 2. 基于原始曲线生成平滑曲线，用于音高区域检测
+			// 2. timePositions 从秒转为毫秒
+			for (int i = 0; i < timePositions.Length; i++) {
+				timePositions[i] *= 1000.0;
+			}
+
+			// 3. 基于原始曲线生成平滑曲线，用于音高区域检测
 			double[] smoothedMidi = new double[rawMidi.Length];
 			Array.Copy(rawMidi, smoothedMidi, rawMidi.Length);
 			if (medianWindow > 1) {
@@ -9944,28 +9989,28 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				ApplyJumpSmoothing(smoothedMidi, jumpWindow, jumpThreshold);
 			}
 
-			// 3. 提取 RMS 能量
+			// 4. 提取 RMS 能量（NWaves 用秒）
 			MultiFeatureOptions tdOptions = new MultiFeatureOptions {
 				SamplingRate = signal.SamplingRate,
 				FeatureList = "rms",
-				FrameDuration = frameDuration,
-				HopDuration = hopDuration
+				FrameDuration = frameDurationSec,
+				HopDuration = hopDurationSec
 			};
 			TimeDomainFeaturesExtractor tdExtractor = new TimeDomainFeaturesExtractor(tdOptions);
 			List<float[]> tdVectors = tdExtractor.ComputeFrom(signal);
 
-			// 4. 提取频谱质心
+			// 5. 提取频谱质心（NWaves 用秒）
 			MultiFeatureOptions spectralOptions = new MultiFeatureOptions {
 				SamplingRate = signal.SamplingRate,
 				FeatureList = "centroid",
-				FrameDuration = frameDuration,
-				HopDuration = hopDuration,
+				FrameDuration = frameDurationSec,
+				HopDuration = hopDurationSec,
 				FftSize = 1024
 			};
 			SpectralFeaturesExtractor spectralExtractor = new SpectralFeaturesExtractor(spectralOptions);
 			List<float[]> spectralVectors = spectralExtractor.ComputeFrom(signal);
 
-			// 5. 对齐帧数
+			// 6. 对齐帧数
 			int frameCount = Math.Min(rawMidi.Length, tdVectors.Count);
 			frameCount = Math.Min(frameCount, spectralVectors.Count);
 
@@ -9985,7 +10030,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		/// <summary>
 		/// 批量分析多个媒体截取片段。同一文件的不同时间段会合并后分析（重叠合并、超出时长循环处理）。
-		/// 返回所有文件的分析结果列表（每个文件对应一个 AnalysisResult，时间相对于原文件）。
+		/// 返回所有文件合并后的 AnalysisResult。
+		/// 注意：MediaSegment.StartTime / Duration 单位为毫秒；返回结果的时间单位与 Analyze 保持一致（毫秒）。
 		/// </summary>
 		public static AnalysisResult AnalyzeMediaSegments(
 			List<MediaSegment> segments,
@@ -9994,8 +10040,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			int medianWindow = 3,
 			int jumpWindow = 5,
 			double jumpThreshold = 4.0,
-			double frameDuration = 0.046,
-			double hopDuration = 0.0116) {
+			double frameDuration = 46.0,
+			double hopDuration = 11.6) {
 
 			AnalysisResult results = new AnalysisResult();
 			if (segments == null || segments.Count == 0) {
@@ -10014,42 +10060,40 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					continue;
 				}
 
-				double totalDuration = (double)fullSignal.Length / fullSignal.SamplingRate;
-				if (totalDuration <= 0) {
+				// 统一使用毫秒
+				double totalDurationMs = (double)fullSignal.Length * 1000.0 / fullSignal.SamplingRate;
+				if (totalDurationMs <= 0) {
 					continue;
 				}
 
-				// 将每个截取片段（毫秒）转换为 [0, totalDuration] 内的秒区间
 				List<Tuple<double, double>> intervals = new List<Tuple<double, double>>();
 				foreach (MediaSegment seg in group) {
 					if (seg.Duration <= 0) {
 						continue;
 					}
-					double segStartSec = seg.StartTime / 1000.0;
-					double segDurationSec = seg.Duration / 1000.0;
+					double segStartMs = seg.StartTime;
+					double segDurationMs = seg.Duration;
 
-					if (segDurationSec >= totalDuration) {
-						// 持续时间大于等于总时长，相当于分析整个媒体
-						intervals.Add(Tuple.Create(0.0, totalDuration));
+					if (segDurationMs >= totalDurationMs) {
+						intervals.Add(Tuple.Create(0.0, totalDurationMs));
 						continue;
 					}
-					double start = segStartSec % totalDuration;
+					double start = segStartMs % totalDurationMs;
 					if (start < 0) {
-						start += totalDuration;
+						start += totalDurationMs;
 					}
-					double end = start + segDurationSec;
-					if (end <= totalDuration) {
+					double end = start + segDurationMs;
+					if (end <= totalDurationMs) {
 						intervals.Add(Tuple.Create(start, end));
 					} else {
-						intervals.Add(Tuple.Create(start, totalDuration));
-						intervals.Add(Tuple.Create(0.0, end - totalDuration));
+						intervals.Add(Tuple.Create(start, totalDurationMs));
+						intervals.Add(Tuple.Create(0.0, end - totalDurationMs));
 					}
 				}
 				if (intervals.Count == 0) {
 					continue;
 				}
 
-				// 合并重叠/相邻区间
 				intervals.Sort((a, b) => a.Item1.CompareTo(b.Item1));
 				List<Tuple<double, double>> merged = new List<Tuple<double, double>>();
 				foreach (Tuple<double, double> interval in intervals) {
@@ -10067,13 +10111,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 
 				foreach (Tuple<double, double> interval in merged) {
-					double startSec = interval.Item1;
-					double endSec = interval.Item2;
-					if (endSec <= startSec) {
+					double startMs = interval.Item1;
+					double endMs = interval.Item2;
+					if (endMs <= startMs) {
 						continue;
 					}
-					int startSample = (int)Math.Floor(startSec * fullSignal.SamplingRate);
-					int endSample = (int)Math.Ceiling(endSec * fullSignal.SamplingRate);
+
+					int startSample = (int)Math.Floor(startMs * fullSignal.SamplingRate / 1000.0);
+					int endSample = (int)Math.Ceiling(endMs * fullSignal.SamplingRate / 1000.0);
 					startSample = Math.Max(0, Math.Min(startSample, fullSignal.Length));
 					endSample = Math.Max(startSample, Math.Min(endSample, fullSignal.Length));
 					int length = endSample - startSample;
@@ -10085,18 +10130,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					DiscreteSignal segmentSignal = new DiscreteSignal(fullSignal.SamplingRate, samples);
 
 					AnalysisResult segmentResult = AnalyzeSignal(
-						segmentSignal, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold, frameDuration, hopDuration, false);
+						segmentSignal, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold,
+						frameDuration, hopDuration, false);
 
-					double offset = startSec;
+					double offsetMs = startMs;   // 毫秒
 					foreach (PitchRegion region in segmentResult.PitchRegions) {
-						region.StartTime += offset;
-						region.EndTime += offset;
+						// AnalyzeSignal 已返回毫秒，直接加偏移
+						region.StartTime = region.StartTime + offsetMs;
+						region.EndTime = region.EndTime + offsetMs;
 						region.Source = keySegment;
 						results.PitchRegions.Add(region);
 					}
 					foreach (DrumCandidate ev in segmentResult.DrumCandidates) {
-						ev.StartTime += offset;
-						ev.EndTime += offset;
+						ev.StartTime = ev.StartTime + offsetMs;
+						ev.EndTime = ev.EndTime + offsetMs;
 						ev.Source = keySegment;
 						results.DrumCandidates.Add(ev);
 					}
@@ -10115,7 +10162,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		int frameCount) {
 
 			const double rmsThreshold = 0.01;
-			const double minDuration = 0.1;
 			List<PitchRegion> regions = new List<PitchRegion>();
 
 			List<int> currentIndices = new List<int>();
@@ -10166,11 +10212,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return;
 			}
 
-			double hopDuration = indices.Count > 1 ? timePositions[1] - timePositions[0] : 0.0116;
+			double hopDuration = indices.Count > 1 ? timePositions[1] - timePositions[0] : 11.6; // 毫秒
 			double startTime = timePositions[indices[0]];
 			double endTime = timePositions[indices[indices.Count - 1]] + hopDuration;
 			double duration = endTime - startTime;
-			if (duration < 0.1) {
+			if (duration < 100.0) { // 毫秒
 				return;
 			}
 
@@ -10233,7 +10279,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			const double rmsThreshold = 0.01;
 			const double jumpThresholdSemitones = 2.0;
-			const double minDuration = 0.05;
+			const double minDuration = 50.0; // 毫秒
 
 			DrumCandidates candidates = new DrumCandidates();
 
@@ -10241,7 +10287,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return candidates;
 			}
 
-			double hopDuration = timePositions.Length > 1 ? timePositions[1] - timePositions[0] : 0.0116;
+			double hopDuration = timePositions.Length > 1 ? timePositions[1] - timePositions[0] : 11.6; // 毫秒
 
 			// 标记候选帧：能量足够且（音高缺失或音高急剧跳跃）
 			bool[] isDrumFrame = new bool[frameCount];
@@ -10297,7 +10343,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						candidates.Add(new DrumCandidate {
 							StartTime = startTime,
 							EndTime = endTime,
-							Duration = duration,
 							AverageCentroid = avgCentroid,
 							AverageMidi = avgMidi,
 						});
@@ -28037,6 +28082,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.pitchShiftPresetMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.unloadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.datamoshPathMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.changeDatamoshPathMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.resetDatamoshPathMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.enableLegacyProgressDialogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.titleBarMaterialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -28159,7 +28207,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MysteryBoxTab = new System.Windows.Forms.TabPage();
 			this.MysteryBoxPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.EnhanceSelectCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
-			this.LuckyDipLotionBathCheck = new System.Windows.Forms.CheckBox();
+			this.LuckyDipLotionBathCheck = new Otomad.VegasScripts.OtomadHelper.V4.RememberedCheckBox();
 			this.LuckyDipLotionBathIntervalPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.LuckyDipLotionBathIntervalLbl = new System.Windows.Forms.Label();
 			this.LuckyDipLotionBathIntervalBox = new Otomad.VegasScripts.OtomadHelper.V4.TimecodeBox();
@@ -28631,6 +28679,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.StutterBtn = new Otomad.VegasScripts.OtomadHelper.V4.CommandLinkButton();
 			this.CameraShakeBtn = new Otomad.VegasScripts.OtomadHelper.V4.CommandLinkButton();
 			this.DatamoshNotInstalledTable = new System.Windows.Forms.TableLayoutPanel();
+			this.CustomDatamoshLocationLink = new System.Windows.Forms.LinkLabel();
 			this.DatamoshNotInstalledInfo = new System.Windows.Forms.Label();
 			this.DownloadDatamoshLink = new System.Windows.Forms.LinkLabel();
 			this.DatamoshInfoLbl = new System.Windows.Forms.Label();
@@ -29049,6 +29098,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.formSizeToolStripMenuItem,
 			this.toolStripSeparator6,
 			this.pitchShiftPresetMenuItem,
+			this.datamoshPathMenuItem,
 			this.toolStripSeparator1,
 			this.enableLegacyProgressDialogToolStripMenuItem,
 			this.titleBarMaterialToolStripMenuItem,
@@ -29066,13 +29116,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.saveConfigToolStripMenuItem.Name = "saveConfigToolStripMenuItem";
 			this.saveConfigToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.saveConfigToolStripMenuItem.Text = "保存用户配置(&S)";
 			//
 			// resetConfigToolStripMenuItem
 			//
 			this.resetConfigToolStripMenuItem.Name = "resetConfigToolStripMenuItem";
-			this.resetConfigToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.resetConfigToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.resetConfigToolStripMenuItem.Text = "重置用户配置(&R)";
 			this.resetConfigToolStripMenuItem.Click += new System.EventHandler(this.resetConfigToolStripMenuItem_Click);
 			//
@@ -29087,7 +29137,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.setToDefaultFormSizeToolStripMenuItem,
 			this.setToMinFormSizeToolStripMenuItem});
 			this.formSizeToolStripMenuItem.Name = "formSizeToolStripMenuItem";
-			this.formSizeToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.formSizeToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.formSizeToolStripMenuItem.Text = "窗体大小(&F)";
 			//
 			// rememberFormSizeToolStripMenuItem
@@ -29138,7 +29188,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// toolStripSeparator6
 			//
 			this.toolStripSeparator6.Name = "toolStripSeparator6";
-			this.toolStripSeparator6.Size = new System.Drawing.Size(427, 6);
+			this.toolStripSeparator6.Size = new System.Drawing.Size(432, 6);
 			//
 			// pitchShiftPresetMenuItem
 			//
@@ -29146,7 +29196,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.loadPresetsToolStripMenuItem,
 			this.unloadPresetsToolStripMenuItem});
 			this.pitchShiftPresetMenuItem.Name = "pitchShiftPresetMenuItem";
-			this.pitchShiftPresetMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.pitchShiftPresetMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.pitchShiftPresetMenuItem.Text = "移调插件预设(&P)";
 			//
 			// loadPresetsToolStripMenuItem
@@ -29163,16 +29213,37 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.unloadPresetsToolStripMenuItem.Text = "卸载预设(&U)...";
 			this.unloadPresetsToolStripMenuItem.Click += new System.EventHandler(this.LoadPresetsToolStripMenuItem_Click);
 			//
+			// datamoshPathMenuItem
+			//
+			this.datamoshPathMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.changeDatamoshPathMenuItem,
+			this.resetDatamoshPathMenuItem});
+			this.datamoshPathMenuItem.Name = "datamoshPathMenuItem";
+			this.datamoshPathMenuItem.Size = new System.Drawing.Size(435, 44);
+			this.datamoshPathMenuItem.Text = "数据抹失扩展包文件夹路径";
+			//
+			// changeDatamoshPathMenuItem
+			//
+			this.changeDatamoshPathMenuItem.Name = "changeDatamoshPathMenuItem";
+			this.changeDatamoshPathMenuItem.Size = new System.Drawing.Size(383, 44);
+			this.changeDatamoshPathMenuItem.Text = "更改为自定义路径(&C)...";
+			//
+			// resetDatamoshPathMenuItem
+			//
+			this.resetDatamoshPathMenuItem.Name = "resetDatamoshPathMenuItem";
+			this.resetDatamoshPathMenuItem.Size = new System.Drawing.Size(383, 44);
+			this.resetDatamoshPathMenuItem.Text = "重置为默认路径(&R)...";
+			//
 			// toolStripSeparator1
 			//
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(427, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(432, 6);
 			//
 			// enableLegacyProgressDialogToolStripMenuItem
 			//
 			this.enableLegacyProgressDialogToolStripMenuItem.CheckOnClick = true;
 			this.enableLegacyProgressDialogToolStripMenuItem.Name = "enableLegacyProgressDialogToolStripMenuItem";
-			this.enableLegacyProgressDialogToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.enableLegacyProgressDialogToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.enableLegacyProgressDialogToolStripMenuItem.Text = "启用旧版进度对话框";
 			//
 			// titleBarMaterialToolStripMenuItem
@@ -29188,7 +29259,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.darkMicaAltMaterialToolStripMenuItem,
 			this.darkSolidMaterialToolStripMenuItem});
 			this.titleBarMaterialToolStripMenuItem.Name = "titleBarMaterialToolStripMenuItem";
-			this.titleBarMaterialToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.titleBarMaterialToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.titleBarMaterialToolStripMenuItem.Text = "标题栏材质样式";
 			//
 			// lightAcrylicMaterialToolStripMenuItem
@@ -29273,32 +29344,32 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// toolStripSeparator12
 			//
 			this.toolStripSeparator12.Name = "toolStripSeparator12";
-			this.toolStripSeparator12.Size = new System.Drawing.Size(427, 6);
+			this.toolStripSeparator12.Size = new System.Drawing.Size(432, 6);
 			//
 			// exportConfigToolStripMenuItem
 			//
 			this.exportConfigToolStripMenuItem.Name = "exportConfigToolStripMenuItem";
-			this.exportConfigToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
-			this.exportConfigToolStripMenuItem.Text = "导出配置(&E)";
+			this.exportConfigToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
+			this.exportConfigToolStripMenuItem.Text = "导出配置(&E)...";
 			this.exportConfigToolStripMenuItem.Click += new System.EventHandler(this.ExportConfigToolStripMenuItem_Click);
 			//
 			// importConfigToolStripMenuItem
 			//
 			this.importConfigToolStripMenuItem.Name = "importConfigToolStripMenuItem";
-			this.importConfigToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
-			this.importConfigToolStripMenuItem.Text = "导入配置(&I)";
+			this.importConfigToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
+			this.importConfigToolStripMenuItem.Text = "导入配置(&I)...";
 			this.importConfigToolStripMenuItem.Click += new System.EventHandler(this.ImportConfigToolStripMenuItem_Click);
 			//
 			// toolStripSeparator11
 			//
 			this.toolStripSeparator11.Name = "toolStripSeparator11";
-			this.toolStripSeparator11.Size = new System.Drawing.Size(427, 6);
+			this.toolStripSeparator11.Size = new System.Drawing.Size(432, 6);
 			//
 			// exitDiscardingChangesToolStripMenuItem
 			//
 			this.exitDiscardingChangesToolStripMenuItem.Name = "exitDiscardingChangesToolStripMenuItem";
 			this.exitDiscardingChangesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
-			this.exitDiscardingChangesToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.exitDiscardingChangesToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.exitDiscardingChangesToolStripMenuItem.Text = "放弃更改并退出(&D)";
 			this.exitDiscardingChangesToolStripMenuItem.Click += new System.EventHandler(this.exitDiscardingChangesToolStripMenuItem_Click);
 			//
@@ -29306,7 +29377,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
 			this.exitToolStripMenuItem.ShortcutKeyDisplayString = "Esc";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(430, 44);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(435, 44);
 			this.exitToolStripMenuItem.Text = "退出(&X)";
 			//
 			// helpToolStripMenuItem
@@ -30429,6 +30500,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.MultiSourceConfigSelectedAsFirstCheck.Text = "挑取首项沿用选区首项";
 			this.MultiSourceConfigSelectedAsFirstCheck.UserChecked = true;
 			this.MultiSourceConfigSelectedAsFirstCheck.UseVisualStyleBackColor = true;
+			this.MultiSourceConfigSelectedAsFirstCheck.Visible = false;
 			//
 			// MultiSourceCombPickerTabs
 			//
@@ -38112,8 +38184,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// DatamoshNotInstalledTable
 			//
 			this.DatamoshNotInstalledTable.AutoSize = true;
-			this.DatamoshNotInstalledTable.ColumnCount = 1;
+			this.DatamoshNotInstalledTable.ColumnCount = 2;
+			this.DatamoshNotInstalledTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.DatamoshNotInstalledTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.DatamoshNotInstalledTable.Controls.Add(this.CustomDatamoshLocationLink, 1, 1);
 			this.DatamoshNotInstalledTable.Controls.Add(this.DatamoshNotInstalledInfo, 0, 0);
 			this.DatamoshNotInstalledTable.Controls.Add(this.DownloadDatamoshLink, 0, 1);
 			this.DatamoshNotInstalledTable.Dock = System.Windows.Forms.DockStyle.Top;
@@ -38123,13 +38197,25 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.DatamoshNotInstalledTable.RowCount = 2;
 			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
 			this.DatamoshNotInstalledTable.Size = new System.Drawing.Size(1086, 84);
 			this.DatamoshNotInstalledTable.TabIndex = 8;
+			//
+			// CustomDatamoshLocationLink
+			//
+			this.CustomDatamoshLocationLink.AutoSize = true;
+			this.CustomDatamoshLocationLink.Dock = System.Windows.Forms.DockStyle.Left;
+			this.CustomDatamoshLocationLink.Location = new System.Drawing.Point(155, 44);
+			this.CustomDatamoshLocationLink.Name = "CustomDatamoshLocationLink";
+			this.CustomDatamoshLocationLink.Size = new System.Drawing.Size(278, 32);
+			this.CustomDatamoshLocationLink.TabIndex = 4;
+			this.CustomDatamoshLocationLink.TabStop = true;
+			this.CustomDatamoshLocationLink.Text = "自定义扩展包文件夹路径";
+			this.CustomDatamoshLocationLink.VisitedLinkColor = System.Drawing.Color.Blue;
 			//
 			// DatamoshNotInstalledInfo
 			//
 			this.DatamoshNotInstalledInfo.AutoSize = true;
+			this.DatamoshNotInstalledTable.SetColumnSpan(this.DatamoshNotInstalledInfo, 2);
 			this.DatamoshNotInstalledInfo.Dock = System.Windows.Forms.DockStyle.Top;
 			this.DatamoshNotInstalledInfo.Font = new System.Drawing.Font("微软雅黑", 9F);
 			this.DatamoshNotInstalledInfo.Location = new System.Drawing.Point(3, 12);
@@ -38141,13 +38227,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// DownloadDatamoshLink
 			//
 			this.DownloadDatamoshLink.AutoSize = true;
-			this.DownloadDatamoshLink.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.DownloadDatamoshLink.Dock = System.Windows.Forms.DockStyle.Left;
 			this.DownloadDatamoshLink.Location = new System.Drawing.Point(3, 44);
 			this.DownloadDatamoshLink.Name = "DownloadDatamoshLink";
-			this.DownloadDatamoshLink.Size = new System.Drawing.Size(1080, 32);
+			this.DownloadDatamoshLink.Padding = new System.Windows.Forms.Padding(0, 0, 12, 0);
+			this.DownloadDatamoshLink.Size = new System.Drawing.Size(146, 32);
 			this.DownloadDatamoshLink.TabIndex = 3;
 			this.DownloadDatamoshLink.TabStop = true;
 			this.DownloadDatamoshLink.Text = "下载扩展包";
+			this.DownloadDatamoshLink.VisitedLinkColor = System.Drawing.Color.Blue;
 			//
 			// DatamoshInfoLbl
 			//
@@ -39509,7 +39597,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public NoAutoScrollPanel SourceTabScrollPanel;
 		public System.Windows.Forms.FlowLayoutPanel LinearMapPanel;
 		public System.Windows.Forms.CheckBox MatchCutAccumulateHarmonicsCheck;
-		public System.Windows.Forms.CheckBox LuckyDipLotionBathCheck;
+		public RememberedCheckBox LuckyDipLotionBathCheck;
 		public System.Windows.Forms.TableLayoutPanel LuckyDipLotionBathIntervalPanel;
 		public System.Windows.Forms.Label LuckyDipLotionBathIntervalLbl;
 		public TimecodeBox LuckyDipLotionBathIntervalBox;
@@ -39695,6 +39783,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public IntegerTrackWithBox VideoTransitionAlignBox;
 		public System.Windows.Forms.TextBox VideoTransitionDurationTxt;
 		public System.Windows.Forms.Button VideoTransitionOffBtn;
+		public System.Windows.Forms.ToolStripMenuItem datamoshPathMenuItem;
+		public System.Windows.Forms.LinkLabel CustomDatamoshLocationLink;
+		public System.Windows.Forms.ToolStripMenuItem changeDatamoshPathMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem resetDatamoshPathMenuItem;
 	}
 	#endregion
 
@@ -39806,6 +39898,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				LuckyDipBarOrBeatCheck.CheckedChanged += e;
 				StaffLengthenToBarEndCheck.CheckedChanged += e;
 				LuckyDipLotionBathCheck.CheckedChanged += e;
+				EnhanceSelectCheck.CheckedChanged += e;
 				AudioStackCheck.CheckedChanged += e;
 				VideoStackCheck.CheckedChanged += e;
 				MatchCutSustainCheck.CheckedChanged += e;
@@ -39874,7 +39967,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			GenerateAtBeginRadio.Text = Lang.str.generate_at_begin + Lang.str.colon + Timecode.FromMilliseconds(0).ToPositionString();
 			GenerateAtCursorRadio.Text = Lang.str.generate_at_cursor + Lang.str.colon + vegas.Transport.CursorPosition.ToPositionString();
 			{
-				EventHandler e = new EventHandler(MidiAutoChangeProjectPropertiesApplyBtn_CheckEnabled);
+				EventHandler e = MidiAutoChangeProjectPropertiesApplyBtn_CheckEnabled;
 				MidiDynamicMidiBpmCheck.CheckedChanged += e;
 				MidiMidiBpmCheck.CheckedChanged += e;
 				MidiProjectBpmCheck.CheckedChanged += e;
@@ -39887,8 +39980,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#region 菜单选项
 			currentVersionMenuItem.Text = "v" + EntryPoint.VERSION.ToString();
 			saveConfigToolStripMenuItem.Click += (sender, e) => SaveIni();
-			exitToolStripMenuItem.Click += new EventHandler(CancelBtn_Click);
-			aboutToolStripMenuItem.Click += new EventHandler(AboutBtn_Click);
+			exitToolStripMenuItem.Click += CancelBtn_Click;
+			aboutToolStripMenuItem.Click += AboutBtn_Click;
 			aboutToolStripMenuItem.ShortcutKeyDisplayString = "Alt+" + GetAboutAccessKeyInCurrentLanguage();
 			DownloadDatamoshLink.Click += (sender, e) => OpenLink(Links.GITHUB_DATAMOSH_EXTPACK);
 			BindMenuLink(latestVersionLinkToolStripMenuItem, Links.GITHUB_LATEST);
@@ -39911,7 +40004,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			BindMenuLink(schineseDocsToolStripMenuItem, Links.READTHEDOCS_SCHINESE);
 			BindMenuLink(vitenameseDocsToolStripMenuItem, Links.READTHEDOCS_VIETNAMESE);
 			foreach (ToolStripItem item in languageToolStripMenuItem.DropDownItems)
-				item.Click += new EventHandler(LanguageStripMenuItem_Click);
+				item.Click += LanguageStripMenuItem_Click;
 			TrackLegatoMenu.Renderer = menu.Renderer = new Windows10StyledContextMenuStripRenderer();
 			if (!supportSystemBackdropType) titleBarMaterialToolStripMenuItem.Visible = false;
 			#endregion
@@ -40267,7 +40360,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AffixAsPitch = configIni.Read("AffixAsPitch", AffixAsPitch.OFF);
 			if (configIni.Read("TartarRatherThanShupelunker", false)) TartarRadio.Checked = true;
 			else ShupelunkerRadio.Checked = true;
-			ShupelunkerUnallocatedOctavesCheck.Checked = configIni.Read("ShupelunkerUnallocatedOctaves", true);
+			ShupelunkerUnallocatedOctavesCheck.Checked = configIni.Read("ShupelunkerUnallocatedOctaves", false);
 			ShupelunkerUnallocatedFillUpCheck.Checked = configIni.Read("ShupelunkerUnallocatedFillUp", true);
 			ShupelunkerUnallocatedFillDownCheck.Checked = configIni.Read("ShupelunkerUnallocatedFillDown", true);
 			ShupelunkerUnallocatedDefaultCheck.Checked = configIni.Read("ShupelunkerUnallocatedDefault", true);
@@ -41871,8 +41964,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			VideoGlissandoBox.Enabled = VideoGlissandoCheck.CheckedAndEnabled();
 
 			LuckyDipBarOrBeatPanel.Enabled = LuckyDipBarOrBeatCheck.Checked;
-			EnhanceSelectCheck.Status = LuckyDipLotionBathCheck.Checked ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
-			LuckyDipLotionBathIntervalPanel.Enabled = LuckyDipLotionBathCheck.Checked;
+			LuckyDipLotionBathIntervalPanel.Enabled = LuckyDipLotionBathCheck.Checked && !EnhanceSelectCheck.Checked;
 			MatchCutSustainCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
 			MatchCutSustainPanel.Enabled = MatchCutSustainCheck.Checked;
 			MatchCutRepeatPanel.Enabled = !MatchCutSustainCheck.Checked;
@@ -43954,6 +44046,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				MultisourceCombPicker != MultisourceCombMode.OFF; // 注意不能改变这里对Visible赋值的等号先后顺序，否则会导致最终控件呈现的顺序错误。
 			MatchCutSustainCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
 			LinearMapReuseCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.Unlocked;
+			LuckyDipLotionBathCheck.Status = MultisourceCombOrganizer == MultisourceCombMode.SHUPELUNKER ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
 			//UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus();
 			if (isLoaded && sender != this) SourceTabScrollPanel.AutoScrollPosition = new Point(0, ushort.MaxValue);
 			ShupelunkerOffsetCombo.SelectionLength = 0;
