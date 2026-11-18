@@ -41435,7 +41435,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			LinearMapReuseCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.Unlocked;
 			TartarReuseCheck.Status = TartarRadio.Checked ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.True;
 			ShupelunkerUnallocatedPanel.Enabled = ShupelunkerOffsetPanel.Enabled = ShupelunkerRadio.Checked;
-			UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus();
+			//UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus();
 
 			PreviewBeepWaveFormCombo.Enabled = PreviewBeepEngineCombo.SelectedIndex == 2;
 			SetStackAndTimeUnremappingEnabled();
@@ -43505,16 +43505,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// 其它逻辑相关代码
 			SetStackAndTimeUnremappingEnabled();
 
-			MultiSourceConfigSelectedAsFirstCheck.Visible = MultiSourceConfigSplitterWrapper.Visible = MultiSourceCombOrganizerTabs.Visible =
+			/*MultiSourceConfigSelectedAsFirstCheck.Visible =*/ MultiSourceConfigSplitterWrapper.Visible = MultiSourceCombOrganizerTabs.Visible =
 				MultisourceCombPicker != MultisourceCombMode.OFF; // 注意不能改变这里对Visible赋值的等号先后顺序，否则会导致最终控件呈现的顺序错误。
 			MatchCutSustainCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
 			LinearMapReuseCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.Unlocked;
-			UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus();
+			//UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus();
 			if (isLoaded && sender != this) SourceTabScrollPanel.AutoScrollPosition = new Point(0, ushort.MaxValue);
 			ShupelunkerOffsetCombo.SelectionLength = 0;
 		}
 
-		private void SyncopatorOrderRadio_CheckedChanged(object sender, EventArgs e) { UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus(); }
+		private void SyncopatorOrderRadio_CheckedChanged(object sender, EventArgs e) { /*UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus();*/ }
 		private void UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus() {
 			MultiSourceConfigSelectedAsFirstCheck.Status =
 				MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX && LuckyDipLotionBathCheck.Checked ||
