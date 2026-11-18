@@ -9343,14 +9343,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	}
 
 	public static class PitchDetector {
-		private static readonly object cacheLock = new object();
-		private static string cachedFilePath = null;
-		private static double cachedLowFreq;
-		private static double cachedHighFreq;
-		private static int cachedMedianWindow;
-		private static int cachedJumpWindow;
-		private static double cachedJumpThreshold;
-		private static Tuple<double[], double[]> cachedCurve = null;
+		// 完整音频音高曲线缓存（键为文件路径）
+		private static readonly Dictionary<string, Tuple<double[], double[]>> _fullPitchCurveCache =
+			new Dictionary<string, Tuple<double[], double[]>>();
 
 		/// <summary>
 		/// 加载任意格式音频为 NWaves 的单声道 DiscreteSignal。
@@ -9454,10 +9449,36 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		/// <summary>
+		/// 获取完整音频的音高曲线（优先从缓存读取）。
+		/// </summary>
+		private static Tuple<double[], double[]> GetFullPitchCurve(
+			string filePath,
+			double lowFreq,
+			double highFreq,
+			int medianWindow,
+			int jumpWindow,
+			double jumpThreshold,
+			double frameDuration,
+			double hopDuration) {
+
+			Tuple<double[], double[]> cached;
+			if (_fullPitchCurveCache.TryGetValue(filePath, out cached)) {
+				return cached;
+			}
+
+			DiscreteSignal signal = LoadAudioAsSignal(filePath);
+			Tuple<double[], double[]> curve = ExtractPitchCurve(
+				signal, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold, frameDuration, hopDuration);
+			_fullPitchCurveCache[filePath] = curve;
+			return curve;
+		}
+
+		/// <summary>
 		/// 获取音频在指定时间（毫秒）处的 MIDI 音高数值。
 		/// 若目标窗口内无法获得音高，则向后续最多 maxLookAheadMs 毫秒内搜索第一个有效音高。
 		/// 中值滤波与跳跃平滑的结果会被缓存，相同文件与参数再次调用时直接复用。
 		/// </summary>
+		/// <param name="useFullCurve">为 true 时计算/读取完整音频音高曲线后查找，适合随机访问同一音频的多个位置。</param>
 		public static double? GetPitchAt(
 			string filePath,
 			double timeMs,
@@ -9468,236 +9489,139 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			int medianWindow = 3,
 			int jumpWindow = 5,
 			double jumpThreshold = 4,
-			double preRollMs = 2500) {
+			double preRollMs = 2500,
+			bool useFullCurve = false) {
 
 			try {
-				DiscreteSignal signal = LoadAudioAsSignal(filePath);
-				double totalDurationMs = signal.Length * 1000.0 / signal.SamplingRate;
-				if (timeMs < 0 || timeMs > totalDurationMs) {
+				if (useFullCurve) {
+					Tuple<double[], double[]> curve = GetFullPitchCurve(
+						filePath, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold,
+						frameDuration: 0.046, hopDuration: 0.0116);
+					double[] midiValues = curve.Item1;
+					double[] timePositions = curve.Item2;
+
+					if (timePositions.Length == 0) {
+						return null;
+					}
+
+					double relativeTimeSec = timeMs / 1000.0;
+					double winStartSec = relativeTimeSec - windowMs / 2000.0;
+					double winEndSec = relativeTimeSec + windowMs / 2000.0;
+
+					List<double> validInWindow = new List<double>();
+					for (int i = 0; i < timePositions.Length; i++) {
+						double t = timePositions[i];
+						if (t < winStartSec) {
+							continue;
+						}
+						if (t > winEndSec) {
+							break;
+						}
+						if (!double.IsNaN(midiValues[i])) {
+							validInWindow.Add(midiValues[i]);
+						}
+					}
+					double? median = ComputeMedian(validInWindow);
+					if (median != null) {
+						return median;
+					}
+
+					double searchStartSec = relativeTimeSec;
+					double searchEndSec = relativeTimeSec + maxLookAheadMs / 1000.0;
+					for (int i = 0; i < timePositions.Length; i++) {
+						double t = timePositions[i];
+						if (t < searchStartSec) {
+							continue;
+						}
+						if (t > searchEndSec) {
+							break;
+						}
+						if (!double.IsNaN(midiValues[i])) {
+							return (int)Math.Round(midiValues[i], MidpointRounding.AwayFromZero);
+						}
+					}
 					return null;
-				}
+				} else {
 
-				// 提取目标时间附近 2.5 秒前置 + 最大后置搜索时间 + 2.5 秒后置
-				double postRollMs = maxLookAheadMs + preRollMs;
-				double segmentStartMs = Math.Max(0, timeMs - preRollMs);
-				double segmentEndMs = Math.Min(totalDurationMs, timeMs + postRollMs);
-				double segmentDurationMs = segmentEndMs - segmentStartMs;
-				if (segmentDurationMs <= 0) {
-					return null;
-				}
-
-				int startSample = (int)Math.Floor(segmentStartMs / 1000.0 * signal.SamplingRate);
-				int endSample = (int)Math.Ceiling(segmentEndMs / 1000.0 * signal.SamplingRate);
-				startSample = Math.Max(0, Math.Min(startSample, signal.Length));
-				endSample = Math.Max(startSample, Math.Min(endSample, signal.Length));
-				int segmentLength = endSample - startSample;
-				if (segmentLength <= 0) {
-					return null;
-				}
-
-				float[] segmentSamples = new float[segmentLength];
-				Array.Copy(signal.Samples, startSample, segmentSamples, 0, segmentLength);
-				DiscreteSignal segment = new DiscreteSignal(signal.SamplingRate, segmentSamples);
-
-				Tuple<double[], double[]> curve = ExtractPitchCurve(
-					segment, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold);
-				double[] midiValues = curve.Item1;
-				double[] timePositions = curve.Item2;
-
-				if (timePositions.Length == 0) {
-					return null;
-				}
-
-				double relativeTimeSec = (timeMs - segmentStartMs) / 1000.0;
-				double winStartSec = relativeTimeSec - windowMs / 2000.0;
-				double winEndSec = relativeTimeSec + windowMs / 2000.0;
-
-				List<double> validInWindow = new List<double>();
-				for (int i = 0; i < timePositions.Length; i++) {
-					double t = timePositions[i];
-					if (t < winStartSec) {
-						continue;
+					// 原有分段计算逻辑
+					DiscreteSignal signal = LoadAudioAsSignal(filePath);
+					double totalDurationMs = signal.Length * 1000.0 / signal.SamplingRate;
+					if (timeMs < 0 || timeMs > totalDurationMs) {
+						return null;
 					}
-					if (t > winEndSec) {
-						break;
-					}
-					if (!double.IsNaN(midiValues[i])) {
-						validInWindow.Add(midiValues[i]);
-					}
-				}
-				double? median = ComputeMedian(validInWindow);
-				if (median != null) {
-					return median;
-				}
 
-				double searchStartSec = relativeTimeSec;
-				double searchEndSec = relativeTimeSec + maxLookAheadMs / 1000.0;
-				for (int i = 0; i < timePositions.Length; i++) {
-					double t = timePositions[i];
-					if (t < searchStartSec) {
-						continue;
+					// 提取目标时间附近 2.5 秒前置 + 最大后置搜索时间 + 2.5 秒后置
+					double postRollMs = maxLookAheadMs + preRollMs;
+					double segmentStartMs = Math.Max(0, timeMs - preRollMs);
+					double segmentEndMs = Math.Min(totalDurationMs, timeMs + postRollMs);
+					double segmentDurationMs = segmentEndMs - segmentStartMs;
+					if (segmentDurationMs <= 0) {
+						return null;
 					}
-					if (t > searchEndSec) {
-						break;
+
+					int startSample = (int)Math.Floor(segmentStartMs / 1000.0 * signal.SamplingRate);
+					int endSample = (int)Math.Ceiling(segmentEndMs / 1000.0 * signal.SamplingRate);
+					startSample = Math.Max(0, Math.Min(startSample, signal.Length));
+					endSample = Math.Max(startSample, Math.Min(endSample, signal.Length));
+					int segmentLength = endSample - startSample;
+					if (segmentLength <= 0) {
+						return null;
 					}
-					if (!double.IsNaN(midiValues[i])) {
-						return (int)Math.Round(midiValues[i], MidpointRounding.AwayFromZero);
+
+					float[] segmentSamples = new float[segmentLength];
+					Array.Copy(signal.Samples, startSample, segmentSamples, 0, segmentLength);
+					DiscreteSignal segment = new DiscreteSignal(signal.SamplingRate, segmentSamples);
+
+					Tuple<double[], double[]> curve = ExtractPitchCurve(
+						segment, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold);
+					double[] midiValues = curve.Item1;
+					double[] timePositions = curve.Item2;
+
+					if (timePositions.Length == 0) {
+						return null;
+					}
+
+					double relativeTimeSec = (timeMs - segmentStartMs) / 1000.0;
+					double winStartSec = relativeTimeSec - windowMs / 2000.0;
+					double winEndSec = relativeTimeSec + windowMs / 2000.0;
+
+					List<double> validInWindow = new List<double>();
+					for (int i = 0; i < timePositions.Length; i++) {
+						double t = timePositions[i];
+						if (t < winStartSec) {
+							continue;
+						}
+						if (t > winEndSec) {
+							break;
+						}
+						if (!double.IsNaN(midiValues[i])) {
+							validInWindow.Add(midiValues[i]);
+						}
+					}
+					double? median = ComputeMedian(validInWindow);
+					if (median != null) {
+						return median;
+					}
+
+					double searchStartSec = relativeTimeSec;
+					double searchEndSec = relativeTimeSec + maxLookAheadMs / 1000.0;
+					for (int i = 0; i < timePositions.Length; i++) {
+						double t = timePositions[i];
+						if (t < searchStartSec) {
+							continue;
+						}
+						if (t > searchEndSec) {
+							break;
+						}
+						if (!double.IsNaN(midiValues[i])) {
+							return (int)Math.Round(midiValues[i], MidpointRounding.AwayFromZero);
+						}
 					}
 				}
 
 				return null;
 			} catch (Exception) {
 				return null;
-			}
-		}
-
-		/// <summary>
-		/// 生成指定时间范围的音高曲线图，并保存到桌面 test.png。
-		/// 同时把该时间范围的音频保存为桌面 test.wav，方便调试对齐。
-		/// </summary>
-		public static void RenderToDesktop(
-			string filePath,
-			int imageWidth,
-			int imageHeight,
-			double startMs,
-			double endMs,
-			double? minMidi = null,
-			double? maxMidi = null,
-			int medianWindow = 3,
-			int jumpWindow = 5,
-			double jumpThreshold = 4.0,
-			double lowFreq = 80,
-			double highFreq = 1000) {
-
-			if (imageWidth <= 0 || imageHeight <= 0) {
-				throw new ArgumentException("图片尺寸必须为正数。");
-			}
-			if (endMs <= startMs) {
-				throw new ArgumentException("结束时间必须大于开始时间。");
-			}
-
-			Tuple<double[], double[]> curve = GetOrLoadCurve(
-				filePath, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold);
-			double[] midiValues = curve.Item1;
-			double[] timePositions = curve.Item2;
-
-			DiscreteSignal signal = LoadAudioAsSignal(filePath);
-			double totalDurationMs = signal.Length * 1000.0 / signal.SamplingRate;
-			double clampedStartMs = Math.Max(0, startMs);
-			double clampedEndMs = Math.Min(totalDurationMs, endMs);
-			double spanMs = clampedEndMs - clampedStartMs;
-			if (spanMs <= 0) {
-				spanMs = 1;
-			}
-
-			int startSample = (int)Math.Floor(clampedStartMs / 1000.0 * signal.SamplingRate);
-			int endSample = (int)Math.Ceiling(clampedEndMs / 1000.0 * signal.SamplingRate);
-			startSample = Math.Max(0, Math.Min(startSample, signal.Length));
-			endSample = Math.Max(startSample, Math.Min(endSample, signal.Length));
-
-			string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-			string wavPath = System.IO.Path.Combine(desktopPath, "test.wav");
-			SaveTrimmedAudioToWav(signal, startSample, endSample, wavPath);
-
-			double minVal = double.MaxValue;
-			double maxVal = double.MinValue;
-			for (int i = 0; i < midiValues.Length; i++) {
-				double timeMs = timePositions[i] * 1000.0;
-				if (timeMs < clampedStartMs || timeMs > clampedEndMs) {
-					continue;
-				}
-				double v = midiValues[i];
-				if (!double.IsNaN(v)) {
-					if (v < minVal) {
-						minVal = v;
-					}
-					if (v > maxVal) {
-						maxVal = v;
-					}
-				}
-			}
-
-			if (minVal > maxVal) {
-				minVal = 48;
-				maxVal = 84;
-			}
-
-			double axisMin = minMidi ?? (minVal - 1);
-			double axisMax = maxMidi ?? (maxVal + 1);
-			if (axisMax <= axisMin) {
-				axisMax = axisMin + 1;
-			}
-
-			using (Bitmap bitmap = new Bitmap(imageWidth, imageHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
-			using (Graphics g = Graphics.FromImage(bitmap)) {
-				g.Clear(Color.White);
-				g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
-				List<PointF> points = new List<PointF>();
-				for (int i = 0; i < midiValues.Length; i++) {
-					double timeMs = timePositions[i] * 1000.0;
-					if (timeMs < clampedStartMs || timeMs > clampedEndMs) {
-						if (points.Count > 0) {
-							DrawCurve(g, points, imageHeight);
-							points.Clear();
-						}
-						continue;
-					}
-
-					double v = midiValues[i];
-					if (double.IsNaN(v)) {
-						if (points.Count > 0) {
-							DrawCurve(g, points, imageHeight);
-							points.Clear();
-						}
-						continue;
-					}
-
-					float x = (float)((timeMs - clampedStartMs) / spanMs * imageWidth);
-					float y = (float)(imageHeight - (v - axisMin) / (axisMax - axisMin) * imageHeight);
-					points.Add(new PointF(x, y));
-				}
-
-				if (points.Count > 0) {
-					DrawCurve(g, points, imageHeight);
-				}
-
-				string pngPath = System.IO.Path.Combine(desktopPath, "test.png");
-				bitmap.Save(pngPath, System.Drawing.Imaging.ImageFormat.Png);
-			}
-		}
-
-		private static Tuple<double[], double[]> GetOrLoadCurve(
-			string filePath,
-			double lowFreq,
-			double highFreq,
-			int medianWindow,
-			int jumpWindow,
-			double jumpThreshold) {
-
-			lock (cacheLock) {
-				if (cachedFilePath == filePath &&
-					cachedLowFreq == lowFreq &&
-					cachedHighFreq == highFreq &&
-					cachedMedianWindow == medianWindow &&
-					cachedJumpWindow == jumpWindow &&
-					cachedJumpThreshold == jumpThreshold &&
-					cachedCurve != null) {
-					return cachedCurve;
-				}
-
-				DiscreteSignal signal = LoadAudioAsSignal(filePath);
-				Tuple<double[], double[]> curve = ExtractPitchCurve(
-					signal, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold);
-
-				cachedFilePath = filePath;
-				cachedLowFreq = lowFreq;
-				cachedHighFreq = highFreq;
-				cachedMedianWindow = medianWindow;
-				cachedJumpWindow = jumpWindow;
-				cachedJumpThreshold = jumpThreshold;
-				cachedCurve = curve;
-				return curve;
 			}
 		}
 
@@ -9715,34 +9639,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				median = (values[mid - 1] + values[mid]) / 2.0;
 			}
 			return median;
-		}
-
-		private static void SaveTrimmedAudioToWav(
-			DiscreteSignal signal,
-			int startSample,
-			int endSample,
-			string path) {
-
-			if (endSample <= startSample) {
-				endSample = Math.Min(signal.Length, startSample + 1);
-			}
-			if (startSample >= signal.Length) {
-				startSample = Math.Max(0, signal.Length - 1);
-			}
-			if (endSample <= startSample) {
-				return;
-			}
-
-			int length = endSample - startSample;
-			float[] trimmedSamples = new float[length];
-			Array.Copy(signal.Samples, startSample, trimmedSamples, 0, length);
-
-			WaveFormat wavFormat = WaveFormat.CreateIeeeFloatWaveFormat(signal.SamplingRate, 1);
-			using (WaveFileWriter writer = new WaveFileWriter(path, wavFormat)) {
-				byte[] byteBuffer = new byte[trimmedSamples.Length * 4];
-				Buffer.BlockCopy(trimmedSamples, 0, byteBuffer, 0, byteBuffer.Length);
-				writer.Write(byteBuffer, 0, byteBuffer.Length);
-			}
 		}
 
 		/// <summary>
@@ -9840,29 +9736,578 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			Array.Copy(smoothed, values, values.Length);
 		}
 
-		private static void DrawCurve(Graphics g, List<PointF> points, int imageHeight) {
-			if (points.Count < 1) {
+		// ==================== 新增的公开类型 ====================
+		public class PitchRegion {
+			public double StartTime { get; set; }
+			public double EndTime { get; set; }
+			public double AveragePitchHz { get; set; }
+			public double MidiNote { get; set; }
+			public string NoteName { get; set; }
+
+			public MediaSegment Source { get; set; }
+		}
+
+		public class DrumCandidate {
+			public double StartTime { get; set; }
+			public double EndTime { get; set; }
+			public double Duration { get; set; }
+			public double AverageCentroid { get; set; }
+			public double AverageMidi { get; set; }
+
+			public bool IsHighCandidate { get { return AverageCentroid > 2000; } }
+
+			public MediaSegment Source { get; set; }
+		}
+
+		public class DrumCandidates : List<DrumCandidate> {
+			public DrumCandidate Kick;
+			public DrumCandidate Snare;
+			public DrumCandidate Clap;
+			public DrumCandidate Hat;
+			public DrumCandidate OHat;
+			public DrumCandidate Crash;
+
+			public Dictionary<string, DrumCandidate> Typicalities {
+				get {
+					return new Dictionary<string, DrumCandidate> {
+						{ "Kick", Kick },
+						{ "Snare", Snare },
+						{ "Clap", Clap },
+						{ "Hat", Hat },
+						{ "OHat", OHat },
+						{ "Crash", Crash },
+					};
+				}
+			}
+
+			public List<DrumCandidate> Atypicalities {
+				get {
+					List<DrumCandidate> typicalities = Typicalities.Values.ToList();
+					return this.Where(c => !typicalities.Contains(c)).ToList();
+				}
+			}
+
+			public static List<DrumCandidate> SortByCandidate(List<DrumCandidate> candidates) {
+				candidates.Sort((a, b) => a.AverageCentroid.CompareTo(b.AverageCentroid));
+				return candidates;
+			}
+			public List<DrumCandidate> SortByCandidate() { return SortByCandidate(Atypicalities); }
+			public static List<DrumCandidate> SortByPitch(List<DrumCandidate> candidates) {
+				candidates.Sort((a, b) => {
+					double ma = double.IsNaN(a.AverageMidi) ? 0 : a.AverageMidi;
+					double mb = double.IsNaN(b.AverageMidi) ? 0 : b.AverageMidi;
+					return ma.CompareTo(mb);
+				});
+				return candidates;
+			}
+			public List<DrumCandidate> SortByPitch() { return SortByPitch(Atypicalities); }
+			public static List<DrumCandidate> SortByDuration(List<DrumCandidate> candidates) {
+				candidates.Sort((a, b) => a.Duration.CompareTo(b.Duration));
+				return candidates;
+			}
+			public List<DrumCandidate> SortByDuration() { return SortByDuration(Atypicalities); }
+
+			public void RefreshTypical() {
+				// 分类
+				List<DrumCandidate> lowCandidates = this.Where(c => !c.IsHighCandidate).ToList(),
+					highCandidates = this.Where(c => c.IsHighCandidate).ToList();
+
+				// 低频类：按平均 MIDI 从低到高排序（NaN 视为 0）
+				SortByPitch(lowCandidates);
+				Get3Ends(lowCandidates, ref Kick, ref Snare, ref Clap);
+
+				// 高频类：按时长从短到长排序
+				SortByDuration(highCandidates);
+				Get3Ends(highCandidates, ref Hat, ref OHat, ref Crash);
+
+				// 尽可能补充剩余缺失的鼓声。
+				IEnumerable<DrumCandidate> typicalities = Typicalities.Values;
+				if (!typicalities.Any(i => i == null)) return;
+				foreach (DrumCandidate typicality in typicalities) {
+					lowCandidates.Remove(typicality);
+					highCandidates.Remove(typicality);
+				}
+				if ((Kick == null || Snare == null || Clap == null) && highCandidates.Any()) {
+					SortByPitch(highCandidates);
+					if (Kick == null)
+						Get3Ends(highCandidates, ref Kick, ref Snare, ref Clap);
+					else if (Snare == null)
+						Get2Ends(highCandidates, ref Snare, ref Clap);
+					else
+						Clap = highCandidates.Last();
+				}
+				if ((Hat == null || OHat == null || Crash == null) && lowCandidates.Any()) {
+					SortByDuration(lowCandidates);
+					if (Hat == null)
+						Get3Ends(lowCandidates, ref Hat, ref OHat, ref Crash);
+					else if (OHat == null)
+						Get2Ends(lowCandidates, ref OHat, ref Crash);
+					else
+						Crash = lowCandidates.Last();
+				}
+				if (Clap == null) Clap = Snare;
+				if (Crash == null) Crash = OHat;
+			}
+
+			private static void Get3Ends<T>(List<T> list, ref T first, ref T center, ref T end) {
+				if (list.Count >= 1)
+					first = list[0];
+				if (list.Count >= 2)
+					center = list[list.Count / 2];
+				if (list.Count >= 3)
+					end = list[list.Count - 1];
+			}
+
+			private static void Get2Ends<T>(List<T> list, ref T first, ref T end) {
+				if (list.Count >= 1)
+					first = list[0];
+				if (list.Count >= 2)
+					end = list[list.Count - 1];
+			}
+		}
+
+		public class AnalysisResult {
+			public List<PitchRegion> PitchRegions { get; set; }
+			public DrumCandidates DrumCandidates { get; set; }
+
+			public AnalysisResult() {
+				PitchRegions = new List<PitchRegion>();
+				DrumCandidates = new DrumCandidates();
+			}
+		}
+
+		/// <summary>
+		/// 媒体截取片段描述。
+		/// </summary>
+		public class MediaSegment {
+			public string FilePath { get; set; }
+			/// <summary>截取开始时间（毫秒）。</summary>
+			public double StartTime { get; set; }
+			/// <summary>截取持续时间（毫秒）。</summary>
+			public double Duration { get; set; }
+			public Take Take { get; private set; }
+			public static implicit operator MediaSegment(TrackEvent trackEvent) {
+				return new MediaSegment() {
+					FilePath = trackEvent.ActiveTake.MediaPath,
+					StartTime = trackEvent.ActiveTake.Offset.ToMilliseconds(),
+					Duration = trackEvent.Length.ToMilliseconds(),
+					Take = trackEvent.ActiveTake,
+				};
+			}
+		}
+
+		/// <summary>
+		/// 分析音频，返回音高平直区域与六种鼓声的代表性区间。
+		/// 鼓声分析不使用平滑处理，以保留冲击特征。
+		/// </summary>
+		public static AnalysisResult Analyze(
+			string filePath,
+			double lowFreq = 80,
+			double highFreq = 1000,
+			int medianWindow = 3,
+			int jumpWindow = 5,
+			double jumpThreshold = 4.0,
+			double frameDuration = 0.046,
+			double hopDuration = 0.0116) {
+
+			DiscreteSignal signal = LoadAudioAsSignal(filePath);
+			return AnalyzeSignal(signal, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold, frameDuration, hopDuration);
+		}
+
+		/// <summary>
+		/// 对已加载的信号进行分析（时间从 0 开始）。
+		/// </summary>
+		public static AnalysisResult AnalyzeSignal(
+			DiscreteSignal signal,
+			double lowFreq = 80,
+			double highFreq = 1000,
+			int medianWindow = 3,
+			int jumpWindow = 5,
+			double jumpThreshold = 4.0,
+			double frameDuration = 0.046,
+			double hopDuration = 0.0116,
+			bool refreshDrumTypical = true) {
+
+			// 1. 提取原始音高曲线（不做平滑），用于鼓声分类
+			Tuple<double[], double[]> rawCurve = ExtractPitchCurve(
+				signal, lowFreq, highFreq, 0, 0, 0, frameDuration, hopDuration);
+			double[] rawMidi = rawCurve.Item1;
+			double[] timePositions = rawCurve.Item2;
+
+			// 2. 基于原始曲线生成平滑曲线，用于音高区域检测
+			double[] smoothedMidi = new double[rawMidi.Length];
+			Array.Copy(rawMidi, smoothedMidi, rawMidi.Length);
+			if (medianWindow > 1) {
+				ApplyMedianFilter(smoothedMidi, medianWindow);
+			}
+			if (jumpWindow > 1) {
+				ApplyJumpSmoothing(smoothedMidi, jumpWindow, jumpThreshold);
+			}
+
+			// 3. 提取 RMS 能量
+			MultiFeatureOptions tdOptions = new MultiFeatureOptions {
+				SamplingRate = signal.SamplingRate,
+				FeatureList = "rms",
+				FrameDuration = frameDuration,
+				HopDuration = hopDuration
+			};
+			TimeDomainFeaturesExtractor tdExtractor = new TimeDomainFeaturesExtractor(tdOptions);
+			List<float[]> tdVectors = tdExtractor.ComputeFrom(signal);
+
+			// 4. 提取频谱质心
+			MultiFeatureOptions spectralOptions = new MultiFeatureOptions {
+				SamplingRate = signal.SamplingRate,
+				FeatureList = "centroid",
+				FrameDuration = frameDuration,
+				HopDuration = hopDuration,
+				FftSize = 1024
+			};
+			SpectralFeaturesExtractor spectralExtractor = new SpectralFeaturesExtractor(spectralOptions);
+			List<float[]> spectralVectors = spectralExtractor.ComputeFrom(signal);
+
+			// 5. 对齐帧数
+			int frameCount = Math.Min(rawMidi.Length, tdVectors.Count);
+			frameCount = Math.Min(frameCount, spectralVectors.Count);
+
+			double[] rmsValues = new double[frameCount];
+			double[] centroidValues = new double[frameCount];
+			for (int i = 0; i < frameCount; i++) {
+				rmsValues[i] = tdVectors[i].Length > 0 ? tdVectors[i][0] : 0;
+				centroidValues[i] = spectralVectors[i].Length > 0 ? spectralVectors[i][0] : 0;
+			}
+
+			AnalysisResult result = new AnalysisResult() {
+				PitchRegions = DetectPitchRegions(smoothedMidi, rmsValues, timePositions, frameCount),
+				DrumCandidates = DetectDrumEventsFromSignal(rawMidi, rmsValues, centroidValues, timePositions, frameCount, refreshDrumTypical),
+			};
+			return result;
+		}
+
+		/// <summary>
+		/// 批量分析多个媒体截取片段。同一文件的不同时间段会合并后分析（重叠合并、超出时长循环处理）。
+		/// 返回所有文件的分析结果列表（每个文件对应一个 AnalysisResult，时间相对于原文件）。
+		/// </summary>
+		public static AnalysisResult AnalyzeMediaSegments(
+			List<MediaSegment> segments,
+			double lowFreq = 80,
+			double highFreq = 1000,
+			int medianWindow = 3,
+			int jumpWindow = 5,
+			double jumpThreshold = 4.0,
+			double frameDuration = 0.046,
+			double hopDuration = 0.0116) {
+
+			AnalysisResult results = new AnalysisResult();
+			if (segments == null || segments.Count == 0) {
+				return results;
+			}
+
+			IEnumerable<IGrouping<string, MediaSegment>> groups = segments.GroupBy(s => s.FilePath);
+			foreach (IGrouping<string, MediaSegment> group in groups) {
+				string filePath = group.Key;
+				MediaSegment keySegment = group.First();
+
+				DiscreteSignal fullSignal;
+				try {
+					fullSignal = LoadAudioAsSignal(filePath);
+				} catch {
+					continue;
+				}
+
+				double totalDuration = (double)fullSignal.Length / fullSignal.SamplingRate;
+				if (totalDuration <= 0) {
+					continue;
+				}
+
+				// 将每个截取片段（毫秒）转换为 [0, totalDuration] 内的秒区间
+				List<Tuple<double, double>> intervals = new List<Tuple<double, double>>();
+				foreach (MediaSegment seg in group) {
+					if (seg.Duration <= 0) {
+						continue;
+					}
+					double segStartSec = seg.StartTime / 1000.0;
+					double segDurationSec = seg.Duration / 1000.0;
+
+					if (segDurationSec >= totalDuration) {
+						// 持续时间大于等于总时长，相当于分析整个媒体
+						intervals.Add(Tuple.Create(0.0, totalDuration));
+						continue;
+					}
+					double start = segStartSec % totalDuration;
+					if (start < 0) {
+						start += totalDuration;
+					}
+					double end = start + segDurationSec;
+					if (end <= totalDuration) {
+						intervals.Add(Tuple.Create(start, end));
+					} else {
+						intervals.Add(Tuple.Create(start, totalDuration));
+						intervals.Add(Tuple.Create(0.0, end - totalDuration));
+					}
+				}
+				if (intervals.Count == 0) {
+					continue;
+				}
+
+				// 合并重叠/相邻区间
+				intervals.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+				List<Tuple<double, double>> merged = new List<Tuple<double, double>>();
+				foreach (Tuple<double, double> interval in intervals) {
+					if (merged.Count == 0) {
+						merged.Add(interval);
+					} else {
+						Tuple<double, double> last = merged[merged.Count - 1];
+						if (interval.Item1 <= last.Item2) {
+							double newEnd = Math.Max(last.Item2, interval.Item2);
+							merged[merged.Count - 1] = Tuple.Create(last.Item1, newEnd);
+						} else {
+							merged.Add(interval);
+						}
+					}
+				}
+
+				foreach (Tuple<double, double> interval in merged) {
+					double startSec = interval.Item1;
+					double endSec = interval.Item2;
+					if (endSec <= startSec) {
+						continue;
+					}
+					int startSample = (int)Math.Floor(startSec * fullSignal.SamplingRate);
+					int endSample = (int)Math.Ceiling(endSec * fullSignal.SamplingRate);
+					startSample = Math.Max(0, Math.Min(startSample, fullSignal.Length));
+					endSample = Math.Max(startSample, Math.Min(endSample, fullSignal.Length));
+					int length = endSample - startSample;
+					if (length <= 0) {
+						continue;
+					}
+					float[] samples = new float[length];
+					Array.Copy(fullSignal.Samples, startSample, samples, 0, length);
+					DiscreteSignal segmentSignal = new DiscreteSignal(fullSignal.SamplingRate, samples);
+
+					AnalysisResult segmentResult = AnalyzeSignal(
+						segmentSignal, lowFreq, highFreq, medianWindow, jumpWindow, jumpThreshold, frameDuration, hopDuration, false);
+
+					double offset = startSec;
+					foreach (PitchRegion region in segmentResult.PitchRegions) {
+						region.StartTime += offset;
+						region.EndTime += offset;
+						region.Source = keySegment;
+						results.PitchRegions.Add(region);
+					}
+					foreach (DrumCandidate ev in segmentResult.DrumCandidates) {
+						ev.StartTime += offset;
+						ev.EndTime += offset;
+						ev.Source = keySegment;
+						results.DrumCandidates.Add(ev);
+					}
+				}
+			}
+
+			results.DrumCandidates.RefreshTypical();
+			return results;
+		}
+
+		// ==================== 私有辅助方法 ====================
+		private static List<PitchRegion> DetectPitchRegions(
+		double[] midiValues,
+		double[] rmsValues,
+		double[] timePositions,
+		int frameCount) {
+
+			const double rmsThreshold = 0.01;
+			const double minDuration = 0.1;
+			List<PitchRegion> regions = new List<PitchRegion>();
+
+			List<int> currentIndices = new List<int>();
+			double? currentMidi = null;
+
+			for (int i = 0; i < frameCount; i++) {
+				double midi = midiValues[i];
+				double rms = rmsValues[i];
+				bool valid = !double.IsNaN(midi) && rms > rmsThreshold;
+
+				if (valid) {
+					if (currentMidi == null) {
+						currentMidi = midi;
+						currentIndices.Add(i);
+					} else {
+						if (Math.Abs(midi - currentMidi.Value) <= 0.5) {
+							currentIndices.Add(i);
+						} else {
+							AddPitchRegion(regions, currentIndices, midiValues, timePositions);
+							currentIndices.Clear();
+							currentMidi = midi;
+							currentIndices.Add(i);
+						}
+					}
+				} else {
+					if (currentIndices.Count > 0) {
+						AddPitchRegion(regions, currentIndices, midiValues, timePositions);
+						currentIndices.Clear();
+						currentMidi = null;
+					}
+				}
+			}
+
+			if (currentIndices.Count > 0) {
+				AddPitchRegion(regions, currentIndices, midiValues, timePositions);
+			}
+
+			return regions;
+		}
+
+		private static void AddPitchRegion(
+			List<PitchRegion> regions,
+			List<int> indices,
+			double[] midiValues,
+			double[] timePositions) {
+
+			if (indices.Count == 0) {
 				return;
 			}
 
-			using (Pen pen = new Pen(Color.Black, 1.0f)) {
-				if (points.Count == 1) {
-					g.DrawLine(pen, points[0].X, points[0].Y, points[0].X + 1, points[0].Y);
-				} else {
-					PointF[] clipped = new PointF[points.Count];
-					for (int i = 0; i < points.Count; i++) {
-						float y = points[i].Y;
-						if (y < 0) {
-							y = 0;
-						}
-						if (y > imageHeight - 1) {
-							y = imageHeight - 1;
-						}
-						clipped[i] = new PointF(points[i].X, y);
-					}
-					g.DrawLines(pen, clipped);
+			double hopDuration = indices.Count > 1 ? timePositions[1] - timePositions[0] : 0.0116;
+			double startTime = timePositions[indices[0]];
+			double endTime = timePositions[indices[indices.Count - 1]] + hopDuration;
+			double duration = endTime - startTime;
+			if (duration < 0.1) {
+				return;
+			}
+
+			List<double> midiList = new List<double>();
+			double sumFreq = 0;
+			int freqCount = 0;
+			for (int i = 0; i < indices.Count; i++) {
+				int idx = indices[i];
+				double midi = midiValues[idx];
+				if (!double.IsNaN(midi)) {
+					midiList.Add(midi);
+					double hz = 440.0 * Math.Pow(2.0, (midi - 69) / 12.0);
+					sumFreq += hz;
+					freqCount++;
 				}
 			}
+			if (midiList.Count == 0) {
+				return;
+			}
+
+			midiList.Sort();
+			double minMidi = midiList[0];
+			double maxMidi = midiList[midiList.Count - 1];
+			if (maxMidi - minMidi > 1.0) {
+				return;
+			}
+
+			double avgFreq = freqCount > 0 ? sumFreq / freqCount : 0;
+			double midiNote = 69 + 12 * Math.Log(avgFreq / 440.0, 2);
+			int midiNote_int = (int)Math.Round(midiNote);
+			string noteName = MidiToNoteName(midiNote_int);
+
+			regions.Add(new PitchRegion {
+				StartTime = startTime,
+				EndTime = endTime,
+				AveragePitchHz = avgFreq,
+				MidiNote = midiNote,
+				NoteName = noteName
+			});
+		}
+
+		private static string MidiToNoteName(int midi) {
+			string[] noteNames = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
+			int octave = midi / 12 - 1;
+			string note = noteNames[midi % 12];
+			return note + octave;
+		}
+
+		/// <summary>
+		/// 新的鼓声检测：基于“音高缺失或急剧跳跃”且能量高于阈值的区间作为候选，
+		/// 再按频谱质心分为高低频组，分别排序后分配为六种鼓声。
+		/// </summary>
+		private static DrumCandidates DetectDrumEventsFromSignal(
+			double[] rawMidi,
+			double[] rmsValues,
+			double[] centroidValues,
+			double[] timePositions,
+			int frameCount,
+			bool refreshTypical = true) {
+
+			const double rmsThreshold = 0.01;
+			const double jumpThresholdSemitones = 2.0;
+			const double minDuration = 0.05;
+
+			DrumCandidates candidates = new DrumCandidates();
+
+			if (frameCount == 0 || timePositions.Length == 0) {
+				return candidates;
+			}
+
+			double hopDuration = timePositions.Length > 1 ? timePositions[1] - timePositions[0] : 0.0116;
+
+			// 标记候选帧：能量足够且（音高缺失或音高急剧跳跃）
+			bool[] isDrumFrame = new bool[frameCount];
+			for (int i = 0; i < frameCount; i++) {
+				if (rmsValues[i] <= rmsThreshold) {
+					continue;
+				}
+				bool pitchMissing = double.IsNaN(rawMidi[i]);
+				bool pitchJump = false;
+				if (!pitchMissing) {
+					double? prevMidi = null;
+					for (int j = i - 1; j >= 0; j--) {
+						if (!double.IsNaN(rawMidi[j])) {
+							prevMidi = rawMidi[j];
+							break;
+						}
+					}
+					if (prevMidi != null && Math.Abs(rawMidi[i] - prevMidi.Value) > jumpThresholdSemitones) {
+						pitchJump = true;
+					}
+				}
+				if (pitchMissing || pitchJump) {
+					isDrumFrame[i] = true;
+				}
+			}
+
+			// 合并连续候选帧
+			int startIdx = -1;
+			for (int i = 0; i <= frameCount; i++) {
+				bool active = i < frameCount && isDrumFrame[i];
+				if (active && startIdx < 0) {
+					startIdx = i;
+				} else if (!active && startIdx >= 0) {
+					int endIdx = i - 1;
+					double startTime = timePositions[startIdx];
+					double endTime = timePositions[endIdx] + hopDuration;
+					double duration = endTime - startTime;
+					if (duration >= minDuration) {
+						double sumCentroid = 0;
+						double sumMidi = 0;
+						int midiCount = 0;
+						for (int j = startIdx; j <= endIdx; j++) {
+							sumCentroid += centroidValues[j];
+							if (!double.IsNaN(rawMidi[j])) {
+								sumMidi += rawMidi[j];
+								midiCount++;
+							}
+						}
+						int count = endIdx - startIdx + 1;
+						double avgCentroid = count > 0 ? sumCentroid / count : 0;
+						double avgMidi = midiCount > 0 ? sumMidi / midiCount : double.NaN;
+
+						candidates.Add(new DrumCandidate {
+							StartTime = startTime,
+							EndTime = endTime,
+							Duration = duration,
+							AverageCentroid = avgCentroid,
+							AverageMidi = avgMidi,
+						});
+					}
+					startIdx = -1;
+				}
+			}
+
+			if (refreshTypical) candidates.RefreshTypical();
+			return candidates;
 		}
 	}
 
