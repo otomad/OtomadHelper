@@ -919,6 +919,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						(videoEvent == null ? null : EntryPoint.GetPitchFromAffix(videoEvent, affix));
 				return _affixAsPitch;
 			}
+			/// <summary>
+			/// 已知其音高，无需再次重复计算。
+			/// </summary>
+			public double? KnownPitch;
 		}
 
 		public class EventSets : IReadOnlyList<EventSet>, IDisposable {
@@ -961,6 +965,33 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public IEnumerator<EventSet> GetEnumerator() { return eventSets.GetEnumerator(); }
 			IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 			public int IndexOf(EventSet item) { IList<EventSet> _eventSets = eventSets as IList<EventSet>; return _eventSets == null ? -1 : _eventSets.IndexOf(item); }
+		}
+
+		public class PitchAnalyzedEventSets : EventSets {
+			public PitchAnalyzedEventSets(IReadOnlyList<EventSet> eventSets, AudioTrack aSmpTrack, VideoTrack vSmpTrack, IEnumerable<TrackEvent> originalClips, EventSets selectedSources) :
+				base(eventSets, aSmpTrack, vSmpTrack, originalClips) {
+				SelectedSources = selectedSources;
+			}
+
+			public EventSets SelectedSources { get; private set; }
+
+			public EventSet Kick { get; set; }
+			public EventSet Snare { get; set; }
+			public EventSet Clap { get; set; }
+			public EventSet Hat { get; set; }
+			public EventSet OHat { get; set; }
+			public EventSet Crash { get; set; }
+			public void SetDrumSound(PitchDetector.DrumSound drum, EventSet set) {
+				switch (drum) {
+					case PitchDetector.DrumSound.Kick: Kick = set; break;
+					case PitchDetector.DrumSound.Snare: Snare = set; break;
+					case PitchDetector.DrumSound.Clap: Clap = set; break;
+					case PitchDetector.DrumSound.Hat: Hat = set; break;
+					case PitchDetector.DrumSound.OHat: OHat = set; break;
+					case PitchDetector.DrumSound.Crash: Crash = set; break;
+					default: break;
+				}
+			}
 		}
 
 		/// <summary>
@@ -1577,7 +1608,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			if (CombConfigEnhanceSelect) {
 				if (!eventSets.HasAudioEvents) throw new Exception("没有音频素材！");
-				else if (enhancedAnalysis == null) enhancedAnalysis = PitchDetector.AnalyzeMediaSegments(eventSets.EnhancedSegement);
+				else if (enhancedAnalysis == null) {
+					enhancedAnalysis = PitchDetector.AnalyzeMediaSegments(eventSets.EnhancedSegement);
+					if (enhancedAnalysis.PitchRegions.Count == 0 && (MidiConfigTracks.HasPitchedChannel || enhancedAnalysis.DrumCandidates.Count == 0))
+						throw new Exception("没有识别到有效音频素材！");
+					eventSets = GetEnhancedSelectedSources(enhancedAnalysis, eventSets);
+				}
 			}
 			#if TEST // 测试强化选择音频分析功能能否可靠识别。
 			if (enhancedAnalysis != null) {
@@ -1586,8 +1622,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				vegas.Project.Tracks.Add(aTrack = new AudioTrack(vegas.Project, 0, "hhhhh"));
 				vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, 0, "hhhhh"));
 				foreach (PitchDetector.PitchRegion region in enhancedAnalysis.PitchRegions) {
-					AudioEvent evt = Track_Append(aTrack, region.Source.Source.audioEvent, Timecode.FromSeconds(0), true);
-					VideoEvent vEvt = Track_Append(vTrack, region.Source.Source.videoEvent, Timecode.FromSeconds(0), true);
+					AudioEvent evt = Track_Append(aTrack, region.Source.Source.audioEvent, TimecodeZero, true);
+					VideoEvent vEvt = Track_Append(vTrack, region.Source.Source.videoEvent, TimecodeZero, true);
 					evt.Length = vEvt.Length = Timecode.FromMilliseconds(region.Duration);
 					evt.ActiveTake.Offset = vEvt.ActiveTake.Offset = Timecode.FromMilliseconds(region.StartTime);
 					evt.Method = TimeStretchPitchShift.Elastique;
@@ -1595,18 +1631,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 				foreach (var drum in enhancedAnalysis.DrumCandidates.Typicalities) {
 					if (drum.Value != null) {
-						AudioEvent evt = Track_Append(aTrack, drum.Value.Source.Source.audioEvent, Timecode.FromSeconds(0), true);
-						VideoEvent vEvt = Track_Append(vTrack, drum.Value.Source.Source.videoEvent, Timecode.FromSeconds(0), true);
+						AudioEvent evt = Track_Append(aTrack, drum.Value.Source.Source.audioEvent, TimecodeZero, true);
+						VideoEvent vEvt = Track_Append(vTrack, drum.Value.Source.Source.videoEvent, TimecodeZero, true);
 						evt.Length = vEvt.Length = Timecode.FromMilliseconds(drum.Value.Duration);
 						evt.ActiveTake.Offset = vEvt.ActiveTake.Offset = Timecode.FromMilliseconds(drum.Value.StartTime);
-						evt.ActiveTake.Name = vEvt.ActiveTake.Name = drum.Key;
+						evt.ActiveTake.Name = vEvt.ActiveTake.Name = drum.Key.ToString();
 						evt.Normalize = true;
 						evt.RecalculateNorm();
 					}
 				}
 				foreach (PitchDetector.DrumCandidate drum in PitchDetector.DrumCandidates.SortByCandidate(new List<PitchDetector.DrumCandidate>(enhancedAnalysis.DrumCandidates))) {
-					AudioEvent evt = Track_Append(aTrack, drum.Source.Source.audioEvent, Timecode.FromSeconds(0), true);
-					VideoEvent vEvt = Track_Append(vTrack, drum.Source.Source.videoEvent, Timecode.FromSeconds(0), true);
+					AudioEvent evt = Track_Append(aTrack, drum.Source.Source.audioEvent, TimecodeZero, true);
+					VideoEvent vEvt = Track_Append(vTrack, drum.Source.Source.videoEvent, TimecodeZero, true);
 					evt.Length = vEvt.Length = Timecode.FromMilliseconds(drum.Duration);
 					evt.ActiveTake.Offset = vEvt.ActiveTake.Offset = Timecode.FromMilliseconds(drum.StartTime);
 					evt.ActiveTake.Name = vEvt.ActiveTake.Name = drum.IsHighCandidate ? "HatLike" : "KickLike";
@@ -1686,6 +1722,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			Action<long> NextMysteryBoxSource = step => {
 				if (CombConfigSyncopatorPicker) // 踩点
 					NextSourceByOrder(CombConfigSyncopatorOrder, baseShuffledSeed, CombConfigMysteryBox && CombConfigMysteryBoxTrack ? step + MidiConfigTracks.CurrentChannel : step, true, true);
+				else if (CombConfigEnhanceSelect) // 强化选择
+					NextSourceByOrder(CombConfigMysteryBoxLotionBath ? SyncopatorOrder.SEQUENTIAL : SyncopatorOrder.SHUFFLED, baseShuffledSeed, CombConfigMysteryBox && CombConfigMysteryBoxTrack ? step + MidiConfigTracks.CurrentChannel : step, true, true);
 				else if (CombConfigMysteryBoxLotionBath) { // 素材盲盒 - 润肤浴战法
 					int _;
 					NextSequentialSourceByStep(CombConfigMysteryBoxLotionBathInterval.Value, !CombConfigMysteryBoxTrack ? step : step + MidiConfigTracks.CurrentChannel, out activeSource, out _, out sourceStartTime);
@@ -1975,8 +2013,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (AConfigVelocity) audioEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Audio), AConfigVelocityMultiplyGain);
 
 						#region 应用变调
-						double? basePitchOrNull = null;
-						if (CombConfigSyncopatorPicker && CombConfigSyncopatorAffixAsPitch != AffixAsPitch.OFF)
+						double? basePitchOrNull = activeSource.KnownPitch;
+						if (basePitchOrNull == null && CombConfigSyncopatorPicker && CombConfigSyncopatorAffixAsPitch != AffixAsPitch.OFF)
 							basePitchOrNull = activeSource.GetPitchFromAffix(CombConfigSyncopatorAffixAsPitch);
 						if (basePitchOrNull == null && AConfigAutoBasePitch)
 							basePitchOrNull = activeSource.GetAutoBasePitch(adjustTime ? sourceStartTime : 0, CombConfigMysteryBoxPicker && !CombConfigEnhanceSelect);
@@ -2456,7 +2494,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void ApplyTransitions<TTrack>(List<TTrack> tracks, List<TrackEvent> excludeEvents) where TTrack : Track {
 			double duration = VConfigTransitionDuration.ToMilliseconds();
 			double curAlign = (VConfigTransitionAlign + 100) / 200, nextAlign = curAlign - 1;
-			Timecode ZERO = Timecode.FromSeconds(0);
 			foreach (TTrack track in tracks) {
 				TrackEvents events = track.Events;
 				for (int i = 0; i < events.Count - 1; i++) {
@@ -2466,11 +2503,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (curEvent.End + postpone <= nextEvent.Start + prepone) continue;
 					if (curEvent.End + postpone > nextEvent.End) postpone = nextEvent.End - curEvent.End;
 					if (nextEvent.Start + prepone < curEvent.Start - curEvent.FadeIn.Length) prepone = curEvent.Start - curEvent.FadeIn.Length - nextEvent.Start;
-					if (postpone < ZERO) postpone = ZERO;
-					if (prepone > ZERO) prepone = ZERO;
+					if (postpone < TimecodeZero) postpone = TimecodeZero;
+					if (prepone > TimecodeZero) prepone = TimecodeZero;
 					curEvent.Length += postpone;
 					nextEvent.AdjustStartLength(nextEvent.Start + prepone, nextEvent.Length - prepone, true);
-					if (nextEvent is VideoEvent && prepone < ZERO) {
+					if (nextEvent is VideoEvent && prepone < TimecodeZero) {
 						//Timecode nextEventLength = nextEvent.Length;
 						foreach (Envelope envelope in ((VideoEvent)nextEvent).Envelopes) {
 							bool isVelocity = envelope.Type == EnvelopeType.Velocity;
@@ -2657,7 +2694,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// "quick fades" automatically on every split. Leave the outer
 			// fades alone so the clip's original fade-in at the start and
 			// fade-out at the end survive.
-			originalEvent.FadeOut.Length = secondEvent.FadeIn.Length = Timecode.FromSeconds(0);
+			originalEvent.FadeOut.Length = secondEvent.FadeIn.Length = TimecodeZero;
 
 			// STEP 3: Position the overlap and apply gain
 			Timecode overlapDuration = Timecode.FromMilliseconds(spliceTime * offsetPercent / 100);
@@ -2997,7 +3034,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <param name="isCopy">是否是复制而不是移动。</param>
 		/// <returns>追加后的新事件。</returns>
 		public static T AppendAtEventTail<T>(T lastEvent, Track track, T source, Timecode startTime = null, bool isCopy = false) where T : TrackEvent {
-			startTime = startTime ?? Timecode.FromMilliseconds(0);
+			startTime = startTime ?? TimecodeZero;
 			if (lastEvent != null) startTime = lastEvent.End;
 			return AppendOrCopyEventAtTime(track, source, startTime, isCopy);
 		}
@@ -3045,6 +3082,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public static AudioEvent GetAssociatedEvent(VideoEvent trackEvent) {
 			return GetAssociatedEvent(trackEvent as TrackEvent) as AudioEvent;
 		}
+
+		private static readonly Timecode TimecodeZero = Timecode.FromSeconds(0);
 
 		/// <summary>
 		/// 获取所选多项素材（包括选中轨道事件或项目媒体）。
@@ -3165,8 +3204,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						}
 					}
 					// 在后面单独添加，避免之后报错又消不掉。
-					if (AConfig) aSmp = Track_Append(aSmpTrack, aEvent, Timecode.FromMilliseconds(0), true);
-					if (VConfig) vSmp = Track_Append(vSmpTrack, vEvent, Timecode.FromMilliseconds(0), true);
+					if (AConfig) aSmp = Track_Append(aSmpTrack, aEvent, TimecodeZero, true);
+					if (VConfig) vSmp = Track_Append(vSmpTrack, vEvent, TimecodeZero, true);
 					if (requireReverse) eventSets.Add(new EventSet(aSmp, vSmp, aReverse, vReverse));
 					else eventSets.Add(new EventSet(aSmp, vSmp, aEvent, vEvent));
 					return true;
@@ -3256,6 +3295,46 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			foreach (Subclip subclip in subclips) // 删除不需要使用的反转子剪辑。
 				if (subclip.UseCount == 0) vegas.Project.MediaPool.Remove(subclip.KeyString);
+		}
+
+		private PitchAnalyzedEventSets GetEnhancedSelectedSources(PitchDetector.AnalysisResult analysis, EventSets selectedSources) {
+			AudioTrack aSmpTrack = selectedSources.ASmpTrack;
+			VideoTrack vSmpTrack = selectedSources.VSmpTrack;
+			List<EventSet> eventSets = new List<EventSet>();
+			Func<EventSet, double, double, EventSet> CreateEvent = (source, start, duration) => {
+				AudioEvent aEvt = null;
+				VideoEvent vEvt = null;
+				if (AConfig && aSmpTrack != null) {
+					aEvt = Track_Append(aSmpTrack, source.audioEvent, TimecodeZero, true);
+					aEvt.Length = Timecode.FromMilliseconds(duration);
+					aEvt.ActiveTake.Offset = Timecode.FromMilliseconds(start);
+				}
+				if (VConfig && vSmpTrack != null) {
+					vEvt = Track_Append(vSmpTrack, source.videoEvent, TimecodeZero, true);
+					vEvt.Length = Timecode.FromMilliseconds(duration);
+					vEvt.ActiveTake.Offset = Timecode.FromMilliseconds(start);
+				}
+				return new EventSet(aEvt, vEvt, source.audioOriginalEvent, source.videoOriginalEvent) { mediaPoolIndex = source.mediaPoolIndex };
+			};
+			foreach (PitchDetector.PitchRegion region in analysis.PitchRegions) {
+				EventSet set = CreateEvent(region.Source.Source, region.StartTime, region.Duration);
+				set.KnownPitch = region.MidiNote;
+				eventSets.Add(set);
+			}
+			PitchAnalyzedEventSets result = new PitchAnalyzedEventSets(eventSets, aSmpTrack, vSmpTrack, selectedSources.OriginalClips, selectedSources);
+			foreach (var drum in analysis.DrumCandidates.Typicalities) {
+				if (drum.Value != null) {
+					EventSet set = CreateEvent(drum.Value.Source.Source, drum.Value.StartTime, drum.Value.Duration);
+					result.SetDrumSound(drum.Key, set);
+					AudioEvent evt = set.audioEvent;
+					if (evt != null) {
+						evt.Normalize = true;
+						evt.RecalculateNorm();
+					}
+				}
+			}
+			result.OnDispose += EventSets_Dispose;
+			return result;
 		}
 
 		private static TrackEvent FindTheClosestEvent(TrackEvent nominative, IEnumerable<TrackEvent> accusative) {
@@ -3832,7 +3911,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </summary>
 		private bool GenerateYtp() {
 			Timecode generateBeginTime = GenerateAt == GenerateAt.CUSTOM ? GenerateAtCustomTimecode :
-				GenerateAt == GenerateAt.CURSOR ? vegas.Transport.CursorPosition : Timecode.FromMilliseconds(0);
+				GenerateAt == GenerateAt.CURSOR ? vegas.Transport.CursorPosition : TimecodeZero;
 			progressForm.Info = Lang.str.processing_ytp;
 			AudioTrack aTrack = AConfig && IsAPreferredTrack ? AConfigPreferredTrack.Track : null;
 			VideoTrack vTrack = VConfig && IsVPreferredTrack ? VConfigPreferredTrack.Track : null;
@@ -9780,7 +9859,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public double Duration { get { return EndTime - StartTime; } }
 			public double AveragePitchHz { get; set; }
 			public double MidiNote { get; set; }
-			public string NoteName { get; set; }
 
 			public MediaSegment Source { get; set; }
 		}
@@ -9797,6 +9875,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public MediaSegment Source { get; set; }
 		}
 
+		public enum DrumSound { Kick, Snare, Clap, Hat, OHat, Crash }
+
 		public class DrumCandidates : List<DrumCandidate> {
 			public DrumCandidate Kick;
 			public DrumCandidate Snare;
@@ -9805,15 +9885,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public DrumCandidate OHat;
 			public DrumCandidate Crash;
 
-			public Dictionary<string, DrumCandidate> Typicalities {
+			public Dictionary<DrumSound, DrumCandidate> Typicalities {
 				get {
-					return new Dictionary<string, DrumCandidate> {
-						{ "Kick", Kick },
-						{ "Snare", Snare },
-						{ "Clap", Clap },
-						{ "Hat", Hat },
-						{ "OHat", OHat },
-						{ "Crash", Crash },
+					return new Dictionary<DrumSound, DrumCandidate> {
+						{ DrumSound.Kick, Kick },
+						{ DrumSound.Snare, Snare },
+						{ DrumSound.Clap, Clap },
+						{ DrumSound.Hat, Hat },
+						{ DrumSound.OHat, OHat },
+						{ DrumSound.Crash, Crash },
 					};
 				}
 			}
@@ -10136,14 +10216,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					double offsetMs = startMs;   // 毫秒
 					foreach (PitchRegion region in segmentResult.PitchRegions) {
 						// AnalyzeSignal 已返回毫秒，直接加偏移
-						region.StartTime = region.StartTime + offsetMs;
-						region.EndTime = region.EndTime + offsetMs;
+						region.StartTime += offsetMs;
+						region.EndTime += offsetMs;
 						region.Source = keySegment;
 						results.PitchRegions.Add(region);
 					}
 					foreach (DrumCandidate ev in segmentResult.DrumCandidates) {
-						ev.StartTime = ev.StartTime + offsetMs;
-						ev.EndTime = ev.EndTime + offsetMs;
+						ev.StartTime += offsetMs;
+						ev.EndTime += offsetMs;
 						ev.Source = keySegment;
 						results.DrumCandidates.Add(ev);
 					}
@@ -10247,22 +10327,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			double avgFreq = freqCount > 0 ? sumFreq / freqCount : 0;
 			double midiNote = 69 + 12 * Math.Log(avgFreq / 440.0, 2);
 			int midiNote_int = (int)Math.Round(midiNote);
-			string noteName = MidiToNoteName(midiNote_int);
 
 			regions.Add(new PitchRegion {
 				StartTime = startTime,
 				EndTime = endTime,
 				AveragePitchHz = avgFreq,
 				MidiNote = midiNote,
-				NoteName = noteName
 			});
-		}
-
-		private static string MidiToNoteName(int midi) {
-			string[] noteNames = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
-			int octave = midi / 12 - 1;
-			string note = noteNames[midi % 12];
-			return note + octave;
 		}
 
 		/// <summary>
@@ -21243,6 +21314,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public bool IsMultiMidiChannel { get { return selectedChannelCount > 1; } }
 		public bool IsNonEmpty { get { return Count > 0; } }
 		public bool HasDrumKitChannel { get { return this.Any(track => track.IsDrumKit); } }
+		public bool HasPitchedChannel { get { return this.Any(track => !track.IsDrumKit); } }
 
 		// 用于解决新问题：直接将本对象添加进入下拉菜单会显示为“(集合)”而不是重写的 ToString 方法，需使用下面这个属性解决。
 		public string DisplayValue { get { return ToString(); } }
@@ -41486,7 +41558,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				str.gaussian_blur, str.radial_blur,
 				str.wipe_in_the_right,
 				str.split_vertical_out,
-				str.random_effect + " " + 1,
+				str.random_effect_1,
 			});
 			VideoConfigCheck.Text = str.vconfig;
 			VideoScratchLbl.Text = str.video_stretch;
@@ -41965,7 +42037,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			LuckyDipBarOrBeatPanel.Enabled = LuckyDipBarOrBeatCheck.Checked;
 			LuckyDipLotionBathIntervalPanel.Enabled = LuckyDipLotionBathCheck.Checked && !EnhanceSelectCheck.Checked;
-			MatchCutSustainCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
+			MatchCutSustainCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX && EnhanceSelectCheck.Checked == false ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
 			MatchCutSustainPanel.Enabled = MatchCutSustainCheck.Checked;
 			MatchCutRepeatPanel.Enabled = !MatchCutSustainCheck.Checked;
 			if (MatchCutSustainCheck.Checked) MatchCutRepeatBox.Value = 1;
@@ -44044,7 +44116,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			/*MultiSourceConfigSelectedAsFirstCheck.Visible =*/ MultiSourceConfigSplitterWrapper.Visible = MultiSourceCombOrganizerTabs.Visible =
 				MultisourceCombPicker != MultisourceCombMode.OFF; // 注意不能改变这里对Visible赋值的等号先后顺序，否则会导致最终控件呈现的顺序错误。
-			MatchCutSustainCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
+			MatchCutSustainCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX && EnhanceSelectCheck.Checked == false ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
 			LinearMapReuseCheck.Status = MultisourceCombPicker == MultisourceCombMode.MYSTERY_BOX ? RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.Unlocked;
 			LuckyDipLotionBathCheck.Status = MultisourceCombOrganizer == MultisourceCombMode.SHUPELUNKER ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
 			//UpdateMultiSourceConfigSelectedAsFirstCheckLockStatus();
@@ -45259,7 +45331,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			standard = "标准",
 			snappy = "迅捷",
 			unset = "不改变",
-			random_effect = "随机效果",
+			random_effect_1 = "印度运镜（随机效果）",
 			random = "随机",
 			random_class = "随机类",
 			trippy_coloring = "地府调色",
