@@ -335,7 +335,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		#endregion
 
 		#region 声呐属性
-		/**<summary>启　　用</summary>*/ private bool SonarConfig { get { return configForm.SonarConfigCheck.Checked; } }
+		/**<summary>启　　用</summary>*/ internal bool SonarConfig { get { return configForm.SonarConfigCheck.Checked; } }
 		/**<summary>分离鼓声</summary>*/ private bool SonarConfigSeparateDrums { get { return configForm.SeparateDrumsCheck.Checked; } }
 		/**<summary>差值混合</summary>*/ private bool SonarConfigDifferenceCompositeMode { get { return configForm.DifferenceCompositeModeCheck.Checked; } }
 		/**<summary>阴　　影</summary>*/ private bool SonarConfigShadow { get { return configForm.TrackShadowCheck.Checked; } }
@@ -359,15 +359,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private VariableBpmIntegrator bpmIntegrator = null;
 		private VariableTimeSignatureIntegrator beatIntegrator = null;
 		public static Encoding ScoreEncoding = Encoding.Default;
-		/**
-		 * <summary>
-		 * <para>多素材属性 - 实例对象变量</para>
-		 * 确保多音轨素材的一致性的随机种子。
-		 * </summary>
-		 * <remarks>若为 null 表示不保障一致性，完全打乱随机。</remarks>
-		 */
+		/// <summary>
+		/// <para>多素材属性 - 实例对象变量</para>
+		/// 确保多音轨素材的一致性的随机种子。
+		/// </summary>
+		/// <remarks>若为 null 表示不保障一致性，完全打乱随机。</remarks>
 		private int? consistencyTracksSeed = null;
 		private double? resultCursorPosition = null;
+		/// <summary>
+		/// 代码性能测速工具。
+		/// </summary>
+		[Obsolete("不要在生产环境中忘记删除。")]
+		internal static readonly Stopwatch sw = new Stopwatch();
 
 		// 媒体 / MIDI 参数变量
 		internal MIDI midi = null;
@@ -1603,7 +1606,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (CombConfigEnhanceSelect) {
 				if (!eventSets.HasAudioEvents) throw new Exception("没有音频素材！");
 				else if (enhancedAnalysis == null) {
-					enhancedAnalysis = PitchDetector.AnalyzeMediaSegments(eventSets.EnhancedSegement);
+					try {
+						enhancedAnalysis = PitchDetector.AnalyzeMediaSegments(eventSets.EnhancedSegement);
+					} catch (OperationCanceledException) {
+						return false;
+					}
 					if (enhancedAnalysis.PitchRegions.Count == 0 && (MidiConfigTracks.HasPitchedChannel || enhancedAnalysis.DrumCandidates.Count == 0))
 						throw new Exception("没有识别到有效音频素材！");
 					eventSets = GetEnhancedSelectedSources(enhancedAnalysis, eventSets);
@@ -2026,7 +2033,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							int divisor = curDrumSound == PitchDetector.DrumSound.Crash ? 1 : curDrumSound == PitchDetector.DrumSound.OHat ? 2 : 4;
 							Timecode percNoteLength = Timecode.FromMilliseconds(msPerQuarter / divisor);
 							if (audioEvent.Length > percNoteLength) audioEvent.Length = percNoteLength;
-							if (audioEvent.FadeOut.Length.ToMilliseconds() == 0) audioEvent.FadeOut.Length = audioEvent.Length;
+							//if (audioEvent.FadeOut.Length.ToMilliseconds() == 0) // 使用这行代码会巨卡，未知原因。
+							if (AConfigSetFadeBy == SetFadeByType.TIMECODE ? AConfigFadeoutTimecode == TimecodeZero : AConfigFadeout == 0)
+								audioEvent.FadeOut.Length = audioEvent.Length;
 							skipLegatoAudioEvents.Add(audioEvent);
 						}
 
@@ -10034,6 +10043,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 分析音频，返回音高平直区域与六种鼓声的代表性区间。
 		/// 鼓声分析不使用平滑处理，以保留冲击特征。
 		/// </summary>
+		/// <exception cref="OperationCanceledException">用户终止继续提取音高时抛出。</exception>
 		public static AnalysisResult Analyze(
 			string filePath,
 			double lowFreq = 80,
@@ -10051,6 +10061,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// <summary>
 		/// 对已加载的信号进行分析（时间从 0 开始）。
 		/// </summary>
+		/// <exception cref="OperationCanceledException">用户终止继续提取音高时抛出。</exception>
 		public static AnalysisResult AnalyzeSignal(
 			DiscreteSignal signal,
 			double lowFreq = 80,
@@ -10131,6 +10142,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 返回所有文件合并后的 AnalysisResult。
 		/// 注意：MediaSegment.StartTime / Duration 单位为毫秒；返回结果的时间单位与 Analyze 保持一致（毫秒）。
 		/// </summary>
+		/// <exception cref="OperationCanceledException">用户终止继续提取音高时抛出。</exception>
 		public static AnalysisResult AnalyzeMediaSegments(
 			List<MediaSegment> segments,
 			double lowFreq = 80,
@@ -13991,7 +14003,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			} else {
 				Animation = AnimationResource.GetShellAnimation(ShellAnimation.FlyingPapers);
-				FormClosed += (sender, e) => Close();
+				FormClosed += delegate { Close(); };
+				TextChanged += delegate { if (_dialog != null) _dialog.SetTitle(Text); };
 			}
 		}
 
@@ -14114,7 +14127,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 			}
 			_dialog = new ProgressDialog();
-			_dialog.SetTitle(Lang.str.processing_it);
+			_dialog.SetTitle(Text);
 			if (Animation != null)
 				_dialog.SetAnimation(_currentAnimationModuleHandle, (ushort)Animation.ResourceId);
 			_dialog.SetLine(1, ProgressText, false, IntPtr.Zero);
@@ -21307,11 +21320,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public int CurrentChannel { get; private set; }
 		public void CompleteConfig() {
 			selectedChannelCount = Count;
-			// 将鼓组轨道移至末尾
-			List<MIDI.TrackInfo> drumChannels = FindAll(t => t.IsDrumKit);
-			foreach (MIDI.TrackInfo track in drumChannels) {
-				Remove(track);
-				Add(track);
+			// 开启声呐后将鼓组轨道移至末尾
+			if (EntryPoint.instance.SonarConfig) {
+				List<MIDI.TrackInfo> drumChannels = FindAll(t => t.IsDrumKit);
+				foreach (MIDI.TrackInfo track in drumChannels) {
+					Remove(track);
+					Add(track);
+				}
 			}
 		}
 		public double GetPercent(double currentTrackPercent) {
