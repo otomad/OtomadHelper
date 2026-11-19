@@ -971,26 +971,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public PitchAnalyzedEventSets(IReadOnlyList<EventSet> eventSets, AudioTrack aSmpTrack, VideoTrack vSmpTrack, IEnumerable<TrackEvent> originalClips, EventSets selectedSources) :
 				base(eventSets, aSmpTrack, vSmpTrack, originalClips) {
 				SelectedSources = selectedSources;
+				Drums = new Dictionary<PitchDetector.DrumSound, EventSet>();
 			}
 
 			public EventSets SelectedSources { get; private set; }
+			private Dictionary<PitchDetector.DrumSound, EventSet> Drums { get; set; }
 
-			public EventSet Kick { get; set; }
-			public EventSet Snare { get; set; }
-			public EventSet Clap { get; set; }
-			public EventSet Hat { get; set; }
-			public EventSet OHat { get; set; }
-			public EventSet Crash { get; set; }
 			public void SetDrumSound(PitchDetector.DrumSound drum, EventSet set) {
-				switch (drum) {
-					case PitchDetector.DrumSound.Kick: Kick = set; break;
-					case PitchDetector.DrumSound.Snare: Snare = set; break;
-					case PitchDetector.DrumSound.Clap: Clap = set; break;
-					case PitchDetector.DrumSound.Hat: Hat = set; break;
-					case PitchDetector.DrumSound.OHat: OHat = set; break;
-					case PitchDetector.DrumSound.Crash: Crash = set; break;
-					default: break;
-				}
+				if (!Enum.IsDefined(typeof(PitchDetector.DrumSound), drum) || drum == PitchDetector.DrumSound.Null) return;
+				Drums[drum] = set;
+			}
+			public EventSet GetDrumSound(PitchDetector.DrumSound drum) {
+				EventSet result;
+				if (Drums.TryGetValue(drum, out result)) return result;
+				else return null;
 			}
 		}
 
@@ -1615,6 +1609,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					eventSets = GetEnhancedSelectedSources(enhancedAnalysis, eventSets);
 				}
 			}
+			PitchAnalyzedEventSets analyzedEventSets = eventSets as PitchAnalyzedEventSets;
 			#if TEST // 测试强化选择音频分析功能能否可靠识别。
 			if (enhancedAnalysis != null) {
 				VideoTrack vTrack;
@@ -1768,6 +1763,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			bool vShouldLegato = VConfigShouldLegato && !SheetConfig && VConfig && !isSonarLegal;
 			DoActionsOnEventLater applyToVideoEventsAfterLegato = new DoActionsOnEventLater(vShouldLegato); // 部分视频事件处理在消除间隙（如果需要）之后再执行。
+			List<TrackEvent> skipLegatoAudioEvents = new List<TrackEvent>();
 
 			for (int i = 0; i < currentChannel.Events.Count; i++) {
 				MidiEvent midiEvent = currentChannel.Events[i];
@@ -1792,68 +1788,78 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				bool isHarmonicInChords = prevNoteOnEvent != null && noteOnEvent.AbsoluteTime == prevNoteOnEvent.AbsoluteTime;
 				if (!isHarmonicInChords) currentUpperNoteNumber = noteOnEvent.NoteNumber;
 				bool isDrumKit = noteEvent.Channel == 10;
+				bool directlyChangeActiveSource = CombConfigEnhanceSelect && isDrumKit || CombConfigShupelunkerTartar;
+				PitchDetector.DrumSound curDrumSound = PitchDetector.GetDrumSoundFromMidiNumber(noteOnEvent);
 
-				#region 素材盲盒
-				if (CombConfigMysteryBox) {
-					bool targetStepEnabled = false, markerIndexEnabled = false;
-					long targetStep = 0; int markerIndex = 0;
-					if (CombConfigMysteryBoxBarOrBeat) {
-						long measures = beatIntegrator.GetMeasureIndex(noteEvent), quarters = beatIntegrator.GetQuarterIndex(noteEvent);
-						if (CombConfigMysteryBoxBarOrBeatPreparation.Unit == BarOrBeat.Units.Beat && quarters >= CombConfigMysteryBoxBarOrBeatPreparation.Value ||
-							CombConfigMysteryBoxBarOrBeatPreparation.Unit == BarOrBeat.Units.Bar && measures >= CombConfigMysteryBoxBarOrBeatPreparation.Value) {
-							targetStepEnabled = VariableTimeSignatureIntegrator.ShouldChangeSource(measures, prevMeasures, quarters, prevQuarters, out targetStep, CombConfigMysteryBoxBarOrBeatPeriod, CombConfigMysteryBoxBarOrBeatPreparation);
+				if (!directlyChangeActiveSource) {
+					#region 素材盲盒
+					if (CombConfigMysteryBox) {
+						bool targetStepEnabled = false, markerIndexEnabled = false;
+						long targetStep = 0; int markerIndex = 0;
+						if (CombConfigMysteryBoxBarOrBeat) {
+							long measures = beatIntegrator.GetMeasureIndex(noteEvent), quarters = beatIntegrator.GetQuarterIndex(noteEvent);
+							if (CombConfigMysteryBoxBarOrBeatPreparation.Unit == BarOrBeat.Units.Beat && quarters >= CombConfigMysteryBoxBarOrBeatPreparation.Value ||
+								CombConfigMysteryBoxBarOrBeatPreparation.Unit == BarOrBeat.Units.Bar && measures >= CombConfigMysteryBoxBarOrBeatPreparation.Value) {
+								targetStepEnabled = VariableTimeSignatureIntegrator.ShouldChangeSource(measures, prevMeasures, quarters, prevQuarters, out targetStep, CombConfigMysteryBoxBarOrBeatPeriod, CombConfigMysteryBoxBarOrBeatPreparation);
+							}
+							prevMeasures = measures; prevQuarters = quarters;
 						}
-						prevMeasures = measures; prevQuarters = quarters;
+						if (CombConfigMysteryBoxMarker && midi.MarkerTrack != null) {
+							TextEvent marker = midi.GetLeadingMarker(noteEvent, out markerIndex, CombConfigMysteryBoxBarOrBeat);
+							markerIndexEnabled = markerIndex != prevMarkerIndex && marker != null && marker.AbsoluteTime != 0;
+							if (markerIndexEnabled) prevMarkerIndex = markerIndex;
+						}
+						//_testName = targetStep.ToString() + markerIndex.ToString();
+						if (targetStepEnabled || markerIndexEnabled)
+							NextMysteryBoxSource(targetStep + markerIndex);
 					}
-					if (CombConfigMysteryBoxMarker && midi.MarkerTrack != null) {
-						TextEvent marker = midi.GetLeadingMarker(noteEvent, out markerIndex, CombConfigMysteryBoxBarOrBeat);
-						markerIndexEnabled = markerIndex != prevMarkerIndex && marker != null && marker.AbsoluteTime != 0;
-						if (markerIndexEnabled) prevMarkerIndex = markerIndex;
-					}
-					//_testName = targetStep.ToString() + markerIndex.ToString();
-					if (targetStepEnabled || markerIndexEnabled)
-						NextMysteryBoxSource(targetStep + markerIndex);
-				}
-				#endregion
+					#endregion
 
-				#region 踩点
-				if (CombConfigSyncopator) {
-					EventSet pitchCachedSource = null, prevActiveSource = activeSource;
-					// 冠音
-					bool isUpperNote = CombConfigSyncopatorAccumulateHarmonics || !isHarmonicInChords;
-					if (isUpperNote) {
-						if (CombConfigSyncopatorSustain) {
-							var previousPair = syncopatorPitchQueue.LastPair;
-							syncopatorPitchQueue.TryGetAndRefreshValue(noteOnEvent.NoteNumber, out pitchCachedSource);
-							var currentPair = pitchCachedSource == null ? null : syncopatorPitchQueue.LastPair;
-							// 如果上一项刚好与本次缓存音高的素材相同，但音高却不相同，则放弃缓存的素材而改用新素材。
-							if (pitchCachedSource != null && previousPair != null && currentPair != null &&
-								previousPair.Value.Value == currentPair.Value.Value && previousPair.Value.Key != currentPair.Value.Key) pitchCachedSource = null;
+					#region 踩点
+					if (CombConfigSyncopator) {
+						EventSet pitchCachedSource = null, prevActiveSource = activeSource;
+						// 冠音
+						bool isUpperNote = CombConfigSyncopatorAccumulateHarmonics || !isHarmonicInChords;
+						if (isUpperNote) {
+							if (CombConfigSyncopatorSustain) {
+								var previousPair = syncopatorPitchQueue.LastPair;
+								syncopatorPitchQueue.TryGetAndRefreshValue(noteOnEvent.NoteNumber, out pitchCachedSource);
+								var currentPair = pitchCachedSource == null ? null : syncopatorPitchQueue.LastPair;
+								// 如果上一项刚好与本次缓存音高的素材相同，但音高却不相同，则放弃缓存的素材而改用新素材。
+								if (pitchCachedSource != null && previousPair != null && currentPair != null &&
+									previousPair.Value.Value == currentPair.Value.Value && previousPair.Value.Key != currentPair.Value.Key) pitchCachedSource = null;
+							}
+							if (pitchCachedSource == null) syncopatorIndex++;
 						}
-						if (pitchCachedSource == null) syncopatorIndex++;
-					}
-					if (pitchCachedSource != null)
-						activeSource = pitchCachedSource;
-					else {
-						if (syncopatorIndex > 1 && isUpperNote && syncopatorIndex % CombConfigSyncopatorRepeatOneCount == 0) {
-						ReSelectASourceBecauseSameAsPreviousPitchCachedSource:
-							long step = syncopatorIndex / CombConfigSyncopatorRepeatOneCount;
-							if (CombConfigSyncopatorPicker) NextSourceByOrder(CombConfigSyncopatorOrder, null, step, false, false);
-							else NextMysteryBoxSource(step);
-							// 如果下一项刚好与前一缓存音高的素材相同，则立即再换一个素材。
-							if (CombConfigSyncopatorSustain && activeSource == prevActiveSource && eventSets.Count > 1) {
-								syncopatorIndex++;
-								goto ReSelectASourceBecauseSameAsPreviousPitchCachedSource;
+						if (pitchCachedSource != null)
+							activeSource = pitchCachedSource;
+						else {
+							if (syncopatorIndex > 1 && isUpperNote && syncopatorIndex % CombConfigSyncopatorRepeatOneCount == 0) {
+							ReSelectASourceBecauseSameAsPreviousPitchCachedSource:
+								long step = syncopatorIndex / CombConfigSyncopatorRepeatOneCount;
+								if (CombConfigSyncopatorPicker) NextSourceByOrder(CombConfigSyncopatorOrder, null, step, false, false);
+								else NextMysteryBoxSource(step);
+								// 如果下一项刚好与前一缓存音高的素材相同，则立即再换一个素材。
+								if (CombConfigSyncopatorSustain && activeSource == prevActiveSource && eventSets.Count > 1) {
+									syncopatorIndex++;
+									goto ReSelectASourceBecauseSameAsPreviousPitchCachedSource;
+								}
+							}
+							if (CombConfigSyncopatorSustain && isUpperNote)
+								syncopatorPitchQueue.Add(noteOnEvent.NoteNumber, activeSource);
+							//_testName = syncopatorRound.ToString();
+							if (CombConfigSyncopatorRepeatRoundCount != 0 && syncopatorRound >= CombConfigSyncopatorRepeatRoundCount) {
+								progressForm.Close();
+								MessageBox.Show(Lang.str.match_cut_loop_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+								return false;
 							}
 						}
-						if (CombConfigSyncopatorSustain && isUpperNote)
-							syncopatorPitchQueue.Add(noteOnEvent.NoteNumber, activeSource);
-						//_testName = syncopatorRound.ToString();
-						if (CombConfigSyncopatorRepeatRoundCount != 0 && syncopatorRound >= CombConfigSyncopatorRepeatRoundCount) {
-							progressForm.Close();
-							MessageBox.Show(Lang.str.match_cut_loop_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-							return false;
-						}
+					}
+				} else {
+					if (CombConfigEnhanceSelect && isDrumKit && analyzedEventSets != null) {
+						EventSet drumEventSet = analyzedEventSets.GetDrumSound(curDrumSound);
+						if (drumEventSet == null) continue;
+						else activeSource = drumEventSet;
 					}
 				}
 				prevNoteOnEvent = noteOnEvent;
@@ -1988,10 +1994,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							}
 						}
 						if (adjustTime) AdjustDeviation(audioEvent, sourceStartTime, sourceEndTime);
-						if ((AConfigStretch == StretchType.FLEXING_AND_EXTENDING ||
-							AConfigStretch == StretchType.EXTENDING_ONLY && duration > audioLength ||
-							AConfigStretch == StretchType.FLEXING_ONLY && duration < audioLength) &&
-							AConfigMethod != AudioTuningMethod.OSCILLATOR && AConfigStretchMethod != AudioStretchMethod.NO_TUNING
+						if ((AConfigStretch == StretchType.FLEXING_AND_EXTENDING
+							|| AConfigStretch == StretchType.EXTENDING_ONLY && duration > audioLength
+							|| AConfigStretch == StretchType.FLEXING_ONLY && duration < audioLength)
+							&& AConfigMethod != AudioTuningMethod.OSCILLATOR && AConfigStretchMethod != AudioStretchMethod.NO_TUNING
+							&& !(CombConfigEnhanceSelect && isDrumKit)
 							#if VER_GEQ_16
 							&& !(AConfigStretchMethod == AudioStretchMethod.UNSET && audioEvent.Method == TimeStretchPitchShift.None)
 							#endif
@@ -2012,6 +2019,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (tempEventGroup != null) tempEventGroup.Add(audioEvent);
 						if (AConfigVelocity) audioEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Audio), AConfigVelocityMultiplyGain);
 
+						// 强化选择时微调鼓声音频。
+						if (CombConfigEnhanceSelect && isDrumKit) {
+							double msPerQuarter = midi.MsPerQuarter != 0 ? midi.MsPerQuarter : 6e4 / 120;
+							// Crash 最长用四分音符，OHat 最长用八分音符，其它最长用十六分音符。
+							int divisor = curDrumSound == PitchDetector.DrumSound.Crash ? 1 : curDrumSound == PitchDetector.DrumSound.OHat ? 2 : 4;
+							Timecode percNoteLength = Timecode.FromMilliseconds(msPerQuarter / divisor);
+							if (audioEvent.Length > percNoteLength) audioEvent.Length = percNoteLength;
+							if (audioEvent.FadeOut.Length.ToMilliseconds() == 0) audioEvent.FadeOut.Length = audioEvent.Length;
+							skipLegatoAudioEvents.Add(audioEvent);
+						}
+
 						#region 应用变调
 						double? basePitchOrNull = activeSource.KnownPitch;
 						if (basePitchOrNull == null && CombConfigSyncopatorPicker && CombConfigSyncopatorAffixAsPitch != AffixAsPitch.OFF)
@@ -2022,7 +2040,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						double pitchDelta = pitch - basePitch + AConfigOverallShift;
 						bool backToUsePlugin = false;
 					BackToUsePlugin:
-						if (method == AudioTuningMethod.NO_TUNING || AConfigNoTuningDrumKits && isDrumKit) { } // 不调音。
+						if (method == AudioTuningMethod.NO_TUNING || (AConfigNoTuningDrumKits || CombConfigEnhanceSelect) && isDrumKit) { } // 不调音。
 						else if (method == AudioTuningMethod.PITCH_SHIFT || backToUsePlugin) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
 							if (Plugin.pitchShift == null) { ShowError(new Exceptions.NoPluginPitchShiftException()); return false; }
 							int pitchDelta_int = (int)Math.Round(pitchDelta, MidpointRounding.AwayFromZero);
@@ -2425,7 +2443,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (!action()) return false;
 			}
 			if (AConfigShouldLegato && AConfig)
-				ApplyLegatoOnGeneration(trackHelper.audioTracks, aMaxGap, AConfigStretch, trackHelper.refAudioTrackOriginalEvents);
+				ApplyLegatoOnGeneration(trackHelper.audioTracks, aMaxGap, AConfigStretch, trackHelper.refAudioTrackOriginalEvents.Concat(skipLegatoAudioEvents).ToList());
 			#endregion
 
 			#region 过渡
@@ -9875,7 +9893,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public MediaSegment Source { get; set; }
 		}
 
-		public enum DrumSound { Kick, Snare, Clap, Hat, OHat, Crash }
+		public enum DrumSound { Null, Kick, Snare, Clap, Hat, OHat, Crash }
 
 		public class DrumCandidates : List<DrumCandidate> {
 			public DrumCandidate Kick;
@@ -10424,6 +10442,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			if (refreshTypical) candidates.RefreshTypical();
 			return candidates;
+		}
+
+		public static DrumSound GetDrumSoundFromMidiNumber(NoteEvent noteEvent) {
+			switch (noteEvent.NoteNumber) {
+				case 35: case 36: return DrumSound.Kick;
+				case 38: case 40: return DrumSound.Snare;
+				case 39: return DrumSound.Clap;
+				case 42: case 44: case 54: case 80: case 82: case 85: return DrumSound.Hat;
+				case 46: case 53: case 81: return DrumSound.OHat;
+				case 49: case 51: case 52: case 55: case 57: case 59: return DrumSound.Crash;
+				default: return DrumSound.Null;
+			}
 		}
 	}
 
