@@ -900,18 +900,21 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// <summary>
 			/// 是否包含倒放子剪辑。
 			/// </summary>
-			public bool IncludeReversedSubClip {
-				get {
-					return audioReverse != null || videoReverse != null;
-				}
-			}
+			public bool IncludeReversedSubClip { get { return audioReverse != null || videoReverse != null; } }
+			/// <summary>
+			/// 音频事件的媒体文件时长的毫秒值。缺省值为 <see langword="null" />。
+			/// </summary>
+			/// <remarks>
+			/// 为什么单独需要该属性？因为直接获取 <see cref="TrackEvent.ActiveTake" />.<see cref="Media.Length" /> 属性巨慢，只能在首次获取时将其缓存下来。
+			/// </remarks>
+			private double? AudioMediaLength { get; set; }
 			public double? GetAutoBasePitch(double offset, bool isMysteryBox = false) {
 				if (audioEvent == null || audioEvent.ActiveTake == null || !audioEvent.ActiveTake.Media.IsLocalMedia()) return null;
 				string path = audioEvent.ActiveTake.Media.FilePath;
-				double mediaLength = audioEvent.ActiveTake.Media.Length.ToMilliseconds();
-				double ms = (audioEvent.ActiveTake.Offset.ToMilliseconds() + offset) % mediaLength;
+				if (!AudioMediaLength.HasValue) AudioMediaLength = audioEvent.ActiveTake.Media.Length.ToMilliseconds();
+				double ms = (audioEvent.ActiveTake.Offset.ToMilliseconds() + offset) % AudioMediaLength.Value;
 				const double ADDITIONAL_OFFSET = 100;
-				if (mediaLength - ms > ADDITIONAL_OFFSET) ms += ADDITIONAL_OFFSET;
+				if (AudioMediaLength.Value - ms > ADDITIONAL_OFFSET) ms += ADDITIONAL_OFFSET;
 				return PitchDetector.GetPitchAt(path, ms, useFullCurve: isMysteryBox);
 			}
 			private double? _affixAsPitch = -1;
