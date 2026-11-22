@@ -370,7 +370,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 代码性能测速工具。
 		/// </summary>
 		[Obsolete("不要在生产环境中忘记删除。")]
-		internal static readonly Stopwatch sw = new Stopwatch();
+		internal static readonly StopwatchList sws = new StopwatchList();
 
 		// 媒体 / MIDI 参数变量
 		internal MIDI midi = null;
@@ -901,22 +901,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// 是否包含倒放子剪辑。
 			/// </summary>
 			public bool IncludeReversedSubClip { get { return audioReverse != null || videoReverse != null; } }
+
 			/// <summary>
-			/// 音频事件的媒体文件时长的毫秒值。缺省值为 <see langword="null" />。
+			/// 音频事件的媒体文件。
 			/// </summary>
 			/// <remarks>
-			/// 为什么单独需要该属性？因为直接获取 <see cref="TrackEvent.ActiveTake" />.<see cref="Media.Length" /> 属性巨慢，只能在首次获取时将其缓存下来。
+			/// 为什么单独需要该属性？因为在每次调用 <see cref="GetAutoBasePitch" /> 时直接获取 <see cref="TrackEvent.ActiveTake" />.<see cref="Media" /> 的属性巨慢，只能在首次获取时将其缓存下来。
 			/// </remarks>
-			private double? AudioMediaLength { get; set; }
+			private Media _audioMedia;
 			public double? GetAutoBasePitch(double offset, bool isMysteryBox = false) {
-				if (audioEvent == null || audioEvent.ActiveTake == null || !audioEvent.ActiveTake.Media.IsLocalMedia()) return null;
-				string path = audioEvent.ActiveTake.Media.FilePath;
-				if (!AudioMediaLength.HasValue) AudioMediaLength = audioEvent.ActiveTake.Media.Length.ToMilliseconds();
-				double ms = (audioEvent.ActiveTake.Offset.ToMilliseconds() + offset) % AudioMediaLength.Value;
+				if (audioEvent == null || audioEvent.ActiveTake == null || !(_audioMedia = _audioMedia ?? audioEvent.ActiveTake.Media).IsLocalMedia()) return null;
+				string path = _audioMedia.FilePath;
+				double mediaLength = _audioMedia.Length.ToMilliseconds();
+				double ms = (audioEvent.ActiveTake.Offset.ToMilliseconds() + offset) % mediaLength;
 				const double ADDITIONAL_OFFSET = 100;
-				if (AudioMediaLength.Value - ms > ADDITIONAL_OFFSET) ms += ADDITIONAL_OFFSET;
+				if (mediaLength - ms > ADDITIONAL_OFFSET) ms += ADDITIONAL_OFFSET;
 				return PitchDetector.GetPitchAt(path, ms, useFullCurve: isMysteryBox);
 			}
+
 			private double? _affixAsPitch = -1;
 			public double? GetPitchFromAffix(AffixAsPitch affix) {
 				if (_affixAsPitch == -1)
@@ -925,6 +927,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						(videoEvent == null ? null : EntryPoint.GetPitchFromAffix(videoEvent, affix));
 				return _affixAsPitch;
 			}
+
 			/// <summary>
 			/// 已知其音高，无需再次重复计算。
 			/// </summary>
@@ -4395,6 +4398,41 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 		}
 		#endregion
+	}
+
+	/// <summary>
+	/// Provides lazy, index-based access to a collection of stopwatches.
+	/// </summary>
+	public class StopwatchList : IReadOnlyList<Stopwatch> {
+		/// <summary>
+		/// Stores the stopwatches by their index.
+		/// </summary>
+		private readonly SortedDictionary<int, Stopwatch> stopwatches = new SortedDictionary<int, Stopwatch>();
+
+		/// <summary>
+		/// Gets the stopwatch at the specified index, creating it if necessary.
+		/// </summary>
+		/// <param name="index">The zero-based index of the stopwatch.</param>
+		/// <returns>The stopwatch at the specified index.</returns>
+		/// <exception cref="ArgumentOutOfRangeException"><paramref name="index" /> is negative.</exception>
+		public Stopwatch this[int index] {
+			get {
+				if (index < 0) throw new ArgumentOutOfRangeException("index");
+				Stopwatch result;
+				return stopwatches.TryGetValue(index, out result) ? result : (stopwatches[index] = new Stopwatch());
+			}
+		}
+
+		/// <summary>
+		/// Joins the elapsed milliseconds of the existing stopwatches.
+		/// </summary>
+		/// <param name="sep">The separator between elapsed millisecond values.</param>
+		/// <returns>A string containing the elapsed millisecond values separated by <paramref name="sep" />.</returns>
+		public string Join(string sep = ", ") { return string.Join(sep, stopwatches.Values.Select(sw => sw.Elapsed.Milliseconds)); }
+
+		int IReadOnlyCollection<Stopwatch>.Count { get { return stopwatches.Count == 0 ? 0 : stopwatches.Keys.Max() + 1; } }
+		public IEnumerator<Stopwatch> GetEnumerator() { return stopwatches.Values.GetEnumerator(); }
+		IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 	}
 
 	/// <summary>
