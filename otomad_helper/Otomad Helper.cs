@@ -948,8 +948,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public IEnumerable<AudioEvent> AudioSampleEvents { get { return eventSets.Select(set => set.audioEvent).OfType<AudioEvent>(); } }
 			public IEnumerable<VideoEvent> VideoSampleEvents { get { return eventSets.Select(set => set.videoEvent).OfType<VideoEvent>(); } }
 			private static bool _CheckLocalAudio(EventSet set) { return set.audioEvent != null && set.audioEvent.ActiveTake != null && set.audioEvent.ActiveTake.Media.IsLocalMedia(); }
+			private static bool _CheckLocalVideoContainsAudio(EventSet set) { return set.videoEvent != null && set.videoEvent.ActiveTake != null && set.videoEvent.ActiveTake.Media.IsLocalMedia() && set.videoEvent.ActiveTake.Media.HasAudio(); }
 			public bool HasAudioEvents { get { return eventSets.Any(_CheckLocalAudio); } }
-			public List<PitchDetector.MediaSegment> EnhancedSegement { get { return eventSets.Where(_CheckLocalAudio).Select(set => new PitchDetector.MediaSegment(set)).ToList(); } }
+			public List<PitchDetector.MediaSegment> EnhancedSegement {
+				get {
+					return HasAudioEvents ? eventSets.Where(_CheckLocalAudio).Select(set => new PitchDetector.MediaSegment(set)).ToList() :
+						eventSets.Where(_CheckLocalVideoContainsAudio).Select(set => new PitchDetector.MediaSegment(set, true)).ToList();
+				}
+			}
 			/// <summary>
 			/// <list type="bullet">
 			/// <item><term><see langword="true" /></term><description>落单的视频剪辑更多。</description></item>
@@ -1610,15 +1616,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return false;
 			}
 			if (CombConfigEnhanceSelect) {
-				if (!eventSets.HasAudioEvents) throw new Exception("没有音频素材！");
-				else if (enhancedAnalysis == null) {
+				if (enhancedAnalysis == null) {
 					try {
-						enhancedAnalysis = PitchDetector.AnalyzeMediaSegments(eventSets.EnhancedSegement);
+						List<PitchDetector.MediaSegment> segments = eventSets.EnhancedSegement;
+						enhancedAnalysis = PitchDetector.AnalyzeMediaSegments(segments);
 					} catch (OperationCanceledException) {
 						return false;
 					}
-					if (enhancedAnalysis.PitchRegions.Count == 0 && (MidiConfigTracks.HasPitchedChannel || enhancedAnalysis.DrumCandidates.Count == 0))
-						throw new Exception("没有识别到有效音频素材！");
+					if (enhancedAnalysis.PitchRegions.Count == 0 && (MidiConfigTracks.HasMelodicChannel || enhancedAnalysis.DrumCandidates.Count == 0))
+						throw !eventSets.HasAudioEvents ? new Exception("没有音频素材！") : new Exception("没有识别到有效音频素材！");
 					eventSets = GetEnhancedSelectedSources(enhancedAnalysis, eventSets);
 				}
 			}
@@ -10072,10 +10078,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// <summary>截取持续时间（毫秒）。</summary>
 			public double Duration { get; set; }
 			public EntryPoint.EventSet Source { get; private set; }
-			public MediaSegment(EntryPoint.EventSet source) {
-				FilePath = source.audioEvent.ActiveTake.MediaPath;
-				StartTime = source.audioEvent.ActiveTake.Offset.ToMilliseconds();
-				Duration = source.audioEvent.Length.ToMilliseconds();
+			public MediaSegment(EntryPoint.EventSet source, bool useVideoMediaIfNoAudioAvailable = false) {
+				TrackEvent trackEvent = !useVideoMediaIfNoAudioAvailable ? source.audioEvent : (TrackEvent)source.videoEvent;
+				FilePath = trackEvent.ActiveTake.MediaPath;
+				StartTime = trackEvent.ActiveTake.Offset.ToMilliseconds();
+				Duration = trackEvent.Length.ToMilliseconds();
 				Source = source;
 			}
 		}
@@ -21400,7 +21407,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public bool IsMultiMidiChannel { get { return selectedChannelCount > 1; } }
 		public bool IsNonEmpty { get { return Count > 0; } }
 		public bool HasDrumKitChannel { get { return this.Any(track => track.IsDrumKit); } }
-		public bool HasPitchedChannel { get { return this.Any(track => !track.IsDrumKit); } }
+		public bool HasMelodicChannel { get { return this.Any(track => !track.IsDrumKit); } }
 
 		// 用于解决新问题：直接将本对象添加进入下拉菜单会显示为“(集合)”而不是重写的 ToString 方法，需使用下面这个属性解决。
 		public string DisplayValue { get { return ToString(); } }
