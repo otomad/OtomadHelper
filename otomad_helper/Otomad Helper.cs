@@ -932,6 +932,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			/// 已知其音高，无需再次重复计算。
 			/// </summary>
 			public double? KnownPitch;
+
+			public PitchDetector.PitchRegion PitchRegion;
+			public PitchDetector.DrumCandidate DrumCandidate;
 		}
 
 		public class EventSets : IReadOnlyList<EventSet>, IDisposable {
@@ -1000,6 +1003,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				EventSet result;
 				if (Drums.TryGetValue(drum, out result)) return result;
 				else return null;
+			}
+			/// <summary>
+			/// 检查素材是否是鼓声中的 Kick、Snare、Clap 类。
+			/// </summary>
+			public bool IsKickLike(EventSet activeSource) {
+				if (activeSource.DrumCandidate == null) return false;
+				return !activeSource.DrumCandidate.IsHighCandidate;
 			}
 		}
 
@@ -1753,6 +1763,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			};
 			if (CombConfigMysteryBox && CombConfigMysteryBoxTrack && !CombConfigMysteryBoxLotionBath && MidiConfigTracks.CurrentChannel != 0)
 				NextMysteryBoxSource(-1);
+			if (CombConfigMysteryBoxPicker && CombConfigEnhanceSelect && !CombConfigMysteryBoxLotionBath)
+				NextMysteryBoxSource(1);
 			#endregion
 
 			#region 素材乐团
@@ -1980,7 +1992,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					double audioLength = activeSource.audioLength, videoLength = activeSource.videoLength;
 					#region 生成音频事件
 					if (AConfig) {
-						if (AConfigMuteDrumKits && isDrumKit) goto endAConfig;
+						if (AConfigMuteDrumKits && isDrumKit) goto endAConfig; // TODO: 仅强化选择时发声
 						int indexInAudioTracks;
 						AudioEvent audioEvent = trackHelper.AddEvent(activeSource.audioEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(duration), out indexInAudioTracks);
 						if (audioEvent == null) goto endAConfig;
@@ -2038,6 +2050,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (tempEventGroup != null) tempEventGroup.Add(audioEvent);
 						if (AConfigVelocity) audioEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Audio), AConfigVelocityMultiplyGain);
 
+						bool stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit = false;
 						// 强化选择时微调鼓声音频。
 						if (CombConfigEnhanceSelect && isDrumKit) {
 							double msPerQuarter = midi.MsPerQuarter != 0 ? midi.MsPerQuarter : 6e4 / 120;
@@ -2049,6 +2062,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							if (AConfigSetFadeBy == SetFadeByType.TIMECODE ? AConfigFadeoutTimecode == TimecodeZero : AConfigFadeout == 0)
 								audioEvent.FadeOut.Length = audioEvent.Length;
 							skipLegatoAudioEvents.Add(audioEvent);
+							if (analyzedEventSets != null && analyzedEventSets.IsKickLike(activeSource) && activeSource.KnownPitch.HasValue && activeSource.KnownPitch.Value > noteOnEvent.NoteNumber)
+								// 注意：activeSource.KnownPitch.Value 的值可能会为 NaN。
+								stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit = true;
 						}
 
 						#region 应用变调
@@ -2061,7 +2077,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						double pitchDelta = pitch - basePitch + AConfigOverallShift;
 						bool backToUsePlugin = false;
 					BackToUsePlugin:
-						if (method == AudioTuningMethod.NO_TUNING || (AConfigNoTuningDrumKits || CombConfigEnhanceSelect) && isDrumKit) { } // 不调音。
+						if (method == AudioTuningMethod.NO_TUNING || (AConfigNoTuningDrumKits || CombConfigEnhanceSelect) && isDrumKit && !stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit) { } // 不调音。
 						else if (method == AudioTuningMethod.PITCH_SHIFT || backToUsePlugin) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
 							if (Plugin.pitchShift == null) { ShowError(new Exceptions.NoPluginPitchShiftException()); return false; }
 							int pitchDelta_int = (int)Math.Round(pitchDelta, MidpointRounding.AwayFromZero);
@@ -3358,6 +3374,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			foreach (PitchDetector.PitchRegion region in analysis.PitchRegions) {
 				EventSet set = CreateEvent(region.Source.Source, region.StartTime, region.Duration);
 				set.KnownPitch = region.MidiNote;
+				set.PitchRegion = region;
 				eventSets.Add(set);
 			}
 			PitchAnalyzedEventSets result = new PitchAnalyzedEventSets(eventSets, aSmpTrack, vSmpTrack, selectedSources.OriginalClips, selectedSources);
@@ -3365,6 +3382,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (drum.Value != null) {
 					EventSet set = CreateEvent(drum.Value.Source.Source, drum.Value.StartTime, drum.Value.Duration);
 					result.SetDrumSound(drum.Key, set);
+					set.KnownPitch = drum.Value.AverageMidi;
+					set.DrumCandidate = drum.Value;
 					AudioEvent evt = set.audioEvent;
 					if (evt != null) {
 						evt.Normalize = true;
