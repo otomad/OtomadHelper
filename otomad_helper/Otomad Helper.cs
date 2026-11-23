@@ -1004,13 +1004,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (Drums.TryGetValue(drum, out result)) return result;
 				else return null;
 			}
-			/// <summary>
-			/// 检查素材是否是鼓声中的 Kick、Snare、Clap 类。
-			/// </summary>
-			public bool IsKickLike(EventSet activeSource) {
-				if (activeSource.DrumCandidate == null) return false;
-				return !activeSource.DrumCandidate.IsHighCandidate;
-			}
 		}
 
 		/// <summary>
@@ -1551,7 +1544,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endregion
 			#region 开始处理 MIDI
 			MIDI.TrackInfo currentChannel = MidiConfigTracks[0];
-			string name = currentChannel.Name; // 所选 MIDI 轨道名称。如果没有则为空串。
+			string name = currentChannel.NameForTrack; // 所选 MIDI 轨道名称。如果没有则为空串。
 			currentChannel.Resort(); // 重新排序。
 			NoteOnEvent prevNoteOnEvent = null; AudioEvent prevAudioEvent = null; VideoEvent prevVideoEvent = null;
 			// 冠音
@@ -2062,7 +2055,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							if (AConfigSetFadeBy == SetFadeByType.TIMECODE ? AConfigFadeoutTimecode == TimecodeZero : AConfigFadeout == 0)
 								audioEvent.FadeOut.Length = audioEvent.Length;
 							skipLegatoAudioEvents.Add(audioEvent);
-							if (analyzedEventSets != null && analyzedEventSets.IsKickLike(activeSource) && activeSource.KnownPitch.HasValue && activeSource.KnownPitch.Value > noteOnEvent.NoteNumber)
+							if (activeSource.DrumCandidate != null && !activeSource.DrumCandidate.IsHighCandidate && activeSource.KnownPitch.HasValue && activeSource.KnownPitch.Value > noteOnEvent.NoteNumber)
 								// 注意：activeSource.KnownPitch.Value 的值可能会为 NaN。
 								stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit = true;
 						}
@@ -2074,7 +2067,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (basePitchOrNull == null && AConfigAutoBasePitch)
 							basePitchOrNull = activeSource.GetAutoBasePitch(adjustTime ? sourceStartTime : 0, CombConfigMysteryBoxPicker && !CombConfigEnhanceSelect);
 						double basePitch = basePitchOrNull ?? AConfigBasePitch;
-						double pitchDelta = pitch - basePitch + AConfigOverallShift;
+						double pitchDelta = stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit ? -12 : pitch - basePitch + AConfigOverallShift;
 						bool backToUsePlugin = false;
 					BackToUsePlugin:
 						if (method == AudioTuningMethod.NO_TUNING || (AConfigNoTuningDrumKits || CombConfigEnhanceSelect) && isDrumKit && !stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit) { } // 不调音。
@@ -8019,6 +8012,15 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			public bool IsVariablePan = false;
 			private bool isResorted = false;
 			public bool HasPitchWheelEvents = false;
+			/// <summary>
+			/// 针对拆分后的单鼓声子音轨（<see cref="DrumKitState.SeparatedDrum" />）单独修改作为创建轨道的名称。
+			/// </summary>
+			public string NameForTrack {
+				get {
+					return DrumKit == DrumKitState.SeparatedDrum && !string.IsNullOrEmpty(BeginNote) ?
+						HasName ? string.Format("{0} ({1})", BeginNote, Name) : BeginNote : Name;
+				}
+			}
 			/// <summary>
 			/// 重新对轨道中的音符进行排序。
 			/// </summary>
