@@ -170,7 +170,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>拉　　伸</summary>*/ private StretchType AConfigStretch { get { return (StretchType)configForm.AudioScratchCombo.SelectedIndex; } }
 		/**<summary>循　　环</summary>*/ private bool AConfigLoop { get { return configForm.AudioLoopCheck.Checked; } }
 		/**<summary>标准音量</summary>*/ private bool AConfigNormalize { get { return configForm.AudioNormalizeCheck.Checked; } }
-		/**<summary>截　　断</summary>*/ private bool AConfigTruncate { get { return configForm.AudioFreezeLastFrameCheck.Checked; } }
+		/**<summary>截　　断</summary>*/ private bool AConfigTrunc { get { return configForm.AudioFreezeLastFrameCheck.Checked; } }
 		/**<summary>连　　奏</summary>*/ private LegatoMaxGapType AConfigLegato { get { return (LegatoMaxGapType)configForm.AudioLegatoCombo.SelectedIndex; } }
 		/**<summary>连　　奏</summary>*/ private bool AConfigShouldLegato { get { return AConfigLegato != LegatoMaxGapType.STACCATO; } }
 		/**<summary>自动声像</summary>*/ private bool AConfigAutoPan { get { return configForm.AudioAutoPanCheck.Checked; } }
@@ -1511,6 +1511,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			bool noMidiChannel = MidiConfigTracks == null || MidiConfigTracks.Count == 0;
 			bool isSonarLegal = SonarConfig && !noMidiChannel && MidiConfigTracks[0].IsDrumKit;
 			bool hasTimeSignature = midi != null && midi.TimeSignatureTrack != null;
+			bool isFirstGeneratedTrack = MidiConfigTracks.CurrentChannel == 0;
 			if (!AConfig && !VConfig && !SonarConfig) return false;
 			if (!isSonarLegal) {
 				if (!IsFromBrowseFile) { bool ok = GetSelectedSource(); if (!ok) return false; }
@@ -1540,7 +1541,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (YtpConfig) return GenerateYtp();
 			#endregion
 			#region 自动改变项目速度和拍号
-			ChangeProjectProperties();
+			if (isFirstGeneratedTrack) ChangeProjectProperties();
 			#endregion
 			#region 开始处理 MIDI
 			MIDI.TrackInfo currentChannel = MidiConfigTracks[0];
@@ -1754,7 +1755,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					sourceEndTime = sourceStartTime + maxLength;
 				}
 			};
-			if (CombConfigMysteryBox && CombConfigMysteryBoxTrack && !CombConfigMysteryBoxLotionBath && MidiConfigTracks.CurrentChannel != 0)
+			if (CombConfigMysteryBox && CombConfigMysteryBoxTrack && !CombConfigMysteryBoxLotionBath && !isFirstGeneratedTrack)
 				NextMysteryBoxSource(-1);
 			if (CombConfigMysteryBoxPicker && CombConfigEnhanceSelect && !CombConfigMysteryBoxLotionBath)
 				NextMysteryBoxSource(1);
@@ -1769,7 +1770,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						long _round = 0;
 						activeSource = Randoms.SourceRandomSelector.GetRandomInPool(eventSets, MidiConfigTracks.CurrentChannel, ref _round, baseShuffledSeed);
 					}
-				} else if (MidiConfigTracks.CurrentChannel != 0) // 素材盲盒
+				} else if (!isFirstGeneratedTrack) // 素材盲盒
 					NextMysteryBoxSource(MidiConfigTracks.CurrentChannel);
 			#endregion
 
@@ -1990,7 +1991,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						AudioEvent audioEvent = trackHelper.AddEvent(activeSource.audioEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(duration), out indexInAudioTracks);
 						if (audioEvent == null) goto endAConfig;
 						audioEvent.Length = Timecode.FromMilliseconds(duration);
-						bool audioFreezeLastFrameCondition = AConfigTruncate &&
+						bool audioFreezeLastFrameCondition = AConfigTrunc &&
 							(AConfigStretch == StretchType.NO_STRETCHING || AConfigStretch == StretchType.FLEXING_ONLY);
 						if (audioFreezeLastFrameCondition && duration > audioLength)
 							audioEvent.Length = Timecode.FromMilliseconds(audioLength);
@@ -2404,7 +2405,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				progressForm.ReportProgress(100);
 
 			#region 生成五线谱
-			if (MidiConfigTracks.CurrentChannel == 0) {
+			if (isFirstGeneratedTrack) {
 				bool useTrackGroupReference = GroupTrackBy == GroupTrackBy.TRACK && TrackGroupReuse;
 				if (SheetConfigGenerateStaffClef) {
 					if (Plugin.picInPic == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); goto endGenerateClef; }
@@ -2482,7 +2483,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endregion
 
 			#region 插入标记
-			if (MidiConfigTracks.CurrentChannel == 0) {
+			if (isFirstGeneratedTrack) {
 				if (InsertBeatChangeMarker && midi.IsVariableBeat) {
 					foreach (TimeSignatureEvent timeSignatureEvent in midi.TimeSignatureTrack) {
 						double startTime = MidiEventActualTime.GetActualTime(timeSignatureEvent, MidiUseVariableMidiBpm, bpmIntegrator, midi);
