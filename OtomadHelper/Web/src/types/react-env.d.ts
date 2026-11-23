@@ -55,6 +55,7 @@ declare module "enum-plus/types" {
 	interface ValueOnlyEnumItemInit extends EnumItemInitExtension { }
 	interface LabelOnlyEnumItemInit extends EnumItemInitExtension { }
 	interface MetaOnlyEnumItemInit extends EnumItemInitExtension { }
+	interface LooseMetaEnumItemInit extends EnumItemInitExtension { }
 }
 
 declare module "enum-plus" {
