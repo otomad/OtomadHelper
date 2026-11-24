@@ -1612,5 +1612,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			VideoTransitionOffBtn.Visible = VideoTransitionDurationTxt.Text != "00:00.000";
 			#endif
 		}
+
+		private void ChangeDatamoshPathMenuItem_Click(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void ResetDatamoshPathMenuItem_Click(object sender, EventArgs e) {
+			Console.WriteLine(DatamoshInfoLbl);
+		}
+
+		private void ChangeDatamoshPathMenuItem_Click(object sender, LinkLabelLinkClickedEventArgs e) {
+			ChangeDatamoshPathMenuItem_Click(sender, e);
+		}
 	}
 }

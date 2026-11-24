@@ -189,8 +189,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>调音方法</summary>*/ private AudioTuningMethod AConfigMethod { get { return (AudioTuningMethod)configForm.AudioTuneMethodCombo.SelectedIndex; } }
 		/**<summary>调音方法</summary>*/ private AudioStretchMethod AConfigStretchMethod { get { return (AudioStretchMethod)configForm.AudioStretchMethodCombo.SelectedIndex; } }
 		/**<summary>超出音域替代方法</summary>*/ private AudioAltTuningMethod AConfigAltMethod { get { return (AudioAltTuningMethod)configForm.AudioAltMethodCombo.SelectedIndex; } }
-		/**<summary>不调鼓组</summary>*/ private bool AConfigNoTuningDrumKits { get { return configForm.AudioNoTuningDrumKitsCheck.Checked; } }
-		/**<summary>静音鼓组</summary>*/ private bool AConfigMuteDrumKits { get { return configForm.AudioMuteDrumKitsCheck.Checked; } }
+		/**<summary>鼓组调音</summary>*/ private bool AConfigDrumKitsTuning { get { return configForm.AudioTuningDrumKitsChannel == TuningDrumKitsChannel.TUNING; } }
+		/**<summary>鼓组不调</summary>*/ private bool AConfigDrumKitsNoTuning { get { return configForm.AudioTuningDrumKitsChannel == TuningDrumKitsChannel.NO_TUNING; } }
+		/**<summary>鼓组静音</summary>*/ private bool AConfigDrumKitsMute { get { return configForm.AudioTuningDrumKitsChannel == TuningDrumKitsChannel.MUTE; } }
+		/**<summary>鼓组强化</summary>*/ private bool AConfigDrumKitsEnhanceSelect { get { return configForm.AudioTuningDrumKitsChannel == TuningDrumKitsChannel.ENHANCE_SELECT_ONLY; } }
 		/**<summary>整体偏移</summary>*/ private int AConfigOverallShift { get { return ParsePitchOffset(configForm.AudioOverallShiftCombo.Text); } }
 		#if VER_GEQ_16
 		/**<summary>弹性属性</summary>*/ private ElastiqueStretchAttributes? AConfigElastiqueAttr { get { return AConfigMethod == AudioTuningMethod.ELASTIQUE ?
@@ -1628,7 +1630,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						return false;
 					}
 					if (enhancedAnalysis.PitchRegions.Count == 0 && (MidiConfigTracks.HasMelodicChannel || enhancedAnalysis.DrumCandidates.Count == 0))
-						throw !eventSets.HasAudioEvents ? new Exception("没有音频素材！") : new Exception("没有识别到有效音频素材！");
+						throw !eventSets.HasAudioEvents ? (Exception)new Exceptions.NoAudioSourceForEnhanceSelectException() : new Exceptions.NoValidAudioSourceForEnhanceSelectException();
 					eventSets = GetEnhancedSelectedSources(enhancedAnalysis, eventSets);
 				}
 			}
@@ -1986,7 +1988,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					double audioLength = activeSource.audioLength, videoLength = activeSource.videoLength;
 					#region 生成音频事件
 					if (AConfig) {
-						if (AConfigMuteDrumKits && isDrumKit) goto endAConfig; // TODO: 仅强化选择时发声
+						if ((AConfigDrumKitsMute || AConfigDrumKitsEnhanceSelect && !CombConfigEnhanceSelect) && isDrumKit) goto endAConfig;
 						int indexInAudioTracks;
 						AudioEvent audioEvent = trackHelper.AddEvent(activeSource.audioEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(duration), out indexInAudioTracks);
 						if (audioEvent == null) goto endAConfig;
@@ -2056,7 +2058,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							if (AConfigSetFadeBy == SetFadeByType.TIMECODE ? AConfigFadeoutTimecode == TimecodeZero : AConfigFadeout == 0)
 								audioEvent.FadeOut.Length = audioEvent.Length;
 							skipLegatoAudioEvents.Add(audioEvent);
-							if (activeSource.DrumCandidate != null && !activeSource.DrumCandidate.IsHighCandidate && activeSource.KnownPitch.HasValue && activeSource.KnownPitch.Value > noteOnEvent.NoteNumber)
+							if (activeSource.DrumCandidate != null && !activeSource.DrumCandidate.IsHighCandidate && activeSource.KnownPitch.HasValue && activeSource.KnownPitch.Value > noteOnEvent.NoteNumber && (AConfigDrumKitsEnhanceSelect || AConfigDrumKitsTuning))
 								// 注意：activeSource.KnownPitch.Value 的值可能会为 NaN。
 								stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit = true;
 						}
@@ -2071,7 +2073,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						double pitchDelta = stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit ? -12 : pitch - basePitch + AConfigOverallShift;
 						bool backToUsePlugin = false;
 					BackToUsePlugin:
-						if (method == AudioTuningMethod.NO_TUNING || (AConfigNoTuningDrumKits || CombConfigEnhanceSelect) && isDrumKit && !stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit) { } // 不调音。
+						if (method == AudioTuningMethod.NO_TUNING || (AConfigDrumKitsNoTuning || AConfigDrumKitsEnhanceSelect || CombConfigEnhanceSelect) && isDrumKit && !stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit) { } // 不调音。
 						else if (method == AudioTuningMethod.PITCH_SHIFT || backToUsePlugin) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
 							if (Plugin.pitchShift == null) { ShowError(new Exceptions.NoPluginPitchShiftException()); return false; }
 							int pitchDelta_int = (int)Math.Round(pitchDelta, MidpointRounding.AwayFromZero);
@@ -5633,6 +5635,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	}
 
 	/// <summary>
+	/// 是否在鼓组通道对音频调音。
+	/// </summary>
+	public enum TuningDrumKitsChannel {
+		/// <summary>视为乐音而调音。</summary>
+		TUNING,
+		/// <summary>不调音。</summary>
+		NO_TUNING,
+		/// <summary>不发声。</summary>
+		MUTE,
+		/// <summary>仅强化选择下发声。</summary>
+		ENHANCE_SELECT_ONLY,
+	}
+
+	/// <summary>
 	/// YTP 效果枚举。
 	/// 目前将视频和音频效果都杂糅在一起了，如果需要的话，未来可能会分离两部分内容。
 	/// </summary>
@@ -9110,6 +9126,27 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return str.midi_out_open_exception_header + "\n\n" + reason;
 			}
 		}
+
+		public class NoAudioSourceForEnhanceSelectException : Exception {
+			/// <summary>
+			/// 使用强化选择时没有音频素材。
+			/// </summary>
+			public NoAudioSourceForEnhanceSelectException() : base(Lang.str.no_audio_source_for_enhance_select_exception) { }
+		}
+
+		public class NoValidAudioSourceForEnhanceSelectException : Exception {
+			/// <summary>
+			/// 使用强化选择时没有识别到有效音频素材。
+			/// </summary>
+			public NoValidAudioSourceForEnhanceSelectException() : base(Lang.str.no_valid_audio_source_for_enhance_select_exception) { }
+		}
+
+		public class DatamoshExtensionPackNotInstalledException : Exception {
+			/// <summary>
+			/// 未正确安装数据抹失扩展包。
+			/// </summary>
+			public DatamoshExtensionPackNotInstalledException() : base(Lang.str.datamosh_extension_pack_not_installed_exception) { }
+		}
 	}
 
 	/// <summary>
@@ -10938,19 +10975,16 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return Template.GetTemplate(vegas, frameRate, Template.Mode.Uncompressed);
 			}
 			public abstract void Main(Vegas vegas, EntryPoint entryPoint);
-			protected bool CheckEnvironment(Vegas vegas, out string _scriptDirectory, out RenderTemplate _template) {
-				_scriptDirectory = "";
-				_template = null;
+			protected bool CheckEnvironment(Vegas vegas, out RenderTemplate template) {
+				template = null;
 				try {
 					var frameRate = vegas.Project.Video.FrameRate;
 					var frameRateInt = (int)Math.Round(frameRate * 1000);
 
-					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
-					if (scriptDirectory == null) {
-						EntryPoint.ShowError(new Exceptions.CannotGetScriptDirException());
+					if (!CheckInternalDirectory()) {
+						EntryPoint.ShowError(new Exceptions.DatamoshExtensionPackNotInstalledException());
 						return false;
 					}
-					_scriptDirectory = scriptDirectory;
 
 					var xvidPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
 					if (string.IsNullOrEmpty(xvidPath)) {
@@ -10966,10 +11000,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						if (MessageBox.Show(Lang.str.install_xvid_info, XVID_TITLE, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
 							return false;
 						var xvid = new Process {
-								StartInfo = {
+							StartInfo = {
 								UseShellExecute = true,
-								FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "xvid", "xvid.exe"),
-								WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
+								FileName = System.IO.Path.Combine(InternalDir, "xvid", "xvid.exe"),
+								WorkingDirectory = InternalDir,
 								Arguments =
 									"--unattendedmodeui none  --mode unattended  --AutoUpdater no --decode_divx DIVX  --decode_3ivx 3IVX --decode_divx DIVX --decode_other MPEG-4",
 								CreateNoWindow = true,
@@ -10993,14 +11027,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						return false;
 					}
 
-					var template = GetTemplate(vegas, frameRateInt);
-					if (template == null) {
+					var _template = GetTemplate(vegas, frameRateInt);
+					if (_template == null) {
 						GetStandardTemplates(vegas);
 						GetTemplate(vegas, frameRateInt);
 						MessageBox.Show(Lang.str.render_template_generate_completed, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 						return false;
 					}
-					_template = template;
+					template = _template;
 				} catch (Exception e) {
 					EntryPoint.ShowError(new Exceptions.UnknownException(e), e);
 					Debug.WriteLine(e);
@@ -11008,6 +11042,36 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 				return true;
 			}
+
+			public static bool CheckInternalDirectory(string path) {
+				//if (string.IsNullOrEmpty(path)) path = DefaultInternalDirectory;
+				if (string.IsNullOrEmpty(path)) return false;
+				if (!Directory.Exists(path)) return false;
+				string[] requiredFiles = new string[] {
+					@"avidemux_datamix.js",
+					@"avidemux_datamosh.js",
+					@"avidemux\avidemux2.exe",
+					@"avidemux\avidemux2_cli.exe",
+					@"ffmpeg\ffmpeg.exe",
+					@"xvid\xvid.exe",
+				};
+				return requiredFiles.All(file => {
+					string fullPath = System.IO.Path.Combine(path, file);
+					return File.Exists(fullPath);
+				});
+			}
+			public static bool CheckInternalDirectory() {
+				if (string.IsNullOrEmpty(InternalDir)) InternalDir = DefaultInternalDirectory;
+				return CheckInternalDirectory(InternalDir);
+			}
+			public static string DefaultInternalDirectory {
+				get {
+					string scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
+					if (scriptDirectory == null) return null;
+					return System.IO.Path.Combine(scriptDirectory, "_internal");
+				}
+			}
+			public static string InternalDir { get; set; }
 		}
 		public abstract class BaseUncomprAlphaDatamosh : IDatamosh {
 			protected static void GetStandardTemplates(Vegas vegas) {
@@ -11017,28 +11081,25 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return Template.GetTemplate(vegas, frameRate, Template.Mode.UncomprAlpha);
 			}
 			public abstract void Main(Vegas vegas, EntryPoint entryPoint);
-			protected bool CheckEnvironment(Vegas vegas, out string _scriptDirectory, out RenderTemplate _template) {
-				_scriptDirectory = "";
-				_template = null;
+			protected bool CheckEnvironment(Vegas vegas, out RenderTemplate template) {
+				template = null;
 				try {
 					var frameRate = vegas.Project.Video.FrameRate;
 					var frameRateInt = (int)Math.Round(frameRate * 1000);
 
-					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
-					if (scriptDirectory == null) {
-						EntryPoint.ShowError(new Exceptions.CannotGetScriptDirException());
+					if (!BaseUncompressedDatamosh.CheckInternalDirectory()) {
+						EntryPoint.ShowError(new Exceptions.DatamoshExtensionPackNotInstalledException());
 						return false;
 					}
-					_scriptDirectory = scriptDirectory;
 
-					var template = GetTemplate(vegas, frameRateInt);
-					if (template == null) {
+					var _template = GetTemplate(vegas, frameRateInt);
+					if (_template == null) {
 						GetStandardTemplates(vegas);
 						GetTemplate(vegas, frameRateInt);
 						MessageBox.Show(Lang.str.render_template_generate_completed, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 						return false;
 					}
-					_template = template;
+					template = _template;
 				} catch (Exception e) {
 					EntryPoint.ShowError(new Exceptions.UnknownException(e), e);
 					Debug.WriteLine(e);
@@ -11268,7 +11329,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// Datamoshes a part of a video quickly and automatically (mosh a clip onto another).
 		/// </summary>
 		public class Datamix : BaseUncompressedDatamosh {
-			private void Encode(Vegas vegas, string scriptDirectory, RenderArgs renderArgs, string pathEncoded) {
+			private void Encode(Vegas vegas, RenderArgs renderArgs, string pathEncoded) {
 				var status = vegas.Render(renderArgs);
 				if (status != RenderStatus.Complete) {
 					EntryPoint.ShowError(new Exceptions.UnexpectedRenderStatus(status), ShowErrorState.SILENCE);
@@ -11278,8 +11339,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				var encode = new Process {
 					StartInfo = {
 						UseShellExecute = false,
-						FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "ffmpeg", "ffmpeg.exe"),
-						WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
+						FileName = System.IO.Path.Combine(InternalDir, "ffmpeg", "ffmpeg.exe"),
+						WorkingDirectory = InternalDir,
 						Arguments = "-y -hide_banner -nostdin -i \"" + renderArgs.OutputFile +
 									"\" -c:v libxvid -q:v 1 -g 1M -flags +mv4+qpel -mpeg_quant 1 -c:a copy \"" + pathEncoded +
 									"\"",
@@ -11314,9 +11375,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 
 				try {
-					string scriptDirectory;
 					RenderTemplate template;
-					if (!CheckEnvironment(vegas, out scriptDirectory, out template)) return;
+					if (!CheckEnvironment(vegas, out template)) return;
 
 					VideoTrack videoTrack = null;
 					for (var i = vegas.Project.Tracks.Count - 1; i >= 0; i--) {
@@ -11342,7 +11402,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					var pathEncodedSrc = System.IO.Path.Combine(vegas.TemporaryFilesPath,
 						System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) + "-" +
 						Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8) + ".avi");
-					Encode(vegas, scriptDirectory, new RenderArgs {
+					Encode(vegas, new RenderArgs {
 						OutputFile = pathSrc,
 						Start = Timecode.FromFrames(start.FrameCount - 1),
 						Length = Timecode.FromFrames(1),
@@ -11353,7 +11413,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					var pathEncodedClip = System.IO.Path.Combine(vegas.TemporaryFilesPath,
 						System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) + "-" +
 						Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8) + ".avi");
-					Encode(vegas, scriptDirectory, new RenderArgs {
+					Encode(vegas, new RenderArgs {
 						OutputFile = pathClip,
 						Start = start,
 						Length = length,
@@ -11370,13 +11430,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						"var output=\"" + pathDatamixed.Replace("\\", "/") + "\";"
 					};
 
-					File.WriteAllLines(System.IO.Path.Combine(scriptDirectory, "_internal", "config_datamix.js"), datamoshConfig);
+					File.WriteAllLines(System.IO.Path.Combine(InternalDir, "config_datamix.js"), datamoshConfig);
 
 					var datamosh = new Process {
 						StartInfo = {
 							UseShellExecute = false,
-							FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "avidemux", "avidemux2_cli.exe"),
-							WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
+							FileName = System.IO.Path.Combine(InternalDir, "avidemux", "avidemux2_cli.exe"),
+							WorkingDirectory = InternalDir,
 							Arguments = "--nogui --run avidemux_datamix.js",
 							RedirectStandardInput = true,
 							RedirectStandardOutput = true,
@@ -11419,9 +11479,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				var length = vegas.Transport.LoopRegionLength;
 
 				try {
-					string scriptDirectory;
 					RenderTemplate template;
-					if (!CheckEnvironment(vegas, out scriptDirectory, out template)) return;
+					if (!CheckEnvironment(vegas, out template)) return;
 
 					var frameCount = (string)Registry.GetValue(Template.DataPath, "FrameCount", "");
 					var defaultCount = 1;
@@ -11547,13 +11606,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						"var repeat=" + repeat + ";"
 					};
 
-					File.WriteAllLines(System.IO.Path.Combine(scriptDirectory, "_internal", "config_datamosh.js"), datamoshConfig);
+					File.WriteAllLines(System.IO.Path.Combine(InternalDir, "config_datamosh.js"), datamoshConfig);
 
 					var encode = new Process {
 						StartInfo = {
 							UseShellExecute = false,
-							FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "ffmpeg", "ffmpeg.exe"),
-							WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
+							FileName = System.IO.Path.Combine(InternalDir, "ffmpeg", "ffmpeg.exe"),
+							WorkingDirectory = InternalDir,
 							Arguments = "-y -hide_banner -nostdin -i \"" + path +
 								"\" -c:v libxvid -q:v 1 -g 1M -flags +mv4+qpel -mpeg_quant 1 -c:a copy \"" + pathEncoded +
 								"\"",
@@ -11576,8 +11635,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					var datamosh = new Process {
 						StartInfo = {
 							UseShellExecute = false,
-							FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "avidemux", "avidemux2_cli.exe"),
-							WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
+							FileName = System.IO.Path.Combine(InternalDir, "avidemux", "avidemux2_cli.exe"),
+							WorkingDirectory = InternalDir,
 							Arguments = "--nogui --run avidemux_datamosh.js",
 							RedirectStandardInput = true,
 							RedirectStandardOutput = true,
@@ -11661,7 +11720,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				try {
 					string scriptDirectory;
 					RenderTemplate template;
-					if (!CheckEnvironment(vegas, out scriptDirectory, out template)) return;
+					if (!CheckEnvironment(vegas, out template)) return;
 
 					var layeringCount = (string)Registry.GetValue(Template.DataPath, "LayerCount", "");
 					var defaultCount = 1;
@@ -11835,7 +11894,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				try {
 					string scriptDirectory;
 					RenderTemplate template;
-					if (!CheckEnvironment(vegas, out scriptDirectory, out template)) return;
+					if (!CheckEnvironment(vegas, out template)) return;
 
 					VideoTrack videoTrack = null;
 					for (var i = vegas.Project.Tracks.Count - 1; i >= 0; i--) {
@@ -12150,7 +12209,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		public static class Template {
-			public const string DataPath = "HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets";
+			public const string DataPath = @"HKEY_CURRENT_USER\SOFTWARE\VEGAS Creative Software\Custom Presets";
 
 			public enum Mode {
 				Uncompressed,
@@ -28551,8 +28610,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel19 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioOverallShiftCombo = new System.Windows.Forms.ComboBox();
 			this.AudioOverallShiftUnitLbl = new System.Windows.Forms.Label();
-			this.AudioNoTuningDrumKitsCheck = new System.Windows.Forms.CheckBox();
-			this.AudioMuteDrumKitsCheck = new System.Windows.Forms.CheckBox();
 			this.AudioOverallShiftLbl = new System.Windows.Forms.Label();
 			this.AudioStretchMethodCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.AudioStretchMethodLbl = new System.Windows.Forms.Label();
@@ -28913,6 +28970,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioDrumKitsChannelLbl = new System.Windows.Forms.Label();
+			this.AudioDrumKitsTuningRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioDrumKitsNoTuningRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioDrumKitsMuteRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioDrumKitsEnhanceSelectOnlyRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.menu.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -29094,6 +29157,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
+			this.flowLayoutPanel7.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// tableLayoutPanel1
@@ -29389,14 +29453,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// loadPresetsToolStripMenuItem
 			//
 			this.loadPresetsToolStripMenuItem.Name = "loadPresetsToolStripMenuItem";
-			this.loadPresetsToolStripMenuItem.Size = new System.Drawing.Size(288, 44);
+			this.loadPresetsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.loadPresetsToolStripMenuItem.Text = "加载预设(&L)...";
 			this.loadPresetsToolStripMenuItem.Click += new System.EventHandler(this.LoadPresetsToolStripMenuItem_Click);
 			//
 			// unloadPresetsToolStripMenuItem
 			//
 			this.unloadPresetsToolStripMenuItem.Name = "unloadPresetsToolStripMenuItem";
-			this.unloadPresetsToolStripMenuItem.Size = new System.Drawing.Size(288, 44);
+			this.unloadPresetsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.unloadPresetsToolStripMenuItem.Text = "卸载预设(&U)...";
 			this.unloadPresetsToolStripMenuItem.Click += new System.EventHandler(this.LoadPresetsToolStripMenuItem_Click);
 			//
@@ -29414,12 +29478,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.changeDatamoshPathMenuItem.Name = "changeDatamoshPathMenuItem";
 			this.changeDatamoshPathMenuItem.Size = new System.Drawing.Size(383, 44);
 			this.changeDatamoshPathMenuItem.Text = "更改为自定义路径(&C)...";
+			this.changeDatamoshPathMenuItem.Click += new System.EventHandler(this.ChangeDatamoshPathMenuItem_Click);
 			//
 			// resetDatamoshPathMenuItem
 			//
 			this.resetDatamoshPathMenuItem.Name = "resetDatamoshPathMenuItem";
 			this.resetDatamoshPathMenuItem.Size = new System.Drawing.Size(383, 44);
 			this.resetDatamoshPathMenuItem.Text = "重置为默认路径(&R)...";
+			this.resetDatamoshPathMenuItem.Click += new System.EventHandler(this.ResetDatamoshPathMenuItem_Click);
 			//
 			// toolStripSeparator1
 			//
@@ -29455,7 +29521,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.lightAcrylicMaterialToolStripMenuItem.CheckOnClick = true;
 			this.lightAcrylicMaterialToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.lightAcrylicMaterialToolStripMenuItem.Name = "lightAcrylicMaterialToolStripMenuItem";
-			this.lightAcrylicMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.lightAcrylicMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.lightAcrylicMaterialToolStripMenuItem.Tag = "3,1";
 			this.lightAcrylicMaterialToolStripMenuItem.Text = "浅色 - 亚克力";
 			this.lightAcrylicMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -29464,7 +29530,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.lightMicaMaterialToolStripMenuItem.CheckOnClick = true;
 			this.lightMicaMaterialToolStripMenuItem.Name = "lightMicaMaterialToolStripMenuItem";
-			this.lightMicaMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.lightMicaMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.lightMicaMaterialToolStripMenuItem.Tag = "2,1";
 			this.lightMicaMaterialToolStripMenuItem.Text = "浅色 - 云母";
 			this.lightMicaMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -29473,7 +29539,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.lightMicaAltMaterialToolStripMenuItem.CheckOnClick = true;
 			this.lightMicaAltMaterialToolStripMenuItem.Name = "lightMicaAltMaterialToolStripMenuItem";
-			this.lightMicaAltMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.lightMicaAltMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.lightMicaAltMaterialToolStripMenuItem.Tag = "4,1";
 			this.lightMicaAltMaterialToolStripMenuItem.Text = "浅色 - 云母平替";
 			this.lightMicaAltMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -29482,7 +29548,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.lightSolidMaterialToolStripMenuItem.CheckOnClick = true;
 			this.lightSolidMaterialToolStripMenuItem.Name = "lightSolidMaterialToolStripMenuItem";
-			this.lightSolidMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.lightSolidMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.lightSolidMaterialToolStripMenuItem.Tag = "1,1";
 			this.lightSolidMaterialToolStripMenuItem.Text = "浅色 - 纯色";
 			this.lightSolidMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -29490,13 +29556,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// toolStripSeparator13
 			//
 			this.toolStripSeparator13.Name = "toolStripSeparator13";
-			this.toolStripSeparator13.Size = new System.Drawing.Size(312, 6);
+			this.toolStripSeparator13.Size = new System.Drawing.Size(356, 6);
 			//
 			// darkAcrylicMaterialToolStripMenuItem
 			//
 			this.darkAcrylicMaterialToolStripMenuItem.CheckOnClick = true;
 			this.darkAcrylicMaterialToolStripMenuItem.Name = "darkAcrylicMaterialToolStripMenuItem";
-			this.darkAcrylicMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.darkAcrylicMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.darkAcrylicMaterialToolStripMenuItem.Tag = "3,0";
 			this.darkAcrylicMaterialToolStripMenuItem.Text = "深色 - 亚克力";
 			this.darkAcrylicMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -29505,7 +29571,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.darkMicaMaterialToolStripMenuItem.CheckOnClick = true;
 			this.darkMicaMaterialToolStripMenuItem.Name = "darkMicaMaterialToolStripMenuItem";
-			this.darkMicaMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.darkMicaMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.darkMicaMaterialToolStripMenuItem.Tag = "2,0";
 			this.darkMicaMaterialToolStripMenuItem.Text = "深色 - 云母";
 			this.darkMicaMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -29514,7 +29580,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.darkMicaAltMaterialToolStripMenuItem.CheckOnClick = true;
 			this.darkMicaAltMaterialToolStripMenuItem.Name = "darkMicaAltMaterialToolStripMenuItem";
-			this.darkMicaAltMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.darkMicaAltMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.darkMicaAltMaterialToolStripMenuItem.Tag = "4,0";
 			this.darkMicaAltMaterialToolStripMenuItem.Text = "深色 - 云母平替";
 			this.darkMicaAltMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -29523,7 +29589,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.darkSolidMaterialToolStripMenuItem.CheckOnClick = true;
 			this.darkSolidMaterialToolStripMenuItem.Name = "darkSolidMaterialToolStripMenuItem";
-			this.darkSolidMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.darkSolidMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.darkSolidMaterialToolStripMenuItem.Tag = "1,0";
 			this.darkSolidMaterialToolStripMenuItem.Text = "深色 - 纯色";
 			this.darkSolidMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -32968,8 +33034,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneTablePanel.ColumnCount = 2;
 			this.AudioTuneTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.AudioTuneTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.AudioTuneTablePanel.Controls.Add(this.flowLayoutPanel19, 1, 8);
-			this.AudioTuneTablePanel.Controls.Add(this.AudioOverallShiftLbl, 0, 8);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioDrumKitsChannelLbl, 0, 8);
+			this.AudioTuneTablePanel.Controls.Add(this.flowLayoutPanel7, 1, 8);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioStretchMethodCombo, 1, 1);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioStretchMethodLbl, 0, 1);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioAltMethodCombo, 1, 3);
@@ -33006,15 +33072,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// flowLayoutPanel19
 			//
 			this.flowLayoutPanel19.AutoSize = true;
+			this.flowLayoutPanel19.Controls.Add(this.AudioOverallShiftLbl);
 			this.flowLayoutPanel19.Controls.Add(this.AudioOverallShiftCombo);
 			this.flowLayoutPanel19.Controls.Add(this.AudioOverallShiftUnitLbl);
-			this.flowLayoutPanel19.Controls.Add(this.AudioNoTuningDrumKitsCheck);
-			this.flowLayoutPanel19.Controls.Add(this.AudioMuteDrumKitsCheck);
 			this.flowLayoutPanel19.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel19.Location = new System.Drawing.Point(116, 436);
+			this.flowLayoutPanel19.Location = new System.Drawing.Point(493, 0);
 			this.flowLayoutPanel19.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel19.Name = "flowLayoutPanel19";
-			this.flowLayoutPanel19.Size = new System.Drawing.Size(944, 54);
+			this.flowLayoutPanel19.Size = new System.Drawing.Size(349, 54);
 			this.flowLayoutPanel19.TabIndex = 18;
 			//
 			// AudioOverallShiftCombo
@@ -33039,7 +33104,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			"+72",
 			"+84",
 			"+96"});
-			this.AudioOverallShiftCombo.Location = new System.Drawing.Point(3, 3);
+			this.AudioOverallShiftCombo.Location = new System.Drawing.Point(113, 3);
+			this.AudioOverallShiftCombo.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.AudioOverallShiftCombo.Name = "AudioOverallShiftCombo";
 			this.AudioOverallShiftCombo.Size = new System.Drawing.Size(174, 40);
 			this.AudioOverallShiftCombo.TabIndex = 4;
@@ -33050,8 +33116,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.AudioOverallShiftUnitLbl.AutoSize = true;
 			this.AudioOverallShiftUnitLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioOverallShiftUnitLbl.Location = new System.Drawing.Point(180, 0);
-			this.AudioOverallShiftUnitLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.AudioOverallShiftUnitLbl.Location = new System.Drawing.Point(287, 0);
+			this.AudioOverallShiftUnitLbl.Margin = new System.Windows.Forms.Padding(0);
 			this.AudioOverallShiftUnitLbl.MaximumSize = new System.Drawing.Size(0, 54);
 			this.AudioOverallShiftUnitLbl.Name = "AudioOverallShiftUnitLbl";
 			this.AudioOverallShiftUnitLbl.Size = new System.Drawing.Size(62, 54);
@@ -33059,39 +33125,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioOverallShiftUnitLbl.Text = "半音";
 			this.AudioOverallShiftUnitLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
-			// AudioNoTuningDrumKitsCheck
-			//
-			this.AudioNoTuningDrumKitsCheck.AutoSize = true;
-			this.AudioNoTuningDrumKitsCheck.Checked = true;
-			this.AudioNoTuningDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.AudioNoTuningDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(253, 3);
-			this.AudioNoTuningDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
-			this.AudioNoTuningDrumKitsCheck.Name = "AudioNoTuningDrumKitsCheck";
-			this.AudioNoTuningDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
-			this.AudioNoTuningDrumKitsCheck.TabIndex = 2;
-			this.AudioNoTuningDrumKitsCheck.Text = "鼓组通道不调音";
-			this.AudioNoTuningDrumKitsCheck.UseVisualStyleBackColor = true;
-			//
-			// AudioMuteDrumKitsCheck
-			//
-			this.AudioMuteDrumKitsCheck.AutoSize = true;
-			this.AudioMuteDrumKitsCheck.Checked = true;
-			this.AudioMuteDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.AudioMuteDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioMuteDrumKitsCheck.Location = new System.Drawing.Point(473, 3);
-			this.AudioMuteDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
-			this.AudioMuteDrumKitsCheck.Name = "AudioMuteDrumKitsCheck";
-			this.AudioMuteDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
-			this.AudioMuteDrumKitsCheck.TabIndex = 3;
-			this.AudioMuteDrumKitsCheck.Text = "鼓组通道不发声";
-			this.AudioMuteDrumKitsCheck.UseVisualStyleBackColor = true;
-			//
 			// AudioOverallShiftLbl
 			//
 			this.AudioOverallShiftLbl.AutoSize = true;
 			this.AudioOverallShiftLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioOverallShiftLbl.Location = new System.Drawing.Point(3, 436);
+			this.AudioOverallShiftLbl.Location = new System.Drawing.Point(3, 0);
+			this.AudioOverallShiftLbl.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
 			this.AudioOverallShiftLbl.MinimumSize = new System.Drawing.Size(0, 54);
 			this.AudioOverallShiftLbl.Name = "AudioOverallShiftLbl";
 			this.AudioOverallShiftLbl.Size = new System.Drawing.Size(110, 54);
@@ -33269,6 +33308,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel6.Controls.Add(this.AudioMainOctaveCombo);
 			this.flowLayoutPanel6.Controls.Add(this.AudioBasePitchIntervalLbl);
 			this.flowLayoutPanel6.Controls.Add(this.AudioAutoBasePitchCheck);
+			this.flowLayoutPanel6.Controls.Add(this.flowLayoutPanel19);
 			this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel6.Location = new System.Drawing.Point(116, 270);
 			this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
@@ -38398,6 +38438,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.CustomDatamoshLocationLink.TabStop = true;
 			this.CustomDatamoshLocationLink.Text = "自定义扩展包文件夹路径";
 			this.CustomDatamoshLocationLink.VisitedLinkColor = System.Drawing.Color.Blue;
+			this.CustomDatamoshLocationLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeDatamoshPathMenuItem_Click);
 			//
 			// DatamoshNotInstalledInfo
 			//
@@ -38966,6 +39007,82 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			//
+			// flowLayoutPanel7
+			//
+			this.flowLayoutPanel7.AutoSize = true;
+			this.flowLayoutPanel7.Controls.Add(this.AudioDrumKitsTuningRadio);
+			this.flowLayoutPanel7.Controls.Add(this.AudioDrumKitsNoTuningRadio);
+			this.flowLayoutPanel7.Controls.Add(this.AudioDrumKitsMuteRadio);
+			this.flowLayoutPanel7.Controls.Add(this.AudioDrumKitsEnhanceSelectOnlyRadio);
+			this.flowLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel7.Location = new System.Drawing.Point(116, 436);
+			this.flowLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel7.Name = "flowLayoutPanel7";
+			this.flowLayoutPanel7.Size = new System.Drawing.Size(944, 54);
+			this.flowLayoutPanel7.TabIndex = 18;
+			//
+			// AudioDrumKitsChannelLbl
+			//
+			this.AudioDrumKitsChannelLbl.AutoSize = true;
+			this.AudioDrumKitsChannelLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioDrumKitsChannelLbl.Location = new System.Drawing.Point(3, 436);
+			this.AudioDrumKitsChannelLbl.MinimumSize = new System.Drawing.Size(0, 54);
+			this.AudioDrumKitsChannelLbl.Name = "AudioDrumKitsChannelLbl";
+			this.AudioDrumKitsChannelLbl.Size = new System.Drawing.Size(110, 54);
+			this.AudioDrumKitsChannelLbl.TabIndex = 19;
+			this.AudioDrumKitsChannelLbl.Text = "鼓组通道";
+			this.AudioDrumKitsChannelLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// AudioDrumKitsTuningRadio
+			//
+			this.AudioDrumKitsTuningRadio.AutoSize = true;
+			this.AudioDrumKitsTuningRadio.Group = "AudioDrumKitsChannel";
+			this.AudioDrumKitsTuningRadio.Location = new System.Drawing.Point(3, 3);
+			this.AudioDrumKitsTuningRadio.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioDrumKitsTuningRadio.Name = "AudioDrumKitsTuningRadio";
+			this.AudioDrumKitsTuningRadio.Size = new System.Drawing.Size(213, 48);
+			this.AudioDrumKitsTuningRadio.TabIndex = 4;
+			this.AudioDrumKitsTuningRadio.Text = "视为乐音而调音";
+			this.AudioDrumKitsTuningRadio.UseVisualStyleBackColor = true;
+			//
+			// AudioDrumKitsNoTuningRadio
+			//
+			this.AudioDrumKitsNoTuningRadio.AutoSize = true;
+			this.AudioDrumKitsNoTuningRadio.Group = "AudioDrumKitsChannel";
+			this.AudioDrumKitsNoTuningRadio.Location = new System.Drawing.Point(222, 3);
+			this.AudioDrumKitsNoTuningRadio.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioDrumKitsNoTuningRadio.Name = "AudioDrumKitsNoTuningRadio";
+			this.AudioDrumKitsNoTuningRadio.Size = new System.Drawing.Size(117, 48);
+			this.AudioDrumKitsNoTuningRadio.TabIndex = 5;
+			this.AudioDrumKitsNoTuningRadio.Text = "不调音";
+			this.AudioDrumKitsNoTuningRadio.UseVisualStyleBackColor = true;
+			//
+			// AudioDrumKitsMuteRadio
+			//
+			this.AudioDrumKitsMuteRadio.AutoSize = true;
+			this.AudioDrumKitsMuteRadio.Group = "AudioDrumKitsChannel";
+			this.AudioDrumKitsMuteRadio.Location = new System.Drawing.Point(345, 3);
+			this.AudioDrumKitsMuteRadio.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioDrumKitsMuteRadio.Name = "AudioDrumKitsMuteRadio";
+			this.AudioDrumKitsMuteRadio.Size = new System.Drawing.Size(117, 48);
+			this.AudioDrumKitsMuteRadio.TabIndex = 6;
+			this.AudioDrumKitsMuteRadio.Text = "不发声";
+			this.AudioDrumKitsMuteRadio.UseVisualStyleBackColor = true;
+			//
+			// AudioDrumKitsEnhanceSelectOnlyRadio
+			//
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.AutoSize = true;
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.Checked = true;
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.Group = "AudioDrumKitsChannel";
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.Location = new System.Drawing.Point(468, 3);
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.Name = "AudioDrumKitsEnhanceSelectOnlyRadio";
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.Size = new System.Drawing.Size(237, 48);
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.TabIndex = 7;
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.TabStop = true;
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.Text = "仅强化选择下发声";
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.UseVisualStyleBackColor = true;
+			//
 			// ConfigForm
 			//
 			this.AcceptButton = this.OkBtn;
@@ -39296,6 +39413,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
+			this.flowLayoutPanel7.ResumeLayout(false);
+			this.flowLayoutPanel7.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -39916,10 +40035,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public ToolStripRadioButtonMenuItem darkSolidMaterialToolStripMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem hideVersionOnMenuToolStripMenuItem;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel19;
-		public System.Windows.Forms.CheckBox AudioNoTuningDrumKitsCheck;
 		public System.Windows.Forms.Label AudioOverallShiftLbl;
 		public System.Windows.Forms.ComboBox AudioOverallShiftCombo;
-		public System.Windows.Forms.CheckBox AudioMuteDrumKitsCheck;
 		public System.Windows.Forms.Label VideoFreezeLastFrameLbl;
 		public System.Windows.Forms.Button VideoFreezeLastFrameBtn;
 		public ButtonTabControl MultiSourceCombPickerTabs;
@@ -39974,6 +40091,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.LinkLabel CustomDatamoshLocationLink;
 		public System.Windows.Forms.ToolStripMenuItem changeDatamoshPathMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem resetDatamoshPathMenuItem;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel7;
+		public System.Windows.Forms.Label AudioDrumKitsChannelLbl;
+		public GroupedRadioButton AudioDrumKitsTuningRadio;
+		public GroupedRadioButton AudioDrumKitsNoTuningRadio;
+		public GroupedRadioButton AudioDrumKitsMuteRadio;
+		public GroupedRadioButton AudioDrumKitsEnhanceSelectOnlyRadio;
 	}
 	#endregion
 
@@ -40089,7 +40212,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				AudioStackCheck.CheckedChanged += e;
 				VideoStackCheck.CheckedChanged += e;
 				MatchCutSustainCheck.CheckedChanged += e;
-				AudioMuteDrumKitsCheck.CheckedChanged += e;
 				ShupelunkerRadio.CheckedChanged += e;
 				TartarRadio.CheckedChanged += e;
 			}
@@ -40202,10 +40324,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endregion
 
 			#region 数据抹失
-			Path internalPath = new Path(ScriptPath);
-			internalPath.UpOneLevel();
-			internalPath.Add("_internal");
-			if (!Directory.Exists(internalPath.FullPath))
+			Datamosh.BaseUncompressedDatamosh.InternalDir = (string)Registry.GetValue(Datamosh.Template.DataPath, "DatamoshInternalDirectory", "");
+			if (string.IsNullOrEmpty(Datamosh.BaseUncompressedDatamosh.InternalDir)) resetDatamoshPathMenuItem.Enabled = false;
+			if (!Datamosh.BaseUncompressedDatamosh.CheckInternalDirectory())
 				DatamoshBtn.Enabled = DatamixBtn.Enabled = false;
 			else
 				DatamoshNotInstalledTable.Visible = false;
@@ -40393,8 +40514,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			CreateEventGroupInAudioCheck.Checked = configIni.Read("CreateEventGroup", true);
 			AudioAutoBasePitchCheck.Checked = configIni.Read("AutoBasePitch", false);
 			AudioStretchMethodCombo.SetIndex(configIni.Read("StretchMethod", 2), 2);
-			AudioNoTuningDrumKitsCheck.Checked = configIni.Read("NoTuningDrumKits", true);
-			AudioMuteDrumKitsCheck.Checked = configIni.Read("MuteDrumKits", false);
+			AudioTuningDrumKitsChannel = configIni.Read("TuningDrumKitsChannel", TuningDrumKitsChannel.ENHANCE_SELECT_ONLY);
 			AudioOverallShiftCombo.Text = EntryPoint.GetPitchOffsetDisplayText(configIni.Read("OverallShift", 0));
 			AudioPluckSpliceBox.SetValue(configIni.Read("PluckSplice", 40), 40);
 			AudioPluckDuckBox.SetValue(configIni.Read("PluckDuck", 100), 100);
@@ -40687,8 +40807,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			configIni.Write("CreateEventGroup", CreateEventGroupInAudioCheck.Checked);
 			configIni.Write("AutoBasePitch", AudioAutoBasePitchCheck.Checked);
 			configIni.Write("StretchMethod", AudioStretchMethodCombo.UserSelectedIndex);
-			configIni.Write("NoTuningDrumKits", AudioNoTuningDrumKitsCheck.Checked);
-			configIni.Write("MuteDrumKits", AudioMuteDrumKitsCheck.Checked);
+			configIni.Write("TuningDrumKitsChannel", AudioTuningDrumKitsChannel);
 			configIni.Write("OverallShift", EntryPoint.ParsePitchOffset(AudioOverallShiftCombo.Text));
 			configIni.Write("PluckSplice", AudioPluckSpliceBox.Value);
 			configIni.Write("PluckDuck", AudioPluckDuckBox.Value);
@@ -41901,7 +42020,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioAutoBasePitchCheck.Text = str.auto_base_pitch;
 			OverflowToolTip.SetToolTip(AudioAutoBasePitchCheck, str.auto_base_pitch_tooltip);
 			MidiPlayer_PlaybackFinished(null, null);
-			AudioNoTuningDrumKitsCheck.Text = str.no_tuning_drum_kits;
 			AudioPluckGroup.Text = str.chorus_crisp;
 			AudioPluckSpliceLbl.Text = str.splice_position;
 			AudioPluckDuckLbl.Text = str.volume_duck;
@@ -41919,7 +42037,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			darkMicaAltMaterialToolStripMenuItem.Text = str.theme_dark + " - " + str.theme_mica_alt;
 			darkSolidMaterialToolStripMenuItem.Text = str.theme_dark + " - " + str.theme_solid;
 			AudioOverallShiftLbl.Text = str.overall_shift;
-			AudioMuteDrumKitsCheck.Text = str.mute_drum_kits;
+			AudioDrumKitsTuningRadio.Text = str.tuning_drum_kits;
+			AudioDrumKitsNoTuningRadio.Text = str.no_tuning_drum_kits;
+			AudioDrumKitsMuteRadio.Text = str.mute_drum_kits;
+			AudioDrumKitsEnhanceSelectOnlyRadio.Text = str.enhance_select_only_drum_kits;
 			visualTruncate.Translate();
 			MidiEncodingLbl.Text = str.encoding;
 			MidiEncodingCombo.Items.Clear();
@@ -42089,7 +42210,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (method == AudioTuningMethod.PITCH_SHIFT) AudioAltMethodCombo.LockSelectedIndex = 0;
 			else if (!isPitchChangeMethod) AudioAltMethodCombo.LockSelectedIndex = -1;
 			if (!isAConfigOn) AudioScratchCombo.Enabled = false;
-			AudioNoTuningDrumKitsCheck.Enabled = method != AudioTuningMethod.NO_TUNING && !AudioMuteDrumKitsCheck.Checked;
 			AudioPluckTable.Enabled = method != AudioTuningMethod.OSCILLATOR;
 			#if VER_GEQ_16
 			if (method == AudioTuningMethod.ELASTIQUE) {
@@ -44288,6 +44408,23 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 		}
 
+		public TuningDrumKitsChannel AudioTuningDrumKitsChannel {
+			get {
+				return
+					AudioDrumKitsTuningRadio.Checked ? TuningDrumKitsChannel.TUNING :
+					AudioDrumKitsNoTuningRadio.Checked ? TuningDrumKitsChannel.NO_TUNING :
+					AudioDrumKitsMuteRadio.Checked ? TuningDrumKitsChannel.MUTE :
+					TuningDrumKitsChannel.ENHANCE_SELECT_ONLY;
+			}
+			set {
+				AudioDrumKitsNoTuningRadio.Related.Selected =
+					value == TuningDrumKitsChannel.TUNING ? AudioDrumKitsTuningRadio :
+					value == TuningDrumKitsChannel.NO_TUNING ? AudioDrumKitsNoTuningRadio :
+					value == TuningDrumKitsChannel.MUTE ? AudioDrumKitsMuteRadio :
+					AudioDrumKitsEnhanceSelectOnlyRadio;
+			}
+		}
+
 		private void MidiAutoChangeProjectPropertiesApplyBtn_Click(object sender, EventArgs e) {
 			parent.ChangeProjectProperties();
 			MidiProjectBpmCheck.Text = Lang.str.midi_project_bpm + Lang.str.colon + ProcessBpmDouble(parent.ProjectBpm);
@@ -44472,6 +44609,50 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#else
 			VideoTransitionOffBtn.Visible = VideoTransitionDurationTxt.Text != "00:00.000";
 			#endif
+		}
+
+		private void ChangeDatamoshPathMenuItem_Click(object sender, EventArgs e) {
+			FolderBrowserDialog dialog = new FolderBrowserDialog();
+			string scriptDirectory = Script.File != null ? System.IO.Path.GetDirectoryName(Script.File) : null;
+			if (scriptDirectory != null) dialog.DirectoryPath = scriptDirectory;
+			if (dialog.ShowDialog(this) != DialogResult.OK) return;
+			if (!Datamosh.BaseUncompressedDatamosh.CheckInternalDirectory(dialog.DirectoryPath)) {
+				MessageBox.Show(Lang.str.datamosh_extension_pack_custom_path_failed, Lang.str.datamosh_extension_pack, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+			Registry.SetValue(Datamosh.Template.DataPath, "DatamoshInternalDirectory", Datamosh.BaseUncompressedDatamosh.DefaultInternalDirectory != null && AreSameDirectory(Datamosh.BaseUncompressedDatamosh.DefaultInternalDirectory, dialog.DirectoryPath) ? "" : dialog.DirectoryPath, RegistryValueKind.String);
+			MessageBox.Show(string.Format(Lang.str.datamosh_extension_pack_custom_path_succeed, dialog.DirectoryPath), Lang.str.datamosh_extension_pack, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+			Close();
+		}
+
+		private void ResetDatamoshPathMenuItem_Click(object sender, EventArgs e) {
+			Registry.SetValue(Datamosh.Template.DataPath, "DatamoshInternalDirectory", "", RegistryValueKind.String);
+			MessageBox.Show(string.Format(Lang.str.datamosh_extension_pack_reset_succeed, Datamosh.BaseUncompressedDatamosh.DefaultInternalDirectory ?? ""), Lang.str.datamosh_extension_pack, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+			Close();
+
+		}
+
+		private void ChangeDatamoshPathMenuItem_Click(object sender, LinkLabelLinkClickedEventArgs e) {
+			ChangeDatamoshPathMenuItem_Click(sender, e);
+		}
+
+		/// <summary>
+		/// 判断两个目录是否为同一目录（忽略大小写）需要先规范化路径（处理相对路径、斜杠差异和末尾分隔符），再使用 <see cref="StringComparison.OrdinalIgnoreCase" /> 进行比较。
+		/// </summary>
+		public static bool AreSameDirectory(string path1, string path2) {
+			if (string.IsNullOrWhiteSpace(path1) || string.IsNullOrWhiteSpace(path2))
+				return false;
+
+			string fullPath1 = System.IO.Path.GetFullPath(path1)
+				.TrimEnd(System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar);
+			string fullPath2 = System.IO.Path.GetFullPath(path2)
+				.TrimEnd(System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar);
+
+			// 根目录（如 "C:\"）TrimEnd 后会变为空字符串，需保留分隔符
+			if (fullPath1.Length == 0) fullPath1 = System.IO.Path.DirectorySeparatorChar.ToString();
+			if (fullPath2.Length == 0) fullPath2 = System.IO.Path.DirectorySeparatorChar.ToString();
+
+			return string.Equals(fullPath1, fullPath2, StringComparison.OrdinalIgnoreCase);
 		}
 	}
 
@@ -45436,8 +45617,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			play_selected_track = "播放所选音轨",
 			stretch_method = "拉伸方法",
 			no_tuning_no_stretching = "不调音*且不拉伸",
-			no_tuning_drum_kits = "鼓组通道不调音",
-			mute_drum_kits = "鼓组通道不发声",
+			tuning_drum_kits = "视为乐音而调音",
+			no_tuning_drum_kits = "不调音",
+			mute_drum_kits = "不发声",
+			enhance_select_only_drum_kits = "仅强化选择下发声",
 			chorus_crisp = "弹拨 (脆鸣)",
 			splice_position = "分割位置",
 			volume_duck = "音量闪避",
@@ -45497,6 +45680,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			midi_out_open_exception_unknown = "【错误代码 {0}：未知的 MIDI 设备打开失败】\n原因：底层 Windows 多媒体接口返回了未收录的错误状态。\n解决：请检查声卡驱动状态、系统音量合成器或重启应用程序。",
 			cannot_play = "无法播放",
 			slant_up = "斜上扩缩",
+			no_audio_source_for_enhance_select_exception = "错误：没有音频素材。\n\n当前正在使用强化选择，但是素材来源中不包含任何音频流。如果所需素材中确实不需要音频，则请不要开启强化选择。",
+			no_valid_audio_source_for_enhance_select_exception = "错误：没有识别到有效音频素材。\n\n强化选择未能从音频中检测到任何平直音高区域或鼓声区域，请更换声音干净的素材或关闭强化选择。",
+			datamosh_extension_pack_not_installed_exception = "错误：未正确安装数据抹失扩展包。\n\n请正确安装并解压数据抹失扩展包，并将“_internal”文件夹移动到脚本所在目录。或者从菜单中选择自定义的扩展包文件夹的路径。",
+			datamosh_extension_pack_custom_path_failed = "所选目录并非正确的数据抹失扩展包，请检查目录内文件是否存在缺失。",
+			datamosh_extension_pack_custom_path_succeed = "已成功指定自定义的数据抹失扩展包路径。\n{0}\n\n请手动重启脚本。",
+			datamosh_extension_pack_reset_succeed = "已重置数据抹失扩展包至默认路径：脚本所在目录下的“_internal”文件夹。\n{0}\n\n请手动重启脚本。",
+			datamosh_extension_pack = "数据抹失扩展包",
 			__eol__ = null;
 
 		static Lang() {

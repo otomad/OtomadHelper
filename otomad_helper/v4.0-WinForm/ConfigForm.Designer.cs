@@ -334,8 +334,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel19 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioOverallShiftCombo = new System.Windows.Forms.ComboBox();
 			this.AudioOverallShiftUnitLbl = new System.Windows.Forms.Label();
-			this.AudioNoTuningDrumKitsCheck = new System.Windows.Forms.CheckBox();
-			this.AudioMuteDrumKitsCheck = new System.Windows.Forms.CheckBox();
 			this.AudioOverallShiftLbl = new System.Windows.Forms.Label();
 			this.AudioStretchMethodCombo = new Otomad.VegasScripts.OtomadHelper.V4.RememberedComboBox();
 			this.AudioStretchMethodLbl = new System.Windows.Forms.Label();
@@ -696,6 +694,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioDrumKitsChannelLbl = new System.Windows.Forms.Label();
+			this.AudioDrumKitsTuningRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioDrumKitsNoTuningRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioDrumKitsMuteRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioDrumKitsEnhanceSelectOnlyRadio = new Otomad.VegasScripts.OtomadHelper.V4.GroupedRadioButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.menu.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -877,6 +881,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
+			this.flowLayoutPanel7.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// tableLayoutPanel1
@@ -1172,14 +1177,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// loadPresetsToolStripMenuItem
 			//
 			this.loadPresetsToolStripMenuItem.Name = "loadPresetsToolStripMenuItem";
-			this.loadPresetsToolStripMenuItem.Size = new System.Drawing.Size(288, 44);
+			this.loadPresetsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.loadPresetsToolStripMenuItem.Text = "加载预设(&L)...";
 			this.loadPresetsToolStripMenuItem.Click += new System.EventHandler(this.LoadPresetsToolStripMenuItem_Click);
 			//
 			// unloadPresetsToolStripMenuItem
 			//
 			this.unloadPresetsToolStripMenuItem.Name = "unloadPresetsToolStripMenuItem";
-			this.unloadPresetsToolStripMenuItem.Size = new System.Drawing.Size(288, 44);
+			this.unloadPresetsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.unloadPresetsToolStripMenuItem.Text = "卸载预设(&U)...";
 			this.unloadPresetsToolStripMenuItem.Click += new System.EventHandler(this.LoadPresetsToolStripMenuItem_Click);
 			//
@@ -1197,12 +1202,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.changeDatamoshPathMenuItem.Name = "changeDatamoshPathMenuItem";
 			this.changeDatamoshPathMenuItem.Size = new System.Drawing.Size(383, 44);
 			this.changeDatamoshPathMenuItem.Text = "更改为自定义路径(&C)...";
+			this.changeDatamoshPathMenuItem.Click += new System.EventHandler(this.ChangeDatamoshPathMenuItem_Click);
 			//
 			// resetDatamoshPathMenuItem
 			//
 			this.resetDatamoshPathMenuItem.Name = "resetDatamoshPathMenuItem";
 			this.resetDatamoshPathMenuItem.Size = new System.Drawing.Size(383, 44);
 			this.resetDatamoshPathMenuItem.Text = "重置为默认路径(&R)...";
+			this.resetDatamoshPathMenuItem.Click += new System.EventHandler(this.ResetDatamoshPathMenuItem_Click);
 			//
 			// toolStripSeparator1
 			//
@@ -1238,7 +1245,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.lightAcrylicMaterialToolStripMenuItem.CheckOnClick = true;
 			this.lightAcrylicMaterialToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.lightAcrylicMaterialToolStripMenuItem.Name = "lightAcrylicMaterialToolStripMenuItem";
-			this.lightAcrylicMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.lightAcrylicMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.lightAcrylicMaterialToolStripMenuItem.Tag = "3,1";
 			this.lightAcrylicMaterialToolStripMenuItem.Text = "浅色 - 亚克力";
 			this.lightAcrylicMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -1247,7 +1254,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.lightMicaMaterialToolStripMenuItem.CheckOnClick = true;
 			this.lightMicaMaterialToolStripMenuItem.Name = "lightMicaMaterialToolStripMenuItem";
-			this.lightMicaMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.lightMicaMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.lightMicaMaterialToolStripMenuItem.Tag = "2,1";
 			this.lightMicaMaterialToolStripMenuItem.Text = "浅色 - 云母";
 			this.lightMicaMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -1256,7 +1263,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.lightMicaAltMaterialToolStripMenuItem.CheckOnClick = true;
 			this.lightMicaAltMaterialToolStripMenuItem.Name = "lightMicaAltMaterialToolStripMenuItem";
-			this.lightMicaAltMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.lightMicaAltMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.lightMicaAltMaterialToolStripMenuItem.Tag = "4,1";
 			this.lightMicaAltMaterialToolStripMenuItem.Text = "浅色 - 云母平替";
 			this.lightMicaAltMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -1265,7 +1272,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.lightSolidMaterialToolStripMenuItem.CheckOnClick = true;
 			this.lightSolidMaterialToolStripMenuItem.Name = "lightSolidMaterialToolStripMenuItem";
-			this.lightSolidMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.lightSolidMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.lightSolidMaterialToolStripMenuItem.Tag = "1,1";
 			this.lightSolidMaterialToolStripMenuItem.Text = "浅色 - 纯色";
 			this.lightSolidMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -1273,13 +1280,13 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// toolStripSeparator13
 			//
 			this.toolStripSeparator13.Name = "toolStripSeparator13";
-			this.toolStripSeparator13.Size = new System.Drawing.Size(312, 6);
+			this.toolStripSeparator13.Size = new System.Drawing.Size(356, 6);
 			//
 			// darkAcrylicMaterialToolStripMenuItem
 			//
 			this.darkAcrylicMaterialToolStripMenuItem.CheckOnClick = true;
 			this.darkAcrylicMaterialToolStripMenuItem.Name = "darkAcrylicMaterialToolStripMenuItem";
-			this.darkAcrylicMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.darkAcrylicMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.darkAcrylicMaterialToolStripMenuItem.Tag = "3,0";
 			this.darkAcrylicMaterialToolStripMenuItem.Text = "深色 - 亚克力";
 			this.darkAcrylicMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -1288,7 +1295,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.darkMicaMaterialToolStripMenuItem.CheckOnClick = true;
 			this.darkMicaMaterialToolStripMenuItem.Name = "darkMicaMaterialToolStripMenuItem";
-			this.darkMicaMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.darkMicaMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.darkMicaMaterialToolStripMenuItem.Tag = "2,0";
 			this.darkMicaMaterialToolStripMenuItem.Text = "深色 - 云母";
 			this.darkMicaMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -1297,7 +1304,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.darkMicaAltMaterialToolStripMenuItem.CheckOnClick = true;
 			this.darkMicaAltMaterialToolStripMenuItem.Name = "darkMicaAltMaterialToolStripMenuItem";
-			this.darkMicaAltMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.darkMicaAltMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.darkMicaAltMaterialToolStripMenuItem.Tag = "4,0";
 			this.darkMicaAltMaterialToolStripMenuItem.Text = "深色 - 云母平替";
 			this.darkMicaAltMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -1306,7 +1313,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.darkSolidMaterialToolStripMenuItem.CheckOnClick = true;
 			this.darkSolidMaterialToolStripMenuItem.Name = "darkSolidMaterialToolStripMenuItem";
-			this.darkSolidMaterialToolStripMenuItem.Size = new System.Drawing.Size(315, 44);
+			this.darkSolidMaterialToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
 			this.darkSolidMaterialToolStripMenuItem.Tag = "1,0";
 			this.darkSolidMaterialToolStripMenuItem.Text = "深色 - 纯色";
 			this.darkSolidMaterialToolStripMenuItem.Click += new System.EventHandler(this.SetMaterialToolStripMenuItem_CheckedChanged);
@@ -4751,8 +4758,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioTuneTablePanel.ColumnCount = 2;
 			this.AudioTuneTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.AudioTuneTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.AudioTuneTablePanel.Controls.Add(this.flowLayoutPanel19, 1, 8);
-			this.AudioTuneTablePanel.Controls.Add(this.AudioOverallShiftLbl, 0, 8);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioDrumKitsChannelLbl, 0, 8);
+			this.AudioTuneTablePanel.Controls.Add(this.flowLayoutPanel7, 1, 8);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioStretchMethodCombo, 1, 1);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioStretchMethodLbl, 0, 1);
 			this.AudioTuneTablePanel.Controls.Add(this.AudioAltMethodCombo, 1, 3);
@@ -4789,15 +4796,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			// flowLayoutPanel19
 			//
 			this.flowLayoutPanel19.AutoSize = true;
+			this.flowLayoutPanel19.Controls.Add(this.AudioOverallShiftLbl);
 			this.flowLayoutPanel19.Controls.Add(this.AudioOverallShiftCombo);
 			this.flowLayoutPanel19.Controls.Add(this.AudioOverallShiftUnitLbl);
-			this.flowLayoutPanel19.Controls.Add(this.AudioNoTuningDrumKitsCheck);
-			this.flowLayoutPanel19.Controls.Add(this.AudioMuteDrumKitsCheck);
 			this.flowLayoutPanel19.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel19.Location = new System.Drawing.Point(116, 436);
+			this.flowLayoutPanel19.Location = new System.Drawing.Point(493, 0);
 			this.flowLayoutPanel19.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel19.Name = "flowLayoutPanel19";
-			this.flowLayoutPanel19.Size = new System.Drawing.Size(944, 54);
+			this.flowLayoutPanel19.Size = new System.Drawing.Size(349, 54);
 			this.flowLayoutPanel19.TabIndex = 18;
 			//
 			// AudioOverallShiftCombo
@@ -4822,7 +4828,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			"+72",
 			"+84",
 			"+96"});
-			this.AudioOverallShiftCombo.Location = new System.Drawing.Point(3, 3);
+			this.AudioOverallShiftCombo.Location = new System.Drawing.Point(113, 3);
+			this.AudioOverallShiftCombo.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.AudioOverallShiftCombo.Name = "AudioOverallShiftCombo";
 			this.AudioOverallShiftCombo.Size = new System.Drawing.Size(174, 40);
 			this.AudioOverallShiftCombo.TabIndex = 4;
@@ -4833,8 +4840,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			//
 			this.AudioOverallShiftUnitLbl.AutoSize = true;
 			this.AudioOverallShiftUnitLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioOverallShiftUnitLbl.Location = new System.Drawing.Point(180, 0);
-			this.AudioOverallShiftUnitLbl.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
+			this.AudioOverallShiftUnitLbl.Location = new System.Drawing.Point(287, 0);
+			this.AudioOverallShiftUnitLbl.Margin = new System.Windows.Forms.Padding(0);
 			this.AudioOverallShiftUnitLbl.MaximumSize = new System.Drawing.Size(0, 54);
 			this.AudioOverallShiftUnitLbl.Name = "AudioOverallShiftUnitLbl";
 			this.AudioOverallShiftUnitLbl.Size = new System.Drawing.Size(62, 54);
@@ -4842,39 +4849,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.AudioOverallShiftUnitLbl.Text = "半音";
 			this.AudioOverallShiftUnitLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			//
-			// AudioNoTuningDrumKitsCheck
-			//
-			this.AudioNoTuningDrumKitsCheck.AutoSize = true;
-			this.AudioNoTuningDrumKitsCheck.Checked = true;
-			this.AudioNoTuningDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.AudioNoTuningDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioNoTuningDrumKitsCheck.Location = new System.Drawing.Point(253, 3);
-			this.AudioNoTuningDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
-			this.AudioNoTuningDrumKitsCheck.Name = "AudioNoTuningDrumKitsCheck";
-			this.AudioNoTuningDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
-			this.AudioNoTuningDrumKitsCheck.TabIndex = 2;
-			this.AudioNoTuningDrumKitsCheck.Text = "鼓组通道不调音";
-			this.AudioNoTuningDrumKitsCheck.UseVisualStyleBackColor = true;
-			//
-			// AudioMuteDrumKitsCheck
-			//
-			this.AudioMuteDrumKitsCheck.AutoSize = true;
-			this.AudioMuteDrumKitsCheck.Checked = true;
-			this.AudioMuteDrumKitsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.AudioMuteDrumKitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioMuteDrumKitsCheck.Location = new System.Drawing.Point(473, 3);
-			this.AudioMuteDrumKitsCheck.MinimumSize = new System.Drawing.Size(0, 48);
-			this.AudioMuteDrumKitsCheck.Name = "AudioMuteDrumKitsCheck";
-			this.AudioMuteDrumKitsCheck.Size = new System.Drawing.Size(214, 48);
-			this.AudioMuteDrumKitsCheck.TabIndex = 3;
-			this.AudioMuteDrumKitsCheck.Text = "鼓组通道不发声";
-			this.AudioMuteDrumKitsCheck.UseVisualStyleBackColor = true;
-			//
 			// AudioOverallShiftLbl
 			//
 			this.AudioOverallShiftLbl.AutoSize = true;
 			this.AudioOverallShiftLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioOverallShiftLbl.Location = new System.Drawing.Point(3, 436);
+			this.AudioOverallShiftLbl.Location = new System.Drawing.Point(3, 0);
+			this.AudioOverallShiftLbl.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
 			this.AudioOverallShiftLbl.MinimumSize = new System.Drawing.Size(0, 54);
 			this.AudioOverallShiftLbl.Name = "AudioOverallShiftLbl";
 			this.AudioOverallShiftLbl.Size = new System.Drawing.Size(110, 54);
@@ -5052,6 +5032,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.flowLayoutPanel6.Controls.Add(this.AudioMainOctaveCombo);
 			this.flowLayoutPanel6.Controls.Add(this.AudioBasePitchIntervalLbl);
 			this.flowLayoutPanel6.Controls.Add(this.AudioAutoBasePitchCheck);
+			this.flowLayoutPanel6.Controls.Add(this.flowLayoutPanel19);
 			this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel6.Location = new System.Drawing.Point(116, 270);
 			this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
@@ -10181,6 +10162,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.CustomDatamoshLocationLink.TabStop = true;
 			this.CustomDatamoshLocationLink.Text = "自定义扩展包文件夹路径";
 			this.CustomDatamoshLocationLink.VisitedLinkColor = System.Drawing.Color.Blue;
+			this.CustomDatamoshLocationLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeDatamoshPathMenuItem_Click);
 			//
 			// DatamoshNotInstalledInfo
 			//
@@ -10749,6 +10731,82 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			//
+			// flowLayoutPanel7
+			//
+			this.flowLayoutPanel7.AutoSize = true;
+			this.flowLayoutPanel7.Controls.Add(this.AudioDrumKitsTuningRadio);
+			this.flowLayoutPanel7.Controls.Add(this.AudioDrumKitsNoTuningRadio);
+			this.flowLayoutPanel7.Controls.Add(this.AudioDrumKitsMuteRadio);
+			this.flowLayoutPanel7.Controls.Add(this.AudioDrumKitsEnhanceSelectOnlyRadio);
+			this.flowLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel7.Location = new System.Drawing.Point(116, 436);
+			this.flowLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel7.Name = "flowLayoutPanel7";
+			this.flowLayoutPanel7.Size = new System.Drawing.Size(944, 54);
+			this.flowLayoutPanel7.TabIndex = 18;
+			//
+			// AudioDrumKitsChannelLbl
+			//
+			this.AudioDrumKitsChannelLbl.AutoSize = true;
+			this.AudioDrumKitsChannelLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioDrumKitsChannelLbl.Location = new System.Drawing.Point(3, 436);
+			this.AudioDrumKitsChannelLbl.MinimumSize = new System.Drawing.Size(0, 54);
+			this.AudioDrumKitsChannelLbl.Name = "AudioDrumKitsChannelLbl";
+			this.AudioDrumKitsChannelLbl.Size = new System.Drawing.Size(110, 54);
+			this.AudioDrumKitsChannelLbl.TabIndex = 19;
+			this.AudioDrumKitsChannelLbl.Text = "鼓组通道";
+			this.AudioDrumKitsChannelLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// AudioDrumKitsTuningRadio
+			//
+			this.AudioDrumKitsTuningRadio.AutoSize = true;
+			this.AudioDrumKitsTuningRadio.Group = "AudioDrumKitsChannel";
+			this.AudioDrumKitsTuningRadio.Location = new System.Drawing.Point(3, 3);
+			this.AudioDrumKitsTuningRadio.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioDrumKitsTuningRadio.Name = "AudioDrumKitsTuningRadio";
+			this.AudioDrumKitsTuningRadio.Size = new System.Drawing.Size(213, 48);
+			this.AudioDrumKitsTuningRadio.TabIndex = 4;
+			this.AudioDrumKitsTuningRadio.Text = "视为乐音而调音";
+			this.AudioDrumKitsTuningRadio.UseVisualStyleBackColor = true;
+			//
+			// AudioDrumKitsNoTuningRadio
+			//
+			this.AudioDrumKitsNoTuningRadio.AutoSize = true;
+			this.AudioDrumKitsNoTuningRadio.Group = "AudioDrumKitsChannel";
+			this.AudioDrumKitsNoTuningRadio.Location = new System.Drawing.Point(222, 3);
+			this.AudioDrumKitsNoTuningRadio.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioDrumKitsNoTuningRadio.Name = "AudioDrumKitsNoTuningRadio";
+			this.AudioDrumKitsNoTuningRadio.Size = new System.Drawing.Size(117, 48);
+			this.AudioDrumKitsNoTuningRadio.TabIndex = 5;
+			this.AudioDrumKitsNoTuningRadio.Text = "不调音";
+			this.AudioDrumKitsNoTuningRadio.UseVisualStyleBackColor = true;
+			//
+			// AudioDrumKitsMuteRadio
+			//
+			this.AudioDrumKitsMuteRadio.AutoSize = true;
+			this.AudioDrumKitsMuteRadio.Group = "AudioDrumKitsChannel";
+			this.AudioDrumKitsMuteRadio.Location = new System.Drawing.Point(345, 3);
+			this.AudioDrumKitsMuteRadio.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioDrumKitsMuteRadio.Name = "AudioDrumKitsMuteRadio";
+			this.AudioDrumKitsMuteRadio.Size = new System.Drawing.Size(117, 48);
+			this.AudioDrumKitsMuteRadio.TabIndex = 6;
+			this.AudioDrumKitsMuteRadio.Text = "不发声";
+			this.AudioDrumKitsMuteRadio.UseVisualStyleBackColor = true;
+			//
+			// AudioDrumKitsEnhanceSelectOnlyRadio
+			//
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.AutoSize = true;
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.Checked = true;
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.Group = "AudioDrumKitsChannel";
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.Location = new System.Drawing.Point(468, 3);
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.MinimumSize = new System.Drawing.Size(0, 48);
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.Name = "AudioDrumKitsEnhanceSelectOnlyRadio";
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.Size = new System.Drawing.Size(237, 48);
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.TabIndex = 7;
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.TabStop = true;
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.Text = "仅强化选择下发声";
+			this.AudioDrumKitsEnhanceSelectOnlyRadio.UseVisualStyleBackColor = true;
+			//
 			// ConfigForm
 			//
 			this.AcceptButton = this.OkBtn;
@@ -11079,6 +11137,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
+			this.flowLayoutPanel7.ResumeLayout(false);
+			this.flowLayoutPanel7.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -11699,10 +11759,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public ToolStripRadioButtonMenuItem darkSolidMaterialToolStripMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem hideVersionOnMenuToolStripMenuItem;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel19;
-		public System.Windows.Forms.CheckBox AudioNoTuningDrumKitsCheck;
 		public System.Windows.Forms.Label AudioOverallShiftLbl;
 		public System.Windows.Forms.ComboBox AudioOverallShiftCombo;
-		public System.Windows.Forms.CheckBox AudioMuteDrumKitsCheck;
 		public System.Windows.Forms.Label VideoFreezeLastFrameLbl;
 		public System.Windows.Forms.Button VideoFreezeLastFrameBtn;
 		public ButtonTabControl MultiSourceCombPickerTabs;
@@ -11757,6 +11815,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public System.Windows.Forms.LinkLabel CustomDatamoshLocationLink;
 		public System.Windows.Forms.ToolStripMenuItem changeDatamoshPathMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem resetDatamoshPathMenuItem;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel7;
+		public System.Windows.Forms.Label AudioDrumKitsChannelLbl;
+		public GroupedRadioButton AudioDrumKitsTuningRadio;
+		public GroupedRadioButton AudioDrumKitsNoTuningRadio;
+		public GroupedRadioButton AudioDrumKitsMuteRadio;
+		public GroupedRadioButton AudioDrumKitsEnhanceSelectOnlyRadio;
 	}
 }
 
