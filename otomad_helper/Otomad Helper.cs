@@ -24443,6 +24443,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public CommandLinkButton() : base() {
 			// 在基类上设置默认属性值以避免过时的警告
 			base.FlatStyle = FlatStyle.System;
+			base.BackColor = SystemColors.Control;
 		}
 
 		[Category("Appearance"), DefaultValue(false), Description("指定此按钮应使用命令链接样式。（仅适用于 Windows Vista 及更高版本。）")]
