@@ -187,7 +187,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/**<summary>原始音高</summary>*/ private int AConfigBasePitch { get { return configForm.BasePitch; } }
 		/**<summary>自动校音</summary>*/ private bool AConfigAutoBasePitch { get { return configForm.AudioAutoBasePitchCheck.Checked; } }
 		/**<summary>调音方法</summary>*/ private AudioTuningMethod AConfigMethod { get { return (AudioTuningMethod)configForm.AudioTuneMethodCombo.SelectedIndex; } }
-		/**<summary>调音方法</summary>*/ private AudioStretchMethod AConfigStretchMethod { get { return (AudioStretchMethod)configForm.AudioStretchMethodCombo.SelectedIndex; } }
+		/**<summary>拉伸方法</summary>*/ private AudioStretchMethod AConfigStretchMethod { get { return (AudioStretchMethod)configForm.AudioStretchMethodCombo.SelectedIndex; } }
 		/**<summary>超出音域替代方法</summary>*/ private AudioAltTuningMethod AConfigAltMethod { get { return (AudioAltTuningMethod)configForm.AudioAltMethodCombo.SelectedIndex; } }
 		/**<summary>鼓组调音</summary>*/ private bool AConfigDrumKitsTuning { get { return configForm.AudioTuningDrumKitsChannel == TuningDrumKitsChannel.TUNING; } }
 		/**<summary>鼓组不调</summary>*/ private bool AConfigDrumKitsNoTuning { get { return configForm.AudioTuningDrumKitsChannel == TuningDrumKitsChannel.NO_TUNING; } }
@@ -2073,7 +2073,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						double pitchDelta = stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit ? -12 : pitch - basePitch + AConfigOverallShift;
 						bool backToUsePlugin = false;
 					BackToUsePlugin:
-						if (method == AudioTuningMethod.NO_TUNING || (AConfigDrumKitsNoTuning || AConfigDrumKitsEnhanceSelect || CombConfigEnhanceSelect) && isDrumKit && !stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit) { } // 不调音。
+						if (method == AudioTuningMethod.NO_TUNING || (AConfigDrumKitsNoTuning || AConfigDrumKitsEnhanceSelect /*|| CombConfigEnhanceSelect*/) && isDrumKit && !stillRequireTuningEvenIfEnhanceSelectAndAlsoDrumKit) { } // 不调音。
 						else if (method == AudioTuningMethod.PITCH_SHIFT || backToUsePlugin) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
 							if (Plugin.pitchShift == null) { ShowError(new Exceptions.NoPluginPitchShiftException()); return false; }
 							int pitchDelta_int = (int)Math.Round(pitchDelta, MidpointRounding.AwayFromZero);
@@ -42192,7 +42192,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			AudioScratchCombo.Unlock();
 			AudioAltMethodCombo.Unlock();
 			AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled = PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled
-				= AudioAutoBasePitchCheck.Enabled = AudioBasePitchIntervalLbl.Enabled = AudioOverallShiftCombo.Enabled
+				= AudioAutoBasePitchCheck.Enabled = AudioBasePitchIntervalLbl.Enabled = AudioOverallShiftCombo.Enabled = AudioDrumKitsTuningRadio.Enabled
 				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING;
 			AudioFadeSetAsTimecodeRadio.Enabled = AudioFadeInCurveCombo.Enabled = AudioFadeOutCurveCombo.Enabled = method != AudioTuningMethod.OSCILLATOR;
 			AudioVocalFryCheck.Status = (isAConfigOn && method == AudioTuningMethod.OSCILLATOR) ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
