@@ -1629,8 +1629,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					} catch (OperationCanceledException) {
 						return false;
 					}
-					if (enhancedAnalysis.PitchRegions.Count == 0 && (MidiConfigTracks.HasMelodicChannel || enhancedAnalysis.DrumCandidates.Count == 0))
-						throw !eventSets.HasAudioEvents ? (Exception)new Exceptions.NoAudioSourceForEnhanceSelectException() : new Exceptions.NoValidAudioSourceForEnhanceSelectException();
+					if (enhancedAnalysis.PitchRegions.Count == 0 && (MidiConfigTracks.HasMelodicChannel || enhancedAnalysis.DrumCandidates.Count == 0)) {
+						progressForm.Close();
+						ShowError(!eventSets.HasAudioEvents ? (Exception)new Exceptions.NoAudioSourceForEnhanceSelectException() : new Exceptions.NoValidAudioSourceForEnhanceSelectException(), ShowErrorState.RESUME_NEXT);
+						return false;
+					}
 					eventSets = GetEnhancedSelectedSources(enhancedAnalysis, eventSets);
 				}
 			}
