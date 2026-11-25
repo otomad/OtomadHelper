@@ -115,6 +115,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endregion
 
 			#region 优化界面颜色和外观
+			FixTabPageTransparentColor();
 			List<Label> labels = new List<Label>();
 			int maxSheetTabLabelWidth = 0;
 			foreach (Control control_i in SheetTab.Controls)
@@ -134,6 +135,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				label.MinimumSize = minSize;
 			}
 			YtpEffectsCheckList.MinimumSize = new Size(0, YtpEnableAllEffectsCheck.Height * 5);
+			Font = GetFallbackFont(9f, "Microsoft YaHei UI", "Microsoft YaHei", "SimHei");
 			#endregion
 
 			#region 程序图标
@@ -1391,22 +1393,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			MidiTrackListView_SelectedIndexChanged(sender, e);
 		}
 
-		[DllImport("gdi32.dll")]
-		private static extern uint GetPixel(IntPtr hdc, int nXPos, int nYPos);
-
-		private void FixTabPageTransparentColor() {
-			Color tabPageColor;
-			using (Graphics g = SourceTab.CreateGraphics()) {
-				// 获取父控件左上角第一个像素的颜色
-				IntPtr hdc = g.GetHdc();
-				uint pixel = GetPixel(hdc, 1, SourceTab.Height);
-				g.ReleaseHdc(hdc);
-				tabPageColor = ColorTranslator.FromOle((int)pixel);
-			}
-
-			AudioTab.BackColor = VideoTab.BackColor = YtpTab.BackColor = YtpEffectsCheckList.BackColor = tabPageColor;
-		}
-
 		private void MultiSourceRadio_CheckedChanged(object sender, EventArgs e) {
 			Console.WriteLine(sender);
 		}
@@ -1483,7 +1469,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void ConfigForm_Load(object sender, EventArgs e) {
 			MultiSourceCombOrganizerTabs.SetEnabled(ConsonantTab, false);
-			FixTabPageTransparentColor();
 		}
 
 		private void Tabs_SelectedIndexChanged(object sender, EventArgs e) {
@@ -1624,5 +1609,95 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void ChangeDatamoshPathMenuItem_Click(object sender, LinkLabelLinkClickedEventArgs e) {
 			ChangeDatamoshPathMenuItem_Click(sender, e);
 		}
+
+		/// <summary>
+		/// 获取当前系统及主题下 TabPage 的真实视觉背景色
+		/// </summary>
+		public static Color GetRealTabPageBackColor() {
+			try {
+				// 创建一个临时的 TabControl 和 TabPage，触发系统最原生的绘制管线
+				using (TabControl tempTabControl = new TabControl())
+				using (TabPage tempTabPage = new TabPage()) {
+					// 确保开启视觉样式背景（与默认 TabPage 一致）
+					tempTabPage.UseVisualStyleBackColor = true;
+					tempTabPage.Size = new Size(32, 32);
+
+					tempTabControl.Size = new Size(64, 64);
+					tempTabControl.TabPages.Add(tempTabPage);
+
+					// 强制创建底层窗口句柄（Handle），否则无法触发系统的视觉样式绘制
+					tempTabControl.CreateControl();
+					tempTabPage.CreateControl();
+
+					using (Bitmap bmp = new Bitmap(32, 32)) {
+						// 核心：调用 DrawToBitmap 触发完整的 WM_PRINTCLIENT 消息，让系统真实画出 TabPage
+						tempTabPage.DrawToBitmap(bmp, new Rectangle(0, 0, 32, 32));
+
+						// 取中心点像素，避开任何可能存在的边缘阴影或边框
+						return bmp.GetPixel(16, 16);
+					}
+				}
+			} catch {
+				return SystemColors.Control;
+			}
+		}
+
+		private void ApplyRealTabPageColors() {
+			Color realTabColor = GetRealTabPageBackColor();
+			AudioTab.BackColor = VideoTab.BackColor = YtpTab.BackColor = YtpEffectsCheckList.BackColor = realTabColor;
+		}
+
+		private void FixTabPageTransparentColor() {
+			HandleCreated += delegate {
+				// 订阅系统主题/外观更改事件
+				SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+				// 初始化时应用真实背景色
+				ApplyRealTabPageColors();
+			};
+
+			HandleDestroyed += delegate {
+				// 务必在窗体关闭时取消订阅静态事件，防止内存泄漏！
+				SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
+			};
+		}
+
+		private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e) {
+			// 当用户更改主题、颜色或视觉样式时触发
+			if (e.Category == UserPreferenceCategory.General ||
+				e.Category == UserPreferenceCategory.Color ||
+				e.Category == UserPreferenceCategory.VisualStyle) {
+				// 确保在 UI 线程上更新控件
+				if (InvokeRequired) {
+					BeginInvoke(new Action(ApplyRealTabPageColors));
+				} else {
+					ApplyRealTabPageColors();
+				}
+			}
+		}
+
+		/// <summary>
+		/// 按优先级列表获取系统中存在的第一个字体
+		/// </summary>
+		public static Font GetFallbackFont(float size, FontStyle style = FontStyle.Regular, params string[] fontNames) {
+			using (System.Drawing.Text.InstalledFontCollection fontsCollection = new System.Drawing.Text.InstalledFontCollection()) {
+				// 获取系统所有已安装字体的名称（忽略大小写）
+				HashSet<string> installedFonts = new HashSet<string>(
+					fontsCollection.Families.Select(f => f.Name),
+					StringComparer.OrdinalIgnoreCase
+				);
+
+				foreach (string name in fontNames) {
+					if (!string.IsNullOrWhiteSpace(name) && installedFonts.Contains(name)) {
+						return new Font(name, size, style);
+					}
+				}
+			}
+
+			// 如果列表中的字体全都不存在，返回系统默认对话字体（Win7下通常为宋体/新细明体，Win10/11下为微软雅黑）
+			return SystemFonts.MessageBoxFont != null ?
+				new Font(SystemFonts.MessageBoxFont.FontFamily, size, style) :
+				DefaultFont;
+		}
+		public static Font GetFallbackFont(float size, params string[] fontNames) { return GetFallbackFont(size, FontStyle.Regular, fontNames); }
 	}
 }

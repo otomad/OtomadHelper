@@ -4382,6 +4382,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				#endif
 			} finally {
 				configForm.midiPlayer.Dispose();
+				//configForm.DestroyHandle();
 			}
 		}
 	}
@@ -14240,7 +14241,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			CancelBtn.Text = str.cancel;
 			Text = str.processing_it;
 			InfoLabel.Text = Lang.str.processing_otomad;
@@ -15558,7 +15559,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			OkBtn.Text = str.replace;
 			CancelBtn.Text = str.close;
 			ClassicReplacerLbl.Text = str.replacer_is;
@@ -16278,8 +16279,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
-			SelectIntervalLbl.Font = new Font(str.info_label_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
+			SelectIntervalLbl.Font = ConfigForm.GetFallbackFont(str.info_label_font, 9F);
 			ApplyBtn.Text = str.apply;
 			CancelBtn.Text = str.close;
 			SubmitSelectBtn.Text = str.submit_select;
@@ -17525,7 +17526,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			OkBtn.Text = str.complete;
 			CancelBtn.Text = str.cancel;
 			SquareRadio.Text = str.square;
@@ -18155,7 +18156,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			OkBtn.Text = str.complete;
 			CancelBtn.Text = str.cancel;
 			BottomLbl.Text = str.bottom_surface;
@@ -18464,7 +18465,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			OkBtn.Text = str.complete;
 			CancelBtn.Text = str.cancel;
 			InfoLbl.Text = str.gradient_tracks_info;
@@ -18965,8 +18966,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
-			InfoLbl.Font = new Font(str.info_label_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
+			InfoLbl.Font = ConfigForm.GetFallbackFont(str.info_label_font, 9F);
 			OkBtn.Text = str.complete;
 			CancelBtn.Text = str.cancel;
 			InfoLbl.Text = str.change_tune_method_info;
@@ -19338,7 +19339,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			PresetsLbl.Text = str.batch_subtitle_generation_presets;
 			SubtitlesLbl.Text = str.batch_subtitle_generation_subtitles;
 			SingleDurationLbl.Text = str.batch_subtitle_generation_single_duration;
@@ -19829,7 +19830,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			SelectInfo.Text = str.find_clips_select_info + str.colon + str.none;
 			FindClipsInfo.Text = str.find_clips_info;
 			nameHeader.Text = str.find_clips_header_name;
@@ -21388,8 +21389,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
-			AudioNormalizeCheck.Font = new Font(str.ui_font, 9F, FontStyle.Bold);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
+			AudioNormalizeCheck.Font = ConfigForm.GetFallbackFont(str.ui_font, 9F, FontStyle.Bold);
 			Text = str.quick_config_properties;
 			OkBtn.Text = str.ok;
 			CancelBtn.Text = str.cancel;
@@ -21730,7 +21731,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			OkBtn.Text = str.ok;
 			CancelBtn.Text = str.cancel;
 			IncreaseSpacingLbl.Text = str.increase_spacing_info + str.colon;
@@ -21999,7 +22000,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			VideoEffectsGroup.Text = str.effect;
 			VideoEffectLbl.Text = str.visual_effect;
 			VideoEffectInitialValueLbl.Text = str.initial_visual_effect;
@@ -22387,7 +22388,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			OkBtn.Text = str.ok;
 			CancelBtn.Text = str.cancel;
 			Text = str.pv_rhythm_visual_effect;
@@ -22758,7 +22759,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			OkBtn.Text = str.ok;
 			CancelBtn.Text = str.cancel;
 			FromLbl.Text = str.from;
@@ -24079,7 +24080,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			OkBtn.Text = str.export_with_accesskey;
 			PreviewTrackBtn.Text = str.preview;
 			CancelBtn.Text = str.cancel;
@@ -24121,7 +24122,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			if (Lang.str != Lang.SChinese && Lang.str != Lang.TChinese && Lang.str != Lang.Japanese && Lang.str != Lang.Vietnamese) {
 				AddToEachNewTrackBtn.Font = AddToSameNewTrackBtn.Font = AddToCurrentTrackBtn.Font =
-				AddNewTrackBtn.Font = InsertNewTrackBtn.Font = new Font(str.ui_font, 7F);
+				AddNewTrackBtn.Font = InsertNewTrackBtn.Font = ConfigForm.GetFallbackFont(str.ui_font, 7F);
 			}
 		}
 
@@ -26411,7 +26412,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			OkBtn.Text = str.ok;
 			CancelBtn.Text = str.cancel;
 			AutomatorInfo.Text = str.automator_info;
@@ -26826,7 +26827,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new Font(str.ui_font, 9F);
+			Font = ConfigForm.GetFallbackFont(str.ui_font, 9F);
 			OkBtn.Text = str.ok;
 			CancelBtn.Text = str.cancel;
 			SkewInLbl.Text = str.shake_skew_in;
@@ -40336,6 +40337,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endregion
 
 			#region 优化界面颜色和外观
+			FixTabPageTransparentColor();
 			YtpEffectsCheckList.BackColor = YtpEffectsCheckList.Parent.BackColor;
 			List<Label>[] labels = { new List<Label>(), new List<Label>() };
 			int[] maxSheetTabLabelWidth = { 0, 0 };
@@ -41519,13 +41521,20 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			TrackLegatoMenu.Font = menu.Font = Font = new Font(str.ui_font, 9F);
-			WarningInfoLabel.Font = new Font(str.info_label_font, 11F, FontStyle.Bold);
+			TrackLegatoMenu.Font = menu.Font = Font = GetFallbackFont(str.ui_font, 9F);
+			WarningInfoLabel.Font = GetFallbackFont(str.info_label_font, 11F, FontStyle.Bold);
 			Label[] infoLabels = { SheetConfigInfoLabel, YtpLbl, HelperLbl, DatamoshInfoLbl, DatamoshNotInstalledInfo, MultiSourceOffInfoLbl };
 			foreach (Label label in infoLabels)
-				label.Font = new Font(str.info_label_font, 9F);
-			latestVersionToolStripMenuItemInBar.Font = stretchLegatoTracksToolStripMenuItem.Font = new Font(str.ui_font, 9F, FontStyle.Bold);
-			DragHereLbl.Font = new Font(str.info_label_font, 20F, FontStyle.Bold);
+				label.Font = GetFallbackFont(str.info_label_font, 9F);
+			latestVersionToolStripMenuItemInBar.Font = stretchLegatoTracksToolStripMenuItem.Font = GetFallbackFont(str.ui_font, 9F, FontStyle.Bold);
+			DragHereLbl.Font = GetFallbackFont(str.info_label_font, 20F, FontStyle.Bold);
+			chineseToolStripMenuItem.Font = GetFallbackFont(Lang.SChinese.ui_font, 9F);
+			tchineseToolStripMenuItem.Font = GetFallbackFont(Lang.TChinese.ui_font, 9F);
+			japaneseToolStripMenuItem.Font = GetFallbackFont(Lang.Japanese.ui_font, 9F);
+			russianToolStripMenuItem.Font = GetFallbackFont(Lang.Russian.ui_font, 9F);
+			vietnameseToolStripMenuItem.Font = GetFallbackFont(Lang.Vietnamese.ui_font, 9F);
+			indonesianToolStripMenuItem.Font = GetFallbackFont(Lang.Indonesian.ui_font, 9F);
+			englishToolStripMenuItem.Font = GetFallbackFont(Lang.English.ui_font, 9F);
 			versionToolStripMenuItem.Text = Lang.str.version_number + Lang.str.colon + EntryPoint.VERSION;
 			OkBtn.Text = str.complete;
 			CancelBtn.Text = IsIrreversibleCancel ? str.close : str.cancel;
@@ -43444,7 +43453,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (isMousedown) return;
 			ContextMenuStrip menu = new ContextMenuStrip {
 				Renderer = new Windows10StyledContextMenuStripRenderer(),
-				Font = new Font(Lang.str.ui_font, 9F),
+				Font = GetFallbackFont(Lang.str.ui_font, 9F),
 			};
 
 			bool isChecked = false;
@@ -43469,7 +43478,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (isMousedown) return;
 			ContextMenuStrip menu = new ContextMenuStrip {
 				Renderer = new Windows10StyledContextMenuStripRenderer(),
-				Font = new Font(Lang.str.ui_font, 9F),
+				Font = GetFallbackFont(Lang.str.ui_font, 9F),
 			};
 
 			bool isChecked = false;
@@ -44654,6 +44663,98 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 			return string.Equals(fullPath1, fullPath2, StringComparison.OrdinalIgnoreCase);
 		}
+
+		/// <inheritdoc cref="Control.DestroyHandle" />
+		public new void DestroyHandle() { base.DestroyHandle(); }
+
+		/// <summary>
+		/// 获取当前系统及主题下 TabPage 的真实视觉背景色
+		/// </summary>
+		public static Color GetRealTabPageBackColor() {
+			try {
+				// 创建一个临时的 TabControl 和 TabPage，触发系统最原生的绘制管线
+				using (TabControl tempTabControl = new TabControl())
+				using (TabPage tempTabPage = new TabPage()) {
+					// 确保开启视觉样式背景（与默认 TabPage 一致）
+					tempTabPage.UseVisualStyleBackColor = true;
+					tempTabPage.Size = new Size(32, 32);
+
+					tempTabControl.Size = new Size(64, 64);
+					tempTabControl.TabPages.Add(tempTabPage);
+
+					// 强制创建底层窗口句柄（Handle），否则无法触发系统的视觉样式绘制
+					tempTabControl.CreateControl();
+					tempTabPage.CreateControl();
+
+					using (Bitmap bmp = new Bitmap(32, 32)) {
+						// 核心：调用 DrawToBitmap 触发完整的 WM_PRINTCLIENT 消息，让系统真实画出 TabPage
+						tempTabPage.DrawToBitmap(bmp, new Rectangle(0, 0, 32, 32));
+
+						// 取中心点像素，避开任何可能存在的边缘阴影或边框
+						return bmp.GetPixel(16, 16);
+					}
+				}
+			} catch {
+				return SystemColors.Control;
+			}
+		}
+
+		private void ApplyRealTabPageColors() {
+			Color realTabColor = GetRealTabPageBackColor();
+			AudioTab.BackColor = VideoTab.BackColor = YtpTab.BackColor = YtpEffectsCheckList.BackColor = realTabColor;
+		}
+
+		private void FixTabPageTransparentColor() {
+			HandleCreated += delegate {
+				// 订阅系统主题/外观更改事件
+				SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+				// 初始化时应用真实背景色
+				ApplyRealTabPageColors();
+			};
+
+			HandleDestroyed += delegate {
+				// 务必在窗体关闭时取消订阅静态事件，防止内存泄漏！
+				SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
+			};
+		}
+
+		private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e) {
+			// 当用户更改主题、颜色或视觉样式时触发
+			if (e.Category == UserPreferenceCategory.General ||
+				e.Category == UserPreferenceCategory.Color ||
+				e.Category == UserPreferenceCategory.VisualStyle) {
+				// 确保在 UI 线程上更新控件
+				if (InvokeRequired) {
+					BeginInvoke(new Action(ApplyRealTabPageColors));
+				} else {
+					ApplyRealTabPageColors();
+				}
+			}
+		}
+
+		/// <summary>
+		/// 按优先级列表获取系统中存在的第一个字体
+		/// </summary>
+		public static Font GetFallbackFont(string[] fontNames, float size, FontStyle style = FontStyle.Regular) {
+			using (System.Drawing.Text.InstalledFontCollection fontsCollection = new System.Drawing.Text.InstalledFontCollection()) {
+				// 获取系统所有已安装字体的名称（忽略大小写）
+				HashSet<string> installedFonts = new HashSet<string>(
+					fontsCollection.Families.Select(f => f.Name),
+					StringComparer.OrdinalIgnoreCase
+				);
+
+				foreach (string name in fontNames) {
+					if (!string.IsNullOrWhiteSpace(name) && installedFonts.Contains(name)) {
+						return new Font(name, size, style);
+					}
+				}
+			}
+
+			// 如果列表中的字体全都不存在，返回系统默认对话字体（Win7下通常为宋体/新细明体，Win10/11下为微软雅黑）
+			return SystemFonts.MessageBoxFont != null ?
+				new Font(SystemFonts.MessageBoxFont.FontFamily, size, style) :
+				DefaultFont;
+		}
 	}
 
 	#region 翻译
@@ -44700,10 +44801,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public readonly string dialog_sign = "...";
 		public readonly string dropdown_sign = "▾";
 		public CultureInfo culture = new CultureInfo("zh-CN");
+		public string[] info_label_font = { "Microsoft YaHei" },
+			ui_font = { "Microsoft YaHei UI", "Microsoft YaHei" };
 		public string __name__ = "简体中文",
 			__translator__ = NO_TRANSLATOR,
-			info_label_font = "Microsoft YaHei",
-			ui_font = "Microsoft YaHei UI",
 			language = "语言/&Language",
 			restart_to_effect_language = "重新启动以使语言生效？",
 			yes_to_restart_to_effect_language = "立即手动重启",
@@ -45695,8 +45796,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				__name__ = "English",
 				__translator__ = NO_TRANSLATOR,
 				culture = new CultureInfo("en-US"),
-				info_label_font = "Segoe UI",
-				ui_font = "Segoe UI",
+				info_label_font = new string[] { "Segoe UI", "Tahoma" },
+				ui_font = new string[] { "Segoe UI", "Tahoma" },
 				language = "&Language",
 				restart_to_effect_language = "Restart for language to take effect?",
 				yes_to_restart_to_effect_language = "Restart",
@@ -46607,8 +46708,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				__name__ = "繁體中文",
 				__translator__ = NO_TRANSLATOR,
 				culture = new CultureInfo("zh-TW"),
-				info_label_font = "Microsoft JhengHei",
-				ui_font = "Microsoft JhengHei UI",
+				info_label_font = new string[] { "Microsoft JhengHei" },
+				ui_font = new string[] { "Microsoft JhengHei UI", "Microsoft JhengHei" },
 				language = "語言/&Language",
 				restart_to_effect_language = "重新啟動以使語言生效？",
 				yes_to_restart_to_effect_language = "立即手動重啟",
@@ -47518,8 +47619,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				__name__ = "日本語",
 				__translator__ = NO_TRANSLATOR,
 				culture = new CultureInfo("ja-JP"),
-				info_label_font = "Yu Gothic",
-				ui_font = "Yu Gothic UI",
+				info_label_font = new string[] { "Yu Gothic", "Meiryo", "MS PGothic" },
+				ui_font = new string[] { "Yu Gothic UI", "Meiryo UI", "MS UI Gothic" },
 				language = "言語/&Language",
 				restart_to_effect_language = "言語を有効にするために再起動しますか？",
 				yes_to_restart_to_effect_language = "今すぐ手動で再起動",
@@ -48431,8 +48532,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				__name__ = "Русский",
 				__translator__ = NO_TRANSLATOR,
 				culture = new CultureInfo("ru-RU"),
-				info_label_font = "Segoe UI",
-				ui_font = "Segoe UI",
+				info_label_font = new string[] { "Segoe UI", "Tahoma" },
+				ui_font = new string[] { "Segoe UI", "Tahoma" },
 				language = "&Язык/Language",
 				restart_to_effect_language = "Перезагрузить, чтобы язык вступил в силу?",
 				yes_to_restart_to_effect_language = "Ручной перезапуск сейчас",
@@ -49344,8 +49445,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				__name__ = "Tiếng Việt",
 				__translator__ = "Cyahega",
 				culture = new CultureInfo("vi-VN"),
-				info_label_font = "Segoe UI",
-				ui_font = "Segoe UI",
+				info_label_font = new string[] { "Segoe UI", "Tahoma" },
+				ui_font = new string[] { "Segoe UI", "Tahoma" },
 				language = "&Ngôn ngữ/Language",
 				restart_to_effect_language = "Khởi động lại để ngôn ngữ có hiệu lực ngay?",
 				yes_to_restart_to_effect_language = "K.động lại thủ công",
@@ -50256,8 +50357,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				__name__ = "Bahasa Indonesia",
 				__translator__ = "Ade Edogawa & JujunG",
 				culture = new CultureInfo("id-ID"),
-				info_label_font = "Segoe UI",
-				ui_font = "Segoe UI",
+				info_label_font = new string[] { "Segoe UI", "Tahoma" },
+				ui_font = new string[] { "Segoe UI", "Tahoma" },
 				language = "&Bahasa/Language",
 				restart_to_effect_language = "Restart agar bahasa dapat diterapkan?",
 				yes_to_restart_to_effect_language = "Restart",
