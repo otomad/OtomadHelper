@@ -24585,15 +24585,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	}
 
 	public class MessageBoxEx {
-		/// <summary>
+		/// <inheritdoc cref="MessageBox.Show(string, string, MessageBoxButtons, MessageBoxIcon, MessageBoxDefaultButton)" />
+		/// <remarks>
 		/// 测试样例<br />
 		/// <code>Show("提示消息", "提示标题", MessageBoxButtons.YesNoCancel, new string[] { "按钮一(＆O)", "按钮二(＆T)", "按钮三(＆H)" });</code>
-		/// </summary>
-		/// <param name="text"></param>
-		/// <param name="caption"></param>
-		/// <param name="buttons"></param>
-		/// <param name="buttonTitles"></param>
-		/// <returns></returns>
+		/// </remarks>
+		/// <param name="buttonTitles">按钮标签文本。</param>
 		public static DialogResult Show(string text, string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK, string[] buttonTitles = null, MessageBoxIcon icon = MessageBoxIcon.None, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1) {
 			if (buttonTitles == null) return MessageBox.Show(text, caption, buttons, icon, defaultButton);
 			DummyForm frm = new DummyForm(buttons, buttonTitles);
@@ -24602,6 +24599,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			DialogResult result = MessageBox.Show(frm, text, caption, buttons, icon, defaultButton);
 			frm.Close();
 			return result;
+		}
+
+		/// <inheritdoc cref="MessageBox.Show(string, string, MessageBoxButtons, MessageBoxIcon, MessageBoxDefaultButton)" />
+		/// <remarks>
+		/// 与原 <see cref="MessageBox.Show(string, string, MessageBoxButtons, MessageBoxIcon, MessageBoxDefaultButton)"/> 完全兼容，仅修改标题栏颜色以及字体。
+		/// </remarks>
+		public static DialogResult Show(string text, string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.None, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1) {
+			return Show(text, caption, buttons, null, icon, defaultButton);
 		}
 
 		internal class DummyForm : Form {
@@ -24645,8 +24650,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 
 			private void CheckMsgbox() {
-				if (_buttonTitles == null || _buttonTitles.Length == 0)
-					return;
+				bool requireChangeButtonTitles = _buttonTitles != null && _buttonTitles.Length != 0;
 
 				//按钮标题的索引
 				int buttonTitleIndex = 0;
@@ -24655,7 +24659,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				while (h != IntPtr.Zero) {
 					//按顺序把按钮标题赋上
 					string className = NativeWin32API.GetWindowClassName(h);
-					if (className == "Button") {
+					if (className == "Button" && requireChangeButtonTitles) {
 						if (_buttonTitles.Length > buttonTitleIndex) {
 							NativeWin32API.SetWindowTextW(h, _buttonTitles[buttonTitleIndex]);
 							buttonTitleIndex++;
@@ -46559,7 +46563,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				bool forEvents = effectToSelectedEventsToolStripMenuItem.Checked;
 				if (!forEvents && parent.GetSelectedTracks().Count() > 1 ||
 					forEvents && parent.IsSelectedEventsOnMultipleTracks())
-					if (MessageBox.Show(Lang.str.select_multiple_tracks_warning,
+					if (MessageBoxEx.Show(Lang.str.select_multiple_tracks_warning,
 						type == TrackLegatoType.STACKING_ALL_TRACKS ? Lang.str.track_legato_stacking_all_after : Lang.str.increase_spacing_all_tracks,
 						MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
 						return;
