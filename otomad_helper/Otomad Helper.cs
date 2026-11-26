@@ -43336,12 +43336,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </summary>
 		/// <param name="form">窗体。</param>
 		public static void LoadToRevertWhiteTitleBar(Form form) {
-			System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer() { Interval = 1 };
-			form.Load += (sender, e) => timer.Start();
-			timer.Tick += (sender, e) => {
-				timer.Stop();
-				RevertWhiteTitleBar(form.Handle);
-			};
+			form.Shown += delegate { RevertWhiteTitleBar(form.Handle); };
 		}
 		/// <summary>
 		/// 移除 Vegas Pro 2026 为所有脚本窗体添加的黑色标题栏。
@@ -44711,18 +44706,18 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		private void FixTabPageTransparentColor() {
 			HandleCreated += delegate {
 				// 订阅系统主题/外观更改事件
-				SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+				SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged_ApplyRealTabPageColors;
 				// 初始化时应用真实背景色
 				ApplyRealTabPageColors();
 			};
 
 			HandleDestroyed += delegate {
 				// 务必在窗体关闭时取消订阅静态事件，防止内存泄漏！
-				SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
+				SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged_ApplyRealTabPageColors;
 			};
 		}
 
-		private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e) {
+		private void SystemEvents_UserPreferenceChanged_ApplyRealTabPageColors(object sender, UserPreferenceChangedEventArgs e) {
 			// 当用户更改主题、颜色或视觉样式时触发
 			if (e.Category == UserPreferenceCategory.General ||
 				e.Category == UserPreferenceCategory.Color ||
