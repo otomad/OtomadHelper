@@ -45954,29 +45954,58 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void AboutBtn_Click(object sender, EventArgs e) {
 			Lang str = Lang.str;
-			string[,] pairs = {
+			string[,] versions = {
 				{ str.version_number, EntryPoint.VERSION.ToString() },
 				{ str.revision_date, EntryPoint.REVISION_DATE.ToString("D") },
 				{ str.vegas_version, EntryPoint.CurrentVegasVersion.ToString() },
 				{ str.script_supported_vegas_version, EntryPoint.GetScriptSupportedVersionRange() },
 				{ str.naudio_version, EntryPoint.NAudioVersion.ToString() },
-				{ "", "" },
+			};
+			string[,] authors = {
 				{ str.script_author, str.ranne },
-				{ str.script_original_author , "Chaosinism" },
+				{ str.script_original_author, "Chaosinism" },
 				{ str.script_translator, str.__translator__ },
-				{ "", "" },
+			};
+			string[,] links = {
 				{ str.repository_link, Links.REPOSITORY },
 				{ str.latest_version_link, Links.GITHUB_LATEST },
 				{ str.documentation, Links.READTHEDOCS_HOMEPAGE },
 			};
-			StringBuilder text = new StringBuilder();
-			for (int i = 0; i < pairs.GetLength(0); i++) {
-				string key = pairs[i, 0], value = pairs[i, 1];
+			StringBuilder authorsContent = new StringBuilder(), versionsContent = new StringBuilder(), linksContent = new StringBuilder();
+			for (int i = 0; i < authors.GetLength(0); i++) {
+				string key = authors[i, 0], value = authors[i, 1];
 				if (value == Lang.NO_TRANSLATOR) continue;
-				if (string.IsNullOrWhiteSpace(value)) text.AppendLine();
-				else text.AppendLine(key + str.colon + value);
+				else authorsContent.AppendLine(string.Concat(key, str.colon, value));
 			}
-			MessageBoxEx.Show(text.ToString(), str.about_title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+			for (int i = 0; i < versions.GetLength(0); i++) {
+				string key = versions[i, 0], value = versions[i, 1];
+				versionsContent.AppendLine(string.Concat(key, str.colon, value));
+			}
+			for (int i = 0; i < links.GetLength(0); i++) {
+				string key = links[i, 0], value = links[i, 1];
+				linksContent.AppendLine(string.Format("<a href=\"{1}\">{0}</a>", key, value));
+			}
+
+			TaskDialog dialog = new TaskDialog {
+				EnableHyperlinks = true,
+				MainInstruction = "Otomad Helper",
+				WindowTitle = str.about_title,
+				MainIcon = TaskDialogIcon.Information,
+				FooterIcon = TaskDialogIcon.Shield,
+				Content = authorsContent.ToString(),
+				ExpandedInformation = versionsContent.ToString(),
+				Footer = linksContent.ToString(),
+				ExpandedByDefault = true,
+				AllowDialogCancellation = true,
+			};
+			dialog.HyperlinkClicked += TaskDialog_HyperlinkClicked;
+			dialog.Buttons.Add(new TaskDialogButton(ButtonType.Cancel));
+			dialog.ShowDialog();
+			return;
+		}
+
+		private void TaskDialog_HyperlinkClicked(object sender, HyperlinkClickedEventArgs e) {
+			System.Diagnostics.Process.Start(e.Href);
 		}
 
 		private void TrimTime_ValueChanged(object sender, EventArgs e) {
