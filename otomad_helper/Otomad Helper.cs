@@ -2819,7 +2819,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return presetOk;
 			});
 			if (checkPresets()) return true;
-			DialogResult result = TaskDialog.ShowTaskDialogWithCommandLinks(Lang.str.no_pitch_shift_presets_title, Lang.str.pitch_shift_plugin, Lang.str.no_pitch_shift_presets, MessageBoxButtons.YesNo, new string[] { Lang.str.yes_to_add_pitch_shift_presets, Lang.str.no_to_add_pitch_shift_presets }, TaskDialogIcon.Error);
+			DialogResult result = TaskDialog.ShowWithCommandLinks(Lang.str.no_pitch_shift_presets_title, Lang.str.pitch_shift_plugin, Lang.str.no_pitch_shift_presets, MessageBoxButtons.YesNo, new string[] { Lang.str.yes_to_add_pitch_shift_presets, Lang.str.no_to_add_pitch_shift_presets }, TaskDialogIcon.Error);
 			if (result == DialogResult.No) {
 				requestRestartScript = true;
 				return false;
@@ -12352,7 +12352,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				prompt.MaximizeBox = false;
 				prompt.ShowInTaskbar = false;
 				prompt.ShowIcon = true;
-				prompt.Icon = ImageBase64.GetIcon(iconBase64);
+				prompt.Icon = ImageBase64.GetIcon(iconBase64, 16);
 				prompt.StartPosition = FormStartPosition.Manual;
 				prompt.Location = new Point(240, 240);
 				prompt.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
@@ -15854,11 +15854,14 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// 根据 Base64 编码获得 <see cref="Icon"/> 类型图标。
 		/// </summary>
 		/// <param name="base64">Base64 编码字符串。</param>
+		/// <param name="size">指定图标尺寸，缺省为多尺寸大小。</param>
 		/// <returns><see cref="Icon"/> 类型图标。</returns>
-		public static Icon GetIcon(string base64) {
+		public static Icon GetIcon(string base64, int size = -1) {
 			byte[] buffer = Convert.FromBase64String(base64);
 			using (MemoryStream memory = new MemoryStream(buffer)) {
-				return new Icon(memory, new Size(16, 16));
+				return size <= 0 ?
+					new Icon(memory) :
+					new Icon(memory, new Size(size, size));
 			}
 		}
 
@@ -26464,7 +26467,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	/// <threadsafety static="true" instance="false" />
 	[DefaultProperty("MainInstruction"), DefaultEvent("ButtonClicked"), Description("Displays a task dialog.")]
 	public partial class TaskDialog : Component, IWin32Window {
-		public static DialogResult ShowTaskDialogWithCommandLinks(string text, string caption = "", string content = "", MessageBoxButtons buttons = MessageBoxButtons.OK, string[] buttonTitles = null, TaskDialogIcon icon = TaskDialogIcon.Custom, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1, Icon customIcon = null) {
+		public static DialogResult ShowWithCommandLinks(string text, string caption = "", string content = "", MessageBoxButtons buttons = MessageBoxButtons.OK, string[] buttonTitles = null, TaskDialogIcon icon = TaskDialogIcon.Custom, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1, Icon customIcon = null) {
 			TaskDialog taskDialog = new TaskDialog {
 				WindowTitle = caption,
 				MainInstruction = text,
@@ -26476,7 +26479,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			};
 			DialogResult[] dialogResults = GetDialogResultsFromMessageBoxButtons(buttons);
 			if (buttonTitles == null || buttonTitles.Length < dialogResults.Length)
-				throw new ArgumentException("The provided button titles in ShowTaskDialogWithCommandLinks is not enough", "buttons");
+				throw new ArgumentException("The provided button titles in ShowWithCommandLinks is not enough", "buttons");
 			int defaultButtonIndex = defaultButton == MessageBoxDefaultButton.Button2 ? 1 : defaultButton == MessageBoxDefaultButton.Button3 ? 2 : 0;
 			for (int i = 0; i < dialogResults.Length; i++) {
 				DialogResult dialogResult = dialogResults[i];
@@ -29126,7 +29129,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		public AutomatorForm(Datamosh.Automator.ParameterDataList parameters) {
 			InitializeComponent();
-			Icon = ImageBase64.GetIcon(ImageBase64.AutomatorIcon);
+			Icon = ImageBase64.GetIcon(ImageBase64.AutomatorIcon, 16);
 			ConfigForm.LoadToRevertWhiteTitleBar(this);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			Translate();
@@ -44236,7 +44239,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 		private void LanguageStripMenuItem_Click(object sender, EventArgs e) {
 			Language = Language; // 禁止套娃！
-			DialogResult result = TaskDialog.ShowTaskDialogWithCommandLinks(Lang.str.restart_to_effect_language, Lang.str.__name__, "", MessageBoxButtons.YesNoCancel, new string[] { Lang.str.yes_to_restart_to_effect_language, Lang.str.no_to_restart_to_effect_language, Lang.str.cancel }, TaskDialogIcon.Information, MessageBoxDefaultButton.Button3);
+			DialogResult result = TaskDialog.ShowWithCommandLinks(Lang.str.restart_to_effect_language, Lang.str.__name__, "", MessageBoxButtons.YesNoCancel, new string[] { Lang.str.yes_to_restart_to_effect_language, Lang.str.no_to_restart_to_effect_language, Lang.str.cancel }, TaskDialogIcon.Information, MessageBoxDefaultButton.Button3);
 			if (result == DialogResult.Cancel) {
 				Language = LanguageBackup;
 				return;
