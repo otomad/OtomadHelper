@@ -24808,10 +24808,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				IntPtr h = NativeWin32API.GetWindow(_handle, OCCommon.Message.GW_CHILD);
 				while (h != IntPtr.Zero) {
 					//按顺序把按钮标题赋上
-					if (NativeWin32API.GetWindowClassName(h).Equals("Button")) {
+					string className = NativeWin32API.GetWindowClassName(h);
+					if (className == "Button") {
 						if (_buttonTitles.Length > buttonTitleIndex) {
-							NativeWin32API.SetWindowText(h, _buttonTitles[buttonTitleIndex]);
+							NativeWin32API.SetWindowTextW(h, _buttonTitles[buttonTitleIndex]);
 							buttonTitleIndex++;
+						}
+					}
+					//修改字体
+					if (className == "Button" || className == "Static") {
+						using (Font font = ConfigForm.GetFallbackFont(Lang.str.ui_font, 9F)) {
+							Win32FontHelper.SetControlFont(h, font, false);
 						}
 					}
 					h = NativeWin32API.GetWindow(h, OCCommon.Message.GW_HWNDNEXT);
@@ -24828,6 +24835,53 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 			}
 		}
+
+		public static class Win32FontHelper {
+			private const uint WM_SETFONT = 0x0030;
+
+			[DllImport("user32.dll", CharSet = CharSet.Unicode)]
+			private static extern IntPtr SendMessageW(
+				IntPtr hWnd,
+				uint Msg,
+				IntPtr wParam,
+				IntPtr lParam);
+
+			[DllImport("gdi32.dll", SetLastError = true)]
+			[return: MarshalAs(UnmanagedType.Bool)]
+			private static extern bool DeleteObject(IntPtr hObject);
+
+			/// <summary>
+			/// 根据 System.Drawing.Font 创建 HFONT 并设置到指定 Win32 控件句柄。
+			/// 返回的 HFONT 句柄需由调用方在控件不再使用该字体后调用 DestroyFont 释放。
+			/// </summary>
+			/// <param name="hControl">目标控件的窗口句柄 (HWND)</param>
+			/// <param name="font">WinForms 的 Font 对象</param>
+			/// <param name="redraw">是否立即重绘控件，默认为 true</param>
+			/// <returns>创建的 Win32 HFONT 句柄</returns>
+			public static IntPtr SetControlFont(IntPtr hControl, Font font, bool redraw = true) {
+				if (hControl == IntPtr.Zero)
+					throw new ArgumentException("Invalid control handle.", "hControl");
+				if (font == null)
+					throw new ArgumentNullException("font");
+
+				// 1. 将 System.Drawing.Font 转换为全新的 Win32 HFONT 句柄
+				IntPtr hFont = font.ToHfont();
+
+				// 2. 发送 WM_SETFONT 消息将字体应用到控件
+				SendMessageW(hControl, WM_SETFONT, hFont, redraw ? new IntPtr(1) : IntPtr.Zero);
+
+				return hFont;
+			}
+
+			/// <summary>
+			/// 销毁通过 SetControlFont 创建的 HFONT 句柄，防止 GDI 句柄泄漏。
+			/// </summary>
+			public static void DestroyFont(IntPtr hFont) {
+				if (hFont != IntPtr.Zero) {
+					DeleteObject(hFont);
+				}
+			}
+		}
 	}
 
 	/// <summary>
@@ -24838,8 +24892,10 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int Width, int Height, int flags);
 		[DllImport("user32.dll")]
 		public static extern IntPtr GetWindow(IntPtr hWnd, long wCmd);
-		[DllImport("user32.dll")]
-		public static extern bool SetWindowText(IntPtr hWnd, string lpString);
+		[DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		// 使用 SetWindowTextW 并指定 CharSet.Unicode，而不是 SetWindowText 或 SetWindowTextA，这样就可以支持设置非当前系统语言环境的 Unicode 字符了。
+		public static extern bool SetWindowTextW(IntPtr hWnd, string lpString);
 		[DllImport("user32.dll")]
 		public static extern int GetClassNameW(IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpString, int nMaxCount);
 		[DllImport("user32.dll", EntryPoint = "SetParent")]
