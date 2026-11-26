@@ -76,7 +76,6 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
-using MinHook;
 using NAudio.Midi;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
@@ -26466,35 +26465,33 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	[DefaultProperty("MainInstruction"), DefaultEvent("ButtonClicked"), Description("Displays a task dialog.")]
 	public partial class TaskDialog : Component, IWin32Window {
 		public static DialogResult ShowTaskDialogWithCommandLinks(string text, string caption = "", string content = "", MessageBoxButtons buttons = MessageBoxButtons.OK, string[] buttonTitles = null, TaskDialogIcon icon = TaskDialogIcon.Custom, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1, Icon customIcon = null) {
-			using (new ThemeFontHook("Microsoft JhengHei UI")) {
-				TaskDialog taskDialog = new TaskDialog {
-					WindowTitle = caption,
-					MainInstruction = text,
-					Content = content,
-					ButtonStyle = TaskDialogButtonStyle.CommandLinks,
-					MainIcon = icon,
-					CustomMainIcon = customIcon,
-					AllowDialogCancellation = true,
+			TaskDialog taskDialog = new TaskDialog {
+				WindowTitle = caption,
+				MainInstruction = text,
+				Content = content,
+				ButtonStyle = TaskDialogButtonStyle.CommandLinks,
+				MainIcon = icon,
+				CustomMainIcon = customIcon,
+				AllowDialogCancellation = true,
+			};
+			DialogResult[] dialogResults = GetDialogResultsFromMessageBoxButtons(buttons);
+			if (buttonTitles == null || buttonTitles.Length < dialogResults.Length)
+				throw new ArgumentException("The provided button titles in ShowTaskDialogWithCommandLinks is not enough", "buttons");
+			int defaultButtonIndex = defaultButton == MessageBoxDefaultButton.Button2 ? 1 : defaultButton == MessageBoxDefaultButton.Button3 ? 2 : 0;
+			for (int i = 0; i < dialogResults.Length; i++) {
+				DialogResult dialogResult = dialogResults[i];
+				string buttonTitle = buttonTitles[i];
+				bool isDefault = i == defaultButtonIndex;
+				ButtonType buttonType = dialogResult == DialogResult.Cancel ? ButtonType.Cancel : ButtonType.Custom;
+				TaskDialogButton button = new TaskDialogButton(buttonType) {
+					Text = buttonTitle,
+					DialogResult = dialogResult,
+					Default = isDefault,
 				};
-				DialogResult[] dialogResults = GetDialogResultsFromMessageBoxButtons(buttons);
-				if (buttonTitles == null || buttonTitles.Length < dialogResults.Length)
-					throw new ArgumentException("The provided button titles in ShowTaskDialogWithCommandLinks is not enough", "buttons");
-				int defaultButtonIndex = defaultButton == MessageBoxDefaultButton.Button2 ? 1 : defaultButton == MessageBoxDefaultButton.Button3 ? 2 : 0;
-				for (int i = 0; i < dialogResults.Length; i++) {
-					DialogResult dialogResult = dialogResults[i];
-					string buttonTitle = buttonTitles[i];
-					bool isDefault = i == defaultButtonIndex;
-					ButtonType buttonType = dialogResult == DialogResult.Cancel ? ButtonType.Cancel : ButtonType.Custom;
-					TaskDialogButton button = new TaskDialogButton(buttonType) {
-						Text = buttonTitle,
-						DialogResult = dialogResult,
-						Default = isDefault,
-					};
-					taskDialog.Buttons.Add(button);
-				}
-				TaskDialogButton resultButton = taskDialog.ShowDialog();
-				return resultButton == null ? DialogResult.Cancel : resultButton.DialogResult;
+				taskDialog.Buttons.Add(button);
 			}
+			TaskDialogButton resultButton = taskDialog.ShowDialog();
+			return resultButton == null ? DialogResult.Cancel : resultButton.DialogResult;
 		}
 
 		private static DialogResult[] GetDialogResultsFromMessageBoxButtons(MessageBoxButtons buttons) {
@@ -28006,119 +28003,6 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		#endregion
 
 		#endregion
-	}
-
-	public sealed class ThemeFontHook : IDisposable {
-		private readonly string _targetFontName;
-		private readonly HookEngine _hookEngine;
-
-		private GetThemeFontDelegate _originalGetThemeFont;
-		private GetThemeSysFontDelegate _originalGetThemeSysFont;
-
-		// 1. 定义 UxTheme.dll 的 LOGFONTW 结构体（必须用 Unicode）
-		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-		public struct LOGFONTW {
-			public int lfHeight;
-			public int lfWidth;
-			public int lfEscapement;
-			public int lfOrientation;
-			public int lfWeight;
-			public byte lfItalic;
-			public byte lfUnderline;
-			public byte lfStrikeOut;
-			public byte lfCharSet;
-			public byte lfOutPrecision;
-			public byte lfClipPrecision;
-			public byte lfQuality;
-			public byte lfPitchAndFamily;
-			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-			public string lfFaceName;
-		}
-
-		// 2. 定义目标 API 委托签名
-		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
-		private delegate int GetThemeFontDelegate(
-			IntPtr hTheme,
-			IntPtr hdc,
-			int iPartId,
-			int iStateId,
-			int iPropId,
-			out LOGFONTW pFont);
-
-		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
-		private delegate int GetThemeSysFontDelegate(
-			IntPtr hTheme,
-			int iFontId,
-			out LOGFONTW plf);
-
-		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
-		private delegate IntPtr CreateFontIndirectWDelegate(ref LOGFONTW lplf);
-
-		private CreateFontIndirectWDelegate _originalCreateFontIndirectW;
-
-		public ThemeFontHook(string targetFontName) {
-			_targetFontName = targetFontName;
-			_hookEngine = new HookEngine();
-
-			// 3. 创建并启用钩子
-			_originalGetThemeFont = _hookEngine.CreateHook(
-				"uxtheme.dll",
-				"GetThemeFont",
-				new GetThemeFontDelegate(DetourGetThemeFont));
-
-			_originalGetThemeSysFont = _hookEngine.CreateHook(
-				"uxtheme.dll",
-				"GetThemeSysFont",
-				new GetThemeSysFontDelegate(DetourGetThemeSysFont));
-
-			_originalCreateFontIndirectW = _hookEngine.CreateHook(
-				"gdi32.dll",
-				"CreateFontIndirectW",
-				new CreateFontIndirectWDelegate(DetourCreateFontIndirectW));
-
-			_hookEngine.EnableHooks();
-		}
-
-		// 拦截 GetThemeFont（控制 MainInstruction 大标题、Content 正文、CommandLink 主副文本）
-		private int DetourGetThemeFont(IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, int iPropId, out LOGFONTW pFont) {
-			int hr = _originalGetThemeFont(hTheme, hdc, iPartId, iStateId, iPropId, out pFont);
-			if (hr == 0 && !string.IsNullOrEmpty(_targetFontName)) // S_OK == 0
-			{
-				pFont.lfFaceName = _targetFontName;
-			}
-			return hr;
-		}
-
-		// 拦截 GetThemeSysFont（控制标准按钮如“取消”以及部分辅助文本）
-		private int DetourGetThemeSysFont(IntPtr hTheme, int iFontId, out LOGFONTW plf) {
-			int hr = _originalGetThemeSysFont(hTheme, iFontId, out plf);
-			if (hr == 0 && !string.IsNullOrEmpty(_targetFontName)) // S_OK == 0
-			{
-				plf.lfFaceName = _targetFontName;
-			}
-			return hr;
-		}
-
-		// 拦截 Command Link 创建字体时的底层 GDI 调用
-		private IntPtr DetourCreateFontIndirectW(ref LOGFONTW lplf) {
-			if (!string.IsNullOrEmpty(_targetFontName)) {
-				// 只替换系统默认 UI 字体（避免误伤图标字体如 Marlett / Segoe MDL2 Assets）
-				if (lplf.lfFaceName.Equals("Microsoft YaHei UI", StringComparison.OrdinalIgnoreCase) ||
-					lplf.lfFaceName.Equals("Microsoft YaHei", StringComparison.OrdinalIgnoreCase) ||
-					lplf.lfFaceName.Equals("SimSun", StringComparison.OrdinalIgnoreCase)) {
-					lplf.lfFaceName = _targetFontName;
-				}
-			}
-
-			return _originalCreateFontIndirectW(ref lplf);
-		}
-
-		public void Dispose() {
-			// 弹窗关闭后立即卸载钩子，不影响主程序其他界面
-			if (_hookEngine == null) return;
-			_hookEngine.DisableHooks();
-			_hookEngine.Dispose();
-		}
 	}
 
 	/// <summary>
