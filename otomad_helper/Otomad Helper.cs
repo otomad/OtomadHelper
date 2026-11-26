@@ -667,7 +667,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			DoingAfterShowError(state);
 		}
 		public static void ShowError2(string str) {
-			MessageBox.Show(str, Lang.str.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+			MessageBoxEx.Show(str, Lang.str.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 		public static void ShowError2(Exception e) {
 			ShowError2(e.ToString());
@@ -1620,7 +1620,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			#endif
 			if (CombConfigOrchestra && !CombConfigOrchestraAllowReuse && eventSets.Count < MidiConfigTracks.SelectedChannelCount) {
 				progressForm.Close();
-				MessageBox.Show(Lang.str.linear_map_allow_reuse_existed_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				MessageBoxEx.Show(Lang.str.linear_map_allow_reuse_existed_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				return false;
 			}
 			if (CombConfigEnhanceSelect) {
@@ -1882,7 +1882,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 							//_testName = syncopatorRound.ToString();
 							if (CombConfigSyncopatorRepeatRoundCount != 0 && syncopatorRound >= CombConfigSyncopatorRepeatRoundCount) {
 								progressForm.Close();
-								MessageBox.Show(Lang.str.match_cut_loop_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+								MessageBoxEx.Show(Lang.str.match_cut_loop_warning, Lang.str.stop_generating_warning_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 								return false;
 							}
 						}
@@ -2825,9 +2825,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				return false;
 			}
 			LoadPitchShiftPresets();
-			if (checkPresets()) MessageBox.Show(Lang.str.add_pitch_shift_presets_successful, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			if (checkPresets()) MessageBoxEx.Show(Lang.str.add_pitch_shift_presets_successful, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			else {
-				MessageBox.Show(Lang.str.add_pitch_shift_presets_fail, Lang.str.add_pitch_shift_presets_fail_title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBoxEx.Show(Lang.str.add_pitch_shift_presets_fail, Lang.str.add_pitch_shift_presets_fail_title, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				ShowError(new Exceptions.NoPluginPitchShiftException());
 				return false;
 			}
@@ -4345,7 +4345,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		public static void AlertUnsupportVersion() {
-			MessageBox.Show(string.Format(Lang.str.unsupported_vegas_version, GetScriptSupportedVersionRange(), CurrentVegasVersion.ToString()), Lang.str.unsupported_vegas_version_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			MessageBoxEx.Show(string.Format(Lang.str.unsupported_vegas_version, GetScriptSupportedVersionRange(), CurrentVegasVersion.ToString()), Lang.str.unsupported_vegas_version_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 		}
 
 		private SupportVegasVersionState _supported = SupportVegasVersionState.UNDEFINED;
@@ -4396,7 +4396,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	/// <summary>
 	/// 该类中的方法仅供测试使用。<br />
 	/// 切勿在生产版本中使用该类中的任何方法，即便只是为了显示一个消息框。<br />
-	/// <small>名称 S 源于 <see cref="MessageBox.Show"/> 中 Show 的第一个字母。</small>
+	/// <small>名称 S 源于 <see cref="MessageBoxEx.Show"/> 中 Show 的第一个字母。</small>
 	/// </summary>
 	[Obsolete]
 	public static class S {
@@ -4468,7 +4468,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 	/// </summary>
 	public static class Extensions {
 
-		//public static string s(this object value) { string str = value == null ? "null" : value.ToString(); MessageBox.Show(str); return str; }
+		//public static string s(this object value) { string str = value == null ? "null" : value.ToString(); MessageBoxEx.Show(str); return str; }
 
 		/// <summary>
 		/// 在视频事件平移/裁切中将其所有关键帧进行翻转操作。
@@ -7577,7 +7577,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			private const int MIN_TONE_PITCH_CHANGE = -9;
 			private const int MAX_TONE_PITCH_CHANGE = 9;
 			private static void WarningMissingPlugin(string pluginName) { // 遇到缺少插件时不报错，而是仅仅弹出一个警告，点击确定后可以跳过。
-				MessageBox.Show(string.Format(Lang.str.warning_missing_plugin, pluginName), "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				MessageBoxEx.Show(string.Format(Lang.str.warning_missing_plugin, pluginName), "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			}
 			/// <summary>
 			/// 重要的事情说三遍效果的状态枚举。
@@ -11003,7 +11003,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					xvidPath += @"\Xvid\uninstall.exe";
 					if (!File.Exists(xvidPath)) {
 						const string XVID_TITLE = "XviD";
-						if (MessageBox.Show(Lang.str.install_xvid_info, XVID_TITLE, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+						if (MessageBoxEx.Show(Lang.str.install_xvid_info, XVID_TITLE, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
 							return false;
 						var xvid = new Process {
 							StartInfo = {
@@ -11029,7 +11029,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 						xvid.WaitForExit();
 						GetStandardTemplates(vegas);
 						GetTemplate(vegas, frameRateInt);
-						MessageBox.Show(Lang.str.install_xvid_succeed, XVID_TITLE, MessageBoxButtons.OK, MessageBoxIcon.Information);
+						MessageBoxEx.Show(Lang.str.install_xvid_succeed, XVID_TITLE, MessageBoxButtons.OK, MessageBoxIcon.Information);
 						return false;
 					}
 
@@ -11037,7 +11037,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (_template == null) {
 						GetStandardTemplates(vegas);
 						GetTemplate(vegas, frameRateInt);
-						MessageBox.Show(Lang.str.render_template_generate_completed, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						MessageBoxEx.Show(Lang.str.render_template_generate_completed, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 						return false;
 					}
 					template = _template;
@@ -11102,7 +11102,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (_template == null) {
 						GetStandardTemplates(vegas);
 						GetTemplate(vegas, frameRateInt);
-						MessageBox.Show(Lang.str.render_template_generate_completed, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						MessageBoxEx.Show(Lang.str.render_template_generate_completed, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 						return false;
 					}
 					template = _template;
@@ -11399,7 +11399,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 					var finalFolder = (string)Registry.GetValue(Template.DataPath, "ClipFolder", "");
 					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
-						MessageBox.Show(Lang.str.datamosh_no_clips_folder_info, Lang.str.datamix, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+						MessageBoxEx.Show(Lang.str.datamosh_no_clips_folder_info, Lang.str.datamix, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 						return;
 					}
 
@@ -11577,7 +11577,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 					var finalFolder = (string)Registry.GetValue(Template.DataPath, "ClipFolder", "");
 					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
-						MessageBox.Show(Lang.str.datamosh_no_clips_folder_info, Lang.str.datamosh, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+						MessageBoxEx.Show(Lang.str.datamosh_no_clips_folder_info, Lang.str.datamosh, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 						return;
 					}
 
@@ -11843,7 +11843,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					if (!render) return;
 					var finalFolder = (string)Registry.GetValue(Template.DataPath, "ClipFolder", ""); // LayerClipFolder
 					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
-						MessageBox.Show("Select the folder to put generated layered clips into.\n" +
+						MessageBoxEx.Show("Select the folder to put generated layered clips into.\n" +
 							"(As they are stored uncompressed with alpha, they can take a lot of space (think 1 GB/minute). " +
 							"Choose a location with a lot of available space and go remove some clips there if you need space.)", Lang.str.layering, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 						return;
@@ -11925,7 +11925,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 
 					var finalFolder = (string)Registry.GetValue(Template.DataPath, "ClipFolder", ""); // RenderClipFolder
 					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
-						MessageBox.Show("Select the folder to put generated rendered clips into.\n" +
+						MessageBoxEx.Show("Select the folder to put generated rendered clips into.\n" +
 							"(As they are stored uncompressed with alpha, they can take a lot of space (think 1 GB/minute). " +
 							"Choose a location with a lot of available space and go remove some clips there if you need space.)", Lang.str.rendering, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 						return;
@@ -12162,7 +12162,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 								goto outer;
 							}
 							if (evt.ActiveTake.Media.FilePath == null) {
-								MessageBox.Show(Lang.str.stutter_generator_media_info, Lang.str.stutter, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+								MessageBoxEx.Show(Lang.str.stutter_generator_media_info, Lang.str.stutter, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 								return;
 							}
 							reverseClips.Add(new Subclip(evt.ActiveTake.Media.FilePath, Timecode.FromFrames(0), evt.ActiveTake.Media.Length, true, evt.ActiveTake.Media.Title + Lang.str.reverse_suffix_tag));
@@ -17329,7 +17329,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				EntryPoint.ShowError(new Exceptions.FailToSelectTracksException());
 				Close();
 			} else if (Count > 100) {
-				MessageBox.Show(string.Format(Lang.str.selected_tracks_too_much, Count),
+				MessageBoxEx.Show(string.Format(Lang.str.selected_tracks_too_much, Count),
 					Lang.str.selected_tracks_too_much_title, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Close();
 			}
@@ -18914,7 +18914,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				}
 			}
 			if (failedCount != 0)
-				MessageBox.Show(string.Format(Lang.str.failed_to_convert_tuning_method_count_warning, failedCount), Lang.str.change_tune_method, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				MessageBoxEx.Show(string.Format(Lang.str.failed_to_convert_tuning_method_count_warning, failedCount), Lang.str.change_tune_method, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			#endif
 		}
 
@@ -19425,9 +19425,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			long fileSize = new FileInfo(openFileDialog.FileName).Length;
 			const long LARGE_FILE_SIZE = 1024L * 1024L; // 设 1 MB 以上文件为大文件。
 			if (fileSize > LARGE_FILE_SIZE)
-				if (MessageBox.Show(Lang.str.file_too_large_info, "", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No) return;
+				if (MessageBoxEx.Show(Lang.str.file_too_large_info, "", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No) return;
 			if (!string.IsNullOrWhiteSpace(SubtitlesTxt.Text))
-				if (MessageBox.Show(Lang.str.will_clear_existing_text_info, "", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Cancel) return;
+				if (MessageBoxEx.Show(Lang.str.will_clear_existing_text_info, "", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Cancel) return;
 			string text = File.ReadAllText(openFileDialog.FileName);
 			text = Regex.Replace(text, @"\r\n|\n\r|\r|\n", "\n");
 			SubtitlesTxt.Text = text;
@@ -23924,7 +23924,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			try {
 				MidiExporter midiExporter = new MidiExporter(saveFileDialog.FileName, vegas.Project.Ruler.BeatsPerMinute, MidiTrackList, MidiInstrumentList, EntryPoint.PitchMap(AudioMainKeyCombo.SelectedItem.ToString(), AudioMainOctaveCombo.SelectedItem.ToString()), LoopRegionOnlyCheck.Checked, vegas);
 				midiExporter.SaveToFile();
-				MessageBox.Show(Lang.str.export_successful, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				MessageBoxEx.Show(Lang.str.export_successful, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			} catch (Exception e) {
 				EntryPoint.ShowError(new Exceptions.FailedToExportMidiFileException(), e);
 				ConfigForm.SetF(Handle);
@@ -24592,7 +24592,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </remarks>
 		/// <param name="buttonTitles">按钮标签文本。</param>
 		public static DialogResult Show(string text, string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK, string[] buttonTitles = null, MessageBoxIcon icon = MessageBoxIcon.None, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1) {
-			if (buttonTitles == null) return MessageBox.Show(text, caption, buttons, icon, defaultButton);
+			if (buttonTitles == null) buttonTitles = GetDefaultButtonTitles(buttons);
 			DummyForm frm = new DummyForm(buttons, buttonTitles);
 			frm.Show();
 			frm.WatchForActivate = true;
@@ -24607,6 +24607,24 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		/// </remarks>
 		public static DialogResult Show(string text, string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.None, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1) {
 			return Show(text, caption, buttons, null, icon, defaultButton);
+		}
+
+		private static string[] GetDefaultButtonTitles(MessageBoxButtons buttons) {
+			Lang str = Lang.str;
+			switch (buttons) {
+				case MessageBoxButtons.OK:
+					return new string[] { str.ok };
+				case MessageBoxButtons.OKCancel:
+					return new string[] { str.ok, str.cancel };
+				case MessageBoxButtons.YesNoCancel:
+					return new string[] { str.yes, str.no, str.cancel };
+				case MessageBoxButtons.YesNo:
+					return new string[] { str.yes, str.no };
+				case MessageBoxButtons.AbortRetryIgnore:
+				case MessageBoxButtons.RetryCancel:
+				default:
+					throw new NotImplementedException(string.Format("The provided message box buttons type {0} is not implemented!", buttons));
+			}
 		}
 
 		internal class DummyForm : Form {
@@ -24770,7 +24788,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.caption = caption;
 			timeoutTimer = new System.Threading.Timer(OnTimerElapsed, null, timeout, Timeout.Infinite);
 			using (timeoutTimer)
-				MessageBox.Show(text, caption, buttons, icon, defaultButton);
+				MessageBoxEx.Show(text, caption, buttons, icon, defaultButton);
 		}
 		public static void Show(int timeout, string text, string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.None, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1) {
 			new AutoClosingMessageBox(timeout, text, caption, buttons, icon, defaultButton);
@@ -29867,7 +29885,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "NewInputBoxForm";
-			this.UseSystemFont = true;
+			this.UseSystemFont = false;
 			this.Load += new System.EventHandler(this.NewInputBoxForm_Load);
 			this._primaryPanel.ResumeLayout(false);
 			this._primaryPanel.PerformLayout();
@@ -43892,7 +43910,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				Load += OpenReplaceClipDirectlyEvent;
 			} else if (parent.quickConfigMode) {
 				if (!OkBtn_Enabled) {
-					MessageBox.Show(Lang.str.failed_to_quick_config, "Otomad Helper", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+					MessageBoxEx.Show(Lang.str.failed_to_quick_config, "Otomad Helper", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 					return;
 				}
 				OkBtn_Click(null, null);
@@ -45636,11 +45654,11 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void resetConfigToolStripMenuItem_Click(object sender, EventArgs e) {
-			DialogResult result = MessageBox.Show(Lang.str.sure_to_reset_config, Lang.str.reset_config_successful_title, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+			DialogResult result = MessageBoxEx.Show(Lang.str.sure_to_reset_config, Lang.str.reset_config_successful_title, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
 			if (result == DialogResult.No) return;
 			configIni.Delete(true);
 			exitDiscardingChangesToolStripMenuItem_Click(null, null);
-			MessageBox.Show(Lang.str.reset_config_successful, Lang.str.reset_config_successful_title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+			MessageBoxEx.Show(Lang.str.reset_config_successful, Lang.str.reset_config_successful_title, MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 
 		public new void ShowDialog() {
@@ -45958,7 +45976,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (string.IsNullOrWhiteSpace(value)) text.AppendLine();
 				else text.AppendLine(key + str.colon + value);
 			}
-			MessageBox.Show(text.ToString(), str.about_title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+			MessageBoxEx.Show(text.ToString(), str.about_title, MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 
 		private void TrimTime_ValueChanged(object sender, EventArgs e) {
@@ -46451,7 +46469,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 					reason.AppendLine(i + 1 + ". " + reasons[i]);
 				resultInfo = reason.ToString();
 			}
-			MessageBox.Show(resultInfo, str.why_ok_btn_is_disabled, MessageBoxButtons.OK, MessageBoxIcon.Information);
+			MessageBoxEx.Show(resultInfo, str.why_ok_btn_is_disabled, MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 
 		public void NAudioBeep(int freq, int duration) {
@@ -46613,7 +46631,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (menuItem == loadPresetsToolStripMenuItem) isLoad = true;
 			else if (menuItem == unloadPresetsToolStripMenuItem) isLoad = false;
 			else return;
-			if (MessageBox.Show(isLoad ? Lang.str.ensure_load_presets : Lang.str.ensure_unload_presets, "", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.OK) return;
+			if (MessageBoxEx.Show(isLoad ? Lang.str.ensure_load_presets : Lang.str.ensure_unload_presets, "", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.OK) return;
 			if (isLoad) parent.LoadPitchShiftPresets();
 			else parent.UnloadPitchShiftPresets();
 		}
@@ -46883,17 +46901,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				if (!isLatest) {
 					if (isUnsupportFutureVersion) {
 						if (isManualUpdate)
-							MessageBox.Show(string.Format(str.check_update_unsupport_future_version, newVersion, "v" + EntryPoint.VERSION, futureVersionSupportedMinVegasVersion, EntryPoint.CurrentVegasVersion), str.check_update_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+							MessageBoxEx.Show(string.Format(str.check_update_unsupport_future_version, newVersion, "v" + EntryPoint.VERSION, futureVersionSupportedMinVegasVersion, EntryPoint.CurrentVegasVersion), str.check_update_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					} else {
 						latestVersionToolStripMenuItemInBar.Text = str.download_latest_version + str.colon + newVersion;
 						latestVersionToolStripMenuItemInBar.Visible = true;
 						if (alertable) {
-							DialogResult updateNow = MessageBox.Show(string.Format(str.check_update_found, newVersion, "v" + EntryPoint.VERSION), str.check_update_title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+							DialogResult updateNow = MessageBoxEx.Show(string.Format(str.check_update_found, newVersion, "v" + EntryPoint.VERSION), str.check_update_title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 							if (updateNow == DialogResult.Yes) latestVersionLinkToolStripMenuItem.PerformClick();
 						}
 					}
 				} else if (isManualUpdate)
-					MessageBox.Show(string.Format(str.check_update_not_found, newVersion), str.check_update_title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+					MessageBoxEx.Show(string.Format(str.check_update_not_found, newVersion), str.check_update_title, MessageBoxButtons.OK, MessageBoxIcon.Information);
 			});
 			checkUpdateThread.Start();
 		}
@@ -47077,7 +47095,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 		}
 
 		private void SonarDeleteBtn_Click(object sender, EventArgs e) {
-			if (MessageBox.Show(sender == SonarResetBtn ? Lang.str.sure_to_reset : Lang.str.sure_to_delete, "", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No) return;
+			if (MessageBoxEx.Show(sender == SonarResetBtn ? Lang.str.sure_to_reset : Lang.str.sure_to_delete, "", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No) return;
 			if (sender == SonarResetBtn) {
 				SonarList.Items.Clear();
 				ResetSonarToDefault();
@@ -47286,12 +47304,12 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			}
 			uint beats = vegas.Project.Ruler.BeatsPerMeasure;
 			if (!new List<uint> { 4, 3, 6 }.Contains(beats)) {
-				MessageBox.Show(Lang.str.convert_music_beats_unsupported_beats_exception, Lang.str.convert_music_beats, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBoxEx.Show(Lang.str.convert_music_beats_unsupported_beats_exception, Lang.str.convert_music_beats, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			} else {
 				string curBeats = beats == 4 ? Lang.str.metre_4_4 : beats == 3 ? Lang.str.metre_3_4 : beats == 6 ? Lang.str.metre_6_8 : "";
 				string willBeats = beats == 4 ? Lang.str.metre_3_4 : Lang.str.metre_4_4;
-				if (MessageBox.Show(string.Format(Lang.str.convert_music_beats_info, curBeats, willBeats), "", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Cancel)
+				if (MessageBoxEx.Show(string.Format(Lang.str.convert_music_beats_info, curBeats, willBeats), "", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Cancel)
 					return;
 			}
 			uint wBeats = beats == 4 ? 3u : beats == 6 ? 8u : 4u;
@@ -47304,7 +47322,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			else {
 				IsIrreversibleCancel = true;
 				vegas.UpdateUI();
-				MessageBox.Show(Lang.str.convert_music_beats_complete, Lang.str.convert_music_beats, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				MessageBoxEx.Show(Lang.str.convert_music_beats_complete, Lang.str.convert_music_beats, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
 			}
 		}
 
@@ -47517,9 +47535,9 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				Title = Lang.str.import,
 			};
 			if (openFileDialog.ShowDialog() != DialogResult.OK) return;
-			if (MessageBox.Show(Lang.str.about_to_import_config, Lang.str.import, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Cancel) return;
+			if (MessageBoxEx.Show(Lang.str.about_to_import_config, Lang.str.import, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Cancel) return;
 			File.Copy(openFileDialog.FileName, configIni.FilePath, true);
-			MessageBox.Show(Lang.str.import_config_complete, Lang.str.import, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+			MessageBoxEx.Show(Lang.str.import_config_complete, Lang.str.import, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
 			exitDiscardingChangesToolStripMenuItem_Click(null, null);
 		}
 
@@ -47564,7 +47582,7 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			string datamoshFolder = DatamoshClipsFolderTxt.Text;
 			if (string.IsNullOrWhiteSpace(datamoshFolder) || !Directory.Exists(datamoshFolder)) {
 				if (alert)
-					MessageBox.Show(Lang.str.datamosh_no_clips_folder_info, "Datamosh",
+					MessageBoxEx.Show(Lang.str.datamosh_no_clips_folder_info, "Datamosh",
 						MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return false;
 			}
@@ -48117,17 +48135,17 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			if (scriptDirectory != null) dialog.DirectoryPath = scriptDirectory;
 			if (dialog.ShowDialog(this) != DialogResult.OK) return;
 			if (!Datamosh.BaseUncompressedDatamosh.CheckInternalDirectory(dialog.DirectoryPath)) {
-				MessageBox.Show(Lang.str.datamosh_extension_pack_custom_path_failed, Lang.str.datamosh_extension_pack, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBoxEx.Show(Lang.str.datamosh_extension_pack_custom_path_failed, Lang.str.datamosh_extension_pack, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 			Registry.SetValue(Datamosh.Template.DataPath, "DatamoshInternalDirectory", Datamosh.BaseUncompressedDatamosh.DefaultInternalDirectory != null && AreSameDirectory(Datamosh.BaseUncompressedDatamosh.DefaultInternalDirectory, dialog.DirectoryPath) ? "" : dialog.DirectoryPath, RegistryValueKind.String);
-			MessageBox.Show(string.Format(Lang.str.datamosh_extension_pack_custom_path_succeed, dialog.DirectoryPath), Lang.str.datamosh_extension_pack, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+			MessageBoxEx.Show(string.Format(Lang.str.datamosh_extension_pack_custom_path_succeed, dialog.DirectoryPath), Lang.str.datamosh_extension_pack, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
 			Close();
 		}
 
 		private void ResetDatamoshPathMenuItem_Click(object sender, EventArgs e) {
 			Registry.SetValue(Datamosh.Template.DataPath, "DatamoshInternalDirectory", "", RegistryValueKind.String);
-			MessageBox.Show(string.Format(Lang.str.datamosh_extension_pack_reset_succeed, Datamosh.BaseUncompressedDatamosh.DefaultInternalDirectory ?? ""), Lang.str.datamosh_extension_pack, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+			MessageBoxEx.Show(string.Format(Lang.str.datamosh_extension_pack_reset_succeed, Datamosh.BaseUncompressedDatamosh.DefaultInternalDirectory ?? ""), Lang.str.datamosh_extension_pack, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
 			Close();
 
 		}
@@ -48387,8 +48405,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 			pan_right_abbr = "右",
 			pan_center_abbr = "中",
 			pan_dynamic_abbr = "起",
-			yes = "是",
-			no = "否",
+			yes = "是(&Y)",
+			no = "否(&N)",
 			error_code = "错误代码：",
 			processing_otomad = "正在生成音 MAD / YTPMV⋯⋯",
 			processing_otomad_swirl = "正在生成滑音效果⋯⋯",
@@ -49380,8 +49398,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				pan_right_abbr = "R",
 				pan_center_abbr = "C",
 				pan_dynamic_abbr = "V",
-				yes = "Yes",
-				no = "No",
+				yes = "&Yes",
+				no = "&No",
 				error_code = "Error Code:",
 				processing_otomad = "Generating YTPMV/otoMAD...",
 				processing_otomad_swirl = "Generating glissando visuals...",
@@ -50292,8 +50310,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				pan_right_abbr = "右",
 				pan_center_abbr = "中",
 				pan_dynamic_abbr = "起",
-				yes = "是",
-				no = "否",
+				yes = "是(&Y)",
+				no = "否(&N)",
 				error_code = "錯誤代碼：",
 				processing_otomad = "正在生成音 MAD / YTPMV⋯⋯",
 				processing_otomad_swirl = "正在生成滑音效果⋯⋯",
@@ -51203,8 +51221,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				pan_right_abbr = "右",
 				pan_center_abbr = "中",
 				pan_dynamic_abbr = "から",
-				yes = "はい",
-				no = "いいえ",
+				yes = "はい(&Y)",
+				no = "いいえ(&N)",
 				error_code = "エラーコード：",
 				processing_otomad = "音MAD/YTPMVを生成中⋯⋯",
 				processing_otomad_swirl = "グリッサンドを生成中⋯⋯",
@@ -52116,8 +52134,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				pan_right_abbr = "Р",
 				pan_center_abbr = "С",
 				pan_dynamic_abbr = "В",
-				yes = "Да",
-				no = "Нет",
+				yes = "&Да",
+				no = "&Нет",
 				error_code = "Код ошибки:",
 				processing_otomad = "Создание ЮТПМВ/отоМАД...",
 				processing_otomad_swirl = "Создание глиссандо...",
@@ -53029,8 +53047,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				pan_right_abbr = "R",
 				pan_center_abbr = "C",
 				pan_dynamic_abbr = "V",
-				yes = "Có",
-				no = "Không",
+				yes = "&Có",
+				no = "&Không",
 				error_code = "Mã lỗi:",
 				processing_otomad = "Đang khởi tạo ra otoMAD/YTPMV...",
 				processing_otomad_swirl = "Đang khởi tạo ra glissando...",
@@ -53941,8 +53959,8 @@ namespace Otomad.VegasScripts.OtomadHelper.V4 {
 				pan_right_abbr = "R",
 				pan_center_abbr = "C",
 				pan_dynamic_abbr = "V",
-				yes = "Ya",
-				no = "Tidak",
+				yes = "&Ya",
+				no = "&Tidak",
 				error_code = "Kode Error:",
 				processing_otomad = "Membuat otoMAD/YTPMV...",
 				processing_otomad_swirl = "Membuat glissando",
