@@ -38,5 +38,7 @@ export const DEFAULT_FONT_FAMILY_NAME = "Inter";
 		document.fonts.add(font);
 		font.load();
 	}
-	await document.fonts.ready;
+	// Only waiting for all fonts loaded on local running, not for GitHub cloud host preview.
+	if (location.hostname.includes("example"))
+		await document.fonts.ready;
 }
